@@ -5,11 +5,13 @@ VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewFlowChartTool", "NewFlowChartTool\NewFlowChartTool.csproj", "{E4F00A73-A797-4D65-A4FA-CD26F4957BA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChart", "FlowChart\FlowChart.csproj", "{CC3C9F8B-F69C-4571-94B4-58CF54ABAADB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChart", "FlowChart\FlowChart.csproj", "{CC3C9F8B-F69C-4571-94B4-58CF54ABAADB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectFactory", "ProjectFactory\ProjectFactory.csproj", "{FE90DB58-FBCF-4CD9-9DD5-376B6D28C150}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectFactory", "ProjectFactory\ProjectFactory.csproj", "{FE90DB58-FBCF-4CD9-9DD5-376B6D28C150}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChartTest", "FlowChartTest\FlowChartTest.csproj", "{028531A0-D9C9-45E2-A4E5-BB8413FB1F07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChartTest", "FlowChartTest\FlowChartTest.csproj", "{028531A0-D9C9-45E2-A4E5-BB8413FB1F07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChartCommon", "FlowChartCommon\FlowChartCommon.csproj", "{D791ED7D-0138-40BB-9376-0A71A597C709}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{028531A0-D9C9-45E2-A4E5-BB8413FB1F07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{028531A0-D9C9-45E2-A4E5-BB8413FB1F07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{028531A0-D9C9-45E2-A4E5-BB8413FB1F07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D791ED7D-0138-40BB-9376-0A71A597C709}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D791ED7D-0138-40BB-9376-0A71A597C709}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D791ED7D-0138-40BB-9376-0A71A597C709}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D791ED7D-0138-40BB-9376-0A71A597C709}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
