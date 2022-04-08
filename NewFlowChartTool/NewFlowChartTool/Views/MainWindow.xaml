@@ -5,11 +5,42 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:NewFlowChartTool"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pane="clr-namespace:NewFlowChartTool.Views.Pane"
+    xmlns:views="clr-namespace:NewFlowChartTool.Views"
     Title="MainWindow"
     Width="800"
     Height="450"
     mc:Ignorable="d">
-    <Grid>
+    <!--Grid>
         <Label Content="{Binding TestText}" />
-    </Grid>
+    </Grid-->
+    <DockingManager>
+        <!--  layout container style selector  -->
+        <DockingManager.LayoutItemContainerStyleSelector>
+            <pane:PanesStyleSelector>
+                <pane:PanesStyleSelector.OutputPanelStyle>
+                    <Style TargetType="{x:Type LayoutItem}">
+                        <Setter Property="Title" Value="{Binding Model.Name}" />
+                        <!--  Setter Property="CloseCommand" Value="{Binding Model.OnCloseUnit}" /  -->
+                    </Style>
+                </pane:PanesStyleSelector.OutputPanelStyle>
+            </pane:PanesStyleSelector>
+        </DockingManager.LayoutItemContainerStyleSelector>
+        <LayoutRoot>
+            <LayoutPanel Orientation="Horizontal">
+                <LayoutAnchorablePane x:Name="Left" DockWidth="245">
+                    <LayoutAnchorable Title="工程">
+                        <views:ProjectPanel x:Name="ProjectPanelView" />
+                    </LayoutAnchorable>
+                </LayoutAnchorablePane>
+                <LayoutPanel x:Name="Middle" Orientation="Vertical">
+                    <LayoutAnchorablePane DockHeight="400">
+                        <LayoutAnchorable Title="输出">
+                            <views:OutputPanel x:Name="OutputPanelView" />
+                        </LayoutAnchorable>
+                    </LayoutAnchorablePane>
+                </LayoutPanel>
+            </LayoutPanel>
+        </LayoutRoot>
+    </DockingManager>
 </Window>
