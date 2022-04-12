@@ -16,13 +16,12 @@ namespace NewFlowChartTool.ViewModels
         {
             _testText = "Hello world";
             _ea = ea;
-            InitCommands();
+
+            OpenProjectCommand = new DelegateCommand(OpenProject, () => true);
+            OpenProject();
         }
 
-        void InitCommands()
-        {
-            OpenProjectCommand = new DelegateCommand(OpenProject, () => true);
-        }
+
 
         readonly IEventAggregator _ea;
 

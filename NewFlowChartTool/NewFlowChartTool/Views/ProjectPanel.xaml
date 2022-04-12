@@ -5,8 +5,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:NewFlowChartTool.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <Grid Background="Blue" />
+    <Grid Background="AliceBlue">
+        <TreeView x:Name="ProjectTree" ItemsSource="{Binding Roots}">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type vm:ProjectTreeFolderViewModel}" ItemsSource="{Binding Children}">
+                    <Label Content="{Binding Name}" />
+                    <!--HierarchicalDataTemplate.ItemTemplate></HierarchicalDataTemplate.ItemTemplate-->
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
+                    <Label Content="{Binding Name}" />
+                </DataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+    </Grid>
 </UserControl>
