@@ -9,6 +9,7 @@ using System.Windows;
 using FlowChartCommon;
 using Prism.Ioc;
 using Prism.Unity;
+using Prism.Events;
 
 namespace NewFlowChartTool
 {
@@ -37,6 +38,7 @@ namespace NewFlowChartTool
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
             //throw new NotImplementedException();
         }
 

@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FlowChartCommon\FlowChartCommon.csproj" />
     <ProjectReference Include="..\FlowChart\FlowChart.csproj" />
+    <ProjectReference Include="..\ProjectFactory\ProjectFactory.csproj" />
   </ItemGroup>
 
 </Project>

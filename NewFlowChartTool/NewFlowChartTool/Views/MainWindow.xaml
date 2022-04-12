@@ -11,36 +11,47 @@
     Width="800"
     Height="450"
     mc:Ignorable="d">
-    <!--Grid>
-        <Label Content="{Binding TestText}" />
-    </Grid-->
-    <DockingManager>
-        <!--  layout container style selector  -->
-        <DockingManager.LayoutItemContainerStyleSelector>
-            <pane:PanesStyleSelector>
-                <pane:PanesStyleSelector.OutputPanelStyle>
-                    <Style TargetType="{x:Type LayoutItem}">
-                        <Setter Property="Title" Value="{Binding Model.Name}" />
-                        <!--  Setter Property="CloseCommand" Value="{Binding Model.OnCloseUnit}" /  -->
-                    </Style>
-                </pane:PanesStyleSelector.OutputPanelStyle>
-            </pane:PanesStyleSelector>
-        </DockingManager.LayoutItemContainerStyleSelector>
-        <LayoutRoot>
-            <LayoutPanel Orientation="Horizontal">
-                <LayoutAnchorablePane x:Name="Left" DockWidth="245">
-                    <LayoutAnchorable Title="工程">
-                        <views:ProjectPanel x:Name="ProjectPanelView" />
-                    </LayoutAnchorable>
-                </LayoutAnchorablePane>
-                <LayoutPanel x:Name="Middle" Orientation="Vertical">
-                    <LayoutAnchorablePane DockHeight="400">
-                        <LayoutAnchorable Title="输出">
-                            <views:OutputPanel x:Name="OutputPanelView" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem Header="File">
+                <MenuItem Command="{Binding OpenProjectCommand}" Header="Open Project" />
+            </MenuItem>
+        </Menu>
+
+
+        <DockingManager Grid.Row="1">
+            <!--  layout container style selector  -->
+            <DockingManager.LayoutItemContainerStyleSelector>
+                <pane:PanesStyleSelector>
+                    <pane:PanesStyleSelector.OutputPanelStyle>
+                        <Style TargetType="{x:Type LayoutItem}">
+                            <Setter Property="Title" Value="{Binding Model.Name}" />
+                            <!--  Setter Property="CloseCommand" Value="{Binding Model.OnCloseUnit}" /  -->
+                        </Style>
+                    </pane:PanesStyleSelector.OutputPanelStyle>
+                </pane:PanesStyleSelector>
+            </DockingManager.LayoutItemContainerStyleSelector>
+            <LayoutRoot>
+                <LayoutPanel x:Name="LeftPanel" Orientation="Horizontal">
+                    <LayoutAnchorablePane x:Name="Left" DockWidth="245">
+                        <LayoutAnchorable Title="工程">
+                            <views:ProjectPanel x:Name="ProjectPanelView" />
                         </LayoutAnchorable>
                     </LayoutAnchorablePane>
+                    <LayoutPanel x:Name="MiddleContent" Orientation="Vertical">
+                        <LayoutDocumentPaneGroup />
+                        <LayoutAnchorablePane DockHeight="200">
+                            <LayoutAnchorable Title="输出">
+                                <views:OutputPanel x:Name="OutputPanelView" />
+                            </LayoutAnchorable>
+                        </LayoutAnchorablePane>
+                    </LayoutPanel>
                 </LayoutPanel>
-            </LayoutPanel>
-        </LayoutRoot>
-    </DockingManager>
+            </LayoutRoot>
+        </DockingManager>
+    </Grid>
 </Window>
