@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Prism.Events;
+using Prism.Ioc;
+using NewFlowChartTool.ViewModels;
 
 namespace NewFlowChartTool.Views
 {
@@ -19,10 +22,26 @@ namespace NewFlowChartTool.Views
     /// Interaction logic for ProjectPanel.xaml
     /// </summary>
     public partial class ProjectPanel : UserControl
-    {
+    {        
         public ProjectPanel()
+        {            
+            InitializeComponent();            
+        }
+
+        private void ProjectTreeItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            InitializeComponent();
+            if (!(sender is TreeViewItem)) return;
+
+            if (!((TreeViewItem)sender).IsSelected) return;
+
+            var dc = Utility.WPFHelper.GetDataContext<ProjectTreeItemViewModel>(sender);
+            if (dc == null) return;
+
+            dc.Open();
+            
+            //ContainerLocator.Current.Resolve<IEventAggregator>().GetEvent<Event.GraphOpenEvent>().Publish(dc.)
+
+            e.Handled = true;
         }
     }
 }

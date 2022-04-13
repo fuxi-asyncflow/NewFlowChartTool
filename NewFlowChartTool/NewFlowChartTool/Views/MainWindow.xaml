@@ -42,7 +42,7 @@
             </DockingManager.LayoutItemContainerStyleSelector>
             <LayoutRoot>
                 <LayoutPanel x:Name="LeftPanel" Orientation="Horizontal">
-                    <LayoutAnchorablePane x:Name="Left" DockWidth="245">
+                    <LayoutAnchorablePane DockWidth="245">
                         <LayoutAnchorable Title="工程">
                             <views:ProjectPanel x:Name="ProjectPanelView" />
                         </LayoutAnchorable>

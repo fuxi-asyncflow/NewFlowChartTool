@@ -32,6 +32,11 @@
                     <Label Content="{Binding Name}" Style="{DynamicResource LabelStyle}" />
                 </DataTemplate>
             </TreeView.Resources>
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <EventSetter Event="MouseDoubleClick" Handler="ProjectTreeItem_MouseDoubleClick" />
+                </Style>
+            </TreeView.ItemContainerStyle>
         </TreeView>
     </Grid>
 </UserControl>

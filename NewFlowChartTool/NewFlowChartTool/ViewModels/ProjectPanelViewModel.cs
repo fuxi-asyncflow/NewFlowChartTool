@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Prism.Mvvm;
 using Prism.Events;
+using Prism.Ioc;
 using FlowChart.Core;
 
 namespace NewFlowChartTool.ViewModels
@@ -19,7 +20,12 @@ namespace NewFlowChartTool.ViewModels
         readonly Item _item;
         public string Name { get => _item.Name; }
         public string Description { get => _item.Description; }
-        
+
+        public virtual void Open()
+        {
+            if (_item is Graph)
+                ContainerLocator.Current.Resolve<IEventAggregator>().GetEvent<Event.GraphOpenEvent>().Publish((Graph)_item);
+        }        
     }
 
     internal class ProjectTreeFolderViewModel : ProjectTreeItemViewModel

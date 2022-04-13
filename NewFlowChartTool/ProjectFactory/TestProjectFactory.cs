@@ -44,7 +44,7 @@ namespace ProjectFactory
                     member = new Method()
                     {
                         Name = Name,
-                        Parameters = Parameters.ConvertAll(p => p.ToParameter()),
+                        Parameters = Parameters.ConvertAll(p => p == null ? new Parameter() { Name = "__error" } : p.ToParameter()),
                         Type = TypeJson.GetType(Type)
                     };
                 }
