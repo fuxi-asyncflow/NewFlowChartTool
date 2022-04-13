@@ -30,4 +30,15 @@ namespace NewFlowChartTool.Views.Pane
             return base.SelectStyle(item, container);
         }
     }
+
+    class PanesTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate GraphViewTemplate { get; set; }
+        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        {
+            if (item is GraphPaneViewModel)
+                return GraphViewTemplate;
+            return base.SelectTemplate(item, container);
+        }
+    }
 }

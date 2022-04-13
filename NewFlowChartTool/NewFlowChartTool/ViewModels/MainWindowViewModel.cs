@@ -8,9 +8,11 @@ using Prism.Mvvm;
 using Prism.Events;
 using FlowChart.Core;
 using System.Windows;
+using System.Collections.ObjectModel;
 
 namespace NewFlowChartTool.ViewModels
 {
+
     public class MainWindowViewModel : BindableBase
     {
         public enum Theme
@@ -25,6 +27,11 @@ namespace NewFlowChartTool.ViewModels
 
             OpenProjectCommand = new DelegateCommand(OpenProject, () => true);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
+
+            _ea.GetEvent<Event.GraphOpenEvent>().Subscribe(graph =>
+            {
+                OpenedGraphs.Add(new GraphPaneViewModel(graph));
+            });
 #if DEBUG
             OpenProject();
 #endif
@@ -38,7 +45,16 @@ namespace NewFlowChartTool.ViewModels
         public string TestText { get => _testText; set { SetProperty<string>(ref _testText, value); } }
 
         public Theme SelectedTheme;
-        
+
+
+        public GraphPaneViewModel ActiveGraph { get; set; }
+
+        private ObservableCollection<GraphPaneViewModel> _openedGraphs;    
+        public ObservableCollection<GraphPaneViewModel> OpenedGraphs
+        {
+            get { return _openedGraphs ??= new ObservableCollection<GraphPaneViewModel>(); }
+        }
+
 
         #region COMMAND
         public DelegateCommand OpenProjectCommand { get; private set; }
