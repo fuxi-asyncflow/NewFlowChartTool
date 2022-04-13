@@ -11,6 +11,7 @@
     Width="800"
     Height="450"
     mc:Ignorable="d">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -20,10 +21,14 @@
             <MenuItem Header="File">
                 <MenuItem Command="{Binding OpenProjectCommand}" Header="Open Project" />
             </MenuItem>
+            <MenuItem Header="Theme">
+                <MenuItem Command="{Binding SwitchThemeCommand}" Header="switch theme" />
+            </MenuItem>
         </Menu>
 
 
         <DockingManager Grid.Row="1">
+
             <!--  layout container style selector  -->
             <DockingManager.LayoutItemContainerStyleSelector>
                 <pane:PanesStyleSelector>

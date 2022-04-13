@@ -11,15 +11,25 @@
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <Grid Background="AliceBlue">
-        <TreeView x:Name="ProjectTree" ItemsSource="{Binding Roots}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/AvalonDock.Themes.VS2013;component/DarkTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Style="{DynamicResource GridStyle}">
+        <TreeView
+            x:Name="ProjectTree"
+            Background="Transparent"
+            ItemsSource="{Binding Roots}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type vm:ProjectTreeFolderViewModel}" ItemsSource="{Binding Children}">
-                    <Label Content="{Binding Name}" />
-                    <!--HierarchicalDataTemplate.ItemTemplate></HierarchicalDataTemplate.ItemTemplate-->
+                    <Label Content="{Binding Name}" Style="{DynamicResource LabelStyle}" />
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
-                    <Label Content="{Binding Name}" />
+                    <Label Content="{Binding Name}" Style="{DynamicResource LabelStyle}" />
                 </DataTemplate>
             </TreeView.Resources>
         </TreeView>

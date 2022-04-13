@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectFactory", "ProjectFa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChartTest", "FlowChartTest\FlowChartTest.csproj", "{028531A0-D9C9-45E2-A4E5-BB8413FB1F07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChartCommon", "FlowChartCommon\FlowChartCommon.csproj", "{D791ED7D-0138-40BB-9376-0A71A597C709}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChartCommon", "FlowChartCommon\FlowChartCommon.csproj", "{D791ED7D-0138-40BB-9376-0A71A597C709}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFCT.Themes", "NFCT.Themes\NFCT.Themes.csproj", "{2A48FC64-2647-4CD2-B652-C874B7F01897}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{D791ED7D-0138-40BB-9376-0A71A597C709}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D791ED7D-0138-40BB-9376-0A71A597C709}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D791ED7D-0138-40BB-9376-0A71A597C709}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A48FC64-2647-4CD2-B652-C874B7F01897}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A48FC64-2647-4CD2-B652-C874B7F01897}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A48FC64-2647-4CD2-B652-C874B7F01897}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A48FC64-2647-4CD2-B652-C874B7F01897}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

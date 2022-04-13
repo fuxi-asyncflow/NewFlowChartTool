@@ -10,11 +10,11 @@
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
-    <Grid Background="Yellow">
-        <ListView ItemsSource="{Binding Outputs}">
+    <Grid Style="{DynamicResource GridStyle}">
+        <ListView ItemsSource="{Binding Outputs}" Style="{DynamicResource ListViewStyle}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Label Content="{Binding}" />
+                    <Label Content="{Binding}" Style="{DynamicResource LabelStyle}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

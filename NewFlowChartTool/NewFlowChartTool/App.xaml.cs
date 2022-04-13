@@ -31,7 +31,10 @@ namespace NewFlowChartTool
 #if DEBUG
             AllocConsole();
 #endif
-            FlowChartCommon.Logger.FCLogger.Info("application startup");
+            Logger.FCLogger.Info("application startup");
+
+            //var test = Application.Current.TryFindResource(SystemColors.WindowBrushKey);
+            //Console.WriteLine(test);
 
             return Container.Resolve<Views.MainWindow>();
         }
@@ -39,6 +42,7 @@ namespace NewFlowChartTool
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
+            
             //throw new NotImplementedException();
         }
 
