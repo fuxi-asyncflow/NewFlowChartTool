@@ -16,5 +16,7 @@ namespace NewFlowChartTool.ViewModels
             _graph = graph;
         }
 
+        public string Name { get => _graph.Name; }
+
     }
 }

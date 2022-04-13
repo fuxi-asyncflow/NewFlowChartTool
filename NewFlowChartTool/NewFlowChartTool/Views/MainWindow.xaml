@@ -49,12 +49,12 @@
             </DockingManager.LayoutItemTemplateSelector>
             <DockingManager.LayoutItemContainerStyleSelector>
                 <pane:PanesStyleSelector>
-                    <pane:PanesStyleSelector.OutputPanelStyle>
+                    <pane:PanesStyleSelector.GraphPaneStyle>
                         <Style TargetType="{x:Type LayoutItem}">
                             <Setter Property="Title" Value="{Binding Model.Name}" />
                             <!--  Setter Property="CloseCommand" Value="{Binding Model.OnCloseUnit}" /  -->
                         </Style>
-                    </pane:PanesStyleSelector.OutputPanelStyle>
+                    </pane:PanesStyleSelector.GraphPaneStyle>
                 </pane:PanesStyleSelector>
             </DockingManager.LayoutItemContainerStyleSelector>
             <LayoutRoot>

@@ -14,7 +14,7 @@ namespace NewFlowChartTool.Views.Pane
     {
         public Style ProjectPanelStyle { get; set; }
         public Style OutputPanelStyle { get; set; }
-        public Style RecentFilesStyle { get; set; }
+        public Style GraphPaneStyle { get; set; }
 
         public override System.Windows.Style SelectStyle(object item, System.Windows.DependencyObject container)
         {
@@ -24,8 +24,8 @@ namespace NewFlowChartTool.Views.Pane
             if (item is OutputPanelViewModel)
                 return OutputPanelStyle;
 
-            //if (item is FileViewModel)
-            //    return FileStyle;
+            if (item is GraphPaneViewModel)
+                return GraphPaneStyle;
 
             return base.SelectStyle(item, container);
         }
