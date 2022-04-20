@@ -11,5 +11,7 @@ namespace NewFlowChartTool.Event
     class ProjectOpenEvent : PubSubEvent<Project> { }
 
     class GraphOpenEvent : PubSubEvent<Graph> { }
+
+    class GraphOpenedEvent : PubSubEvent<Graph> { }
     
 }

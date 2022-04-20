@@ -31,7 +31,18 @@ namespace NewFlowChartTool.ViewModels
 
             _ea.GetEvent<Event.GraphOpenEvent>().Subscribe(graph =>
             {
+                foreach(var gvm in OpenedGraphs)
+                {
+                    if(gvm.Graph == graph)
+                    {
+                        ActiveGraph = gvm;
+                        return;
+                    }
+                }
+                             
                 OpenedGraphs.Add(new GraphPaneViewModel(graph));
+                ActiveGraph = OpenedGraphs.Last();
+
             });
 #if DEBUG
             OpenProject();
@@ -47,8 +58,8 @@ namespace NewFlowChartTool.ViewModels
 
         public Theme SelectedTheme;
 
-
-        public GraphPaneViewModel ActiveGraph { get; set; }
+        public GraphPaneViewModel _activeGraph;
+        public GraphPaneViewModel ActiveGraph { get => _activeGraph; set => SetProperty(ref _activeGraph, value, nameof(ActiveGraph)); }
 
         private ObservableCollection<GraphPaneViewModel> _openedGraphs;    
         public ObservableCollection<GraphPaneViewModel> OpenedGraphs

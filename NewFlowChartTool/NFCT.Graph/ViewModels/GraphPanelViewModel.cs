@@ -13,6 +13,7 @@ namespace NFCT.Graph.ViewModels
     {        
 
         private FlowChart.Core.Graph _graph;
+        public FlowChart.Core.Graph Graph { get => _graph; }
         public GraphPaneViewModel(FlowChart.Core.Graph graph)
         {
             _graph = graph;
