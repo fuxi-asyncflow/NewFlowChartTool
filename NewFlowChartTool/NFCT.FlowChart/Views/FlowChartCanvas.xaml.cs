@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NewFlowChartTool.Views
+namespace NFCT.FlowChart.Views
 {
     /// <summary>
-    /// Interaction logic for GraphPanel.xaml
+    /// Interaction logic for FlowChartCanvas.xaml
     /// </summary>
-    public partial class GraphPanel : UserControl
+    public partial class FlowChartCanvas : UserControl
     {
-        public GraphPanel()
+        public FlowChartCanvas()
         {
             InitializeComponent();
         }

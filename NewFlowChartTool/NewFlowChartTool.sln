@@ -13,7 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChartTest", "FlowChartT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChartCommon", "FlowChartCommon\FlowChartCommon.csproj", "{D791ED7D-0138-40BB-9376-0A71A597C709}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFCT.Themes", "NFCT.Themes\NFCT.Themes.csproj", "{2A48FC64-2647-4CD2-B652-C874B7F01897}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFCT.Themes", "NFCT.Themes\NFCT.Themes.csproj", "{2A48FC64-2647-4CD2-B652-C874B7F01897}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFCT.FlowChart", "NFCT.FlowChart\NFCT.FlowChart.csproj", "{AA66F757-E59A-44E0-9301-2C656A3DC911}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFCT.Graph", "NFCT.Graph\NFCT.Graph.csproj", "{D31FB6F7-FBFE-475B-BC00-4D00B8D9F292}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChart.Layout", "FlowChart.Layout\FlowChart.Layout.csproj", "{5417EBEA-ACB7-4B00-8A3D-78C87AC3BA31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +51,18 @@ Global
 		{2A48FC64-2647-4CD2-B652-C874B7F01897}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A48FC64-2647-4CD2-B652-C874B7F01897}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A48FC64-2647-4CD2-B652-C874B7F01897}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA66F757-E59A-44E0-9301-2C656A3DC911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA66F757-E59A-44E0-9301-2C656A3DC911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA66F757-E59A-44E0-9301-2C656A3DC911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA66F757-E59A-44E0-9301-2C656A3DC911}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D31FB6F7-FBFE-475B-BC00-4D00B8D9F292}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D31FB6F7-FBFE-475B-BC00-4D00B8D9F292}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D31FB6F7-FBFE-475B-BC00-4D00B8D9F292}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D31FB6F7-FBFE-475B-BC00-4D00B8D9F292}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5417EBEA-ACB7-4B00-8A3D-78C87AC3BA31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5417EBEA-ACB7-4B00-8A3D-78C87AC3BA31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5417EBEA-ACB7-4B00-8A3D-78C87AC3BA31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5417EBEA-ACB7-4B00-8A3D-78C87AC3BA31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

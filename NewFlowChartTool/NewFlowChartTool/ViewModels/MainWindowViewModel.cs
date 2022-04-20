@@ -9,6 +9,7 @@ using Prism.Events;
 using FlowChart.Core;
 using System.Windows;
 using System.Collections.ObjectModel;
+using NFCT.Graph.ViewModels;
 
 namespace NewFlowChartTool.ViewModels
 {

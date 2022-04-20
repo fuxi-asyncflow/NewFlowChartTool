@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using NewFlowChartTool.Views;
 using NewFlowChartTool.ViewModels;
+using NFCT.Graph.ViewModels;
 
 namespace NewFlowChartTool.Views.Pane
 {

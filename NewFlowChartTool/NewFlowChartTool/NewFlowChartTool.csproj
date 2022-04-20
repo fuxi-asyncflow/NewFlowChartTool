@@ -20,6 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="..\FlowChartCommon\FlowChartCommon.csproj" />
     <ProjectReference Include="..\FlowChart\FlowChart.csproj" />
+    <ProjectReference Include="..\NFCT.FlowChart\NFCT.FlowChart.csproj" />
+    <ProjectReference Include="..\NFCT.Graph\NFCT.Graph.csproj" />
     <ProjectReference Include="..\ProjectFactory\ProjectFactory.csproj" />
     <ProjectReference Include="..\NFCT.Themes\NFCT.Themes.csproj" />
   </ItemGroup>

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:conv="clr-namespace:NewFlowChartTool.Utility.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:graph_views="clr-namespace:NFCT.Graph.Views;assembly=NFCT.Graph"
     xmlns:local="clr-namespace:NewFlowChartTool"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pane="clr-namespace:NewFlowChartTool.Views.Pane"
@@ -42,7 +43,7 @@
                 <pane:PanesTemplateSelector>
                     <pane:PanesTemplateSelector.GraphViewTemplate>
                         <DataTemplate>
-                            <views:GraphPanel />
+                            <graph_views:GraphPanel />
                         </DataTemplate>
                     </pane:PanesTemplateSelector.GraphViewTemplate>
                 </pane:PanesTemplateSelector>

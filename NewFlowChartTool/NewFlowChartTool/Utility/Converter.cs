@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using NewFlowChartTool.ViewModels;
+using NFCT.Graph.ViewModels;
 
 namespace NewFlowChartTool.Utility.Converter
 {
