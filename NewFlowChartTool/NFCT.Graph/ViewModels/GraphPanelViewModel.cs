@@ -24,7 +24,7 @@ namespace NFCT.Graph.ViewModels
         public void Initialize()
         {
             Nodes.Clear();
-            _graph.Nodes.ForEach(node => Nodes.Add(new TextNodeViewModel(node)));
+            _graph.Nodes.ForEach(node => Nodes.Add(new TextNodeViewModel(node as TextNode)));
 
             for(int i=0;i<Nodes.Count;i++)
             {

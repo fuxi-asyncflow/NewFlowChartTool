@@ -25,6 +25,7 @@ namespace NewFlowChartTool.ViewModels
         {
             _testText = "Hello world";
             _ea = ea;
+            
 
             OpenProjectCommand = new DelegateCommand(OpenProject, () => true);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
@@ -58,8 +59,8 @@ namespace NewFlowChartTool.ViewModels
 
         public Theme SelectedTheme;
 
-        public GraphPaneViewModel _activeGraph;
-        public GraphPaneViewModel ActiveGraph { get => _activeGraph; set => SetProperty(ref _activeGraph, value, nameof(ActiveGraph)); }
+        public GraphPaneViewModel? _activeGraph;
+        public GraphPaneViewModel? ActiveGraph { get => _activeGraph; set => SetProperty(ref _activeGraph, value, nameof(ActiveGraph)); }
 
         private ObservableCollection<GraphPaneViewModel> _openedGraphs;    
         public ObservableCollection<GraphPaneViewModel> OpenedGraphs

@@ -10,12 +10,13 @@ namespace NFCT.Graph.ViewModels
 {
     public class TextNodeViewModel : BindableBase
     {
-        private Node _node;
-        public TextNodeViewModel(Node node)
+        private TextNode _node;
+        public TextNodeViewModel(TextNode node)
         {
-            node = _node;
+            _node = node;
         }
-        public string Text { get; set; }
+        
+        public string Text { get => _node.Text; }
 
         private float _cx;
         public float CX { get => _cx; set => SetProperty(ref _cx, value, nameof(CX)); }
@@ -28,5 +29,8 @@ namespace NFCT.Graph.ViewModels
 
         private float _height;
         public float Height { get => _height; set => SetProperty(ref _height, value, nameof(Height)); }
+
+        public float ActualHeight { get; set; }
+        public float ActualWidth { get; set; }
     }
 }
