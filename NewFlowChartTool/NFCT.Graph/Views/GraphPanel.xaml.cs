@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NFCT.Graph.ViewModels;
 
 namespace NFCT.Graph.Views
 {
@@ -23,6 +24,18 @@ namespace NFCT.Graph.Views
         public GraphPanel()
         {
             InitializeComponent();
+        }
+
+        private void Graph_LayoutUpdated(object sender, EventArgs e)
+        {
+            GraphPaneViewModel? vm = DataContext as GraphPaneViewModel;
+            if (vm == null) return;
+
+            if (vm.NeedLayout)
+            {
+                vm.NeedLayout = false;
+                vm.Relayout();
+            }
         }
     }
 }
