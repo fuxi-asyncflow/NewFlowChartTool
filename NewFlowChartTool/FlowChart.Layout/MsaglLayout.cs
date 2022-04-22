@@ -30,7 +30,8 @@ namespace FlowChart.Layout
 
             foreach (var conn in graph.Edges)
             {
-                gg.Edges.Add(new Edge(nodeDict[conn.Start], nodeDict[conn.End]));
+                
+                gg.Edges.Add(new Edge(nodeDict[conn.Start], nodeDict[conn.End]) { UserData = conn });
             }
             return gg;
         }
@@ -61,18 +62,24 @@ namespace FlowChart.Layout
             {
                 var node = graph.FindNodeByUserData(n);                
                 n.X = (float)(node.BoundingBox.Left - ox);
-                n.Y = transY(node.BoundingBox.Top);                
+                n.Y = transY(node.BoundingBox.Top);
+                //Console.WriteLine($"++++++++ {n.Width - node.BoundingBox.Width} {n.Height - node.BoundingBox.Height}");
+                Console.WriteLine($"[NODE] {node.BoundingBox} {n.Width} {n.Height}");
             }
 
             // 设置线条坐标
             foreach (var edge in graph.Edges)
             {
                 var edgeNodes = edge.UnderlyingPolyline.ToList();
-                var points = new List<Point>();
-                points.Add(edgeNodes.First());
-                points.Add(edgeNodes.Last());
+                //var points = new List<Point>();
+                //points.Add(edgeNodes.First());
+                //points.Add(edgeNodes.Last());
+                var connector = edge.UserData as IEdge;
+                connector.PathPoints = edgeNodes.ConvertAll(p => new Position(p.X - ox, oy - p.Y));
                 //var connector = c.FindConnector(edge.Source.UserData.ToString(), edge.Target.UserData.ToString());
                 //connector.Points = points.ConvertAll(p => new DrawPoint(p.X - ox, transY(p.Y)));
+
+                Console.WriteLine($"[EDGE] {edgeNodes.First()} {edgeNodes.Last()}");
             }
             Console.WriteLine($"{graph.BoundingBox.Left}, {graph.BoundingBox.Top}, {graph.BoundingBox.Right}, {graph.BoundingBox.Bottom}");
             

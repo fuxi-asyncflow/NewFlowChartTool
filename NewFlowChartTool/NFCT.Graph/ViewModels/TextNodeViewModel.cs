@@ -12,10 +12,13 @@ namespace NFCT.Graph.ViewModels
     public class TextNodeViewModel : BindableBase, INode
     {
         private TextNode _node;
-        public TextNodeViewModel(TextNode node)
+        public TextNodeViewModel(TextNode node, GraphPaneViewModel g)
         {
             _node = node;
+            Owner = g;
         }
+
+        public GraphPaneViewModel Owner { get; set; }
         
         public string Text { get => _node.Text; }
 
@@ -26,14 +29,16 @@ namespace NFCT.Graph.ViewModels
         public double CY { get => _cy; set => SetProperty(ref _cy, value, nameof(CY)); }
 
         private double _width;
-        public double Width { get => _width; set => SetProperty(ref _width, value, nameof(Width)); }
+        public double Width { get => ActualWidth; }
 
         private double _height;
-        public double Height { get => _height; set => SetProperty(ref _height, value, nameof(Height)); }
+        public double Height { get => ActualHeight; }
         public double X { set { CX = value; } }
         public double Y { set { CY = value; } }
 
-        public float ActualHeight { get; set; }
-        public float ActualWidth { get; set; }
+        private double _actualHeight;
+        public double ActualHeight { get => _actualHeight; set { if (_actualHeight == value) return; _actualHeight = value; Owner.NeedLayout = true; } }
+        private double _actualWidth;
+        public double ActualWidth { get => _actualWidth; set { if (_actualWidth == value) return; _actualWidth = value; Owner.NeedLayout = true; } }
     }
 }

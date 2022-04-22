@@ -13,7 +13,7 @@
         utility:SizeObserver.Observe="True"
         utility:SizeObserver.ObservedHeight="{Binding ActualHeight, Mode=OneWayToSource}"
         utility:SizeObserver.ObservedWidth="{Binding ActualWidth, Mode=OneWayToSource}"
-        Background="Blue">
+        Background="LightYellow">
         <Label Content="{Binding Text}" />
 
     </Grid>

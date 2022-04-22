@@ -1,5 +1,12 @@
 ﻿namespace FlowChart.Layout
 {
+    public struct Position
+    {
+        public Position(double _x, double _y) { x = _x; y = _y; }
+        public double x;
+        public double y;
+    }
+
     public interface INode
     {
         public double Width { get; }
@@ -12,6 +19,7 @@
     {
         public INode Start { get; }
         public INode End { get; }
+        public List<Position> PathPoints { set; }
     }
     public interface IGraph
     {

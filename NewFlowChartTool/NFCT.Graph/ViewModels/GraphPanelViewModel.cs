@@ -31,7 +31,7 @@ namespace NFCT.Graph.ViewModels
         {
             _graph = graph;
             Nodes = new ObservableCollection<TextNodeViewModel>();
-            NodeDict = new Dictionary<TextNode, TextNodeViewModel>();
+            NodeDict = new Dictionary<Node, TextNodeViewModel>();
             Connectors = new ObservableCollection<ConnectorViewModel>();
             Initialize();
         }
@@ -40,7 +40,7 @@ namespace NFCT.Graph.ViewModels
         {
             var tNode = node as TextNode;
             if (tNode == null) return;
-            var vm = new TextNodeViewModel(tNode);
+            var vm = new TextNodeViewModel(tNode, this);
             Nodes.Add(vm);
             NodeDict.Add(tNode, vm);
         }
@@ -49,8 +49,8 @@ namespace NFCT.Graph.ViewModels
         {
             var start = conn.Start;
             var end = conn.End;
-            TextNodeViewModel startVm, endVm;
-            if (NodeDict.TryGetValue(start as TextNode, out startVm) &&  NodeDict.TryGetValue(end as TextNode, out endVm))
+            TextNodeViewModel? startVm, endVm;
+            if (NodeDict.TryGetValue(start, out startVm) &&  NodeDict.TryGetValue(end, out endVm))
             {
                 Connectors.Add(new ConnectorViewModel(conn, startVm, endVm));
             }           
@@ -64,14 +64,7 @@ namespace NFCT.Graph.ViewModels
             _graph.Nodes.ForEach(node => AddNode(node));
             _graph.Connectors.ForEach(Connect);
 
-            for(int i=0;i<Nodes.Count;i++)
-            {
-                var node = Nodes[i];
-                node.CX = 100;
-                node.CY = 40*i;
-                node.Width = i * 40;
-                node.Height = 30;                
-            }
+
             NeedLayout = true;
         }
 
@@ -80,7 +73,7 @@ namespace NFCT.Graph.ViewModels
         public string Description { get => _graph.Description;}
 
         public ObservableCollection<TextNodeViewModel> Nodes { get; set; }
-        public Dictionary<TextNode, TextNodeViewModel> NodeDict { get; set; }
+        public Dictionary<Node, TextNodeViewModel> NodeDict { get; set; }
         public ObservableCollection<ConnectorViewModel> Connectors { get; set; }
         public bool NeedLayout { get; set; }
         public double Width { get; set; }
@@ -88,9 +81,18 @@ namespace NFCT.Graph.ViewModels
 
         public void Relayout()
         {
+            Console.WriteLine($"Relayout for graph {Name}");
             var graph = new GraphLayoutAdapter(this);
             MsaglLayout layout = new MsaglLayout();
-            layout.Layout(graph);
+            try
+            {
+                layout.Layout(graph);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"[error] layout failed {e.Message}");
+            }
+            
         }
     }
 }
