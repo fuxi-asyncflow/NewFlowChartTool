@@ -5,6 +5,26 @@
         public Position(double _x, double _y) { x = _x; y = _y; }
         public double x;
         public double y;
+
+        public override string ToString()
+        {
+            return $"[{x}, {y}]";
+        }
+    }
+
+    public class Curve
+    {
+        public Curve()
+        {
+            Points = new List<Position>();
+        }
+        public enum CurveType
+        {
+            Line = 0,
+            SPLINE = 1,
+        }
+        public CurveType Type { get; set; }
+        public List<Position> Points { get; set; }
     }
 
     public interface INode
@@ -15,11 +35,13 @@
         public double Y { set; }
     }
 
+    
+
     public interface IEdge
     {
         public INode Start { get; }
         public INode End { get; }
-        public List<Position> PathPoints { set; }
+        public List<Curve> Curves { set; }
     }
     public interface IGraph
     {

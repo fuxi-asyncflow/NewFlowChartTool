@@ -45,7 +45,7 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Path Data="{Binding Points, Converter={StaticResource PointsToPathConverter}}" Stroke="Black" />
+                        <Path Data="{Binding Path}" Stroke="Black" />
 
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

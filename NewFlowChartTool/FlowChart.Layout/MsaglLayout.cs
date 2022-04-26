@@ -10,6 +10,7 @@ using Microsoft.Msagl.Core.Routing;
 using Microsoft.Msagl.Layout.Layered;
 
 using GraphNode = Microsoft.Msagl.Core.Layout.Node;
+using GraphCurve = Microsoft.Msagl.Core.Geometry.Curves.Curve;
 
 namespace FlowChart.Layout
 {
@@ -35,6 +36,35 @@ namespace FlowChart.Layout
             }
             return gg;
         }
+
+        static Position ToPosition(Point p)
+        {
+            return new Position(p.X, p.Y);
+        }
+
+        static FlowChart.Layout.Curve ToCurve(ICurve curve)
+        {
+            if(curve is LineSegment line)
+            {
+                var c = new Curve() { Type = Curve.CurveType.Line };
+                c.Points.Add(ToPosition(line.Start));
+                c.Points.Add(ToPosition(line.End));
+                return c;
+
+            }
+            else if (curve is CubicBezierSegment bezier)
+            {
+                var c = new Curve() { Type = Curve.CurveType.SPLINE };
+                for (int i = 0; i < 4; i++)
+                {
+                    c.Points.Add(ToPosition(bezier.B(i)));
+                }
+                return c;
+            }
+
+            return null;
+
+        }
         public void Layout(IGraph _graph)
         {
             var graph = CreateGraph(_graph);
@@ -55,33 +85,43 @@ namespace FlowChart.Layout
             double ox = graph.BoundingBox.Left;
             double oy = graph.BoundingBox.Top;
 
-            Func<double, float> transY = _y => (float)(oy - _y);
+            Func<double, double> transX = _X => (_X - ox);
+            Func<double, double> transY = _y => (oy - _y);
 
             // 设置node 坐标
             foreach (var n in _graph.Nodes)
             {
                 var node = graph.FindNodeByUserData(n);                
-                n.X = (float)(node.BoundingBox.Left - ox);
+                n.X = transX(node.BoundingBox.Left);
                 n.Y = transY(node.BoundingBox.Top);
                 //Console.WriteLine($"++++++++ {n.Width - node.BoundingBox.Width} {n.Height - node.BoundingBox.Height}");
-                Console.WriteLine($"[NODE] {node.BoundingBox} {n.Width} {n.Height}");
+                //Console.WriteLine($"[NODE] {node.BoundingBox} {n.Width} {n.Height}");
             }
 
             // 设置线条坐标
             foreach (var edge in graph.Edges)
             {
-                var edgeNodes = edge.UnderlyingPolyline.ToList();
-                //var points = new List<Point>();
-                //points.Add(edgeNodes.First());
-                //points.Add(edgeNodes.Last());
-                var connector = edge.UserData as IEdge;
-                connector.PathPoints = edgeNodes.ConvertAll(p => new Position(p.X - ox, oy - p.Y));
-                //var connector = c.FindConnector(edge.Source.UserData.ToString(), edge.Target.UserData.ToString());
-                //connector.Points = points.ConvertAll(p => new DrawPoint(p.X - ox, transY(p.Y)));
+                var connector = (IEdge)edge.UserData;
+                var curves = new List<Curve>();
 
-                Console.WriteLine($"[EDGE] {edgeNodes.First()} {edgeNodes.Last()}");
+                if (edge.Curve is LineSegment)
+                {
+                    curves.Add(ToCurve(edge.Curve));
+                }
+                else if(edge.Curve is GraphCurve)
+                {
+                    var c = (GraphCurve)edge.Curve;
+                    foreach (var seg in c.Segments)
+                    {
+                        curves.Add(ToCurve(seg));
+                    }
+                }
+
+                curves.ForEach(curv => curv.Points = curv.Points.ConvertAll(p => new Position(transX(p.x), transY(p.y))));
+                connector.Curves = curves;
+               
             }
-            Console.WriteLine($"{graph.BoundingBox.Left}, {graph.BoundingBox.Top}, {graph.BoundingBox.Right}, {graph.BoundingBox.Bottom}");
+            // Console.WriteLine($"{graph.BoundingBox.Left}, {graph.BoundingBox.Top}, {graph.BoundingBox.Right}, {graph.BoundingBox.Bottom}");
             
             _graph.Width = (float)graph.BoundingBox.Width;
             _graph.Height = (float)graph.BoundingBox.Height;
