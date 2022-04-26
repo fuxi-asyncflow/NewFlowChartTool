@@ -13,11 +13,11 @@ namespace NewFlowChartTool.Views.Pane
 {
     class PanesStyleSelector : StyleSelector
     {
-        public Style ProjectPanelStyle { get; set; }
-        public Style OutputPanelStyle { get; set; }
-        public Style GraphPaneStyle { get; set; }
+        public Style? ProjectPanelStyle { get; set; }
+        public Style? OutputPanelStyle { get; set; }
+        public Style? GraphPaneStyle { get; set; }
 
-        public override System.Windows.Style SelectStyle(object item, System.Windows.DependencyObject container)
+        public override System.Windows.Style? SelectStyle(object item, System.Windows.DependencyObject container)
         {
             if (item is ProjectPanelViewModel)
                 return ProjectPanelStyle;
@@ -34,8 +34,8 @@ namespace NewFlowChartTool.Views.Pane
 
     class PanesTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate GraphViewTemplate { get; set; }
-        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        public DataTemplate? GraphViewTemplate { get; set; }
+        public override DataTemplate? SelectTemplate(object item, DependencyObject container)
         {
             if (item is GraphPaneViewModel)
                 return GraphViewTemplate;

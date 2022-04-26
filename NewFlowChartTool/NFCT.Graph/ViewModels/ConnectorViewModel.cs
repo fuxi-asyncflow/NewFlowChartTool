@@ -22,7 +22,7 @@ namespace NFCT.Graph.ViewModels
             End = end;
         }
 
-        public PathGeometry Path { get; set; }
+        public PathGeometry? Path { get; set; }
         public List<Curve> Curves
         {
             set => CreatePath(value);

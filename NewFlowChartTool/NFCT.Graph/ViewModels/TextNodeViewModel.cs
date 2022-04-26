@@ -28,10 +28,10 @@ namespace NFCT.Graph.ViewModels
         private double _cy;
         public double CY { get => _cy; set => SetProperty(ref _cy, value, nameof(CY)); }
 
-        private double _width;
+        //private double _width;
         public double Width { get => ActualWidth; }
 
-        private double _height;
+        //private double _height;
         public double Height { get => ActualHeight; }
         public double X { set { CX = value; } }
         public double Y { set { CY = value; } }
