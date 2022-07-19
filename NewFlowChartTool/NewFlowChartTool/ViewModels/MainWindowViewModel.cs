@@ -78,7 +78,7 @@ namespace NewFlowChartTool.ViewModels
         public void OpenProject()
         {
             var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
-            p.Path = @"D:\git\asyncflow_new\test\flowchart";
+            p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
             _ea.GetEvent<Event.ProjectOpenEvent>().Publish(p);
         }

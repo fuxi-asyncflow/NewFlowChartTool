@@ -1,7 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -9,14 +8,10 @@
 
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.10.1" />
-    <PackageReference Include="NLog" Version="4.7.15" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FlowChart.AST\FlowChart.AST.csproj" />
-    <ProjectReference Include="..\FlowChart.Parser\FlowChart.Parser.csproj" />
-    <ProjectReference Include="..\FlowChart\FlowChart.csproj" />
-    <ProjectReference Include="..\ProjectFactory\ProjectFactory.csproj" />
   </ItemGroup>
 
 </Project>

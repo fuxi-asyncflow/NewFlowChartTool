@@ -19,7 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFCT.FlowChart", "NFCT.Flow
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFCT.Graph", "NFCT.Graph\NFCT.Graph.csproj", "{D31FB6F7-FBFE-475B-BC00-4D00B8D9F292}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChart.Layout", "FlowChart.Layout\FlowChart.Layout.csproj", "{5417EBEA-ACB7-4B00-8A3D-78C87AC3BA31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChart.Layout", "FlowChart.Layout\FlowChart.Layout.csproj", "{5417EBEA-ACB7-4B00-8A3D-78C87AC3BA31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChart.Parser", "FlowChart.Parser\FlowChart.Parser.csproj", "{578E34CD-F96C-4B4E-97FB-470F377D3E93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChart.AST", "FlowChart.AST\FlowChart.AST.csproj", "{F1D4C3AE-DFA4-4229-AF4D-47C2CC808BDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +67,14 @@ Global
 		{5417EBEA-ACB7-4B00-8A3D-78C87AC3BA31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5417EBEA-ACB7-4B00-8A3D-78C87AC3BA31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5417EBEA-ACB7-4B00-8A3D-78C87AC3BA31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{578E34CD-F96C-4B4E-97FB-470F377D3E93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{578E34CD-F96C-4B4E-97FB-470F377D3E93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{578E34CD-F96C-4B4E-97FB-470F377D3E93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{578E34CD-F96C-4B4E-97FB-470F377D3E93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1D4C3AE-DFA4-4229-AF4D-47C2CC808BDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1D4C3AE-DFA4-4229-AF4D-47C2CC808BDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1D4C3AE-DFA4-4229-AF4D-47C2CC808BDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1D4C3AE-DFA4-4229-AF4D-47C2CC808BDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
