@@ -21,9 +21,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFCT.Graph", "NFCT.Graph\NF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChart.Layout", "FlowChart.Layout\FlowChart.Layout.csproj", "{5417EBEA-ACB7-4B00-8A3D-78C87AC3BA31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChart.Parser", "FlowChart.Parser\FlowChart.Parser.csproj", "{578E34CD-F96C-4B4E-97FB-470F377D3E93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChart.Parser", "FlowChart.Parser\FlowChart.Parser.csproj", "{578E34CD-F96C-4B4E-97FB-470F377D3E93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChart.AST", "FlowChart.AST\FlowChart.AST.csproj", "{F1D4C3AE-DFA4-4229-AF4D-47C2CC808BDD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChart.AST", "FlowChart.AST\FlowChart.AST.csproj", "{F1D4C3AE-DFA4-4229-AF4D-47C2CC808BDD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeGenerator", "CodeGenerator", "{FCA7C064-1AF9-43D2-BA65-01F8D571255B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.NodeParserTest", "Test.NodeParserTest\Test.NodeParserTest.csproj", "{79E53635-97FA-46AB-90D5-E7A768E998AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,9 +79,18 @@ Global
 		{F1D4C3AE-DFA4-4229-AF4D-47C2CC808BDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1D4C3AE-DFA4-4229-AF4D-47C2CC808BDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1D4C3AE-DFA4-4229-AF4D-47C2CC808BDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79E53635-97FA-46AB-90D5-E7A768E998AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79E53635-97FA-46AB-90D5-E7A768E998AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79E53635-97FA-46AB-90D5-E7A768E998AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79E53635-97FA-46AB-90D5-E7A768E998AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{578E34CD-F96C-4B4E-97FB-470F377D3E93} = {FCA7C064-1AF9-43D2-BA65-01F8D571255B}
+		{F1D4C3AE-DFA4-4229-AF4D-47C2CC808BDD} = {FCA7C064-1AF9-43D2-BA65-01F8D571255B}
+		{79E53635-97FA-46AB-90D5-E7A768E998AC} = {FCA7C064-1AF9-43D2-BA65-01F8D571255B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B9844D40-C0A0-409F-95FB-9E7F64F123C9}

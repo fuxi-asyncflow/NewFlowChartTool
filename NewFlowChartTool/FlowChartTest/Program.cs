@@ -77,7 +77,7 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
 
             NodeParserBaseVisitor<ASTNode> visitor = new NodeCommandVisitor();
             var node = visitor.Visit(tree);
-            System.Console.WriteLine($"{node}");
+            System.Console.WriteLine($"{node .Equals(new NumberNode(){Text = "1"})}");
             //System.Console.WriteLine(command);
             //node.Print(0);
             //using (var writer = new StreamWriter(new FileStream("D:\\parse.gv", FileMode.OpenOrCreate)))
