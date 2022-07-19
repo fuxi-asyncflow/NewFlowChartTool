@@ -80,17 +80,6 @@ public partial class NodeParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitExpr_parenthesis([NotNull] NodeParserParser.Expr_parenthesisContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>expr_mulDiv</c>
-	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
-	/// <para>
-	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
-	/// on <paramref name="context"/>.
-	/// </para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	public virtual Result VisitExpr_mulDiv([NotNull] NodeParserParser.Expr_mulDivContext context) { return VisitChildren(context); }
-	/// <summary>
 	/// Visit a parse tree produced by the <c>expr_container</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
 	/// <para>
@@ -135,7 +124,7 @@ public partial class NodeParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitExpr_func_with_caller([NotNull] NodeParserParser.Expr_func_with_callerContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by the <c>expr_addSub</c>
+	/// Visit a parse tree produced by the <c>expr_mul_div</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
@@ -144,7 +133,7 @@ public partial class NodeParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpr_addSub([NotNull] NodeParserParser.Expr_addSubContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpr_mul_div([NotNull] NodeParserParser.Expr_mul_divContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expr_subscript</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
@@ -200,6 +189,17 @@ public partial class NodeParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	public virtual Result VisitExpr_bitwise([NotNull] NodeParserParser.Expr_bitwiseContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expr_add_sub</c>
+	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitExpr_add_sub([NotNull] NodeParserParser.Expr_add_subContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expr_unary</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.

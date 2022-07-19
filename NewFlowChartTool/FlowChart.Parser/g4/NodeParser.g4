@@ -17,8 +17,8 @@ expr
     | NAME '(' argumentlist ')'             # expr_func_no_caller
     | expr '.' NAME '(' argumentlist ')'    # expr_func_with_caller
     | operatorUnary expr            # expr_unary
-    | expr operatorMulDivMod expr   # expr_mulDiv
-    | expr operatorAddSub expr      # expr_addSub
+    | expr operatorMulDivMod expr   # expr_mul_div
+    | expr operatorAddSub expr      # expr_add_sub
     | expr operatorComparison expr  # expr_compare
     | expr operatorStrcat expr      # expr_strcat
     | expr operatorAnd expr	        # expr_and
@@ -63,10 +63,10 @@ operatorUnary
     : 'not' | '#' | '-' | '~';
 
 operatorMulDivMod
-	: '^' | '*' | '/' | '%';
+	: '^' | MUL | DIV | '%';
 
 operatorAddSub
-	: '+' | '-';
+	: ADD | SUB;
 
 operatorStrcat
 	: '..';

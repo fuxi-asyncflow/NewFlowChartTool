@@ -1,4 +1,4 @@
-// Generated from f:\asyncflow\NewFlowChartTool\NewFlowChartTool\FlowChart.Parser\g4\Node.g4 by ANTLR 4.9.2
+// Generated from f:\asyncflow\NewFlowChartTool\NewFlowChartTool\FlowChart.Parser\g4\NodeParser.g4 by ANTLR 4.9.2
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -106,7 +106,7 @@ public class NodeParserLexer extends Lexer {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "Node.g4"; }
+	public String getGrammarFileName() { return "NodeParser.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }

@@ -61,13 +61,6 @@ public interface INodeParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExpr_parenthesis([NotNull] NodeParserParser.Expr_parenthesisContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>expr_mulDiv</c>
-	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitExpr_mulDiv([NotNull] NodeParserParser.Expr_mulDivContext context);
-	/// <summary>
 	/// Visit a parse tree produced by the <c>expr_container</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
 	/// </summary>
@@ -96,12 +89,12 @@ public interface INodeParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExpr_func_with_caller([NotNull] NodeParserParser.Expr_func_with_callerContext context);
 	/// <summary>
-	/// Visit a parse tree produced by the <c>expr_addSub</c>
+	/// Visit a parse tree produced by the <c>expr_mul_div</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpr_addSub([NotNull] NodeParserParser.Expr_addSubContext context);
+	Result VisitExpr_mul_div([NotNull] NodeParserParser.Expr_mul_divContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expr_subscript</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
@@ -137,6 +130,13 @@ public interface INodeParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitExpr_bitwise([NotNull] NodeParserParser.Expr_bitwiseContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expr_add_sub</c>
+	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpr_add_sub([NotNull] NodeParserParser.Expr_add_subContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>expr_unary</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.

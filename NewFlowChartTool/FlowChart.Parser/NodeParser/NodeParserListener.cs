@@ -80,18 +80,6 @@ public interface INodeParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitExpr_parenthesis([NotNull] NodeParserParser.Expr_parenthesisContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>expr_mulDiv</c>
-	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterExpr_mulDiv([NotNull] NodeParserParser.Expr_mulDivContext context);
-	/// <summary>
-	/// Exit a parse tree produced by the <c>expr_mulDiv</c>
-	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitExpr_mulDiv([NotNull] NodeParserParser.Expr_mulDivContext context);
-	/// <summary>
 	/// Enter a parse tree produced by the <c>expr_container</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
 	/// </summary>
@@ -140,17 +128,17 @@ public interface INodeParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitExpr_func_with_caller([NotNull] NodeParserParser.Expr_func_with_callerContext context);
 	/// <summary>
-	/// Enter a parse tree produced by the <c>expr_addSub</c>
+	/// Enter a parse tree produced by the <c>expr_mul_div</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterExpr_addSub([NotNull] NodeParserParser.Expr_addSubContext context);
+	void EnterExpr_mul_div([NotNull] NodeParserParser.Expr_mul_divContext context);
 	/// <summary>
-	/// Exit a parse tree produced by the <c>expr_addSub</c>
+	/// Exit a parse tree produced by the <c>expr_mul_div</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitExpr_addSub([NotNull] NodeParserParser.Expr_addSubContext context);
+	void ExitExpr_mul_div([NotNull] NodeParserParser.Expr_mul_divContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>expr_subscript</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
@@ -211,6 +199,18 @@ public interface INodeParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitExpr_bitwise([NotNull] NodeParserParser.Expr_bitwiseContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>expr_add_sub</c>
+	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExpr_add_sub([NotNull] NodeParserParser.Expr_add_subContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>expr_add_sub</c>
+	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExpr_add_sub([NotNull] NodeParserParser.Expr_add_subContext context);
 	/// <summary>
 	/// Enter a parse tree produced by the <c>expr_unary</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.

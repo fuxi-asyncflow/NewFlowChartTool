@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reflection.Metadata.Ecma335;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using FlowChart.AST.Nodes;
@@ -40,11 +41,33 @@ namespace Test.NodeParserTest
 
     public class SimpleNodeTest
     {
-        [Theory]
-        [ClassData(typeof(SimpleNodeTestData))]
-        public void Test1(string text, ASTNode result)
+        //[Theory]
+        //[ClassData(typeof(SimpleNodeTestData))]
+        //public void Test1(string text, ASTNode result)
+        //{
+        //    Assert.Equal(Parse(text), result);
+        //}
+
+        [Fact]
+        public void TestNumberNode()
         {
-            Assert.Equal(Parse(text), result);
+            Assert.Equal(Parse("1"), new NumberNode(){Text = "1"});
+            Assert.Equal(Parse("1.01e1"), new NumberNode() { Text = "1.01e1" });
+            Assert.NotEqual(Parse("1.01e"), new NumberNode() { Text = "1.01e" });
+        }
+
+        [Fact]
+        public void TestBinOpNode()
+        {
+            BinOpNode node;
+            node = new BinOpNode() { Op = Operator.ADD };
+            node.Add(new NumberNode() {Text = "1"});
+            node.Add(new NumberNode() { Text = "2" });
+            Assert.Equal(Parse("1+2"), node);
+            Assert.Equal(Parse("1 +2"), node);
+            Assert.Equal(Parse("1d + 2d"), node);
+            Assert.NotEqual(Parse("1-2"), node);
+            Assert.NotEqual(Parse("1.0+2"), node);
         }
 
         public static ASTNode Parse(string text)
@@ -71,8 +94,17 @@ namespace Test.NodeParserTest
             }
             // System.Console.WriteLine(tree.ToStringTree(parser));
 
-            NodeParserBaseVisitor<ASTNode> visitor = new NodeCommandVisitor();
-            return visitor.Visit(tree);
+            try
+            {
+                NodeParserBaseVisitor<ASTNode> visitor = new NodeCommandVisitor();
+                return visitor.Visit(tree);
+            }
+            catch(Exception /*ex*/)
+            {
+                
+            }
+
+            return null;
         }
     }
 }
