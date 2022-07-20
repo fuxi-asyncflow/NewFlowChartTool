@@ -112,15 +112,15 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
         static void CodeGenTest()
         {
             // 1 * 2 + 3 * 4
-            BinOpNode node_11 = new BinOpNode() { Op = Operator.MUL };
+            BinOpNode node_11 = new BinOpNode() { Op = Operator.Mul };
             node_11.Add(new NumberNode() { Text = "1" });
             node_11.Add(new NumberNode() { Text = "2" });
 
-            BinOpNode node_12 = new BinOpNode() { Op = Operator.MUL };
+            BinOpNode node_12 = new BinOpNode() { Op = Operator.Mul };
             node_12.Add(new NumberNode() { Text = "3" });
             node_12.Add(new NumberNode() { Text = "4" });
 
-            BinOpNode node_10 = new BinOpNode() { Op = Operator.ADD };
+            BinOpNode node_10 = new BinOpNode() { Op = Operator.Add };
             node_10.Add(node_11);
             node_10.Add(node_12);
 

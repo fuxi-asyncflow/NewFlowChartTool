@@ -10,10 +10,10 @@ namespace FlowChart.Parser.ASTGenerator
         static NodeCommandVisitor()
         {
             OpDict = new Dictionary<string, Operator>();
-            OpDict.Add("+", Operator.ADD);
-            OpDict.Add("-", Operator.SUB);
-            OpDict.Add("*", Operator.MUL);
-            OpDict.Add("/", Operator.DIV);
+            OpDict.Add("+", Operator.Add);
+            OpDict.Add("-", Operator.Sub);
+            OpDict.Add("*", Operator.Mul);
+            OpDict.Add("/", Operator.Div);
         }
         #region statement
         // assignment statement
@@ -153,7 +153,7 @@ namespace FlowChart.Parser.ASTGenerator
 
         public static Operator Str2Op(string st)
         {
-            return OpDict.TryGetValue(st, out var op) ? op : Operator.UNKOWN;
+            return OpDict.TryGetValue(st, out var op) ? op : Operator.Unkown;
         }
 
     }

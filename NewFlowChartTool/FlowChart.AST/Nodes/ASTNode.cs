@@ -6,17 +6,39 @@ using System.Threading.Tasks;
 
 namespace FlowChart.AST.Nodes
 {
-    public enum Operator
+    public class Operator
     {
-        UNKOWN = 0,
-        ADD = 1,
-        SUB = 2,
-        MUL = 3,
-        DIV = 4,
-        MOD = 5,
-        LT = 6,
-        GT = 7,
+        public enum OPERATOR
+        {
+            UNKOWN = 0,
+            ADD = 1,
+            SUB = 2,
+            MUL = 3,
+            DIV = 4,
+            MOD = 5,
+            LT = 6,
+            GT = 7,
+        }
+
+        public Operator(OPERATOR op, string text)
+        {
+            Op = op;
+            Text = text;
+        }
+
+        public OPERATOR Op;
+        public string Text;
+
+        public static Operator Unkown = new Operator(OPERATOR.UNKOWN, "Unkown Operator");
+        public static Operator Add = new Operator(OPERATOR.ADD, "+");
+        public static Operator Sub = new Operator(OPERATOR.SUB, "-");
+        public static Operator Mul = new Operator(OPERATOR.MUL, "*");
+        public static Operator Div = new Operator(OPERATOR.DIV, "/");
+        public static Operator Mod = new Operator(OPERATOR.MOD, "%");
+        public static Operator Lt = new Operator(OPERATOR.LT, ">");
+        public static Operator Gt = new Operator(OPERATOR.GT, "<");
     }
+
     public class ASTNode
     {
         public virtual T OnVisit<T>(IASTNodeVisitor<T> visitor)

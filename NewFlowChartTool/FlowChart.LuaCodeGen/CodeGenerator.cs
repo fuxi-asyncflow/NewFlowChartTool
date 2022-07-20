@@ -44,7 +44,7 @@ namespace FlowChart.LuaCodeGen
         {
             var nis = node.ChildNodes.ConvertAll(node => node.OnVisit(this));
             //TODO handle compare operator
-            var nodeInfo = new NodeInfo() { Code = $"{nis[0].Code} {node.Op} {nis[1].Code}", Type = nis[0].Type };
+            var nodeInfo = new NodeInfo() { Code = $"{nis[0].Code} {node.Op.Text} {nis[1].Code}", Type = nis[0].Type };
             return nodeInfo;
         }
 
