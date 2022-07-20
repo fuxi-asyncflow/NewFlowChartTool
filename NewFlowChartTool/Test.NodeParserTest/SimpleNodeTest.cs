@@ -31,6 +31,21 @@ namespace Test.NodeParserTest
             //Assert.NotEqual(Parse("1 + 2d"), node);
             Assert.NotEqual(Parse("1-2"), node);
             Assert.NotEqual(Parse("1.0+2"), node);
+
+            // 1 * 2 + 3 * 4
+            BinOpNode node_11 = new BinOpNode() { Op = Operator.MUL };
+            node.Add(new NumberNode() { Text = "1" });
+            node.Add(new NumberNode() { Text = "2" });
+
+            BinOpNode node_12 = new BinOpNode() { Op = Operator.MUL };
+            node.Add(new NumberNode() { Text = "3" });
+            node.Add(new NumberNode() { Text = "4" });
+
+            BinOpNode node_10 = new BinOpNode() { Op = Operator.ADD };
+            node.Add(node_11);
+            node.Add(node_12);
+
+            Assert.NotEqual(Parse("1 * 2 + 3 * 4"), node_10);
         }
 
         [Fact]

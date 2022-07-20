@@ -100,8 +100,13 @@ namespace FlowChart.AST.Nodes
             if (obj == null) return false;
             if (obj.GetType() != this.GetType()) return false;
             var b = (BinOpNode)obj;
-            if (!Op.Equals(b.Op))
+            if (!Equals(Op, b.Op))
                 return false;
+            if (!Equals(Left, b.Left))
+                return false;
+            if (!Equals(Right, b.Right))
+                return false;
+
             return base.Equals(obj);
         }
     }
