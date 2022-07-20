@@ -19,6 +19,10 @@ namespace FlowChart.AST.Nodes
     }
     public class ASTNode
     {
+        public virtual T OnVisit<T>(IASTNodeVisitor<T> visitor)
+        {
+            throw new NotImplementedException("should not visit ASTNode");
+        }
         public List<ASTNode> ChildNodes;
 
         public ASTNode()
@@ -64,33 +68,34 @@ namespace FlowChart.AST.Nodes
 
     public class NumberNode : LiteralNode
     {
-        
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
     }
 
     public class StringNode : LiteralNode
     {
-
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
     }
 
     public class VariableNode : LiteralNode
     {
-
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
     }
 
     public class BoolNode : LiteralNode
     {
-        
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
     }
 
     public class SelfNode : LiteralNode
     {
-
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
     }
 
 
 
     public class BinOpNode : ASTNode
     {
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
         public ASTNode Left => ChildNodes[0];
         public ASTNode Right => ChildNodes[1];
         public Operator Op;
@@ -113,6 +118,8 @@ namespace FlowChart.AST.Nodes
 
     public class ArgNode : ASTNode
     {
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
+
         public bool IsNamed;
         public ASTNode Expr;
         public string? Name;
@@ -135,6 +142,8 @@ namespace FlowChart.AST.Nodes
 
     public class ArgListNode : ASTNode
     {
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
+
         public List<ASTNode> Args => ChildNodes;
 
         public override bool Equals(object? obj)
@@ -155,6 +164,8 @@ namespace FlowChart.AST.Nodes
 
     public class FuncNode : ASTNode
     {
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
+
         public ASTNode Caller => ChildNodes[0];
         public string FuncName;
         public ASTNode Args => ChildNodes[1];
@@ -176,6 +187,7 @@ namespace FlowChart.AST.Nodes
 
     public class MemberNode : ASTNode
     {
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
         public ASTNode Owner => ChildNodes[0];
         public string MemberName;
 
@@ -194,6 +206,7 @@ namespace FlowChart.AST.Nodes
 
     public class SubscriptNode : ASTNode
     {
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
         public ASTNode Owner => ChildNodes[0];
         public ASTNode Key => ChildNodes[1];
 

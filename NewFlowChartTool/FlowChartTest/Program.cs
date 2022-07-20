@@ -8,6 +8,7 @@ using FlowChart.Parser.NodeParser;
 using FlowChart.Parser.ASTGenerator;
 using FlowChart.AST;
 using FlowChart.AST.Nodes;
+using FlowChart.LuaCodeGen;
 using FlowChart.Parser.ASTGenerator;
 
 namespace FlowChartTest // Note: actual namespace depends on the project name.
@@ -40,7 +41,8 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
         static void Main(string[] args)
         {
             Logger.MyLogger.Info("hello");
-            ParserTest();            
+            //ParserTest();            
+            CodeGenTest();
         }
 
         static void OpenProjectTest()
@@ -50,9 +52,8 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             p.Load();
         }
 
-        static void ParserTest()
+        public static ASTNode Parse(string text)
         {
-            var text = "1";
             AntlrInputStream input = new AntlrInputStream(text);
             NodeParserLexer lexer = new NodeParserLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -75,18 +76,55 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             }
             // System.Console.WriteLine(tree.ToStringTree(parser));
 
-            NodeParserBaseVisitor<ASTNode> visitor = new NodeCommandVisitor();
-            var node = visitor.Visit(tree);
-            System.Console.WriteLine($"{node .Equals(new NumberNode(){Text = "1"})}");
-            //System.Console.WriteLine(command);
-            //node.Print(0);
-            //using (var writer = new StreamWriter(new FileStream("D:\\parse.gv", FileMode.OpenOrCreate)))
-            //{
-            //    writer.WriteLine("digraph g {\ngraph [rankdir = \"TB\"];\nnode[shape=\"rectangle\"]");
-            //    node.Dot(writer);
-            //    writer.WriteLine("}");
-            //}
+            try
+            {
+                NodeParserBaseVisitor<ASTNode> visitor = new NodeCommandVisitor();
+                return visitor.Visit(tree);
+            }
+            catch (Exception /*ex*/)
+            {
 
+            }
+
+            return null;
+        }
+
+
+        static void ParserTest()
+        {
+            FuncNode node;
+            node = new FuncNode();
+            node.FuncName = "foo";
+            node.Add(null);
+            node.Add(new ArgListNode());
+
+            node.Args.Add(new ArgNode(false) { Expr = new NumberNode() { Text = "1" } });
+            Console.WriteLine(Equals(Parse("foo(1)"), node));
+        }
+
+        static void GenCode(ASTNode ast)
+        {
+            var gen = new CodeGenerator();
+            var nodeInfo = ast.OnVisit(gen);
+            Console.WriteLine(nodeInfo.Code);
+        }
+
+        static void CodeGenTest()
+        {
+            // 1 * 2 + 3 * 4
+            BinOpNode node_11 = new BinOpNode() { Op = Operator.MUL };
+            node_11.Add(new NumberNode() { Text = "1" });
+            node_11.Add(new NumberNode() { Text = "2" });
+
+            BinOpNode node_12 = new BinOpNode() { Op = Operator.MUL };
+            node_12.Add(new NumberNode() { Text = "3" });
+            node_12.Add(new NumberNode() { Text = "4" });
+
+            BinOpNode node_10 = new BinOpNode() { Op = Operator.ADD };
+            node_10.Add(node_11);
+            node_10.Add(node_12);
+
+            GenCode(node_10);
         }
     }
 }
