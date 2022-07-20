@@ -118,6 +118,15 @@ namespace FlowChart.Parser.ASTGenerator
             return node;
         }
 
+        public override ASTNode VisitExpr_func_with_caller(NodeParserParser.Expr_func_with_callerContext context)
+        {
+            var node = new FuncNode();
+            node.Add(Visit(context.expr()));
+            node.Add(Visit(context.argumentlist()));    // Args
+            node.FuncName = context.NAME().GetText();
+            return node;
+        }
+
         #endregion
 
         #region member and subscript

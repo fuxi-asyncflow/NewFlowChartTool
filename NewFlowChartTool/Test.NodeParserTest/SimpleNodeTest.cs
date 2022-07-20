@@ -34,18 +34,18 @@ namespace Test.NodeParserTest
 
             // 1 * 2 + 3 * 4
             BinOpNode node_11 = new BinOpNode() { Op = Operator.MUL };
-            node.Add(new NumberNode() { Text = "1" });
-            node.Add(new NumberNode() { Text = "2" });
+            node_11.Add(new NumberNode() { Text = "1" });
+            node_11.Add(new NumberNode() { Text = "2" });
 
             BinOpNode node_12 = new BinOpNode() { Op = Operator.MUL };
-            node.Add(new NumberNode() { Text = "3" });
-            node.Add(new NumberNode() { Text = "4" });
+            node_12.Add(new NumberNode() { Text = "3" });
+            node_12.Add(new NumberNode() { Text = "4" });
 
             BinOpNode node_10 = new BinOpNode() { Op = Operator.ADD };
-            node.Add(node_11);
-            node.Add(node_12);
+            node_10.Add(node_11);
+            node_10.Add(node_12);
 
-            Assert.NotEqual(Parse("1 * 2 + 3 * 4"), node_10);
+            Assert.Equal(Parse("1 * 2 + 3 * 4"), node_10);
         }
 
         [Fact]
@@ -77,6 +77,34 @@ namespace Test.NodeParserTest
             Assert.Equal(Parse("foo(1,2,arg=3)"), node);
             Assert.Equal(Parse("foo(1,2, arg=3)"), node);
             Assert.NotEqual(Parse("foo(1,2,args=3)"), node);
+
+            //====================================================================================
+            
+            node = new FuncNode();
+            node.FuncName = "foo";
+            node.Add(new SelfNode() {Text = "self"});
+            node.Add(new ArgListNode());
+
+            // no arg
+            Assert.Equal(Parse("self.foo()"), node);
+            Assert.Equal(Parse("self.foo( )"), node);
+
+            // one arg
+            node.Args.Add(new ArgNode(false) { Expr = new NumberNode() { Text = "1" } });
+            Assert.Equal(Parse("self.foo(1)"), node);
+            Assert.Equal(Parse("self.foo( 1 )"), node);
+
+            // two args
+            node.Args.Add(new ArgNode(false) { Expr = new NumberNode() { Text = "2" } });
+            Assert.Equal(Parse("self.foo(1,2)"), node);
+            Assert.Equal(Parse("self.foo(1, 2)"), node);
+            Assert.NotEqual(Parse("self.foo(1.2)"), node);
+
+            // named arg
+            node.Args.Add(new ArgNode(true) { Expr = new NumberNode() { Text = "3" }, Name = "arg" });
+            Assert.Equal(Parse("self.foo(1,2,arg=3)"), node);
+            Assert.Equal(Parse("self.foo(1,2, arg=3)"), node);
+            Assert.NotEqual(Parse("self.foo(1,2,args=3)"), node);
 
         }
 
