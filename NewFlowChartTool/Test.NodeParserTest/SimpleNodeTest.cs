@@ -8,46 +8,9 @@ using FlowChart.Parser.NodeParser;
 
 namespace Test.NodeParserTest
 {
-    public class CaseData
-    {
-        public string Text;
-        public ASTNode Result;
-    }
-    public class SimpleNodeTestData : IEnumerable<object[]>
-    {
-        public SimpleNodeTestData()
-        {
-            Data = new List<object[]>();
-            AddCase("1", new NumberNode() { Text = "1" });
-        }
-
-        public IEnumerator<object[]> GetEnumerator()
-        {
-            return Data.GetEnumerator();
-        }
-
-        private List<object[]> Data;
-
-        private void AddCase(string text, ASTNode result)
-        {
-            Data.Add(new object[] {text, result});
-        }
-
-
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    }
-
+   
     public class SimpleNodeTest
     {
-        //[Theory]
-        //[ClassData(typeof(SimpleNodeTestData))]
-        //public void Test1(string text, ASTNode result)
-        //{
-        //    Assert.Equal(Parse(text), result);
-        //}
-
         [Fact]
         public void TestNumberNode()
         {
@@ -65,10 +28,43 @@ namespace Test.NodeParserTest
             node.Add(new NumberNode() { Text = "2" });
             Assert.Equal(Parse("1+2"), node);
             Assert.Equal(Parse("1 +2"), node);
-            Assert.Equal(Parse("1d + 2d"), node);
+            //Assert.NotEqual(Parse("1 + 2d"), node);
             Assert.NotEqual(Parse("1-2"), node);
             Assert.NotEqual(Parse("1.0+2"), node);
         }
+
+        [Fact]
+        public void TestFuncNode()
+        {
+            FuncNode node;
+            node = new FuncNode();
+            node.FuncName = "foo";
+            node.Caller = null;
+            node.Args = new ArgListNode();
+
+            // no arg
+            Assert.Equal(Parse("foo()"), node);
+            Assert.Equal(Parse("foo( )"), node);
+
+            // one arg
+            node.Args.Add(new ArgNode(false) { Expr = new NumberNode() { Text = "1"} });
+            Assert.Equal(Parse("foo(1)"), node);
+            Assert.Equal(Parse("foo( 1 )"), node);
+
+            // two args
+            node.Args.Add(new ArgNode(false) { Expr = new NumberNode() { Text = "2" } });
+            Assert.Equal(Parse("foo(1,2)"), node);
+            Assert.Equal(Parse("foo(1, 2)"), node);
+            Assert.NotEqual(Parse("foo(1.2)"), node);
+
+            // named arg
+            node.Args.Add(new ArgNode(true) { Expr = new NumberNode() { Text = "3" }, Name = "arg"});
+            Assert.Equal(Parse("foo(1,2,arg=3)"), node);
+            Assert.Equal(Parse("foo(1,2, arg=3)"), node);
+            Assert.NotEqual(Parse("foo(1,2,args=3)"), node);
+
+        }
+
 
         public static ASTNode Parse(string text)
         {

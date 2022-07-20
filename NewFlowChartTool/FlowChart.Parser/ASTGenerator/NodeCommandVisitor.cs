@@ -24,23 +24,46 @@ namespace FlowChart.Parser.ASTGenerator
 
         public override ASTNode VisitStat_expr([NotNull] NodeParserParser.Stat_exprContext context)
         {
-            return base.VisitStat_expr(context);
+            //return base.VisitStat_expr(context);
+            return Visit(context.expr());
         }
         #endregion
 
         #region atom expr
-
         public override ASTNode VisitAtom_number(NodeParserParser.Atom_numberContext context)
         {
             return new NumberNode() { Text = context.NUMBER().GetText() };
         }
 
-        //public override ASTNode VisitAtom_expr(NodeParserParser.Atom_exprContext context)
-        //{
-        //    var child = context.children[0];
-        //    return base.VisitAtom_expr(context);
-        //}
+        public override ASTNode VisitAtom_string(NodeParserParser.Atom_stringContext context)
+        {
+            return new StringNode() { Text = context.STRING().GetText() };
+        }
 
+        public override ASTNode VisitAtom_variable(NodeParserParser.Atom_variableContext context)
+        {
+            return new StringNode() { Text = context.VARIABLE().GetText() };
+        }
+
+        public override ASTNode VisitAtom_true(NodeParserParser.Atom_trueContext context)
+        {
+            return new StringNode() { Text = context.TRUE().GetText() };
+        }
+
+        public override ASTNode VisitAtom_false(NodeParserParser.Atom_falseContext context)
+        {
+            return new StringNode() { Text = context.FALSE().GetText() };
+        }
+
+        public override ASTNode VisitAtom_nil(NodeParserParser.Atom_nilContext context)
+        {
+            return new StringNode() { Text = context.NIL().GetText() };
+        }
+
+        public override ASTNode VisitAtom_self(NodeParserParser.Atom_selfContext context)
+        {
+            return new StringNode() { Text = context.SELF().GetText() };
+        }
         #endregion
 
         #region operator
@@ -58,6 +81,40 @@ namespace FlowChart.Parser.ASTGenerator
             var node = new BinOpNode() { Op = Str2Op(context.operatorMulDivMod().GetText()) };
             node.Add(Visit(context.expr(0)));
             node.Add(Visit(context.expr(1)));
+            return node;
+        }
+        #endregion
+
+        #region function
+
+        public override ASTNode VisitExpr_arg(NodeParserParser.Expr_argContext context)
+        {
+            var exprNode = Visit(context.expr());
+            return new ArgNode(false) { Expr = exprNode };
+        }
+
+        public override ASTNode VisitExpr_named_arg(NodeParserParser.Expr_named_argContext context)
+        {
+            var exprNode = Visit(context.expr());
+            return new ArgNode(true) { Expr = exprNode, Name = context.NAME().GetText()};
+        }
+
+        public override ASTNode VisitArgumentlist(NodeParserParser.ArgumentlistContext context)
+        {
+            var node = new ArgListNode();
+            foreach (var arg in context.argument())
+            {
+                node.Args.Add(Visit(arg));
+            }
+            return node;
+        }
+
+        public override ASTNode VisitExpr_func_no_caller(NodeParserParser.Expr_func_no_callerContext context)
+        {
+            var node = new FuncNode();
+            node.Caller = null;
+            node.Args = Visit(context.argumentlist());
+            node.FuncName = context.NAME().GetText();
             return node;
         }
 

@@ -343,7 +343,8 @@ public partial class NodeParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitExpr_subscript_assign([NotNull] NodeParserParser.Expr_subscript_assignContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="NodeParserParser.argument"/>.
+	/// Visit a parse tree produced by the <c>expr_arg</c>
+	/// labeled alternative in <see cref="NodeParserParser.argument"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -351,7 +352,18 @@ public partial class NodeParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitArgument([NotNull] NodeParserParser.ArgumentContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpr_arg([NotNull] NodeParserParser.Expr_argContext context) { return VisitChildren(context); }
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expr_named_arg</c>
+	/// labeled alternative in <see cref="NodeParserParser.argument"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitExpr_named_arg([NotNull] NodeParserParser.Expr_named_argContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="NodeParserParser.argumentlist"/>.
 	/// <para>

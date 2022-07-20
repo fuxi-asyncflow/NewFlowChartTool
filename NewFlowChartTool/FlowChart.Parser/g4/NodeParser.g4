@@ -50,8 +50,8 @@ assign_stat
 
 
 argument
-    : expr
-    | NAME '=' expr
+    : expr                          # expr_arg
+    | NAME '=' expr                 # expr_named_arg
     ;
 
 argumentlist

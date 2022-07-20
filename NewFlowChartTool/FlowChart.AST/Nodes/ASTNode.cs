@@ -72,6 +72,18 @@ namespace FlowChart.AST.Nodes
 
     }
 
+    public class VariableNode : LiteralNode
+    {
+
+    }
+
+    public class BoolNode : LiteralNode
+    {
+        
+    }
+
+
+
     public class BinOpNode : ASTNode
     {
         public ASTNode Left => ChildNodes[0];
@@ -87,8 +99,68 @@ namespace FlowChart.AST.Nodes
                 return false;
             return base.Equals(obj);
         }
+    }
 
-        
+    public class ArgNode : ASTNode
+    {
+        public bool IsNamed;
+        public ASTNode Expr;
+        public string? Name;
+        public ArgNode(bool isNamed)
+        {
+            IsNamed = isNamed;
+        }
 
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            if (obj.GetType() != GetType()) return false;
+            var b = (ArgNode)obj;
+            if(IsNamed != b.IsNamed) return false;
+            if(!Equals(Name, b.Name)) return false;
+            if(!Equals(Expr, b.Expr)) return false;
+            return true;
+        }
+    }
+
+    public class ArgListNode : ASTNode
+    {
+        public List<ASTNode> Args => ChildNodes;
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            if (obj.GetType() != GetType()) return false;
+            var b = (ArgListNode)obj;
+            int count = Args.Count;
+            if(count != b.Args.Count) return false;
+            for (int i = 0; i < count; i++)
+            {
+                if (!Equals(Args[i], b.Args[i]))
+                    return false;
+            }
+            return true;
+        }
+    }
+
+    public class FuncNode : ASTNode
+    {
+        public ASTNode Caller;
+        public string FuncName;
+        public ASTNode Args;
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            if (obj.GetType() != GetType()) return false;
+            var b = (FuncNode)obj;
+            if (!Equals(Caller, b.Caller))
+                return false;
+            if (!Equals(FuncName, b.FuncName))
+                return false;
+            if (!Equals(Args, b.Args))
+                return false;
+            return true;
+        }
     }
 }

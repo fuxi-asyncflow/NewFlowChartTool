@@ -366,15 +366,29 @@ public interface INodeParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitExpr_subscript_assign([NotNull] NodeParserParser.Expr_subscript_assignContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="NodeParserParser.argument"/>.
+	/// Enter a parse tree produced by the <c>expr_arg</c>
+	/// labeled alternative in <see cref="NodeParserParser.argument"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterArgument([NotNull] NodeParserParser.ArgumentContext context);
+	void EnterExpr_arg([NotNull] NodeParserParser.Expr_argContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="NodeParserParser.argument"/>.
+	/// Exit a parse tree produced by the <c>expr_arg</c>
+	/// labeled alternative in <see cref="NodeParserParser.argument"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitArgument([NotNull] NodeParserParser.ArgumentContext context);
+	void ExitExpr_arg([NotNull] NodeParserParser.Expr_argContext context);
+	/// <summary>
+	/// Enter a parse tree produced by the <c>expr_named_arg</c>
+	/// labeled alternative in <see cref="NodeParserParser.argument"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExpr_named_arg([NotNull] NodeParserParser.Expr_named_argContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>expr_named_arg</c>
+	/// labeled alternative in <see cref="NodeParserParser.argument"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExpr_named_arg([NotNull] NodeParserParser.Expr_named_argContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="NodeParserParser.argumentlist"/>.
 	/// </summary>

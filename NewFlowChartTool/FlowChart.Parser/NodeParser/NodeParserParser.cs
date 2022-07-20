@@ -1308,30 +1308,60 @@ public partial class NodeParserParser : Parser {
 	}
 
 	public partial class ArgumentContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ExprContext expr() {
-			return GetRuleContext<ExprContext>(0);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME() { return GetToken(NodeParserParser.NAME, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ASSIGN() { return GetToken(NodeParserParser.ASSIGN, 0); }
 		public ArgumentContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
 		public override int RuleIndex { get { return RULE_argument; } }
+	 
+		public ArgumentContext() { }
+		public virtual void CopyFrom(ArgumentContext context) {
+			base.CopyFrom(context);
+		}
+	}
+	public partial class Expr_named_argContext : ArgumentContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode NAME() { return GetToken(NodeParserParser.NAME, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode ASSIGN() { return GetToken(NodeParserParser.ASSIGN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ExprContext expr() {
+			return GetRuleContext<ExprContext>(0);
+		}
+		public Expr_named_argContext(ArgumentContext context) { CopyFrom(context); }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
 			INodeParserListener typedListener = listener as INodeParserListener;
-			if (typedListener != null) typedListener.EnterArgument(this);
+			if (typedListener != null) typedListener.EnterExpr_named_arg(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
 			INodeParserListener typedListener = listener as INodeParserListener;
-			if (typedListener != null) typedListener.ExitArgument(this);
+			if (typedListener != null) typedListener.ExitExpr_named_arg(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
 			INodeParserVisitor<TResult> typedVisitor = visitor as INodeParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitArgument(this);
+			if (typedVisitor != null) return typedVisitor.VisitExpr_named_arg(this);
+			else return visitor.VisitChildren(this);
+		}
+	}
+	public partial class Expr_argContext : ArgumentContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ExprContext expr() {
+			return GetRuleContext<ExprContext>(0);
+		}
+		public Expr_argContext(ArgumentContext context) { CopyFrom(context); }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			INodeParserListener typedListener = listener as INodeParserListener;
+			if (typedListener != null) typedListener.EnterExpr_arg(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			INodeParserListener typedListener = listener as INodeParserListener;
+			if (typedListener != null) typedListener.ExitExpr_arg(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			INodeParserVisitor<TResult> typedVisitor = visitor as INodeParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExpr_arg(this);
 			else return visitor.VisitChildren(this);
 		}
 	}
@@ -1345,6 +1375,7 @@ public partial class NodeParserParser : Parser {
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,7,Context) ) {
 			case 1:
+				_localctx = new Expr_argContext(_localctx);
 				EnterOuterAlt(_localctx, 1);
 				{
 				State = 136;
@@ -1352,6 +1383,7 @@ public partial class NodeParserParser : Parser {
 				}
 				break;
 			case 2:
+				_localctx = new Expr_named_argContext(_localctx);
 				EnterOuterAlt(_localctx, 2);
 				{
 				State = 137;

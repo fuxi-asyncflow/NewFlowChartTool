@@ -855,15 +855,29 @@ public class NodeParserParser extends Parser {
 	}
 
 	public static class ArgumentContext extends ParserRuleContext {
-		public ExprContext expr() {
-			return getRuleContext(ExprContext.class,0);
-		}
-		public TerminalNode NAME() { return getToken(NodeParserParser.NAME, 0); }
-		public TerminalNode ASSIGN() { return getToken(NodeParserParser.ASSIGN, 0); }
 		public ArgumentContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_argument; }
+	 
+		public ArgumentContext() { }
+		public void copyFrom(ArgumentContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class Expr_named_argContext extends ArgumentContext {
+		public TerminalNode NAME() { return getToken(NodeParserParser.NAME, 0); }
+		public TerminalNode ASSIGN() { return getToken(NodeParserParser.ASSIGN, 0); }
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public Expr_named_argContext(ArgumentContext ctx) { copyFrom(ctx); }
+	}
+	public static class Expr_argContext extends ArgumentContext {
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public Expr_argContext(ArgumentContext ctx) { copyFrom(ctx); }
 	}
 
 	public final ArgumentContext argument() throws RecognitionException {
@@ -874,6 +888,7 @@ public class NodeParserParser extends Parser {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,7,_ctx) ) {
 			case 1:
+				_localctx = new Expr_argContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(136);
@@ -881,6 +896,7 @@ public class NodeParserParser extends Parser {
 				}
 				break;
 			case 2:
+				_localctx = new Expr_named_argContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(137);

@@ -427,17 +427,33 @@ public partial class NodeParserBaseListener : INodeParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitExpr_subscript_assign([NotNull] NodeParserParser.Expr_subscript_assignContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="NodeParserParser.argument"/>.
+	/// Enter a parse tree produced by the <c>expr_arg</c>
+	/// labeled alternative in <see cref="NodeParserParser.argument"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterArgument([NotNull] NodeParserParser.ArgumentContext context) { }
+	public virtual void EnterExpr_arg([NotNull] NodeParserParser.Expr_argContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="NodeParserParser.argument"/>.
+	/// Exit a parse tree produced by the <c>expr_arg</c>
+	/// labeled alternative in <see cref="NodeParserParser.argument"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitArgument([NotNull] NodeParserParser.ArgumentContext context) { }
+	public virtual void ExitExpr_arg([NotNull] NodeParserParser.Expr_argContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by the <c>expr_named_arg</c>
+	/// labeled alternative in <see cref="NodeParserParser.argument"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterExpr_named_arg([NotNull] NodeParserParser.Expr_named_argContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by the <c>expr_named_arg</c>
+	/// labeled alternative in <see cref="NodeParserParser.argument"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitExpr_named_arg([NotNull] NodeParserParser.Expr_named_argContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="NodeParserParser.argumentlist"/>.
 	/// <para>The default implementation does nothing.</para>

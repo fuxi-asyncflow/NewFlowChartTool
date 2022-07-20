@@ -228,11 +228,19 @@ public interface INodeParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExpr_subscript_assign([NotNull] NodeParserParser.Expr_subscript_assignContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="NodeParserParser.argument"/>.
+	/// Visit a parse tree produced by the <c>expr_arg</c>
+	/// labeled alternative in <see cref="NodeParserParser.argument"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitArgument([NotNull] NodeParserParser.ArgumentContext context);
+	Result VisitExpr_arg([NotNull] NodeParserParser.Expr_argContext context);
+	/// <summary>
+	/// Visit a parse tree produced by the <c>expr_named_arg</c>
+	/// labeled alternative in <see cref="NodeParserParser.argument"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpr_named_arg([NotNull] NodeParserParser.Expr_named_argContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="NodeParserParser.argumentlist"/>.
 	/// </summary>
