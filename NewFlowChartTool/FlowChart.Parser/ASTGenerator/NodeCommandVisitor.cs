@@ -47,12 +47,12 @@ namespace FlowChart.Parser.ASTGenerator
 
         public override ASTNode VisitAtom_true(NodeParserParser.Atom_trueContext context)
         {
-            return new StringNode() { Text = context.TRUE().GetText() };
+            return new BoolNode() { Text = context.TRUE().GetText() };
         }
 
         public override ASTNode VisitAtom_false(NodeParserParser.Atom_falseContext context)
         {
-            return new StringNode() { Text = context.FALSE().GetText() };
+            return new BoolNode() { Text = context.FALSE().GetText() };
         }
 
         public override ASTNode VisitAtom_nil(NodeParserParser.Atom_nilContext context)
@@ -62,7 +62,7 @@ namespace FlowChart.Parser.ASTGenerator
 
         public override ASTNode VisitAtom_self(NodeParserParser.Atom_selfContext context)
         {
-            return new StringNode() { Text = context.SELF().GetText() };
+            return new SelfNode() { Text = context.SELF().GetText() };
         }
         #endregion
 
@@ -104,7 +104,7 @@ namespace FlowChart.Parser.ASTGenerator
             var node = new ArgListNode();
             foreach (var arg in context.argument())
             {
-                node.Args.Add(Visit(arg));
+                node.Add(Visit(arg));
             }
             return node;
         }
@@ -112,10 +112,30 @@ namespace FlowChart.Parser.ASTGenerator
         public override ASTNode VisitExpr_func_no_caller(NodeParserParser.Expr_func_no_callerContext context)
         {
             var node = new FuncNode();
-            node.Caller = null;
-            node.Args = Visit(context.argumentlist());
+            node.Add(null); // Caller
+            node.Add(Visit(context.argumentlist()));    // Args
             node.FuncName = context.NAME().GetText();
             return node;
+        }
+
+        #endregion
+
+        #region member and subscript
+
+        public override ASTNode VisitExpr_member(NodeParserParser.Expr_memberContext context)
+        {
+            var node = new MemberNode() {MemberName = context.NAME().GetText()};
+            node.Add(Visit(context.expr()));
+            return node;
+        }
+
+        public override ASTNode VisitExpr_subscript(NodeParserParser.Expr_subscriptContext context)
+        {
+            var node = new SubscriptNode();
+            node.Add(Visit(context.expr(0)));
+            node.Add(Visit(context.expr(1)));
+            return node;
+            
         }
 
         #endregion

@@ -39,8 +39,8 @@ namespace Test.NodeParserTest
             FuncNode node;
             node = new FuncNode();
             node.FuncName = "foo";
-            node.Caller = null;
-            node.Args = new ArgListNode();
+            node.Add(null);
+            node.Add(new ArgListNode());
 
             // no arg
             Assert.Equal(Parse("foo()"), node);
@@ -62,6 +62,55 @@ namespace Test.NodeParserTest
             Assert.Equal(Parse("foo(1,2,arg=3)"), node);
             Assert.Equal(Parse("foo(1,2, arg=3)"), node);
             Assert.NotEqual(Parse("foo(1,2,args=3)"), node);
+
+        }
+
+        [Fact]
+        public void TestMemberNode()
+        {
+            MemberNode node = new MemberNode();
+            node.Add(new SelfNode() {Text = "self"});
+            node.MemberName = "name";
+
+            Assert.Equal(Parse("self.name"), node);
+
+            MemberNode node0 = new MemberNode();
+            node0.Add(node);
+            node0.MemberName = "foo";
+            Assert.Equal(Parse("self.name.foo"), node0);
+
+            // subscript test
+            SubscriptNode node_1 = new SubscriptNode();
+            node_1.Add(new SelfNode() {Text = "self"});
+            node_1.Add(new StringNode() {Text = "\"foo\""});
+            Assert.Equal(Parse("self[\"foo\"]"), node_1);
+
+            SubscriptNode node_2 = new SubscriptNode();
+            node_2.Add(node_1);
+            node_2.Add(new StringNode() { Text = "\"bar\"" });
+            Assert.Equal(Parse("self[\"foo\"][\"bar\"]"), node_2);
+
+            // subscript and member case 1
+            SubscriptNode node_11 = new SubscriptNode();
+            node_11.Add(new SelfNode() { Text = "self" });
+            node_11.Add(new StringNode() { Text = "\"foo\"" });
+
+            MemberNode node_12 = new MemberNode();
+            node_12.Add(node_11);
+            node_12.MemberName = "bar";
+            Assert.Equal(Parse("self[\"foo\"].bar"), node_12);
+
+            // subscript and member case 2
+            MemberNode node_21 = new MemberNode();
+            node_21.Add(new SelfNode() { Text = "self" });
+            node_21.MemberName = "foo";
+
+            SubscriptNode node_22 = new SubscriptNode();
+            node_22.Add(node_21);
+            node_22.Add(new StringNode() { Text = "\"bar\"" });
+            
+            Assert.Equal(Parse("self.foo[\"bar\"]"), node_22);
+
 
         }
 

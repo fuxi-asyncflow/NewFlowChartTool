@@ -82,6 +82,11 @@ namespace FlowChart.AST.Nodes
         
     }
 
+    public class SelfNode : LiteralNode
+    {
+
+    }
+
 
 
     public class BinOpNode : ASTNode
@@ -145,9 +150,9 @@ namespace FlowChart.AST.Nodes
 
     public class FuncNode : ASTNode
     {
-        public ASTNode Caller;
+        public ASTNode Caller => ChildNodes[0];
         public string FuncName;
-        public ASTNode Args;
+        public ASTNode Args => ChildNodes[1];
 
         public override bool Equals(object? obj)
         {
@@ -159,6 +164,42 @@ namespace FlowChart.AST.Nodes
             if (!Equals(FuncName, b.FuncName))
                 return false;
             if (!Equals(Args, b.Args))
+                return false;
+            return true;
+        }
+    }
+
+    public class MemberNode : ASTNode
+    {
+        public ASTNode Owner => ChildNodes[0];
+        public string MemberName;
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            if (obj.GetType() != GetType()) return false;
+            var b = (MemberNode)obj;
+            if (!Equals(Owner, b.Owner))
+                return false;
+            if (!Equals(MemberName, b.MemberName))
+                return false;
+            return true;
+        }
+    }
+
+    public class SubscriptNode : ASTNode
+    {
+        public ASTNode Owner => ChildNodes[0];
+        public ASTNode Key => ChildNodes[1];
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            if (obj.GetType() != GetType()) return false;
+            var b = (SubscriptNode)obj;
+            if (!Equals(Owner, b.Owner))
+                return false;
+            if (!Equals(Key, b.Key))
                 return false;
             return true;
         }
