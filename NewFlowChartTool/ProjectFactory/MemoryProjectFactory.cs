@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Core;
 using FlowChart.Type;
+using Type = FlowChart.Type.Type;
 
 namespace ProjectFactory
 {
@@ -20,17 +21,19 @@ namespace ProjectFactory
             return tp;
         }
 
-        FlowChart.Core.Graph CreateTestGraph_1()
+        FlowChart.Core.Graph CreateTestGraph_1(Type tp)
         {
-            var g = new FlowChart.Core.Graph("test_0") { Path = "MonsterAI.test_0" };
+            var g = new FlowChart.Core.Graph("test_0") { Path = "MonsterAI.test_0", Type = tp};
             g.AddNode(new TextNode() {Text = "Say(\"hello\")"});
+            g.AddNode(new TextNode() { Text = "Say(1)" });
             return g;
         }
 
         public void Create(Project project)
         {
-            project.AddType(CreateMonsterType());
-            project.AddGraph(CreateTestGraph_1());
+            var monsterType = CreateMonsterType();
+            project.AddType(monsterType);
+            project.AddGraph(CreateTestGraph_1(monsterType));
         }
 
         public void Save(Project project)

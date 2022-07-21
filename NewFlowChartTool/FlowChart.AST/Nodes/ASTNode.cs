@@ -41,6 +41,7 @@ namespace FlowChart.AST.Nodes
 
     public class ASTNode
     {
+        public static ASTNode NoNode = new ASTNode();
         public virtual T OnVisit<T>(IASTNodeVisitor<T> visitor)
         {
             throw new NotImplementedException("should not visit ASTNode");
@@ -191,6 +192,7 @@ namespace FlowChart.AST.Nodes
         public ASTNode Caller => ChildNodes[0];
         public string FuncName;
         public ASTNode Args => ChildNodes[1];
+        public bool HasCaller => Caller != null;
 
         public override bool Equals(object? obj)
         {

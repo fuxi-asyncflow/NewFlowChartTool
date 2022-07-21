@@ -1,7 +1,10 @@
-﻿using FlowChart.AST;
+﻿using System.ComponentModel.Design;
+using Antlr4.Runtime.Atn;
+using FlowChart.AST;
 using FlowChart;
 using FlowChart.AST.Nodes;
 using FlowChart.Core;
+using FlowChart.Type;
 
 namespace FlowChart.LuaCodeGen
 {
@@ -9,14 +12,31 @@ namespace FlowChart.LuaCodeGen
     {
         public string Code;
         public Type.Type Type;
+
+        public static NodeInfo ErrorNodeInfo = new NodeInfo();
     }
     public class CodeGenerator : IASTNodeVisitor<NodeInfo>, ICodeGenerator
     {
         public Project P;
+        public Graph G;
+        public ParseResult Pr;
 
         public ParseResult GenerateCode(ASTNode ast)
         {
-            throw new NotImplementedException();
+            Pr = new ParseResult();
+            var nodeInfo = ast.OnVisit(this);
+            if(!string.IsNullOrEmpty(Pr.ErrorMessage))
+                Console.WriteLine(Pr.ErrorMessage);
+            else
+            {
+                Console.WriteLine(nodeInfo.Code);
+            }
+            return Pr;
+        }
+
+        public void Error(string msg)
+        {
+            Pr.ErrorMessage = msg;
         }
 
         public NodeInfo Visit(NumberNode node)
@@ -66,7 +86,55 @@ namespace FlowChart.LuaCodeGen
 
         public NodeInfo Visit(FuncNode node)
         {
-            throw new NotImplementedException();
+            Member? member = null;
+            string code = "";
+            if (!node.HasCaller)
+            {
+                member = G.Type.FindMember(node.FuncName);
+                if (member is Method)
+                {
+                    code = "self:";
+                }
+                else
+                {
+                    member = P.GetGlobalType().FindMember(node.FuncName);
+                }
+            }
+            else
+            {
+                var callerNodeInfo = node.Caller.OnVisit(this);
+                member = callerNodeInfo.Type.FindMember(node.FuncName);
+                code = callerNodeInfo.Code + ":";
+
+            }
+
+            if (member is not Method)
+            {
+                Error($"cannot find method `{node.FuncName}`");
+                return NodeInfo.ErrorNodeInfo;
+            }
+
+            // check func args
+            var method = (Method)member;
+            var inputArgsNodeInfo = node.Args.ChildNodes.ConvertAll(node => node.OnVisit(this));
+            var argsDef = method.Parameters;
+            if (argsDef.Count == inputArgsNodeInfo.Count)
+            {
+                for (int i = 0; i < inputArgsNodeInfo.Count; i++)
+                {
+                    if (argsDef[i].Type != inputArgsNodeInfo[i].Type)
+                    {
+                        Error($"function args type unmatch: arg[{i}] expect `{argsDef[i].Type.Name}` buf receive `{inputArgsNodeInfo[i].Type.Name}`");
+                    }
+                }
+            }
+            string argsString = string.Join(", ", inputArgsNodeInfo.ConvertAll(ni => ni.Code));
+
+            return new NodeInfo()
+            {
+                Type = method.Type,
+                Code = $"{code}{node.FuncName}({argsString})"
+            };
         }
 
         public NodeInfo Visit(MemberNode node)

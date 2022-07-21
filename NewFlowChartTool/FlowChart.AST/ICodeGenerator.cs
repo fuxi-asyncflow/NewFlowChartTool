@@ -9,6 +9,7 @@ namespace FlowChart.AST
 {
     public class ParseResult
     {
+        public string ErrorMessage { get; set; }
 
     }
 

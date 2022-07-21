@@ -44,6 +44,15 @@ namespace FlowChart.Type
             }
             return true;
         }
+
+        public Member? FindMember(string name)
+        {
+            Member? member = null;
+            MemberDict.TryGetValue(name, out member);
+            return member;
+        }
+
+
         public List<Type> BaseTypes;
         
         public Dictionary<string, Member> MemberDict;

@@ -9,17 +9,21 @@ using FlowChart.Core;
 
 namespace FlowChart.Parser
 {
+    public interface ICodeGenFactory
+    {
+        public ICodeGenerator CreateCodeGenerator(Project p, Graph g);
+    }
     // Build = Parse + TypeCheck + CodeGen
     public class Builder
     {
-        public Builder(IParser p, ICodeGenerator g)
+        public Builder(IParser p, ICodeGenFactory f)
         {
             parser = p;
-            generator = g;
+            factory = f;
         }
 
         private IParser parser;
-        private ICodeGenerator generator;
+        private ICodeGenFactory factory;
         public void Build(Project p)
         {
             foreach (var graphKV in p.GraphDict)
@@ -30,19 +34,22 @@ namespace FlowChart.Parser
 
         public void BuildGraph(Graph g)
         {
+            var generator = factory.CreateCodeGenerator(g.Project, g);
             foreach (var node in g.Nodes)
             {
                 if (node is TextNode textNode)
                 {
-                    BuildNode(textNode);
+                    BuildNode(textNode, generator);
                 }
             }
         }
 
-        public void BuildNode(TextNode node)
+        public void BuildNode(TextNode node, ICodeGenerator generator)
         {
             var ast = parser.Parse(node.Text);
-            Console.WriteLine($"ast: {ast}");
+            //Console.WriteLine($"ast: {ast}");
+            if(ast != null)
+                generator.GenerateCode(ast);
         }
     }
 }

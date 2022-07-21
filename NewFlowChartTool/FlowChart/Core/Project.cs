@@ -47,6 +47,11 @@ namespace FlowChart.Core
             TypeDict.Add(type.Name, type);
         }
 
+        public Type.Type GetGlobalType()
+        {
+            return new Type.Type("Global");
+        }
+
         public void AddGraph(Graph graph)
         {
             if (GraphDict.ContainsKey(graph.Path))
@@ -73,6 +78,7 @@ namespace FlowChart.Core
             Console.WriteLine($"graph path: {graph.Path}");
             
             GraphDict.Add(graph.Path, graph);
+            graph.Project = this;
         }
     }
 }

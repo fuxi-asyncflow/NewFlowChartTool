@@ -20,6 +20,8 @@ namespace FlowChart.Core
         public List<Node> Nodes { get; set; }
         public Dictionary<string, Node> NodeDict { get; set; }
         public List<Connector> Connectors { get; set; }
+        public Project Project { get; set; }
+        public Type.Type Type { get; set; }
         public void AddNode(Node node)
         {
             if (NodeDict.ContainsKey(node.Uid))

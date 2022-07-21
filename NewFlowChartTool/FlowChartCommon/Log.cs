@@ -25,6 +25,26 @@ namespace FlowChartCommon
         }
 
         public static NLog.Logger FCLogger;
+
+        public static void LOG(string msg)
+        {
+            FCLogger.Info(msg);
+        }
+
+        public static void ERR(string msg)
+        {
+            FCLogger.Error(msg);
+        }
+
+        public static void DBG(string msg)
+        {
+            FCLogger.Debug(msg);
+        }
+
+        public static void WARN(string msg)
+        {
+            FCLogger.Warn(msg);
+        }
     }
 
 }

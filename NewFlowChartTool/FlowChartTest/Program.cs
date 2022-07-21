@@ -8,6 +8,7 @@ using FlowChart.Parser.NodeParser;
 using FlowChart.Parser.ASTGenerator;
 using FlowChart.AST;
 using FlowChart.AST.Nodes;
+using FlowChart.Core;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
 
@@ -36,6 +37,15 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
 
         public static NLog.Logger MyLogger ;
     }
+
+    class CodeGenFactory : ICodeGenFactory
+    {
+        public ICodeGenerator CreateCodeGenerator(Project p, Graph g)
+        {
+            return new CodeGenerator() { G = g, P = p };
+        }
+    }
+
     internal class Program
     {
         static void Main(string[] args)
@@ -53,7 +63,7 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
 
-            var builder = new Builder(new FlowChart.Parser.Parser(), new FlowChart.LuaCodeGen.CodeGenerator() { P = p });
+            var builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
             builder.Build(p);
         }
 
