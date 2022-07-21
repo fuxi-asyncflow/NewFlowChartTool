@@ -8,5 +8,9 @@ namespace FlowChart.Type
 {
     public class Property : Member
     {
+        public Property(string name) : base(name)
+        {
+
+        }
     }
 }

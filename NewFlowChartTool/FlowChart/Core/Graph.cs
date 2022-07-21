@@ -8,7 +8,8 @@ namespace FlowChart.Core
 {
     public class Graph : Item
     {
-        public Graph()
+        public Graph(string Name)
+        : base(Name)
         {
             Nodes = new List<Node>();
             NodeDict = new Dictionary<string, Node>();

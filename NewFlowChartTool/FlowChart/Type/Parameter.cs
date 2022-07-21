@@ -8,6 +8,10 @@ namespace FlowChart.Type
 {
     public class Parameter : Member
     {
+        public Parameter(string name) : base(name)
+        {
+        }
+
         public bool IsOptional { get; set; }
     }
 }

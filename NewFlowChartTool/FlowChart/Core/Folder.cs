@@ -8,7 +8,8 @@ namespace FlowChart.Core
 {
     public class Folder : Item
     {
-        public Folder()
+        public Folder(string name)
+        : base(name)
         {
             Children = new List<Item>();
             Items = new Dictionary<string, Item>();
@@ -20,7 +21,7 @@ namespace FlowChart.Core
             var child = Items.GetValueOrDefault(subFolderName);
             if(child == null)
             {
-                var item = new Folder() { Name = subFolderName};
+                var item = new Folder(subFolderName);
                 AddChild(item);
                 return item;
 

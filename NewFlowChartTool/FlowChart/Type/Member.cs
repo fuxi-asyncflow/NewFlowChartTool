@@ -8,6 +8,10 @@ namespace FlowChart.Type
 {
     public class Member : Core.Item
     {
+        public Member(string name) : base(name)
+        {
+
+        }
         public Type Type { get; set; }
     }
 }

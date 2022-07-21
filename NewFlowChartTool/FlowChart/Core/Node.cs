@@ -8,6 +8,10 @@ namespace FlowChart.Core
 {
     public class Node
     {
+        public Node()
+        {
+            Uid = Project.GenUUID().ToString();
+        }
         public string Uid { get; set; }
 
     }

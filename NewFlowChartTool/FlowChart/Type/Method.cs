@@ -8,6 +8,11 @@ namespace FlowChart.Type
 {
     public class Method : Member
     {
+        public Method(string name)
+        : base(name)
+        {
+
+        }
         public List<Parameter> Parameters { get; set; }
     }
 }

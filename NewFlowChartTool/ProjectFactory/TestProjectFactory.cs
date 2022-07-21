@@ -20,7 +20,7 @@ namespace ProjectFactory
 
         public Parameter ToParameter()
         {
-            return new Parameter { Name = Name, Type = TypeJson.GetType(Type) };
+            return new Parameter(Name) { Type = TypeJson.GetType(Type) };
         }
     }
 
@@ -41,18 +41,16 @@ namespace ProjectFactory
             {                
                 if (MemberType == 2)
                 {
-                    member = new Method()
+                    member = new Method(Name)
                     {
-                        Name = Name,
-                        Parameters = Parameters.ConvertAll(p => p == null ? new Parameter() { Name = "__error" } : p.ToParameter()),
+                        Parameters = Parameters.ConvertAll(p => p == null ? new Parameter("__error") : p.ToParameter()),
                         Type = TypeJson.GetType(Type)
                     };
                 }
                 else if (MemberType == 1)
                 {
-                    member = new Property()
+                    member = new Property(Name)
                     {
-                        Name = Name,
                         Type = TypeJson.GetType(Type)
                     };
                 }
@@ -84,7 +82,7 @@ namespace ProjectFactory
             {
                 return types[name];
             }
-            return new FlowChart.Type.Type { Name = $"Undefined<{name}>"};
+            return new FlowChart.Type.Type($"Undefined<{name}>");
         }
 
     }
@@ -217,13 +215,13 @@ namespace ProjectFactory
                     var fs = GetFileStream(fileName);
                     fs.Position = 0;
                     var tpJson = JsonSerializer.Deserialize<TypeJson>(fs);                    
-                    var tp = new FlowChart.Type.Type();
+                    
                     if(tpJson == null)
                     {
                         Console.WriteLine("load chart json failed");
                         continue;
                     }
-                    tp.Name = tpJson.Name;
+                    var tp = new FlowChart.Type.Type(tpJson.Name);
                     tmp_dict.Add(tp, tpJson);
                 }
             }
@@ -237,7 +235,7 @@ namespace ProjectFactory
         bool LoadType(FlowChart.Type.Type tp, TypeJson js)
         {
             tp.Name = js.Name;
-            tp.Members = js.Members.ConvertAll(m => m.ToMember());
+            js.Members.ForEach(m => tp.AddMember(m.ToMember()));
             return true;
         }
 
@@ -249,7 +247,7 @@ namespace ProjectFactory
             Console.WriteLine($"load chart File {fileName} success, {chartFileJson.Charts.Count} chart is loaded");
             chartFileJson.Charts.ForEach(chart =>
             {
-                var graph = new Graph();
+                var graph = new Graph(chart.Path.Split(".").Last());
                 chart.ToGraph(graph);
                 Project.AddGraph(graph);
             });

@@ -18,9 +18,14 @@ namespace FlowChart.Core
         public Project(IProjectFactory factory)
         {
             Factory = factory;
-            Root = new Folder();
+            Root = new Folder("");
             TypeDict = new Dictionary<string, Type.Type>();
             GraphDict = new Dictionary<string, Graph>();
+        }
+
+        public static Guid GenUUID()
+        {
+            return Guid.NewGuid();
         }
 
         #region PROPERTIES
