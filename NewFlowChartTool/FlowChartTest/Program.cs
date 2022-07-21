@@ -9,6 +9,7 @@ using FlowChart.Parser.ASTGenerator;
 using FlowChart.AST;
 using FlowChart.AST.Nodes;
 using FlowChart.LuaCodeGen;
+using FlowChart.Parser;
 using FlowChart.Parser.ASTGenerator;
 
 namespace FlowChartTest // Note: actual namespace depends on the project name.
@@ -41,15 +42,19 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
         static void Main(string[] args)
         {
             Logger.MyLogger.Info("hello");
+            OpenProjectTest();
             //ParserTest();            
-            CodeGenTest();
+            //CodeGenTest();
         }
 
         static void OpenProjectTest()
         {
             var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
-            p.Path = @"D:\git\asyncflow_new\test\flowchart";
+            p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
+
+            var builder = new Builder(new FlowChart.Parser.Parser(), new FlowChart.LuaCodeGen.CodeGenerator() { P = p });
+            builder.Build(p);
         }
 
         public static ASTNode Parse(string text)

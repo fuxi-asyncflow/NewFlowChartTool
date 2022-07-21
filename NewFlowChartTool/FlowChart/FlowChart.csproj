@@ -11,4 +11,9 @@
     <PackageReference Include="NLog" Version="4.7.15" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FlowChart.AST\FlowChart.AST.csproj" />
+    <ProjectReference Include="..\FlowChart.Parser\FlowChart.Parser.csproj" />
+  </ItemGroup>
+
 </Project>

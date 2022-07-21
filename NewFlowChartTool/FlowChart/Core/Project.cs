@@ -19,7 +19,8 @@ namespace FlowChart.Core
         {
             Factory = factory;
             Root = new Folder();
-            TypeDict = new Dictionary<string, Type.Type>();            
+            TypeDict = new Dictionary<string, Type.Type>();
+            GraphDict = new Dictionary<string, Graph>();
         }
 
         #region PROPERTIES
@@ -27,6 +28,7 @@ namespace FlowChart.Core
         public Folder Root { get; set; }
         public Dictionary<string, Type.Type> TypeDict { get; set; }
         IProjectFactory Factory { get; set; }
+        public Dictionary<string, Graph> GraphDict { get; set; }
         #endregion
 
         public bool Load()
@@ -42,6 +44,12 @@ namespace FlowChart.Core
 
         public void AddGraph(Graph graph)
         {
+            if (GraphDict.ContainsKey(graph.Path))
+            {
+                var originPath = graph.Path;
+                graph.Path = originPath + "_dup";
+                Console.WriteLine($"exist same path when add graph: {originPath} rename to {graph.Path}");
+            }
             var paths = graph.Path.Split(".");
             graph.Name = paths.Last();
             var folder = Root;
@@ -57,6 +65,9 @@ namespace FlowChart.Core
             if (folder == null)
                 return;
             folder.AddChild(graph);
+            Console.WriteLine($"graph path: {graph.Path}");
+            
+            GraphDict.Add(graph.Path, graph);
         }
     }
 }

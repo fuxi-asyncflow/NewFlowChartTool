@@ -17,6 +17,11 @@ namespace FlowChart.AST
         public ParseResult GenerateCode(ASTNode ast);
     }
 
+    public interface IParser
+    {
+        public ASTNode? Parse(string text);
+    }
+
     public interface IASTNodeVisitor<T>
     {
         T Visit(NumberNode node);

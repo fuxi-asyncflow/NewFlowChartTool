@@ -10,9 +10,14 @@ namespace FlowChart.LuaCodeGen
         public string Code;
         public Type.Type Type;
     }
-    public class CodeGenerator : IASTNodeVisitor<NodeInfo>
+    public class CodeGenerator : IASTNodeVisitor<NodeInfo>, ICodeGenerator
     {
         public Project P;
+
+        public ParseResult GenerateCode(ASTNode ast)
+        {
+            throw new NotImplementedException();
+        }
 
         public NodeInfo Visit(NumberNode node)
         {
@@ -75,5 +80,7 @@ namespace FlowChart.LuaCodeGen
         {
             throw new NotImplementedException();
         }
+
+
     }
 }
