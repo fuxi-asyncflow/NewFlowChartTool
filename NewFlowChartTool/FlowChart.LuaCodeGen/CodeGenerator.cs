@@ -227,7 +227,7 @@ namespace FlowChart.LuaCodeGen
                 }
             }
 
-            nodeInfo.Code = string.Join(", ", nis.ConvertAll(n => n.Code));
+            nodeInfo.Code = $"{{{string.Join(", ", nis.ConvertAll(n => n.Code))}}}";
             return nodeInfo;
         }
     }

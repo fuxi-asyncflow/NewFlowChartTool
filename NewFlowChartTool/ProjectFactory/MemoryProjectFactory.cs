@@ -29,6 +29,7 @@ namespace ProjectFactory
             g.AddNode(new TextNode() { Text = "Say(1)" });
             g.AddNode(new TextNode() {Text = "$a = 1"});
             g.AddNode(new TextNode() {Text = "self.age = 1"});
+            g.AddNode(new TextNode() { Text = "$tbl = {1, 2}" });
             return g;
         }
 
