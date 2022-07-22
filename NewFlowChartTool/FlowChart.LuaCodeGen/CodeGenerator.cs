@@ -204,5 +204,31 @@ namespace FlowChart.LuaCodeGen
             return null;
 
         }
+
+        public NodeInfo Visit(ContainerNode node)
+        {
+            // TODO handle dictionary
+            var nis = node.ChildNodes.ConvertAll(n => n.OnVisit(this));
+            var nodeInfo = new NodeInfo();
+            if (node.ChildNodes.Count == 0)
+            {
+                nodeInfo.Type = BuiltinTypes.UndefinedType;
+            }
+            else
+            {
+                nodeInfo.Type = nis[0].Type;
+                for (int i = 1; i < nis.Count; i++)
+                {
+                    if (!nodeInfo.Type.CanAccept(nis[i].Type))
+                    {
+                        Error(string.Format("type unmatch in list: first item is `{0}` but [{1}] item is {2}"
+                            , nodeInfo.Type.Name, i, nis[i].Type.Name));
+                    }
+                }
+            }
+
+            nodeInfo.Code = string.Join(", ", nis.ConvertAll(n => n.Code));
+            return nodeInfo;
+        }
     }
 }

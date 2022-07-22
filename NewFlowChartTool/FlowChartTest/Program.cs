@@ -113,7 +113,10 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             node.Add(null);
             node.Add(new ArgListNode());
 
-            node.Args.Add(new ArgNode(false) { Expr = new NumberNode() { Text = "1" } });
+            var argNode = new ArgNode(false);
+            argNode.Add(new NumberNode() { Text = "1" });
+            node.Args.Add(argNode);
+
             Console.WriteLine(Equals(Parse("foo(1)"), node));
         }
 

@@ -144,7 +144,7 @@ namespace FlowChart.AST.Nodes
         public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
 
         public bool IsNamed;
-        public ASTNode Expr;
+        public ASTNode Expr => ChildNodes[0];
         public string? Name;
         public ArgNode(bool isNamed)
         {
@@ -240,6 +240,10 @@ namespace FlowChart.AST.Nodes
         public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
         public ASTNode Left => ChildNodes[0];
         public ASTNode Right => ChildNodes[1];
+    }
 
+    public class ContainerNode : ASTNode
+    {
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
     }
 }

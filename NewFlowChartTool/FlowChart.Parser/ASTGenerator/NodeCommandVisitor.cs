@@ -90,13 +90,17 @@ namespace FlowChart.Parser.ASTGenerator
         public override ASTNode VisitExpr_arg(NodeParserParser.Expr_argContext context)
         {
             var exprNode = Visit(context.expr());
-            return new ArgNode(false) { Expr = exprNode };
+            var argNode = new ArgNode(false);
+            argNode.Add(exprNode);
+            return argNode;
         }
 
         public override ASTNode VisitExpr_named_arg(NodeParserParser.Expr_named_argContext context)
         {
             var exprNode = Visit(context.expr());
-            return new ArgNode(true) { Expr = exprNode, Name = context.NAME().GetText()};
+            var argNode = new ArgNode(true) { Name = context.NAME().GetText()};
+            argNode.Add(exprNode);
+            return argNode;
         }
 
         public override ASTNode VisitArgumentlist(NodeParserParser.ArgumentlistContext context)
@@ -180,6 +184,16 @@ namespace FlowChart.Parser.ASTGenerator
             subNode.Add(Visit(context.expr(1)));
             node.Add(subNode);
             node.Add(Visit(context.expr(2)));
+            return node;
+        }
+
+        public override ASTNode VisitExpr_container(NodeParserParser.Expr_containerContext context)
+        {
+            var node = new ContainerNode();
+            foreach (var arg in context.container_expr().argumentlist().argument())
+            {
+                node.Add(Visit(arg));
+            }
             return node;
         }
 

@@ -62,18 +62,19 @@ namespace Test.NodeParserTest
             Assert.Equal(Parse("foo( )"), node);
 
             // one arg
-            node.Args.Add(new ArgNode(false) { Expr = new NumberNode() { Text = "1"} });
+            node.Args.Add(CreateArgNode(new NumberNode() { Text = "1" }));
+            var nn = Parse("foo(1)");
             Assert.Equal(Parse("foo(1)"), node);
             Assert.Equal(Parse("foo( 1 )"), node);
 
             // two args
-            node.Args.Add(new ArgNode(false) { Expr = new NumberNode() { Text = "2" } });
+            node.Args.Add(CreateArgNode(new NumberNode() { Text = "2" }));
             Assert.Equal(Parse("foo(1,2)"), node);
             Assert.Equal(Parse("foo(1, 2)"), node);
             Assert.NotEqual(Parse("foo(1.2)"), node);
 
             // named arg
-            node.Args.Add(new ArgNode(true) { Expr = new NumberNode() { Text = "3" }, Name = "arg"});
+            node.Args.Add(CreateArgNode(new NumberNode() { Text = "3" }, "arg"));
             Assert.Equal(Parse("foo(1,2,arg=3)"), node);
             Assert.Equal(Parse("foo(1,2, arg=3)"), node);
             Assert.NotEqual(Parse("foo(1,2,args=3)"), node);
@@ -90,18 +91,18 @@ namespace Test.NodeParserTest
             Assert.Equal(Parse("self.foo( )"), node);
 
             // one arg
-            node.Args.Add(new ArgNode(false) { Expr = new NumberNode() { Text = "1" } });
+            node.Args.Add(CreateArgNode(new NumberNode() { Text = "1" }));
             Assert.Equal(Parse("self.foo(1)"), node);
             Assert.Equal(Parse("self.foo( 1 )"), node);
 
             // two args
-            node.Args.Add(new ArgNode(false) { Expr = new NumberNode() { Text = "2" } });
+            node.Args.Add(CreateArgNode(new NumberNode() { Text = "2" }));
             Assert.Equal(Parse("self.foo(1,2)"), node);
             Assert.Equal(Parse("self.foo(1, 2)"), node);
             Assert.NotEqual(Parse("self.foo(1.2)"), node);
 
             // named arg
-            node.Args.Add(new ArgNode(true) { Expr = new NumberNode() { Text = "3" }, Name = "arg" });
+            node.Args.Add(CreateArgNode(new NumberNode() { Text = "3" }, "arg"));
             Assert.Equal(Parse("self.foo(1,2,arg=3)"), node);
             Assert.Equal(Parse("self.foo(1,2, arg=3)"), node);
             Assert.NotEqual(Parse("self.foo(1,2,args=3)"), node);
@@ -153,6 +154,38 @@ namespace Test.NodeParserTest
             node_22.Add(new StringNode() { Text = "\"bar\"" });
             
             Assert.Equal(Parse("self.foo[\"bar\"]"), node_22);
+        }
+
+        [Fact]
+        public void TestContainerNode()
+        {
+            {
+                // $a = {}
+                var node_00 = new VariableNode() { Text = "a" };
+                var node_01 = new ContainerNode();
+                var node_02 = new AssignmentNode();
+                node_02.Add(node_00);
+                node_02.Add(node_01);
+                Assert.Equal(Parse("$a = {}"), node_02);
+            }
+
+            {
+                // $a = { 1, 2 }
+                var node_00 = new VariableNode() { Text = "a" };
+                var node_01 = new ContainerNode();
+                var argnode_01 = new ArgNode(false);
+                argnode_01.Add(new NumberNode() { Text = "1" });
+                var argnode_02 = new ArgNode(false);
+                argnode_02.Add(new NumberNode() { Text = "2" });
+
+                node_01.Add(argnode_01);
+                node_01.Add(argnode_02);
+                var node_02 = new AssignmentNode();
+                node_02.Add(node_00);
+                node_02.Add(node_01);
+                var node_03 = Parse("$a = {1, 2}");
+                Assert.Equal(Parse("$a = {1, 2}"), node_02);
+            }
 
 
         }
@@ -176,6 +209,16 @@ namespace Test.NodeParserTest
 
             Assert.Equal(Parse("self.age = 1"), node_01);
             Assert.Equal(Parse("self.age=1"), node_01);
+        }
+
+        public static ArgNode CreateArgNode(ASTNode node, string? name = null)
+        {
+            var isNamed = !string.IsNullOrEmpty(name);
+            var arg = new ArgNode(isNamed);
+            if(isNamed)
+                arg.Name = name;
+            arg.Add(node);
+            return arg;
         }
 
 
