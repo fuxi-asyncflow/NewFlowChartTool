@@ -37,6 +37,7 @@ namespace FlowChart.LuaCodeGen
         public void Error(string msg)
         {
             Pr.ErrorMessage = msg;
+            throw new Exception(msg);
         }
 
         public NodeInfo Visit(NumberNode node)
@@ -66,7 +67,7 @@ namespace FlowChart.LuaCodeGen
 
         public NodeInfo Visit(SelfNode node)
         {
-            throw new NotImplementedException();
+            return new NodeInfo() { Code = "self", Type = G.Type };
         }
 
         public NodeInfo Visit(BinOpNode node)
@@ -128,7 +129,7 @@ namespace FlowChart.LuaCodeGen
                 {
                     if (!argsDef[i].Type.CanAccept(inputArgsNodeInfo[i].Type))
                     {
-                        Error(string.Format("function args type unmatch: arg[{0}] expect `{1}` buf receive `{2}`"
+                        Error(string.Format("function args type unmatch: arg[{0}] expect `{1}` but receive `{2}`"
                         , i, argsDef[i].Type.Name, inputArgsNodeInfo[i].Type.Name));
                     }
                 }
@@ -144,8 +145,15 @@ namespace FlowChart.LuaCodeGen
 
         public NodeInfo Visit(MemberNode node)
         {
-            var nis = node.ChildNodes.ConvertAll(node => node.OnVisit(this));
-            var nodeInfo = new NodeInfo() { Code = string.Join(", ", nis.ConvertAll(ni => ni.Code)), Type = nis[0].Type };
+            //var nis = node.ChildNodes.ConvertAll(node => node.OnVisit(this));
+            var ownerNodeInfo = node.Owner.OnVisit(this);
+            var member = ownerNodeInfo.Type.FindMember(node.MemberName);
+            if (member == null)
+            {
+                Error($"cannot find method `{node.MemberName}` in type `{ownerNodeInfo.Type.Name}`");
+                return null;
+            }
+            var nodeInfo = new NodeInfo() { Code = $"{ownerNodeInfo.Code}.{member.Name}", Type = member.Type };
             return nodeInfo;
         }
 
@@ -163,7 +171,7 @@ namespace FlowChart.LuaCodeGen
                 var v = G.GetOrAddVariable(varNode.Text);
                 if (v.Initialized && !varNodeInfo.Type.CanAccept(exprNodeInfo.Type))
                 {
-                    Error(string.Format("assignment type unmatch: left expect `{1}` buf receive `{2}`"
+                    Error(string.Format("assignment type unmatch: left expect `{0}` but receive `{1}`"
                     , varNodeInfo.Type.Name, exprNodeInfo.Type.Name));
                 }
                 else
@@ -179,7 +187,18 @@ namespace FlowChart.LuaCodeGen
             }
             else if (node.Left is MemberNode memberNode)
             {
-                throw new NotImplementedException();
+                var memberNodeInfo = memberNode.OnVisit(this);
+                var exprNodeInfo = node.Right.OnVisit(this);
+                if (memberNodeInfo.Type.CanAccept(exprNodeInfo.Type))
+                {
+                    memberNodeInfo.Code = $"{memberNodeInfo.Code} = {exprNodeInfo.Code}";
+                    return memberNodeInfo;
+                }
+                else
+                {
+                    Error(string.Format("assignment type unmatch: left expect `{0}` but receive `{1}`"
+                        , memberNodeInfo.Type.Name, exprNodeInfo.Type.Name));
+                }
             }
 
             return null;

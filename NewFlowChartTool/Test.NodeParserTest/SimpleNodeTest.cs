@@ -163,6 +163,21 @@ namespace Test.NodeParserTest
             
         }
 
+        [Fact]
+        public void TestAssignNode()
+        {
+            // self.age = 1
+            MemberNode node_00 = new MemberNode();
+            node_00.Add(new SelfNode() { Text = "self" });
+            node_00.MemberName = "age";
+            var node_01 = new AssignmentNode();
+            node_01.Add(node_00);
+            node_01.Add(new NumberNode() {Text = "1"});
+
+            Assert.Equal(Parse("self.age = 1"), node_01);
+            Assert.Equal(Parse("self.age=1"), node_01);
+        }
+
 
         public static ASTNode Parse(string text)
         {

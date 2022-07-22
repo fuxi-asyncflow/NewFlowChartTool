@@ -18,6 +18,7 @@ namespace ProjectFactory
                 { Type = BuiltinTypes.VoidType, Parameters = new List<Parameter>() { new Parameter("msg") {Type = BuiltinTypes.AnyType} } });
             tp.AddMember(new Method("GetHp")
                 { Type = BuiltinTypes.NumberType, Parameters = new List<Parameter>() });
+            tp.AddMember(new Property("age") { Type = BuiltinTypes.NumberType });
             return tp;
         }
 
@@ -27,6 +28,7 @@ namespace ProjectFactory
             g.AddNode(new TextNode() {Text = "Say(\"hello\")"});
             g.AddNode(new TextNode() { Text = "Say(1)" });
             g.AddNode(new TextNode() {Text = "$a = 1"});
+            g.AddNode(new TextNode() {Text = "self.age = 1"});
             return g;
         }
 
