@@ -108,23 +108,23 @@ namespace FlowChart.LuaCodeGen
 
             }
 
-            if (member is not Method)
+            if (member is not Method method)
             {
                 Error($"cannot find method `{node.FuncName}`");
                 return NodeInfo.ErrorNodeInfo;
             }
 
             // check func args
-            var method = (Method)member;
             var inputArgsNodeInfo = node.Args.ChildNodes.ConvertAll(node => node.OnVisit(this));
             var argsDef = method.Parameters;
             if (argsDef.Count == inputArgsNodeInfo.Count)
             {
                 for (int i = 0; i < inputArgsNodeInfo.Count; i++)
                 {
-                    if (argsDef[i].Type != inputArgsNodeInfo[i].Type)
+                    if (!argsDef[i].Type.CanAccept(inputArgsNodeInfo[i].Type))
                     {
-                        Error($"function args type unmatch: arg[{i}] expect `{argsDef[i].Type.Name}` buf receive `{inputArgsNodeInfo[i].Type.Name}`");
+                        Error(string.Format("function args type unmatch: arg[{0}] expect `{1}` buf receive `{2}`"
+                        , i, argsDef[i].Type.Name, inputArgsNodeInfo[i].Type.Name));
                     }
                 }
             }

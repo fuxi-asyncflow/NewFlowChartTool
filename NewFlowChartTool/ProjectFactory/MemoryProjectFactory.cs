@@ -15,7 +15,7 @@ namespace ProjectFactory
         {
             var tp = new FlowChart.Type.Type("Monster") {};
             tp.AddMember(new Method("Say")
-                { Type = BuiltinTypes.VoidType, Parameters = new List<Parameter>() { new Parameter("msg") {Type = BuiltinTypes.StringType} } });
+                { Type = BuiltinTypes.VoidType, Parameters = new List<Parameter>() { new Parameter("msg") {Type = BuiltinTypes.AnyType} } });
             tp.AddMember(new Method("GetHp")
                 { Type = BuiltinTypes.NumberType, Parameters = new List<Parameter>() });
             return tp;
