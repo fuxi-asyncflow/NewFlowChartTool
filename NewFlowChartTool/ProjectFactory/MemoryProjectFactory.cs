@@ -26,6 +26,7 @@ namespace ProjectFactory
             var g = new FlowChart.Core.Graph("test_0") { Path = "MonsterAI.test_0", Type = tp};
             g.AddNode(new TextNode() {Text = "Say(\"hello\")"});
             g.AddNode(new TextNode() { Text = "Say(1)" });
+            g.AddNode(new TextNode() {Text = "$a = 1"});
             return g;
         }
 

@@ -19,6 +19,7 @@ namespace FlowChart.Type
 
             AnyType = new Type("Any");
             AnyType.AcceptFunc = type => true;
+            UndefinedType = new Type("Undefined");
             
             ArrayType = new GenericType("Array");
         }
@@ -28,6 +29,7 @@ namespace FlowChart.Type
         public static Type StringType;
         public static Type VoidType;
         public static Type AnyType;
+        public static Type UndefinedType;
         public static Type ArrayType;
     }
 

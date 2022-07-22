@@ -233,17 +233,13 @@ namespace FlowChart.AST.Nodes
         public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
         public ASTNode Owner => ChildNodes[0];
         public ASTNode Key => ChildNodes[1];
+    }
 
-        public override bool Equals(object? obj)
-        {
-            if (obj == null) return false;
-            if (obj.GetType() != GetType()) return false;
-            var b = (SubscriptNode)obj;
-            if (!Equals(Owner, b.Owner))
-                return false;
-            if (!Equals(Key, b.Key))
-                return false;
-            return true;
-        }
+    public class AssignmentNode : ASTNode
+    {
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
+        public ASTNode Left => ChildNodes[0];
+        public ASTNode Right => ChildNodes[1];
+
     }
 }

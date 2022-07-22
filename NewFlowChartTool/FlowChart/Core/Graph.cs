@@ -14,14 +14,23 @@ namespace FlowChart.Core
             Nodes = new List<Node>();
             NodeDict = new Dictionary<string, Node>();
             Connectors = new List<Connector>();
+            Variables = new List<Variable>();
         }
+
+        #region PROPERTY
         public string Uid { get; set; }
         public string Path { get; set; }
         public List<Node> Nodes { get; set; }
         public Dictionary<string, Node> NodeDict { get; set; }
         public List<Connector> Connectors { get; set; }
+        public List<Variable> Variables { get; set; }
+        #endregion
+
+        #region REF PROPERTY
         public Project Project { get; set; }
         public Type.Type Type { get; set; }
+        #endregion
+
         public void AddNode(Node node)
         {
             if (NodeDict.ContainsKey(node.Uid))
@@ -47,5 +56,24 @@ namespace FlowChart.Core
             Connectors.Add(con);
         }
 
+        public Variable? GetVar(string varName)
+        {
+            return Variables.Find(v => v.Name == varName);
+        }
+
+        public Variable GetOrAddVariable(string name)
+        {
+            var v = GetVar(name);
+            if (v != null)
+            {
+                return v;
+            }
+            else
+            {
+                v = new Variable(name);
+                Variables.Add(v);
+                return v;
+            }
+        }
     }
 }

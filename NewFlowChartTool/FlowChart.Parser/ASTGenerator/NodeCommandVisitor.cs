@@ -149,6 +149,42 @@ namespace FlowChart.Parser.ASTGenerator
 
         #endregion
 
+        #region assignment
+
+        public override ASTNode VisitExpr_var_assign(NodeParserParser.Expr_var_assignContext context)
+        {
+            var node = new AssignmentNode();
+            node.Add(new VariableNode()
+            {
+                Text = context.VARIABLE().GetText().Substring(1)
+            });
+            node.Add(Visit(context.expr()));
+            return node;
+        }
+
+        public override ASTNode VisitExpr_member_assign(NodeParserParser.Expr_member_assignContext context)
+        {
+            var node = new AssignmentNode();
+            var memberNode = new MemberNode() { MemberName = context.NAME().GetText() };
+            memberNode.Add(Visit(context.expr(0)));
+            node.Add(memberNode);
+            node.Add(Visit(context.expr(1)));
+            return node;
+        }
+
+        public override ASTNode VisitExpr_subscript_assign(NodeParserParser.Expr_subscript_assignContext context)
+        {
+            var node = new AssignmentNode();
+            var subNode = new SubscriptNode();
+            subNode.Add(Visit(context.expr(0)));
+            subNode.Add(Visit(context.expr(1)));
+            node.Add(subNode);
+            node.Add(Visit(context.expr(2)));
+            return node;
+        }
+
+        #endregion
+
         private static readonly Dictionary<string, Operator> OpDict;
 
         public static Operator Str2Op(string st)

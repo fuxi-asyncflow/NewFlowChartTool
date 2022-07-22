@@ -51,7 +51,12 @@ namespace FlowChart.LuaCodeGen
 
         public NodeInfo Visit(VariableNode node)
         {
-            throw new NotImplementedException();
+            var v = G.GetOrAddVariable(node.Text);
+            return new NodeInfo()
+            {
+                Code = $"get_var(\"{node.Text}\")",
+                Type = v.Type
+            };
         }
 
         public NodeInfo Visit(BoolNode node)
@@ -149,6 +154,36 @@ namespace FlowChart.LuaCodeGen
             throw new NotImplementedException();
         }
 
+        public NodeInfo Visit(AssignmentNode node)
+        {
+            if (node.Left is VariableNode varNode)
+            {
+                var varNodeInfo = varNode.OnVisit(this);
+                var exprNodeInfo = node.Right.OnVisit(this);
+                var v = G.GetOrAddVariable(varNode.Text);
+                if (v.Initialized && !varNodeInfo.Type.CanAccept(exprNodeInfo.Type))
+                {
+                    Error(string.Format("assignment type unmatch: left expect `{1}` buf receive `{2}`"
+                    , varNodeInfo.Type.Name, exprNodeInfo.Type.Name));
+                }
+                else
+                {
+                    v.Type = exprNodeInfo.Type;
+                    varNodeInfo.Code = $"set_var(\"{varNode.Text}\", {exprNodeInfo.Code})";
+                    return varNodeInfo;
+                }
+            }
+            else if (node.Left is SubscriptNode subNode)
+            {
+                throw new NotImplementedException();
+            }
+            else if (node.Left is MemberNode memberNode)
+            {
+                throw new NotImplementedException();
+            }
 
+            return null;
+
+        }
     }
 }

@@ -36,6 +36,7 @@ namespace FlowChart.AST
         T Visit(FuncNode node);
         T Visit(MemberNode node);
         T Visit(SubscriptNode node);
+        T Visit(AssignmentNode node);
     }
 
 

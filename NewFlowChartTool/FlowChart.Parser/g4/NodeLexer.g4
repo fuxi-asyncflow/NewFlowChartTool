@@ -35,7 +35,7 @@ NAME
     ;
 
 VARIABLE
-    : '#' NAME
+    : '$' NAME
     ;
 
 STRING

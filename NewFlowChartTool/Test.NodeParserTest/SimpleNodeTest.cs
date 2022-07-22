@@ -157,6 +157,12 @@ namespace Test.NodeParserTest
 
         }
 
+        [Fact]
+        public void TestVariableNode()
+        {
+            
+        }
+
 
         public static ASTNode Parse(string text)
         {
