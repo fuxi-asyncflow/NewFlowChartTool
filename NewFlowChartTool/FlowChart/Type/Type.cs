@@ -12,16 +12,33 @@ namespace FlowChart.Type
     {
         static BuiltinTypes()
         {
+            Types = new List<Type>();
+
             NumberType = new Type("Number");
+            Types.Add(NumberType);
+
             BoolType = new Type("Bool");
+            Types.Add(BoolType);
+
             StringType = new Type("String");
+            Types.Add(StringType);
+
             VoidType = new Type("Void");
+            Types.Add(VoidType);
 
             AnyType = new Type("Any");
             AnyType.AcceptFunc = type => true;
+            Types.Add(AnyType);
+
             UndefinedType = new Type("Undefined");
+            Types.Add(UndefinedType);
             
             ArrayType = new GenericType("Array");
+            Types.Add(ArrayType);
+
+            GlobalType = new Type("Global");
+            Types.Add(GlobalType);
+
         }
 
         public static Type NumberType;
@@ -31,6 +48,9 @@ namespace FlowChart.Type
         public static Type AnyType;
         public static Type UndefinedType;
         public static Type ArrayType;
+        public static Type GlobalType;
+
+        public static List<Type> Types;
     }
 
     public class Type : Core.Item

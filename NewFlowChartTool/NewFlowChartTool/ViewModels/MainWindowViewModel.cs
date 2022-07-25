@@ -9,10 +9,20 @@ using Prism.Events;
 using FlowChart.Core;
 using System.Windows;
 using System.Collections.ObjectModel;
+using FlowChart.AST;
+using FlowChart.LuaCodeGen;
+using FlowChart.Parser;
 using NFCT.Graph.ViewModels;
 
 namespace NewFlowChartTool.ViewModels
 {
+    class CodeGenFactory : ICodeGenFactory
+    {
+        public ICodeGenerator CreateCodeGenerator(Project p, Graph g)
+        {
+            return new CodeGenerator() { G = g, P = p };
+        }
+    }
 
     public class MainWindowViewModel : BindableBase
     {
@@ -66,6 +76,7 @@ namespace NewFlowChartTool.ViewModels
             var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
+            p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
             _ea.GetEvent<Event.ProjectOpenEvent>().Publish(p);
         }
 

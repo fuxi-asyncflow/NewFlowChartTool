@@ -1,6 +1,7 @@
 ﻿using FlowChart.Type;
 using FlowChart.Core;
 using System.Text.Json;
+using Type = System.Type;
 
 namespace ProjectFactory
 {
@@ -73,16 +74,18 @@ namespace ProjectFactory
         public int Source { get; set; }
         public List<MemberJson> Members { get; set; }
 
-        public static Dictionary<string, FlowChart.Type.Type> types 
-            = new Dictionary<string, FlowChart.Type.Type>();
+        public static Project Project { get; set; }
         
         public static FlowChart.Type.Type GetType(string name)
         {
-            if(types.ContainsKey(name))
+            var tp = Project.GetType(name);
+            if (tp == null)
             {
-                return types[name];
+                Console.WriteLine($"unkown type : `{name}`");
+                return FlowChart.Type.BuiltinTypes.UndefinedType;
             }
-            return new FlowChart.Type.Type($"Undefined<{name}>");
+
+            return tp;
         }
 
     }
@@ -154,12 +157,13 @@ namespace ProjectFactory
             var sp = Path.DirectorySeparatorChar;
             string path = project.Path;
             LoadConfig($"{path}{sp}config.json");
-
+            TypeJson.Project = Project;
             LoadTypes($"{path}{sp}types");            
 
             foreach (var kv in projectConfig.flowchart_type)
             {
-                LoadFlowchartFile($"{path}{sp}charts{sp}{kv.Key}.json");
+                var tp = Project.GetType(kv.Value);
+                LoadFlowchartFile($"{path}{sp}charts{sp}{kv.Key}.json", tp);
             }
             
         }
@@ -221,8 +225,18 @@ namespace ProjectFactory
                         Console.WriteLine("load chart json failed");
                         continue;
                     }
-                    var tp = new FlowChart.Type.Type(tpJson.Name);
-                    tmp_dict.Add(tp, tpJson);
+                    if(tpJson.Name != "Global")
+                    {
+                        var tp = new FlowChart.Type.Type(tpJson.Name);
+                        Project.AddType(tp);
+                        tmp_dict.Add(tp, tpJson);
+                    }
+                    else
+                    {
+                        var tp = Project.GetGlobalType();
+                        tmp_dict.Add(tp, tpJson);
+                    }
+
                 }
             }
 
@@ -239,7 +253,7 @@ namespace ProjectFactory
             return true;
         }
 
-        void LoadFlowchartFile(string fileName)
+        void LoadFlowchartFile(string fileName, FlowChart.Type.Type tp)
         {
             var fs = GetFileStream(fileName);
             fs.Position = 0;
@@ -247,7 +261,7 @@ namespace ProjectFactory
             Console.WriteLine($"load chart File {fileName} success, {chartFileJson.Charts.Count} chart is loaded");
             chartFileJson.Charts.ForEach(chart =>
             {
-                var graph = new Graph(chart.Path.Split(".").Last());
+                var graph = new Graph(chart.Path.Split(".").Last()) {Type = tp};
                 chart.ToGraph(graph);
                 Project.AddGraph(graph);
             });

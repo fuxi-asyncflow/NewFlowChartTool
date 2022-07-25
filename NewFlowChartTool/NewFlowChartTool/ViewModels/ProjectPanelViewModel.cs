@@ -24,8 +24,11 @@ namespace NewFlowChartTool.ViewModels
 
         public virtual void Open()
         {
-            if (_item is Graph)
-                EventHelper.Pub<GraphOpenEvent, Graph>((Graph)_item);
+            if (_item is Graph graph)
+            {
+                EventHelper.Pub<GraphOpenEvent, Graph>(graph);
+                graph.Project.BuildGraph(graph);
+            }
         }        
     }
 

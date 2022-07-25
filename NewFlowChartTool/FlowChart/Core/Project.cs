@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using FlowChart.Parser;
+using FlowChart.Type;
 
 namespace FlowChart.Core
 {
@@ -21,6 +23,7 @@ namespace FlowChart.Core
             Root = new Folder("");
             TypeDict = new Dictionary<string, Type.Type>();
             GraphDict = new Dictionary<string, Graph>();
+            BuiltinTypes.Types.ForEach(AddType);
         }
 
         public static Guid GenUUID()
@@ -34,6 +37,7 @@ namespace FlowChart.Core
         public Dictionary<string, Type.Type> TypeDict { get; set; }
         IProjectFactory Factory { get; set; }
         public Dictionary<string, Graph> GraphDict { get; set; }
+        public Builder Builder { get; set; }
         #endregion
 
         public bool Load()
@@ -47,9 +51,16 @@ namespace FlowChart.Core
             TypeDict.Add(type.Name, type);
         }
 
+        public Type.Type? GetType(string typeName)
+        {
+            Type.Type? type = null;
+            TypeDict.TryGetValue(typeName, out type);
+            return type;
+        }
+
         public Type.Type GetGlobalType()
         {
-            return new Type.Type("Global");
+            return BuiltinTypes.GlobalType;
         }
 
         public void AddGraph(Graph graph)
@@ -80,5 +91,19 @@ namespace FlowChart.Core
             GraphDict.Add(graph.Path, graph);
             graph.Project = this;
         }
+
+        #region PARSER and BUILDER
+
+        public void Build()
+        {
+
+        }
+
+        public void BuildGraph(Graph graph)
+        {
+            Builder.BuildGraph(graph);
+        }
+
+        #endregion
     }
 }

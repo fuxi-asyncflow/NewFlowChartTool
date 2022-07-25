@@ -47,6 +47,7 @@ namespace FlowChart.Parser
         public void BuildNode(TextNode node, ICodeGenerator generator)
         {
             var ast = parser.Parse(node.Text);
+            Console.WriteLine($"[parse]: {node.Text}");
             //Console.WriteLine($"ast: {ast}");
             if(ast != null)
                 generator.GenerateCode(ast);
