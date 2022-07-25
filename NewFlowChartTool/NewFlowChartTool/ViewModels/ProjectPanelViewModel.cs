@@ -8,6 +8,7 @@ using Prism.Mvvm;
 using Prism.Events;
 using Prism.Ioc;
 using FlowChart.Core;
+using NewFlowChartTool.Event;
 
 namespace NewFlowChartTool.ViewModels
 {
@@ -24,7 +25,7 @@ namespace NewFlowChartTool.ViewModels
         public virtual void Open()
         {
             if (_item is Graph)
-                ContainerLocator.Current.Resolve<IEventAggregator>().GetEvent<Event.GraphOpenEvent>().Publish((Graph)_item);
+                EventHelper.Pub<GraphOpenEvent, Graph>((Graph)_item);
         }        
     }
 

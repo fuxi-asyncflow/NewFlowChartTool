@@ -31,21 +31,7 @@ namespace NewFlowChartTool.ViewModels
             OpenProjectCommand = new DelegateCommand(OpenProject, () => true);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
 
-            _ea.GetEvent<Event.GraphOpenEvent>().Subscribe(graph =>
-            {
-                foreach(var gvm in OpenedGraphs)
-                {
-                    if(gvm.Graph == graph)
-                    {
-                        ActiveGraph = gvm;
-                        return;
-                    }
-                }
-                             
-                OpenedGraphs.Add(new GraphPaneViewModel(graph));
-                ActiveGraph = OpenedGraphs.Last();
-
-            });
+            _ea.GetEvent<Event.GraphOpenEvent>().Subscribe(OnOpenGraph);
 #if DEBUG
             OpenProject();
 #endif
@@ -103,6 +89,21 @@ namespace NewFlowChartTool.ViewModels
                 Application.Current.Resources.MergedDictionaries[1].Source
                     = new Uri("pack://application:,,,/NFCT.Themes;component/DarkTheme.xaml");
             }
+        }
+
+        public void OnOpenGraph(Graph graph)
+        {
+            foreach (var gvm in OpenedGraphs)
+            {
+                if (gvm.Graph == graph)
+                {
+                    ActiveGraph = gvm;
+                    return;
+                }
+            }
+
+            OpenedGraphs.Add(new GraphPaneViewModel(graph));
+            ActiveGraph = OpenedGraphs.Last();
         }
     }
 }
