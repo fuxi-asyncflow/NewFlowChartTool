@@ -80,6 +80,17 @@ public partial class NodeParserBaseVisitor<Result> : AbstractParseTreeVisitor<Re
 	/// <return>The visitor result.</return>
 	public virtual Result VisitExpr_parenthesis([NotNull] NodeParserParser.Expr_parenthesisContext context) { return VisitChildren(context); }
 	/// <summary>
+	/// Visit a parse tree produced by the <c>expr_name</c>
+	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
+	/// <para>
+	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
+	/// on <paramref name="context"/>.
+	/// </para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	public virtual Result VisitExpr_name([NotNull] NodeParserParser.Expr_nameContext context) { return VisitChildren(context); }
+	/// <summary>
 	/// Visit a parse tree produced by the <c>expr_container</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
 	/// <para>

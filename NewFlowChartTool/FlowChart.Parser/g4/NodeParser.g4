@@ -9,6 +9,7 @@ stat
 // top has high priority
 expr
     : atom_expr                     # expr_atom
+    | NAME                          # expr_name
     | container_expr                # expr_container
     | '(' expr ')'                  # expr_parenthesis
     | expr '.' NAME                 # expr_member

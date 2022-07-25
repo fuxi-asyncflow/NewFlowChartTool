@@ -50,6 +50,52 @@ namespace FlowChart.LuaCodeGen
             return new NodeInfo() { Code = node.Text, Type = Type.BuiltinTypes.StringType };
         }
 
+        public NodeInfo Visit(NameNode node)
+        {
+            var text = node.Text;
+            // name node could be property
+            Member? member = G.Type.FindMember(text);
+            string code = "";
+            if (member is Property)
+            {
+                code = "self.";
+            }
+            else
+            {
+                member = P.GetGlobalType().FindMember(text);
+            }
+
+            if (member is Property prop)
+            {
+                return new NodeInfo() { Type = prop.Type, Code = code + prop.Name };
+                
+            }
+
+            // event
+            if (text.StartsWith("On"))
+            {
+                var evName = text.Substring(2);
+                var ev = P.GetEvent(evName);
+                if (ev != null)
+                {
+                    return new NodeInfo() { Type = ev, Code = $"wait_event(\"{evName}\")" };
+                }
+            }
+            else
+            {
+                var evName = text;
+                var ev = P.GetEvent(evName);
+                if (ev != null)
+                {
+                    return new NodeInfo() { Type = ev, Code = $"wait_event(\"{evName}\")" };
+                }
+            }
+
+            Error($"cannot find property or Event `{node.Text}`");
+            return NodeInfo.ErrorNodeInfo;
+
+        }
+
         public NodeInfo Visit(VariableNode node)
         {
             var v = G.GetOrAddVariable(node.Text);

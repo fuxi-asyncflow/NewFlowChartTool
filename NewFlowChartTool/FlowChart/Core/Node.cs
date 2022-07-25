@@ -16,6 +16,11 @@ namespace FlowChart.Core
 
     }
 
+    public class StartNode : Node
+    {
+
+    }
+
     public class TextNode : Node
     {
         public string Text { get; set; }

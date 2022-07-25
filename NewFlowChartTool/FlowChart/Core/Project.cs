@@ -23,6 +23,7 @@ namespace FlowChart.Core
             Root = new Folder("");
             TypeDict = new Dictionary<string, Type.Type>();
             GraphDict = new Dictionary<string, Graph>();
+            EventDict = new Dictionary<string, Event>();
             BuiltinTypes.Types.ForEach(AddType);
         }
 
@@ -35,6 +36,7 @@ namespace FlowChart.Core
         public string Path { get; set; }
         public Folder Root { get; set; }
         public Dictionary<string, Type.Type> TypeDict { get; set; }
+        public Dictionary<string, Type.Event> EventDict { get; set; }
         IProjectFactory Factory { get; set; }
         public Dictionary<string, Graph> GraphDict { get; set; }
         public Builder Builder { get; set; }
@@ -61,6 +63,23 @@ namespace FlowChart.Core
         public Type.Type GetGlobalType()
         {
             return BuiltinTypes.GlobalType;
+        }
+
+        public bool AddEvent(Type.Event ev)
+        {
+            if (EventDict.ContainsKey(ev.Name))
+            {
+                Console.WriteLine("event duplicated");
+                return false;
+            }
+            EventDict.Add(ev.Name, ev);
+            return true;
+        }
+
+        public Event? GetEvent(string evName)
+        {
+            EventDict.TryGetValue(evName, out var ev);
+            return ev;
         }
 
         public void AddGraph(Graph graph)

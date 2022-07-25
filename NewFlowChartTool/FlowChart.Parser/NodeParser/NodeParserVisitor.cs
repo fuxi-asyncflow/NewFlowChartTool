@@ -61,6 +61,13 @@ public interface INodeParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExpr_parenthesis([NotNull] NodeParserParser.Expr_parenthesisContext context);
 	/// <summary>
+	/// Visit a parse tree produced by the <c>expr_name</c>
+	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExpr_name([NotNull] NodeParserParser.Expr_nameContext context);
+	/// <summary>
 	/// Visit a parse tree produced by the <c>expr_container</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
 	/// </summary>

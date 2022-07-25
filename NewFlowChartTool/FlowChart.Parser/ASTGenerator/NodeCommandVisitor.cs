@@ -64,6 +64,12 @@ namespace FlowChart.Parser.ASTGenerator
         {
             return new SelfNode() { Text = context.SELF().GetText() };
         }
+
+        public override ASTNode VisitExpr_name(NodeParserParser.Expr_nameContext context)
+        {
+            return new NameNode { Text = context.NAME().GetText() };
+        }
+
         #endregion
 
         #region operator

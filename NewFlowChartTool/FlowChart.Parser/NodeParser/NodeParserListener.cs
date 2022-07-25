@@ -80,6 +80,18 @@ public interface INodeParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitExpr_parenthesis([NotNull] NodeParserParser.Expr_parenthesisContext context);
 	/// <summary>
+	/// Enter a parse tree produced by the <c>expr_name</c>
+	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExpr_name([NotNull] NodeParserParser.Expr_nameContext context);
+	/// <summary>
+	/// Exit a parse tree produced by the <c>expr_name</c>
+	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExpr_name([NotNull] NodeParserParser.Expr_nameContext context);
+	/// <summary>
 	/// Enter a parse tree produced by the <c>expr_container</c>
 	/// labeled alternative in <see cref="NodeParserParser.expr"/>.
 	/// </summary>

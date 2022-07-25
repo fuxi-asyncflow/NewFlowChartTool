@@ -211,6 +211,13 @@ namespace Test.NodeParserTest
             Assert.Equal(Parse("self.age=1"), node_01);
         }
 
+        [Fact]
+        public void TestNameNode()
+        {
+            NameNode node_00 = new NameNode() {Text = "name"};
+            Assert.Equal(Parse("time"), node_00);
+        }
+
         public static ArgNode CreateArgNode(ASTNode node, string? name = null)
         {
             var isNamed = !string.IsNullOrEmpty(name);

@@ -90,6 +90,30 @@ namespace ProjectFactory
 
     }
 
+    class EventJson
+    {
+        public string Uid { get; set; }
+        public string Name { get; set; }
+        public int Id { get; set; }
+        public List<ParameterInfo>? Parameters { get; set; }
+        public FlowChart.Type.Event ToEvent()
+        {
+            var ev = new FlowChart.Type.Event(Name);
+            if (Parameters != null)
+            {
+                Parameters.ForEach(param =>
+                {
+                    ev.AddMember(new Property(param.Name)
+                    {
+                        Type = TypeJson.GetType(param.Type)
+                    });
+                });
+            }
+            return ev;
+        }
+    }
+
+
     class NodeJson
     {
         public string Uid { get; set; }
@@ -128,6 +152,7 @@ namespace ProjectFactory
             g.Uid = Uid;
             g.Path = Path;
             Nodes.ForEach(node => g.AddNode(node.ToNode()));
+            g.Nodes[0] = new StartNode();
             Connectors.ForEach(con => g.Connect(con.Start, con.End));
         }
     }
@@ -210,15 +235,20 @@ namespace ProjectFactory
         {
             var files = Directory.GetFiles(typeFolder);
             var tmp_dict = new Dictionary<FlowChart.Type.Type, TypeJson>();
+            string eventFileName = null;
             foreach(var fileName in files)
             {
                 if(fileName.EndsWith(".json"))
                 {
                     if (fileName.EndsWith("event.json"))
+                    {
+                        eventFileName = fileName;
                         continue;
+                    }
+
                     var fs = GetFileStream(fileName);
                     fs.Position = 0;
-                    var tpJson = JsonSerializer.Deserialize<TypeJson>(fs);                    
+                    var tpJson = JsonSerializer.Deserialize<TypeJson>(fs);
                     
                     if(tpJson == null)
                     {
@@ -244,12 +274,30 @@ namespace ProjectFactory
             {
                 LoadType(kv.Key, kv.Value);
             }
+
+            if (!string.IsNullOrEmpty(eventFileName))
+            {
+                var eventFs = GetFileStream(eventFileName);
+                eventFs.Position = 0;
+                var eventJson = JsonSerializer.Deserialize<List<EventJson>>(eventFs);
+                LoadEvent(eventJson);
+            }
         }
 
         bool LoadType(FlowChart.Type.Type tp, TypeJson js)
         {
             tp.Name = js.Name;
             js.Members.ForEach(m => tp.AddMember(m.ToMember()));
+            return true;
+        }
+
+        bool LoadEvent(List<EventJson> eventsJson)
+        {
+            foreach (var eventJson in eventsJson)
+            {
+
+                Project.AddEvent(eventJson.ToEvent());
+            }
             return true;
         }
 

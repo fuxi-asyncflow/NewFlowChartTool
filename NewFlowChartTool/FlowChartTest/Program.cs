@@ -58,8 +58,8 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
 
         static void OpenProjectTest()
         {
-            //var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
-            var p = new FlowChart.Core.Project(new ProjectFactory.MemoryProjectFactory());
+            var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
+            //var p = new FlowChart.Core.Project(new ProjectFactory.MemoryProjectFactory());
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
 
