@@ -13,6 +13,7 @@ namespace FlowChart.Core
             Uid = Project.GenUUID().ToString();
         }
         public string Uid { get; set; }
+        public Graph OwnerGraph { get; set; }
 
     }
 

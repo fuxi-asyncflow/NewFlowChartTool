@@ -121,6 +121,8 @@ namespace ProjectFactory
 
         public Node ToNode()
         {
+            if (Uid == "0")
+                return new StartNode() { Uid = Uid };
             return new TextNode() { Uid = Uid, Text = Text};
         }
     }
@@ -152,7 +154,7 @@ namespace ProjectFactory
             g.Uid = Uid;
             g.Path = Path;
             Nodes.ForEach(node => g.AddNode(node.ToNode()));
-            g.Nodes[0] = new StartNode();
+            //g.Nodes[0] = new StartNode() { Uid = g.Nodes[0].Uid };
             Connectors.ForEach(con => g.Connect(con.Start, con.End));
         }
     }

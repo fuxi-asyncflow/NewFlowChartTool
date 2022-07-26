@@ -16,7 +16,7 @@ namespace NFCT.Graph.ViewModels
     {
         public INode Start { get; set; }
         public INode End { get; set; }
-        public ConnectorViewModel(Connector conn, TextNodeViewModel start, TextNodeViewModel end)
+        public ConnectorViewModel(Connector conn, BaseNodeViewModel start, BaseNodeViewModel end)
         {
             Start = start;
             End = end;

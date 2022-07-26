@@ -30,31 +30,28 @@ namespace NFCT.Graph.ViewModels
         public GraphPaneViewModel(FlowChart.Core.Graph graph)
         {
             _graph = graph;
-            Nodes = new ObservableCollection<TextNodeViewModel>();
-            NodeDict = new Dictionary<Node, TextNodeViewModel>();
+            Nodes = new ObservableCollection<BaseNodeViewModel>();
+            NodeDict = new Dictionary<Node, BaseNodeViewModel>();
             Connectors = new ObservableCollection<ConnectorViewModel>();
             Initialize();
         }
 
         public void AddNode(Node node)
         {
-            var tNode = node as TextNode;
-            if (tNode == null) return;
-            var vm = new TextNodeViewModel(tNode, this);
+            var vm = BaseNodeViewModel.CreateNodeViewModel(node, this);
             Nodes.Add(vm);
-            NodeDict.Add(tNode, vm);
+            NodeDict.Add(node, vm);
         }
 
         public void Connect(Connector conn)
         {
             var start = conn.Start;
             var end = conn.End;
-            TextNodeViewModel? startVm, endVm;
+            BaseNodeViewModel? startVm, endVm;
             if (NodeDict.TryGetValue(start, out startVm) &&  NodeDict.TryGetValue(end, out endVm))
             {
                 Connectors.Add(new ConnectorViewModel(conn, startVm, endVm));
-            }           
-          
+            }
         }
 
         public void Initialize()
@@ -72,8 +69,8 @@ namespace NFCT.Graph.ViewModels
 
         public string Description { get => _graph.Description;}
 
-        public ObservableCollection<TextNodeViewModel> Nodes { get; set; }
-        public Dictionary<Node, TextNodeViewModel> NodeDict { get; set; }
+        public ObservableCollection<BaseNodeViewModel> Nodes { get; set; }
+        public Dictionary<Node, BaseNodeViewModel> NodeDict { get; set; }
         public ObservableCollection<ConnectorViewModel> Connectors { get; set; }
         public bool NeedLayout { get; set; }
         public double Width { get; set; }
@@ -92,7 +89,7 @@ namespace NFCT.Graph.ViewModels
             {
                 Console.WriteLine($"[error] layout failed {e.Message}");
             }
-            
+
         }
     }
 }

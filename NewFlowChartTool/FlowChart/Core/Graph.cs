@@ -35,6 +35,7 @@ namespace FlowChart.Core
         {
             if (NodeDict.ContainsKey(node.Uid))
                 return;
+            node.OwnerGraph = this;
             NodeDict.Add(node.Uid, node);
             Nodes.Add(node);
         }

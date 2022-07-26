@@ -25,11 +25,20 @@
                         <Setter Property="Canvas.Top" Value="{Binding CY}" />
                     </Style>
                 </ItemsControl.ItemContainerStyle>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <views:TextNode />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemTemplateSelector>
+                    <utility:GraphNodesTemplateSelector>
+                        <utility:GraphNodesTemplateSelector.TextNodeTemplate>
+                            <DataTemplate>
+                                <views:TextNode />
+                            </DataTemplate>
+                        </utility:GraphNodesTemplateSelector.TextNodeTemplate>
+                        <utility:GraphNodesTemplateSelector.StartNodeTemplate>
+                            <DataTemplate>
+                                <views:StartNode />
+                            </DataTemplate>
+                        </utility:GraphNodesTemplateSelector.StartNodeTemplate>
+                    </utility:GraphNodesTemplateSelector>
+                </ItemsControl.ItemTemplateSelector>
             </ItemsControl>
 
             <ItemsControl ItemsSource="{Binding Connectors}">
