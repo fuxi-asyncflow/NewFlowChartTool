@@ -57,6 +57,7 @@ namespace NewFlowChartTool.ViewModels
                     AddType(tp);
                 }
             }
+            AddEvents(project);
             //TypeTreeRoot = CreateTreeItemViewModel(project.Root);
             //if (TypeTreeRoot is ProjectTreeFolderViewModel)
             //{
@@ -69,6 +70,18 @@ namespace NewFlowChartTool.ViewModels
         {
             var typeRoot = new TypeMemberTreeFolderViewModel(tp);
             foreach (var kv in tp.MemberDict)
+            {
+                var treeItem = new TypeMemberTreeItemViewModel(kv.Value);
+                typeRoot.AddChild(treeItem);
+            }
+            Roots.Add(typeRoot);
+            RaisePropertyChanged("Roots");
+        }
+
+        public void AddEvents(Project project)
+        {
+            var typeRoot = new TypeMemberTreeFolderViewModel(new Item("Events"));
+            foreach (var kv in project.EventDict)
             {
                 var treeItem = new TypeMemberTreeItemViewModel(kv.Value);
                 typeRoot.AddChild(treeItem);
