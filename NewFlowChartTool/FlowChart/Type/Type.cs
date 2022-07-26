@@ -14,26 +14,26 @@ namespace FlowChart.Type
         {
             Types = new List<Type>();
 
-            NumberType = new Type("Number");
+            NumberType = new Type("Number") {IsBuiltinType = true};
             Types.Add(NumberType);
 
-            BoolType = new Type("Bool");
+            BoolType = new Type("Bool") { IsBuiltinType = true };
             Types.Add(BoolType);
 
-            StringType = new Type("String");
+            StringType = new Type("String") { IsBuiltinType = true };
             Types.Add(StringType);
 
-            VoidType = new Type("Void");
+            VoidType = new Type("Void") { IsBuiltinType = true };
             Types.Add(VoidType);
 
-            AnyType = new Type("Any");
+            AnyType = new Type("Any") { IsBuiltinType = true };
             AnyType.AcceptFunc = type => true;
             Types.Add(AnyType);
 
-            UndefinedType = new Type("Undefined");
+            UndefinedType = new Type("Undefined") { IsBuiltinType = true };
             Types.Add(UndefinedType);
             
-            ArrayType = new GenericType("Array");
+            ArrayType = new GenericType("Array") { IsBuiltinType = true };
             Types.Add(ArrayType);
 
             GlobalType = new Type("Global");
@@ -61,6 +61,7 @@ namespace FlowChart.Type
             MemberDict = new Dictionary<string, Member>();
             CompatibleTypes = new List<Type>();
             BaseTypes = new List<Type>();
+            IsBuiltinType = false;
         }
 
         public List<Type> BaseTypes;
@@ -68,6 +69,7 @@ namespace FlowChart.Type
         public Dictionary<string, Member> MemberDict;
 
         public List<Type> CompatibleTypes;
+        public bool IsBuiltinType { get; set; }
 
         public bool AddMember(Member member, bool replace = true)
         {
