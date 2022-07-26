@@ -23,6 +23,16 @@ namespace NewFlowChartTool.Event
             ea.GetEvent<TEvent>().Publish(eventArg);
         }
 
+        public static void Sub<TEvent, TArg>(Action<TArg> cb) where TEvent : PubSubEvent<TArg>, new()
+        {
+            ea.GetEvent<TEvent>().Subscribe(cb);
+        }
+
+        public static void Sub<TEvent, TArg>(Action<TArg> cb, ThreadOption to) where TEvent : PubSubEvent<TArg>, new()
+        {
+            ea.GetEvent<TEvent>().Subscribe(cb, to);
+        }
+
         private static IEventAggregator ea;
 
     }
