@@ -21,15 +21,15 @@
     </UserControl.Resources>
     <Grid Style="{DynamicResource GridStyle}">
         <TreeView
-            x:Name="ProjectTree"
+            x:Name="TypeTree"
             Background="Transparent"
             ItemsSource="{Binding Roots}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type vm:TypeMemberTreeFolderViewModel}" ItemsSource="{Binding Children}">
-                    <Label Content="{Binding Name}" Style="{DynamicResource LabelStyle}" />
+                    <TextBlock Text="{Binding Name}" Style="{DynamicResource TextBlockStyle}" />
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type vm:TypeMemberTreeItemViewModel}">
-                    <Label Content="{Binding Name}" Style="{DynamicResource LabelStyle}" />
+                    <TextBlock Text="{Binding Name}" Style="{DynamicResource TextBlockStyle}" />
                 </DataTemplate>
             </TreeView.Resources>
             <TreeView.ItemContainerStyle>

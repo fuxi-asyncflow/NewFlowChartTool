@@ -15,6 +15,7 @@ namespace ProjectFactory
     {
         private Project Current { get; set; }
         private DirectoryInfo ProjectDir { get; set; }
+        private DirectoryInfo CurrentJsonDir { get; set; }
 
         private string GetFullPath(string relPath)
         {
@@ -84,6 +85,7 @@ namespace ProjectFactory
         void LoadChartsFromJsonFile(string name, string path)
         {
             var jsonFilePath = string.Format("{0}{2}{1}.json", path, name, System.IO.Path.DirectorySeparatorChar);
+            CurrentJsonDir = new FileInfo(jsonFilePath).Directory;
             var jsonStr = File.ReadAllText(jsonFilePath);
             var root = JsonDocument.Parse(jsonStr, new JsonDocumentOptions(){CommentHandling = JsonCommentHandling.Skip, AllowTrailingCommas = true}).RootElement;
             
@@ -110,9 +112,19 @@ namespace ProjectFactory
                 {
                     LoadChart(chartObj, name, path, chartType);
                 }
-                else if (chartObj.TryGetProperty("nodes", out obj))
+                else if (chartObj.TryGetProperty("folder", out obj))
                 {
                     LoadFolder(obj, name, path, chartType);
+                }
+                else if (chartObj.TryGetProperty("file", out obj))
+                {
+                    var jsonFilePath = CurrentJsonDir + "\\" + obj.GetString();
+                    var jsonStr = File.ReadAllText(jsonFilePath);
+                    var root = JsonDocument.Parse(jsonStr, new JsonDocumentOptions()
+                    {
+                        CommentHandling = JsonCommentHandling.Skip, AllowTrailingCommas = true
+                    }).RootElement;
+                    LoadFolder(root.GetProperty("folder"), name, path, chartType);
                 }
             }
         }

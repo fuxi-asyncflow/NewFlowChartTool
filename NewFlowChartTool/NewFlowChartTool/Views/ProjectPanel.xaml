@@ -27,10 +27,10 @@
             ItemsSource="{Binding Roots}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type vm:ProjectTreeFolderViewModel}" ItemsSource="{Binding Children}">
-                    <Label Content="{Binding Name}" Style="{DynamicResource LabelStyle}" />
+                    <TextBlock Text="{Binding Name}" Style="{DynamicResource TextBlockStyle}" />
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
-                    <Label Content="{Binding Name}" Style="{DynamicResource LabelStyle}" />
+                    <TextBlock Text="{Binding Name}" Style="{DynamicResource TextBlockStyle}" />
                 </DataTemplate>
             </TreeView.Resources>
             <TreeView.ItemContainerStyle>
