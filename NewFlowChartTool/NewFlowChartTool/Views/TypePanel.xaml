@@ -7,8 +7,10 @@
              xmlns:mvvm="http://prismlibrary.com/"
              xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
              mvvm:ViewModelLocator.AutoWireViewModel="True"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance vm:TypePanelViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

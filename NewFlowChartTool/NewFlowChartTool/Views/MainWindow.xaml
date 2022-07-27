@@ -9,9 +9,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pane="clr-namespace:NewFlowChartTool.Views.Pane"
     xmlns:views="clr-namespace:NewFlowChartTool.Views"
+    xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
     Title="MainWindow"
     Width="800"
     Height="450"
+    d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
     mc:Ignorable="d">
     <Window.Resources>
         <conv:ActiveGraphConverter x:Key="ActiveGraphConverter" />

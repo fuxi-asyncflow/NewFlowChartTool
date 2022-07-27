@@ -14,6 +14,7 @@ namespace FlowChart.Core
         }
         public string Uid { get; set; }
         public Graph OwnerGraph { get; set; }
+        public string? Description { get; set; }
 
     }
 
