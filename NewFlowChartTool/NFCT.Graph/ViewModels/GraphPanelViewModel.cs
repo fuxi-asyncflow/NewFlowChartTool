@@ -22,11 +22,17 @@ namespace NFCT.Graph.ViewModels
         public double Width { set => _g.Width = value; }
         public double Height { set => _g.Height = value; }
     }
+
     public class GraphPaneViewModel : BindableBase
-    {        
+    {
 
         private FlowChart.Core.Graph _graph;
-        public FlowChart.Core.Graph Graph { get => _graph; }
+
+        public FlowChart.Core.Graph Graph
+        {
+            get => _graph;
+        }
+
         public GraphPaneViewModel(FlowChart.Core.Graph graph)
         {
             _graph = graph;
@@ -48,7 +54,7 @@ namespace NFCT.Graph.ViewModels
             var start = conn.Start;
             var end = conn.End;
             BaseNodeViewModel? startVm, endVm;
-            if (NodeDict.TryGetValue(start, out startVm) &&  NodeDict.TryGetValue(end, out endVm))
+            if (NodeDict.TryGetValue(start, out startVm) && NodeDict.TryGetValue(end, out endVm))
             {
                 Connectors.Add(new ConnectorViewModel(conn, startVm, endVm));
             }
@@ -65,16 +71,32 @@ namespace NFCT.Graph.ViewModels
             NeedLayout = true;
         }
 
-        public string Name { get => _graph.Name; }
+        public string Name => _graph.Name;
+        public string FullPath => _graph.Path;
+        
 
-        public string Description { get => _graph.Description;}
+        public string Description
+        {
+            get => _graph.Description;
+        }
 
         public ObservableCollection<BaseNodeViewModel> Nodes { get; set; }
         public Dictionary<Node, BaseNodeViewModel> NodeDict { get; set; }
         public ObservableCollection<ConnectorViewModel> Connectors { get; set; }
         public bool NeedLayout { get; set; }
-        public double Width { get; set; }
-        public double Height { get; set; }
+        private double _width;
+        public double Width
+        {
+            get => _width;
+            set { if(value != _width) SetProperty(ref _width, value); }
+        }
+
+        public double _height;
+        public double Height
+        {
+            get => _height;
+            set { if (value != _height) SetProperty(ref _height, value); }
+        }
 
         public void Relayout()
         {
@@ -91,5 +113,39 @@ namespace NFCT.Graph.ViewModels
             }
 
         }
+
+        #region SCROLL
+
+        private double _scrollX;
+        private double _scrollY;
+
+        public double ScrollX
+        {
+            get => _scrollX;
+            set { SetProperty(ref _scrollX, value); }
+        }
+
+        public double ScrollY
+        {
+            get { return _scrollY; }
+            set { SetProperty(ref _scrollY, value); }
+        }
+
+        private double _scrollViewerWidth;
+        private double _scrollViewerHeight;
+
+        public double ScrollViewerWidth
+        {
+            get { return _scrollViewerWidth; }
+            set { SetProperty(ref _scrollViewerWidth, value); }
+        }
+
+        public double ScrollViewerHeight
+        {
+            get { return _scrollViewerHeight; }
+            set { SetProperty(ref _scrollViewerHeight, value); }
+
+        }
+        #endregion
     }
 }

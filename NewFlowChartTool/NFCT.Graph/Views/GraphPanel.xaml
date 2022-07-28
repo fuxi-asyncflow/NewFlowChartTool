@@ -8,55 +8,76 @@
     xmlns:utility="clr-namespace:NFCT.Graph.Utility"
     xmlns:views="clr-namespace:NFCT.Graph.Views"
     xmlns:vm="clr-namespace:NFCT.Graph.ViewModels"
+    d:DataContext="{d:DesignInstance vm:GraphPaneViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    d:DataContext="{d:DesignInstance vm:GraphPaneViewModel}"
     mc:Ignorable="d">
-    <Grid Background="PowderBlue" LayoutUpdated="Graph_LayoutUpdated">
-        <Grid.Resources />
-        <Canvas>
-            <ItemsControl ItemsSource="{Binding Nodes}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemContainerStyle>
-                    <Style TargetType="ContentPresenter">
-                        <Setter Property="Canvas.Left" Value="{Binding CX}" />
-                        <Setter Property="Canvas.Top" Value="{Binding CY}" />
-                    </Style>
-                </ItemsControl.ItemContainerStyle>
-                <ItemsControl.ItemTemplateSelector>
-                    <utility:GraphNodesTemplateSelector>
-                        <utility:GraphNodesTemplateSelector.TextNodeTemplate>
+    <DockPanel Dock="Top" LastChildFill="True">
+        <DockPanel DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Background="DarkSeaGreen" Text="{Binding FullPath}" />
+            </StackPanel>
+        </DockPanel>
+        <Grid Background="PowderBlue" LayoutUpdated="Graph_LayoutUpdated">
+            <ScrollViewer
+                Name="CanvasScroll"
+                utility:ScrollViewerBinding.HorizontalOffset="{Binding ScrollX, Mode=TwoWay}"
+                utility:ScrollViewerBinding.VerticalOffset="{Binding ScrollY, Mode=TwoWay}"
+                utility:SizeObserver.Observe="True"
+                utility:SizeObserver.ObservedHeight="{Binding ScrollViewerHeight, Mode=OneWayToSource}"
+                utility:SizeObserver.ObservedWidth="{Binding ScrollViewerWidth, Mode=OneWayToSource}"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <Canvas
+                    Name="GraphCanvas"
+                    Width="{Binding Width}"
+                    Height="{Binding Height}">
+                    <!--  Nodes  -->
+                    <ItemsControl ItemsSource="{Binding Nodes}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Left" Value="{Binding CX}" />
+                                <Setter Property="Canvas.Top" Value="{Binding CY}" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemTemplateSelector>
+                            <utility:GraphNodesTemplateSelector>
+                                <utility:GraphNodesTemplateSelector.TextNodeTemplate>
+                                    <DataTemplate>
+                                        <views:TextNode />
+                                    </DataTemplate>
+                                </utility:GraphNodesTemplateSelector.TextNodeTemplate>
+                                <utility:GraphNodesTemplateSelector.StartNodeTemplate>
+                                    <DataTemplate>
+                                        <views:StartNode />
+                                    </DataTemplate>
+                                </utility:GraphNodesTemplateSelector.StartNodeTemplate>
+                            </utility:GraphNodesTemplateSelector>
+                        </ItemsControl.ItemTemplateSelector>
+                    </ItemsControl>
+
+                    <!--  Paths  -->
+                    <ItemsControl ItemsSource="{Binding Connectors}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <views:TextNode />
+                                <Path Data="{Binding Path}" Stroke="Black" />
                             </DataTemplate>
-                        </utility:GraphNodesTemplateSelector.TextNodeTemplate>
-                        <utility:GraphNodesTemplateSelector.StartNodeTemplate>
-                            <DataTemplate>
-                                <views:StartNode />
-                            </DataTemplate>
-                        </utility:GraphNodesTemplateSelector.StartNodeTemplate>
-                    </utility:GraphNodesTemplateSelector>
-                </ItemsControl.ItemTemplateSelector>
-            </ItemsControl>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Canvas>
 
-            <ItemsControl ItemsSource="{Binding Connectors}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Path Data="{Binding Path}" Stroke="Black" />
-
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Canvas>
-    </Grid>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
 </UserControl>

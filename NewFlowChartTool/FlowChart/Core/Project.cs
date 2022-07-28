@@ -105,7 +105,7 @@ namespace FlowChart.Core
             if (folder == null)
                 return;
             folder.AddChild(graph);
-            Console.WriteLine($"graph path: {graph.Path}");
+            // Console.WriteLine($"graph path: {graph.Path}");
             
             GraphDict.Add(graph.Path, graph);
             graph.Project = this;

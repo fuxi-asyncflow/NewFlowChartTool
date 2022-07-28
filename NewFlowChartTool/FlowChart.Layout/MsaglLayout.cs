@@ -125,6 +125,7 @@ namespace FlowChart.Layout
             
             _graph.Width = (float)graph.BoundingBox.Width;
             _graph.Height = (float)graph.BoundingBox.Height;
+            Console.WriteLine($"canvas width height {graph.BoundingBox.Width}, {graph.BoundingBox.Height}");
         }
 
        
