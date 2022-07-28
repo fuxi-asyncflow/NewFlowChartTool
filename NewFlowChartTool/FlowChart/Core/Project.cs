@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using FlowChart.Parser;
 using FlowChart.Type;
+using XLua;
 
 namespace FlowChart.Core
 {
@@ -15,6 +16,7 @@ namespace FlowChart.Core
         void Save(Project project);
     }
 
+    [LuaCallCSharp]
     public class Project
     {
         public Project(IProjectFactory factory)
@@ -25,6 +27,8 @@ namespace FlowChart.Core
             GraphDict = new Dictionary<string, Graph>();
             EventDict = new Dictionary<string, Event>();
             BuiltinTypes.Types.ForEach(AddType);
+
+            EnumTypeDict = new Dictionary<string, EnumType>();
         }
 
         public static Guid GenUUID()
@@ -124,5 +128,18 @@ namespace FlowChart.Core
         }
 
         #endregion
+
+        private Dictionary<string, EnumType> EnumTypeDict { get; set; }
+
+        public EnumType AddEnumType(string name, string type)
+        {
+            var enumType = new EnumType()
+            {
+                Name = name,
+                Type = type,
+            };
+            EnumTypeDict.Add(name, enumType);
+            return enumType;
+        }
     }
 }

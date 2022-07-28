@@ -8,6 +8,8 @@ using FlowChart.Core;
 using FlowChart.Type;
 using Type = System.Type;
 using System.Text.Json;
+using FlowChart.Lua;
+using XLua;
 
 namespace ProjectFactory
 {
@@ -45,6 +47,8 @@ namespace ProjectFactory
 
             var rootNode = xmlDoc.DocumentElement;
 
+            AddLuaInfomation(rootNode);
+
             var inputPath = rootNode["Define"].GetAttribute("path");
             inputPath = GetFullPath(inputPath);
             LoadClass(inputPath);
@@ -70,6 +74,60 @@ namespace ProjectFactory
             CheckType();
             
             return true;
+        }
+
+        public void AddLuaInfomation(XmlElement rootNode)
+        {
+            XmlNode? luaNode = null;
+            foreach (XmlNode node in rootNode.ChildNodes)
+            {
+                if (node.Name == "Lua")
+                {
+                    luaNode = node;
+                    break;
+                }
+            }
+
+            if (luaNode == null)
+                return;
+
+            List<string> packagePathList = new List<string>();
+            List<string> requireFileList = new List<string>();
+            List<string> luaCodes = new List<string>();
+            foreach (XmlNode node in luaNode.ChildNodes)
+            {
+                // 注意路径要以\结尾
+                // 相对路径以exe所在路径为准
+                if (node.Name == "PackagePath")
+                {
+                    string package = node.Attributes["name"].Value;
+                    package = package.Replace("$(ProjectDir)", ProjectDir.FullName+"\\");
+                    packagePathList.Add(package);
+                }
+                else if (node.Name == "RequireFile")
+                {
+                    string requireFile = node.Attributes["name"].Value;
+                    requireFileList.Add(requireFile);
+                }
+                else if (node.Name == "LuaCode")
+                {
+                    string luaCode = node.Attributes["code"].Value;
+                    luaCodes.Add(luaCode);
+                }
+            }
+            packagePathList.ForEach(Lua.AddRequirePath);
+            requireFileList.ForEach(filePath =>
+            {
+                Lua.DoString(string.Format("require('{0}')", filePath));
+            });
+            luaCodes.ForEach(code => Lua.DoString(code));
+
+            LuaFunction importEnumFunc = Lua.Inst.GetGlobal<LuaFunction>("OnOpenProjectBegin");
+            if (importEnumFunc != null)
+            {
+                importEnumFunc.Call(new object[] { Current });
+            }
+
         }
 
         void LoadClass(string filePath)

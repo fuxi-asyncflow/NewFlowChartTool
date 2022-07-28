@@ -56,6 +56,11 @@ namespace FlowChart.Lua
             
         }
 
+        public T GetGlobal<T>(string name)
+        {
+            return L.Global.Get<T>(name);
+        }
+
         public static int GetLuaMemoryUseage()
         {
             DoString("memoryusage = collectgarbage('count')");
