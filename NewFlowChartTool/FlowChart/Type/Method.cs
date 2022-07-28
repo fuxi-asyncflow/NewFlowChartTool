@@ -11,7 +11,7 @@ namespace FlowChart.Type
         public Method(string name)
         : base(name)
         {
-
+            Parameters = new List<Parameter>();
         }
         public List<Parameter> Parameters { get; set; }
     }

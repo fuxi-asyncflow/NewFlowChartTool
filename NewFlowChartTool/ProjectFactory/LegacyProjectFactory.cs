@@ -9,6 +9,7 @@ using FlowChart.Type;
 using Type = System.Type;
 using System.Text.Json;
 using FlowChart.Lua;
+using FlowChartCommon;
 using XLua;
 
 namespace ProjectFactory
@@ -34,6 +35,7 @@ namespace ProjectFactory
         {
             var fi = new FileInfo(xmlPath);
             ProjectDir = fi.Directory;
+            Current.Path = ProjectDir + "\\";
             XmlDocument xmlDoc = new XmlDocument();
             try
             {
@@ -130,9 +132,184 @@ namespace ProjectFactory
 
         }
 
+        void LoadType(FlowChart.Type.Type type, JsonElement json)
+        {
+            JsonElement j;
+            if (json.TryGetProperty("inherits", out j))
+            {
+                foreach (var inherit in j.EnumerateArray())
+                {
+                    var baseType = Current.GetType(inherit.GetString());
+                    if(baseType != null)
+                        type.BaseTypes.Add(baseType);
+                }
+            }
+
+            if (json.TryGetProperty("properties", out j))
+            {
+                LoadTypeMember<Property>(type, j, s => new Property(s));
+            }
+
+            if (json.TryGetProperty("actions", out j))
+            {
+                LoadTypeMember<Method>(type, j, s => new Method(s));
+            }
+
+            if (json.TryGetProperty("methods", out j))
+            {
+                LoadTypeMember<Method>(type, j, s => new Method(s));
+            }
+
+        }
+
+        void LoadTypeMember<T>(FlowChart.Type.Type type, JsonElement json, Func<string, T> create) where T : Member
+        {
+            JsonElement j, jtmp;
+            foreach (var jmember in json.EnumerateArray())
+            {
+                var member = create(jmember.GetProperty("name").GetString());
+                Console.WriteLine($"add member {member.Name}");
+                if (jmember.TryGetProperty("type", out j))
+                {
+                    var tp = Current.GetType(j.GetString());
+                    member.Type = tp;
+                }
+
+                var paramList = new List<Parameter>();
+                if (jmember.TryGetProperty("parameters", out j))
+                {
+                    foreach (var jpara in j.EnumerateArray())
+                    {
+                        var param = new Parameter(jpara.GetProperty("name").GetString());
+                        if (jpara.TryGetProperty("type", out jtmp))
+                        {
+                            var paramType = Current.GetType(jtmp.GetString());
+                            param.Type = paramType;
+                        }
+                        else
+                        {
+                            param.Type = BuiltinTypes.AnyType;
+                        }
+                        paramList.Add(param);
+
+                    }
+                }
+
+                if (member is Method method)
+                {
+                    method.Parameters.AddRange(paramList);
+                }
+
+                type.AddMember(member);
+            }
+        }
+
         void LoadClass(string filePath)
         {
+            var jsonFilePath = string.Format("{0}{2}{1}.json", filePath, "class", System.IO.Path.DirectorySeparatorChar);
+            var jsonStr = File.ReadAllText(jsonFilePath);
+            //var root = JArray.Parse(jsonStr);
+            var root = JsonDocument.Parse(jsonStr, new JsonDocumentOptions()
+            {
+                CommentHandling = JsonCommentHandling.Skip, 
+                AllowTrailingCommas = true
+            }).RootElement;
 
+            foreach (var jType in root.EnumerateArray())
+            {
+                var typeName = jType.GetProperty("name").GetString();
+                if (Current.GetType(typeName) == null)
+                {
+                    var type = new FlowChart.Type.Type(typeName);
+                    Current.AddType(type);
+                }
+            }
+
+            foreach (var jType in root.EnumerateArray())
+            {
+                var typeName = jType.GetProperty("name").GetString();
+                var type = Current.GetType(typeName);
+                LoadType(type, jType);
+            }
+
+            // 继承表，记录子类的所有父类，即其除了自己可赋值的类型
+            //var inheritDict = new Dictionary<Type, List<Type>>();
+            //var fatherChildDict = new Dictionary<Type, List<Type>>();
+            //void AddFather(Type child, Type father)
+            //{
+            //    if (!inheritDict.ContainsKey(child))
+            //    {
+            //        inheritDict.Add(child, new List<Type>() { father });
+            //    }
+            //    else
+            //    {
+            //        inheritDict[child].Add(father);
+            //    }
+
+            //    if (father.Inherits.Count <= 0) return;
+            //    // 递归设置所有父类
+            //    var fatherFatherList = father.Inherits.ConvertAll(GetType);
+            //    fatherFatherList.ForEach(fft =>
+            //    {
+            //        AddFather(child, fft);
+            //    });
+            //}
+
+            //void AddChild(Type father, Type child)
+            //{
+            //    if (!fatherChildDict.ContainsKey(father))
+            //    {
+            //        fatherChildDict.Add(father, new List<Type>() { child });
+            //    }
+            //    else
+            //    {
+            //        if (!fatherChildDict[father].Contains(child))
+            //        {
+            //            fatherChildDict[father].Add(child);
+            //        }
+            //    }
+            //    // 递归，其所有父也添加该子
+            //    if (inheritDict.ContainsKey(father))
+            //    {
+            //        inheritDict[father].ForEach(fatherFather =>
+            //        {
+            //            AddChild(fatherFather, child);
+            //        });
+            //    }
+            //}
+
+            //// 针对类型的继承关系，设置类型的可赋值项，基类可被派生类赋值，即派生类可赋值给所有的基类
+            //foreach (var childType in TypeDict.Values.Where(type => type.Inherits.Count > 0))
+            //{
+            //    var fatherList = childType.Inherits.ConvertAll(GetType);
+            //    fatherList.ForEach(fatherType =>
+            //    {
+            //        AddFather(childType, fatherType);
+            //    });
+            //}
+
+            //// 从子-父Dict转父-子Dict
+            //foreach (var childType in TypeDict.Values.Where(type => type.Inherits.Count > 0))
+            //{
+            //    var fatherList = childType.Inherits.ConvertAll(GetType);
+            //    fatherList.ForEach(fatherType =>
+            //    {
+            //        AddChild(fatherType, childType);
+            //    });
+            //}
+
+            //foreach (var (father, children) in fatherChildDict)
+            //{
+            //    father.CustomAssignmentPredict = child => children.Contains(child);
+            //}
+
+            LuaFunction importEnumFunc = Lua.Inst.GetGlobal<LuaFunction>("OnClassFileReadEnd");
+            if (importEnumFunc != null)
+            {
+                importEnumFunc.Call(new object[] { Current });
+            }
+
+            
         }
 
         void LoadEvent(string eventPath)
