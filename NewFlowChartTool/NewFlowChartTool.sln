@@ -27,9 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChart.AST", "FlowChart.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CodeGenerator", "CodeGenerator", "{FCA7C064-1AF9-43D2-BA65-01F8D571255B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.NodeParserTest", "Test.NodeParserTest\Test.NodeParserTest.csproj", "{79E53635-97FA-46AB-90D5-E7A768E998AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.NodeParserTest", "Test.NodeParserTest\Test.NodeParserTest.csproj", "{79E53635-97FA-46AB-90D5-E7A768E998AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChart.LuaCodeGen", "FlowChart.LuaCodeGen\FlowChart.LuaCodeGen.csproj", "{00CC089E-63B5-476A-B52F-EE8D3EED8B39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChart.LuaCodeGen", "FlowChart.LuaCodeGen\FlowChart.LuaCodeGen.csproj", "{00CC089E-63B5-476A-B52F-EE8D3EED8B39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XLua", "XLua\XLua.csproj", "{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,6 +114,12 @@ Global
 		{00CC089E-63B5-476A-B52F-EE8D3EED8B39}.Release|Any CPU.Build.0 = Release|Any CPU
 		{00CC089E-63B5-476A-B52F-EE8D3EED8B39}.Release-NoGUI|Any CPU.ActiveCfg = Release-NoGUI|Any CPU
 		{00CC089E-63B5-476A-B52F-EE8D3EED8B39}.Release-NoGUI|Any CPU.Build.0 = Release-NoGUI|Any CPU
+		{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}.Release-NoGUI|Any CPU.ActiveCfg = Release|Any CPU
+		{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}.Release-NoGUI|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
