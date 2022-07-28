@@ -12,7 +12,9 @@ namespace FlowChart.Type
         : base(name)
         {
             Parameters = new List<Parameter>();
+            Type = BuiltinTypes.VoidType;
         }
         public List<Parameter> Parameters { get; set; }
+        public bool IsAction => Type == BuiltinTypes.VoidType;
     }
 }

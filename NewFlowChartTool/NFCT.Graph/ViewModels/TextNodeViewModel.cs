@@ -3,19 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
+using FlowChart.AST;
 using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
+using Color = System.Drawing.Color;
 
 namespace NFCT.Graph.ViewModels
 {
-    
+
     public class BaseNodeViewModel : BindableBase, INode
     {
         private Node _node;
+
+        static BaseNodeViewModel()
+        {
+            BgColors = new Color[]{
+                Color.White, Color.LightGray, Color.FromArgb(0xECB2AB)
+                    , Color.FromArgb(0xB6D8EC), Color.FromArgb(0xC2E4C6), Color.FromArgb(0xECE1B0) };
+            BgBrushes = new Brush[BgColors.Length];
+            for (int i = 0; i < BgColors.Length; i++)
+            {
+                BgBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BgColors[i].R, BgColors[i].G, BgColors[i].B));
+            }
+        }
         public BaseNodeViewModel(Node node, GraphPaneViewModel g)
         {
             _node = node;
+            node.ParseEvent += OnParse;
             Owner = g;
         }
 
@@ -47,6 +63,41 @@ namespace NFCT.Graph.ViewModels
             else if(node is StartNode startNode)
                 return new StartNodeViewModel(startNode, graphVm);
             return null;
+        }
+
+        #region BACKGROUND COLOR
+
+        public enum NodeBgType
+        {
+            NONE = 0,
+            IDLE = 1,
+            ERROR = 2,
+            CONDITION = 3,
+            ACTION = 4,
+            WAIT = 5
+        }
+
+        public static Color[] BgColors;
+        public static Brush[] BgBrushes;
+        private Brush _bgColor;
+        public Brush BgColor
+        {
+            get => _bgColor; set => SetProperty(ref _bgColor, value, nameof(BgColor));
+        }
+        #endregion
+
+        public void OnParse(Node node, ParseResult pr)
+        {
+            if (pr.IsError)
+                BgColor = BgBrushes[(int)NodeBgType.ERROR];
+            else if(pr.IsWait)
+                BgColor = BgBrushes[(int)NodeBgType.WAIT];
+            else if(pr.IsAction)
+                BgColor = BgBrushes[(int)NodeBgType.ACTION];
+            else
+            {
+                BgColor = BgBrushes[(int)NodeBgType.CONDITION];
+            }
         }
     }
 

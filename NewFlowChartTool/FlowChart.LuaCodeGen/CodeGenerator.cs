@@ -24,13 +24,21 @@ namespace FlowChart.LuaCodeGen
         public ParseResult GenerateCode(ASTNode ast)
         {
             Pr = new ParseResult();
-            var nodeInfo = ast.OnVisit(this);
-            if(!string.IsNullOrEmpty(Pr.ErrorMessage))
-                Console.WriteLine(Pr.ErrorMessage);
-            else
+            try
             {
-                Console.WriteLine(nodeInfo.Code);
+                var nodeInfo = ast.OnVisit(this);
+                if (!string.IsNullOrEmpty(Pr.ErrorMessage))
+                    Console.WriteLine(Pr.ErrorMessage);
+                else
+                {
+                    Console.WriteLine(nodeInfo.Code);
+                }
             }
+            catch (Exception)
+            {
+
+            }
+            
             return Pr;
         }
 
@@ -78,6 +86,7 @@ namespace FlowChart.LuaCodeGen
                 var ev = P.GetEvent(evName);
                 if (ev != null)
                 {
+                    Pr.EventName = ev.Name;
                     return new NodeInfo() { Type = ev, Code = $"wait_event(\"{evName}\")" };
                 }
             }
@@ -173,7 +182,10 @@ namespace FlowChart.LuaCodeGen
             {
                 for (int i = 0; i < inputArgsNodeInfo.Count; i++)
                 {
-                    if (!argsDef[i].Type.CanAccept(inputArgsNodeInfo[i].Type))
+                    var defType = argsDef[i].Type;
+                    if(defType == null)
+                        continue;
+                    if (!defType.CanAccept(inputArgsNodeInfo[i].Type))
                     {
                         Error(string.Format("function args type unmatch: arg[{0}] expect `{1}` but receive `{2}`"
                         , i, argsDef[i].Type.Name, inputArgsNodeInfo[i].Type.Name));
@@ -181,6 +193,8 @@ namespace FlowChart.LuaCodeGen
                 }
             }
             string argsString = string.Join(", ", inputArgsNodeInfo.ConvertAll(ni => ni.Code));
+            
+            Pr.IsAction = method.IsAction;
 
             return new NodeInfo()
             {

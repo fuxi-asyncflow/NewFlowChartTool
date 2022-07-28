@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,8 +10,11 @@ namespace FlowChart.AST
 {
     public class ParseResult
     {
+        public bool IsWait => !string.IsNullOrEmpty(EventName);
+        public bool IsAction;
+        public bool IsError => !string.IsNullOrEmpty(ErrorMessage);
         public string ErrorMessage { get; set; }
-
+        public string EventName { get; set; }
     }
 
     public interface ICodeGenerator

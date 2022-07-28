@@ -64,8 +64,8 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
 
-            //var builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
-            //builder.Build(p);
+            var builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
+            builder.Build(p);
         }
 
         public static ASTNode Parse(string text)
