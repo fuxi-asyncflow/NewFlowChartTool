@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,5 +26,24 @@ namespace NFCT.Graph.Utility
             return base.SelectTemplate(item, container);
         }
     }
+
+    #region NODE COVERTERS
+    [ValueConversion(typeof(ViewModels.BaseNodeViewModel.NodeBgType), typeof(Brush))]
+
+    class NodeBgColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var bgType = (int)value;
+            return CanvasNodeResource.BackgroundBrushes[bgType];
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    #endregion
 
 }

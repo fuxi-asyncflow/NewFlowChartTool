@@ -11,12 +11,16 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <utility:NodeBgColorConverter x:Key="BgColorConverter" />
+    </UserControl.Resources>
     <Grid
         utility:SizeObserver.Observe="True"
         utility:SizeObserver.ObservedHeight="{Binding ActualHeight, Mode=OneWayToSource}"
         utility:SizeObserver.ObservedWidth="{Binding ActualWidth, Mode=OneWayToSource}"
         Background="LightYellow">
-        <Label Background="{Binding BgColor}" Content="{Binding Text}" />
-
+        <Border>
+            <Label Background="{Binding BgType, Converter={StaticResource BgColorConverter}, Mode=OneWay}" Content="{Binding Text}" />
+        </Border>
     </Grid>
 </UserControl>

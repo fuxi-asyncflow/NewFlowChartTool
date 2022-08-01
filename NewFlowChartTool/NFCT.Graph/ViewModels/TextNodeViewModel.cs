@@ -12,22 +12,30 @@ using Color = System.Drawing.Color;
 
 namespace NFCT.Graph.ViewModels
 {
+    public static class CanvasNodeResource
+    {
+        static CanvasNodeResource()
+        {
+            BackgroundColors = new Color[]{
+                Color.White, Color.LightGray, Color.FromArgb(0xECB2AB)
+                , Color.FromArgb(0xB6D8EC), Color.FromArgb(0xC2E4C6), Color.FromArgb(0xECE1B0) };
+            BackgroundBrushes = new Brush[BackgroundColors.Length];
+            for (int i = 0; i<BackgroundColors.Length; i++)
+            {
+                BackgroundBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BackgroundColors[i].R, BackgroundColors[i].G, BackgroundColors[i].B));
+            }
+        }
+        public static double DefaultBorderWidth { get => 2.0; }
+        public static double SelectedBorderWidth { get => 6.0; }
+
+        public static Color[] BackgroundColors;
+        public static Brush[] BackgroundBrushes;
+    }
 
     public class BaseNodeViewModel : BindableBase, INode
     {
         private Node _node;
-
-        static BaseNodeViewModel()
-        {
-            BgColors = new Color[]{
-                Color.White, Color.LightGray, Color.FromArgb(0xECB2AB)
-                    , Color.FromArgb(0xB6D8EC), Color.FromArgb(0xC2E4C6), Color.FromArgb(0xECE1B0) };
-            BgBrushes = new Brush[BgColors.Length];
-            for (int i = 0; i < BgColors.Length; i++)
-            {
-                BgBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BgColors[i].R, BgColors[i].G, BgColors[i].B));
-            }
-        }
+       
         public BaseNodeViewModel(Node node, GraphPaneViewModel g)
         {
             _node = node;
@@ -65,6 +73,9 @@ namespace NFCT.Graph.ViewModels
             return null;
         }
 
+        private bool _isSelect;
+        public bool IsSelect { get => _isSelect; set => SetProperty(ref _isSelect, value, nameof(IsSelect)); }
+
         #region BACKGROUND COLOR
 
         public enum NodeBgType
@@ -77,27 +88,21 @@ namespace NFCT.Graph.ViewModels
             WAIT = 5
         }
 
-        public static Color[] BgColors;
-        public static Brush[] BgBrushes;
-        private Brush _bgColor;
-        public Brush BgColor
-        {
-            get => _bgColor; set => SetProperty(ref _bgColor, value, nameof(BgColor));
-        }
+        private NodeBgType _bgType;
+        public NodeBgType BgType { get => _bgType; set => SetProperty(ref _bgType, value, nameof(BgType)); }
+
         #endregion
 
         public void OnParse(Node node, ParseResult pr)
         {
             if (pr.IsError)
-                BgColor = BgBrushes[(int)NodeBgType.ERROR];
-            else if(pr.IsWait)
-                BgColor = BgBrushes[(int)NodeBgType.WAIT];
-            else if(pr.IsAction)
-                BgColor = BgBrushes[(int)NodeBgType.ACTION];
+                BgType = NodeBgType.ERROR;
+            else if (pr.IsWait)
+                BgType = NodeBgType.WAIT;
+            else if (pr.IsAction)
+                BgType = NodeBgType.ACTION;
             else
-            {
-                BgColor = BgBrushes[(int)NodeBgType.CONDITION];
-            }
+                BgType = NodeBgType.CONDITION;
         }
     }
 
