@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NFCT.Graph.ViewModels;
+using NFCT.Common;
 
 namespace NFCT.Graph.Views
 {
@@ -24,5 +26,33 @@ namespace NFCT.Graph.Views
         {
             InitializeComponent();
         }
+
+        private void NodeGrid_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var nodeVm = WPFHelper.GetDataContext<BaseNodeViewModel>(sender);
+            if (nodeVm == null) return;
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                nodeVm.Owner.SelectNode(nodeVm);
+                e.Handled = true;
+            }
+            else if (e.RightButton == MouseButtonState.Pressed)
+            {
+                //bool nodeIsSelected = UnitCanvasViewModel.Current.SelectedNodes.Contains(nodeVm);
+                //UnitCanvasViewModel.Current.SetCurrentNode(nodeVm, !nodeIsSelected, false);
+                //e.Handled = true;
+            }
+        }
+
+        private void NodeGrid_OnMouseMove(object sender, MouseEventArgs e)
+        {
+            // 防止在节点上右键拖动
+            if (e.RightButton == MouseButtonState.Pressed)
+            {
+                e.Handled = true;
+            }
+        }
     }
 }
+
+    

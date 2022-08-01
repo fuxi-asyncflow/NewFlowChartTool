@@ -45,24 +45,22 @@ namespace NFCT.Graph.ViewModels
 
         public GraphPaneViewModel Owner { get; set; }
 
-        private double _cx;
-        public double CX { get => _cx; set => SetProperty(ref _cx, value, nameof(CX)); }
+        private double _left;
+        public double Left{ get => _left - BorderWidth ; set => SetProperty(ref _left, value, nameof(Left)); }
 
-        private double _cy;
-        public double CY { get => _cy; set => SetProperty(ref _cy, value, nameof(CY)); }
+        private double _top;
+        public double Top { get => _top - BorderWidth; set => SetProperty(ref _top, value, nameof(Top)); }
 
         //private double _width;
         public double Width { get => ActualWidth; }
 
         //private double _height;
         public double Height { get => ActualHeight; }
-        public double X { set { CX = value; } }
-        public double Y { set { CY = value; } }
+        public double X { set { Left= value; } }
+        public double Y { set { Top = value; } }
 
-        private double _actualHeight;
-        public double ActualHeight { get => _actualHeight; set { if (_actualHeight == value) return; _actualHeight = value; } }
-        private double _actualWidth;
-        public double ActualWidth { get => _actualWidth; set { if (_actualWidth == value) return; _actualWidth = value; } }
+        public double ActualHeight { get; set; }
+        public double ActualWidth { get; set; }
 
         public static BaseNodeViewModel? CreateNodeViewModel(Node node, GraphPaneViewModel graphVm)
         {
@@ -74,7 +72,25 @@ namespace NFCT.Graph.ViewModels
         }
 
         private bool _isSelect;
-        public bool IsSelect { get => _isSelect; set => SetProperty(ref _isSelect, value, nameof(IsSelect)); }
+        public bool IsSelect
+        {
+            get => _isSelect;
+            set
+            {
+                SetProperty(ref _isSelect, value, nameof(IsSelect)); 
+                RaisePropertyChanged(nameof(Left));
+                RaisePropertyChanged(nameof(Top));
+            }
+        }
+
+        double BorderWidth
+        {
+            get
+            {
+                return _isSelect ? CanvasNodeResource.SelectedBorderWidth : CanvasNodeResource.DefaultBorderWidth;
+            }
+        }
+
 
         #region BACKGROUND COLOR
 
