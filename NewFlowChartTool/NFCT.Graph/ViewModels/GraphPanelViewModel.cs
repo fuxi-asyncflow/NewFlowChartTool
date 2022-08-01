@@ -103,6 +103,8 @@ namespace NFCT.Graph.ViewModels
         {
             Console.WriteLine($"Relayout for graph {Name}");
             var graph = new GraphLayoutAdapter(this);
+            if (NodeDict.Count == 0 || NodeDict.First().Value.Width == 0.0)
+                return false;
             MsaglLayout layout = new MsaglLayout();
             try
             {
@@ -115,6 +117,7 @@ namespace NFCT.Graph.ViewModels
             catch (Exception e)
             {
                 Console.WriteLine($"[error] layout failed {e.Message}");
+                return false;
             }
 
             return true;
