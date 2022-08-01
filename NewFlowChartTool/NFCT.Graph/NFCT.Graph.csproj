@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FlowChart.Layout\FlowChart.Layout.csproj" />
     <ProjectReference Include="..\FlowChart\FlowChart.csproj" />
+    <ProjectReference Include="..\NFCT.Common\NFCT.Common.csproj" />
   </ItemGroup>
 
 </Project>

@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.NodeParserTest", "Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChart.LuaCodeGen", "FlowChart.LuaCodeGen\FlowChart.LuaCodeGen.csproj", "{00CC089E-63B5-476A-B52F-EE8D3EED8B39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XLua", "XLua\XLua.csproj", "{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XLua", "XLua\XLua.csproj", "{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFCT.Common", "NFCT.Common\NFCT.Common.csproj", "{B79522D0-75B0-4442-9013-9B26CCF919C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -120,6 +122,12 @@ Global
 		{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}.Release-NoGUI|Any CPU.ActiveCfg = Release|Any CPU
 		{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}.Release-NoGUI|Any CPU.Build.0 = Release|Any CPU
+		{B79522D0-75B0-4442-9013-9B26CCF919C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B79522D0-75B0-4442-9013-9B26CCF919C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B79522D0-75B0-4442-9013-9B26CCF919C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B79522D0-75B0-4442-9013-9B26CCF919C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B79522D0-75B0-4442-9013-9B26CCF919C5}.Release-NoGUI|Any CPU.ActiveCfg = Release|Any CPU
+		{B79522D0-75B0-4442-9013-9B26CCF919C5}.Release-NoGUI|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -60,9 +60,9 @@ namespace NFCT.Graph.ViewModels
         public double Y { set { CY = value; } }
 
         private double _actualHeight;
-        public double ActualHeight { get => _actualHeight; set { if (_actualHeight == value) return; _actualHeight = value; Owner.NeedLayout = true; } }
+        public double ActualHeight { get => _actualHeight; set { if (_actualHeight == value) return; _actualHeight = value; } }
         private double _actualWidth;
-        public double ActualWidth { get => _actualWidth; set { if (_actualWidth == value) return; _actualWidth = value; Owner.NeedLayout = true; } }
+        public double ActualWidth { get => _actualWidth; set { if (_actualWidth == value) return; _actualWidth = value; } }
 
         public static BaseNodeViewModel? CreateNodeViewModel(Node node, GraphPaneViewModel graphVm)
         {

@@ -39,6 +39,7 @@ namespace NFCT.Graph.ViewModels
             Nodes = new ObservableCollection<BaseNodeViewModel>();
             NodeDict = new Dictionary<Node, BaseNodeViewModel>();
             Connectors = new ObservableCollection<ConnectorViewModel>();
+            NeedLayout = true;
             Initialize();
         }
 
@@ -98,7 +99,7 @@ namespace NFCT.Graph.ViewModels
             set { if (value != _height) SetProperty(ref _height, value); }
         }
 
-        public void Relayout()
+        public bool Relayout()
         {
             Console.WriteLine($"Relayout for graph {Name}");
             var graph = new GraphLayoutAdapter(this);
@@ -106,12 +107,17 @@ namespace NFCT.Graph.ViewModels
             try
             {
                 layout.Layout(graph);
+                if (Height < 0.001 || Width < 0.001)
+                {
+                    return false;
+                }
             }
             catch (Exception e)
             {
                 Console.WriteLine($"[error] layout failed {e.Message}");
             }
 
+            return true;
         }
 
         #region SCROLL
@@ -146,6 +152,19 @@ namespace NFCT.Graph.ViewModels
             set { SetProperty(ref _scrollViewerHeight, value); }
 
         }
+        #endregion
+
+        #region FUNCTION
+
+        private BaseNodeViewModel? SelectedNode { get; set; }
+        public void SelectNode(BaseNodeViewModel nodeVm)
+        {
+            if (SelectedNode != null)
+                SelectedNode.IsSelect = false;
+            SelectedNode = nodeVm;
+            nodeVm.IsSelect = true;
+        }
+
         #endregion
     }
 }

@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using Prism.Events;
 using Prism.Ioc;
 using NewFlowChartTool.ViewModels;
+using NFCT.Common;
 
 namespace NewFlowChartTool.Views
 {
@@ -34,7 +35,7 @@ namespace NewFlowChartTool.Views
 
             if (!((TreeViewItem)sender).IsSelected) return;
 
-            var dc = Utility.WPFHelper.GetDataContext<ProjectTreeItemViewModel>(sender);
+            var dc = WPFHelper.GetDataContext<ProjectTreeItemViewModel>(sender);
             if (dc == null) return;
 
             dc.Open();

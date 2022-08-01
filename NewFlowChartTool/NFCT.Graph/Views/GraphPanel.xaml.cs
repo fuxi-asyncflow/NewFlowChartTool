@@ -26,15 +26,25 @@ namespace NFCT.Graph.Views
             InitializeComponent();
         }
 
+        private int LayoutCount = 0;
         private void Graph_LayoutUpdated(object sender, EventArgs e)
         {
+            if (LayoutCount == 0)
+                LayoutCount = 3;
             GraphPaneViewModel? vm = DataContext as GraphPaneViewModel;
             if (vm == null) return;
 
             if (vm.NeedLayout)
             {
-                vm.NeedLayout = false;
-                vm.Relayout();
+                // if layout failed, retry up to 3 times
+                if (vm.Relayout())
+                    vm.NeedLayout = false;
+                else
+                {
+                    LayoutCount--;
+                    if(LayoutCount == 0)
+                        vm.NeedLayout = false;
+                }
             }
         }
     }
