@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
 using FlowChart.AST;
 using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
+using Prism.Commands;
 using Color = System.Drawing.Color;
 
 namespace NFCT.Graph.ViewModels
@@ -52,6 +54,8 @@ namespace NFCT.Graph.ViewModels
             _node = node;
             node.ParseEvent += OnParse;
             Owner = g;
+
+            OnKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnKeyDown);
         }
 
         public GraphPaneViewModel Owner { get; set; }
@@ -88,11 +92,15 @@ namespace NFCT.Graph.ViewModels
             get => _isSelect;
             set
             {
-                SetProperty(ref _isSelect, value, nameof(IsSelect)); 
+                SetProperty(ref _isSelect, value, nameof(IsSelect));
+                IsFocused = true;
                 RaisePropertyChanged(nameof(Left));
                 RaisePropertyChanged(nameof(Top));
             }
         }
+
+        private bool _isFocused;
+        public bool IsFocused { get => _isFocused; set => SetProperty(ref _isFocused, value, nameof(IsFocused)); }
 
         double BorderWidth
         {
@@ -131,6 +139,19 @@ namespace NFCT.Graph.ViewModels
             else
                 BgType = NodeBgType.CONDITION;
         }
+
+        #region COMMANDS
+        public DelegateCommand<KeyEventArgs> OnKeyDownCommand { get; set; }
+
+        public void OnKeyDown(KeyEventArgs args)
+        {
+            if (args.Key == Key.Space)
+            {
+                Console.WriteLine("textnode keydown");
+            }
+        }
+
+        #endregion
     }
 
     public class TextNodeViewModel : BaseNodeViewModel
