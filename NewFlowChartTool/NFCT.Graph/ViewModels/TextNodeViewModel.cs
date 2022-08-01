@@ -16,20 +16,31 @@ namespace NFCT.Graph.ViewModels
     {
         static CanvasNodeResource()
         {
-            BackgroundColors = new Color[]{
+            BackgroundColors = new Color[]
+            {
                 Color.White, Color.LightGray, Color.FromArgb(0xECB2AB)
-                , Color.FromArgb(0xB6D8EC), Color.FromArgb(0xC2E4C6), Color.FromArgb(0xECE1B0) };
+                , Color.FromArgb(0xB6D8EC), Color.FromArgb(0xC2E4C6), Color.FromArgb(0xECE1B0)
+            };
+            BorderColors = new Color[]
+            {
+                Color.Black, Color.Black, Color.FromArgb(0xDD786D)
+                , Color.FromArgb(0x67ACD4), Color.FromArgb(0x76C07F), Color.FromArgb(0xD5BD52)
+            };
             BackgroundBrushes = new Brush[BackgroundColors.Length];
+            BorderBrushes = new Brush[BorderColors.Length];
             for (int i = 0; i<BackgroundColors.Length; i++)
             {
                 BackgroundBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BackgroundColors[i].R, BackgroundColors[i].G, BackgroundColors[i].B));
+                BorderBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BorderColors[i].R, BorderColors[i].G, BorderColors[i].B));
             }
         }
-        public static double DefaultBorderWidth { get => 2.0; }
-        public static double SelectedBorderWidth { get => 6.0; }
+        public static double DefaultBorderWidth { get => 1.0; }
+        public static double SelectedBorderWidth { get => 3.0; }
 
         public static Color[] BackgroundColors;
         public static Brush[] BackgroundBrushes;
+        public static Color[] BorderColors;
+        public static Brush[] BorderBrushes;
     }
 
     public class BaseNodeViewModel : BindableBase, INode

@@ -44,6 +44,21 @@ namespace NFCT.Graph.Utility
         }
     }
 
+    [ValueConversion(typeof(ViewModels.BaseNodeViewModel.NodeBgType), typeof(Brush))]
+    class NodeBorderColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var bgType = (int)value;
+            return CanvasNodeResource.BorderBrushes[bgType];
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     [ValueConversion(typeof(bool), typeof(double))]
     class NodeBorderConverter : IValueConverter
     {

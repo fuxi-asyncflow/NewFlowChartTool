@@ -13,6 +13,7 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <utility:NodeBgColorConverter x:Key="BgColorConverter" />
+        <utility:NodeBorderColorConverter x:Key="BorderColorConverter" />
         <utility:NodeBorderConverter x:Key="BorderConverter" />
     </UserControl.Resources>
     <Grid
@@ -20,11 +21,15 @@
         utility:SizeObserver.Observe="True"
         utility:SizeObserver.ObservedHeight="{Binding ActualHeight, Mode=OneWayToSource}"
         utility:SizeObserver.ObservedWidth="{Binding ActualWidth, Mode=OneWayToSource}"
-        Background="LightYellow"
         MouseDown="NodeGrid_OnMouseDown"
         MouseMove="NodeGrid_OnMouseMove">
-        <Border BorderThickness="{Binding IsSelect, Converter={StaticResource BorderConverter}}">
-            <Label Background="{Binding BgType, Converter={StaticResource BgColorConverter}, Mode=OneWay}" Content="{Binding Text}" />
+        <Border
+            BorderBrush="{Binding BgType, Converter={StaticResource BorderColorConverter}, Mode=OneWay}"
+            BorderThickness="{Binding IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}"
+            CornerRadius="2">
+            <StackPanel Margin="2" Background="{Binding BgType, Converter={StaticResource BgColorConverter}, Mode=OneWay}">
+                <TextBlock Background="Transparent" Text="{Binding Text}" />
+            </StackPanel>
         </Border>
     </Grid>
 </UserControl>

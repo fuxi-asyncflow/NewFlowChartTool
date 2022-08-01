@@ -74,7 +74,8 @@ namespace NewFlowChartTool.ViewModels
         public void OpenProject()
         {
             //var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
-            var p = new FlowChart.Core.Project(new ProjectFactory.LegacyProjectFactory());
+            //var p = new FlowChart.Core.Project(new ProjectFactory.LegacyProjectFactory());
+            var p = new FlowChart.Core.Project(new ProjectFactory.MemoryProjectFactory());
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
