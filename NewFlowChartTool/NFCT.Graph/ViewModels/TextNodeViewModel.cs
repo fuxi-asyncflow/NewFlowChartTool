@@ -69,10 +69,10 @@ namespace NFCT.Graph.ViewModels
         public double Top { get => _top - BorderWidth; set => SetProperty(ref _top, value, nameof(Top)); }
 
         //private double _width;
-        public double Width { get => ActualWidth; }
+        public double Width { get => ActualWidth + (CanvasNodeResource.DefaultBorderWidth - BorderWidth) * 2.0; }
 
         //private double _height;
-        public double Height { get => ActualHeight; }
+        public double Height { get => ActualHeight + (CanvasNodeResource.DefaultBorderWidth - BorderWidth) * 2.0; }
         public double X { set { Left= value; } }
         public double Y { set { Top = value; } }
 

@@ -25,6 +25,7 @@ namespace FlowChart.Layout
             foreach (var n in graph.Nodes)
             {
                 var node = new GraphNode(CurveFactory.CreateRectangle(n.Width, n.Height, new Point()), n);
+                // Console.WriteLine($"layout node size: {n.Width} {n.Height}");
                 nodeDict.Add(n, node);
                 gg.Nodes.Add(node);
             }
@@ -125,7 +126,7 @@ namespace FlowChart.Layout
             
             _graph.Width = (float)graph.BoundingBox.Width;
             _graph.Height = (float)graph.BoundingBox.Height;
-            Console.WriteLine($"canvas width height {graph.BoundingBox.Width}, {graph.BoundingBox.Height}");
+            //Console.WriteLine($"canvas width height {graph.BoundingBox.Width}, {graph.BoundingBox.Height}");
         }
 
        

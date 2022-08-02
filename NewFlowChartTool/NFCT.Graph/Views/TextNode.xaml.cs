@@ -60,7 +60,6 @@ namespace NFCT.Graph.Views
             if (nodeVm == null) return;
 
             bool visible = (bool)e.NewValue;
-            Console.WriteLine($"node visible change {visible}");
             var ac = ContainerLocator.Current.Resolve<NodeAutoComplete>();
             if (visible)
             {

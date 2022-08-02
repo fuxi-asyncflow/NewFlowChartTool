@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
+using FlowChartCommon;
 
 namespace NFCT.Graph.ViewModels
 {
@@ -101,9 +102,9 @@ namespace NFCT.Graph.ViewModels
 
         public bool Relayout()
         {
-            Console.WriteLine($"Relayout for graph {Name}");
+            Logger.DBG($"Relayout for graph {Name}");
             var graph = new GraphLayoutAdapter(this);
-            if (NodeDict.Count == 0 || NodeDict.First().Value.Width == 0.0)
+            if (NodeDict.Count <= 0.0 || NodeDict.First().Value.Width <= 0.0)
                 return false;
             MsaglLayout layout = new MsaglLayout();
             try
