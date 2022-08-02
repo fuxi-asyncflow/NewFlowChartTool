@@ -13,6 +13,9 @@
     mvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <Grid>
-        <TextBlock x:Name="NodeContentEditBox" Text="{Binding}" />
+        <TextBox
+            x:Name="NodeContentEditBox"
+            IsReadOnly="False"
+            Text="{Binding Text}" />
     </Grid>
 </UserControl>

@@ -7,9 +7,11 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using FlowChartCommon;
+using NFCT.Graph.ViewModels;
 using Prism.Ioc;
 using Prism.Unity;
 using Prism.Events;
+using NFCT.Graph.Views;
 
 namespace NewFlowChartTool
 {
@@ -42,7 +44,10 @@ namespace NewFlowChartTool
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<IEventAggregator, EventAggregator>();
+            containerRegistry.RegisterSingleton<NodeAutoCompleteViewModel>();
+            containerRegistry.RegisterSingleton<NodeAutoComplete>();
             
+
             //throw new NotImplementedException();
         }
 

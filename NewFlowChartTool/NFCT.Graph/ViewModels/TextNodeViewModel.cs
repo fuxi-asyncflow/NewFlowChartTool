@@ -10,6 +10,7 @@ using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
 using Prism.Commands;
+using Prism.Ioc;
 using Color = System.Drawing.Color;
 
 namespace NFCT.Graph.ViewModels
@@ -148,10 +149,20 @@ namespace NFCT.Graph.ViewModels
             if (args.Key == Key.Space)
             {
                 Console.WriteLine("textnode keydown");
+                EnterEditingMode();
             }
         }
 
         #endregion
+
+        public bool _isEditing;
+        public bool IsEditing { get => _isEditing; set => SetProperty(ref _isEditing, value, nameof(IsEditing)); }
+
+        public virtual void EnterEditingMode()
+        {
+            if (IsEditing) return;
+            IsEditing = true;
+        }
     }
 
     public class TextNodeViewModel : BaseNodeViewModel

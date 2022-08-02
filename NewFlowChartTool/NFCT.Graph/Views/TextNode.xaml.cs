@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NFCT.Graph.ViewModels;
 using NFCT.Common;
+using Prism.Ioc;
 
 namespace NFCT.Graph.Views
 {
@@ -50,6 +51,35 @@ namespace NFCT.Graph.Views
             if (e.RightButton == MouseButtonState.Pressed)
             {
                 e.Handled = true;
+            }
+        }
+
+        private void NodeTexts_OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var nodeVm = WPFHelper.GetDataContext<TextNodeViewModel>(this);
+            if (nodeVm == null) return;
+
+            bool visible = (bool)e.NewValue;
+            Console.WriteLine($"node visible change {visible}");
+            var ac = ContainerLocator.Current.Resolve<NodeAutoComplete>();
+            if (visible)
+            {
+                ac.DataContext = null;
+                NodeStack.Children.Remove(ContainerLocator.Current.Resolve<NodeAutoComplete>());
+            }
+            else
+            {
+                if(ac.Parent is StackPanel sp)
+                    sp.Children.Remove(ac);
+                // show autocomplete
+                //TODO use DI BY ViewModelLocator
+                ac.DataContext ??= ContainerLocator.Current.Resolve<NodeAutoCompleteViewModel>();
+                if (ac.DataContext is NodeAutoCompleteViewModel acVm)
+                {
+                    acVm.Node = nodeVm;
+                    acVm.Text = nodeVm.Text;
+                }
+                NodeStack.Children.Add(ac);
             }
         }
     }
