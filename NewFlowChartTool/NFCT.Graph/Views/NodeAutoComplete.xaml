@@ -14,6 +14,7 @@
     mc:Ignorable="d">
     <Grid>
         <TextBox
+            LostFocus="NodeContentEditBox_OnLostFocus"
             x:Name="NodeContentEditBox"
             IsReadOnly="False"
             Text="{Binding Text}" />

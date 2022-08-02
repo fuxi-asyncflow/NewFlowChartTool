@@ -168,6 +168,17 @@ namespace NFCT.Graph.ViewModels
             nodeVm.IsSelect = true;
         }
 
+        public void ClearSelectedItems(string items)
+        {
+            if (items == "all")
+            {
+                var node = SelectedNode;
+                SelectedNode = null;
+                if(node != null)
+                    node.IsSelect = false;
+            }
+        }
+
         #endregion
     }
 }

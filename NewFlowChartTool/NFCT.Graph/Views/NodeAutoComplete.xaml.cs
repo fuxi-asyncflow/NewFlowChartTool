@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using NFCT.Common;
+using NFCT.Graph.ViewModels;
 
 namespace NFCT.Graph.Views
 {
@@ -37,7 +40,7 @@ namespace NFCT.Graph.Views
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                NodeContentEditBox.Focus(); // Don't care about false values.
+                NodeContentEditBox.Focus();
                 Keyboard.Focus(NodeContentEditBox);
             }), DispatcherPriority.Render);
         }

@@ -9,6 +9,7 @@ using FlowChart.AST;
 using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
+using FlowChartCommon;
 using Prism.Commands;
 using Prism.Ioc;
 using Color = System.Drawing.Color;
@@ -94,7 +95,7 @@ namespace NFCT.Graph.ViewModels
             set
             {
                 SetProperty(ref _isSelect, value, nameof(IsSelect));
-                IsFocused = true;
+                IsFocused = _isSelect;
                 RaisePropertyChanged(nameof(Left));
                 RaisePropertyChanged(nameof(Top));
             }
@@ -146,6 +147,7 @@ namespace NFCT.Graph.ViewModels
 
         public void OnKeyDown(KeyEventArgs args)
         {
+            Logger.DBG($"[{nameof(BaseNodeViewModel)}] KeyDown : {args.Key}");
             if (args.Key == Key.Space)
             {
                 Console.WriteLine("textnode keydown");
@@ -161,7 +163,13 @@ namespace NFCT.Graph.ViewModels
         public virtual void EnterEditingMode()
         {
             if (IsEditing) return;
+            Logger.DBG($"[{nameof(BaseNodeViewModel)}] EnterEditingMode");
             IsEditing = true;
+        }
+
+        public virtual void ExitEditingMode(NodeAutoCompleteViewModel acVm)
+        {
+
         }
     }
 
@@ -172,6 +180,15 @@ namespace NFCT.Graph.ViewModels
         public TextNodeViewModel(TextNode node, GraphPaneViewModel g) :base(node, g)
         {
             Node = node;
+        }
+
+        public override void ExitEditingMode(NodeAutoCompleteViewModel acVm)
+        {
+            Logger.DBG($"[{nameof(TextNodeViewModel)}] ExitEditingMode");
+            Node.Text = acVm.Text;
+            RaisePropertyChanged(nameof(Text));
+            Owner.NeedLayout = true;
+            IsEditing = false;
         }
     }
 

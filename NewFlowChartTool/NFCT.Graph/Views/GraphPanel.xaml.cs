@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NFCT.Common;
 using NFCT.Graph.ViewModels;
 
 namespace NFCT.Graph.Views
@@ -46,6 +47,18 @@ namespace NFCT.Graph.Views
                         vm.NeedLayout = false;
                 }
             }
+        }
+
+        private void CanvasBackground_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var vm = WPFHelper.GetDataContext<GraphPaneViewModel>(this);
+            if(vm == null) return;
+
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                vm.ClearSelectedItems("all");
+            }
+            
         }
     }
 }

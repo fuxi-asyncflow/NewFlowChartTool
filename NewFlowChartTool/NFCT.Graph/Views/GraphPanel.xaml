@@ -32,6 +32,12 @@
                     Name="GraphCanvas"
                     Width="{Binding Width}"
                     Height="{Binding Height}">
+                    <Rectangle
+                        x:Name="CanvasBackground"
+                        Width="{Binding Width}"
+                        Height="{Binding Height}"
+                        Fill="Cornsilk"
+                        MouseDown="CanvasBackground_OnMouseDown" />
                     <!--  Nodes  -->
                     <ItemsControl ItemsSource="{Binding Nodes}">
                         <ItemsControl.ItemsPanel>
