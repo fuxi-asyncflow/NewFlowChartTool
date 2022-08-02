@@ -12,8 +12,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using FlowChartCommon;
 using NFCT.Common;
 using NFCT.Graph.ViewModels;
+using NLog.Fluent;
 
 namespace NFCT.Graph.Views
 {
@@ -39,7 +42,24 @@ namespace NFCT.Graph.Views
             {
                 // if layout failed, retry up to 3 times
                 if (vm.Relayout())
+                {
                     vm.NeedLayout = false;
+                    if (vm.IsFirstLayout) // move start node to center after first layout
+                    {
+                        vm.IsFirstLayout = false;
+                        Dispatcher.BeginInvoke((Action)(() =>
+                        {
+                            var startNode = vm.Nodes.FirstOrDefault();
+                            if (startNode != null)
+                            {
+                                vm.MoveNodeToCenter(startNode);
+                                Logger.DBG($"scroll x is set to {vm.ScrollX}");
+                            }
+                            
+                        }), DispatcherPriority.Render);
+                    }
+                }
+                    
                 else
                 {
                     LayoutCount--;
