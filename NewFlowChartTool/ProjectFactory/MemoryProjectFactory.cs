@@ -25,11 +25,41 @@ namespace ProjectFactory
         FlowChart.Core.Graph CreateTestGraph_1(Type tp)
         {
             var g = new FlowChart.Core.Graph("test_0") { Path = "MonsterAI.test_0", Type = tp};
+            g.AddNode(new StartNode());
             g.AddNode(new TextNode() {Text = "Say(\"hello\")"});
             g.AddNode(new TextNode() { Text = "Say(1)" });
             g.AddNode(new TextNode() {Text = "$a = 1"});
             g.AddNode(new TextNode() {Text = "self.age = 1"});
             g.AddNode(new TextNode() { Text = "$tbl = {1, 2}" });
+            for(int i=0; i<g.Nodes.Count -1 ; i++)
+                g.Connect(g.Nodes[i], g.Nodes[i+1]);
+            return g;
+        }
+
+        FlowChart.Core.Graph CreateTestGraph_2(Type tp)
+        {
+            var g = new FlowChart.Core.Graph("big_graph") { Path = "MonsterAI.big_graph", Type = tp };
+            var startNode = new StartNode();
+            var nodes = new List<Node>();
+            int rows = 30;
+            int cols = 20;
+
+            int nodeCount = rows * cols;
+            g.AddNode(startNode);
+            for (int i = 0; i < nodeCount; i++)
+            {
+                nodes.Add(new TextNode() { Text = $"Say(\"hello world abc {i}\")" });
+            }
+            nodes.ForEach(g.AddNode);
+            for (int i = 0; i < nodeCount; i++)
+            {
+                if(i % rows == 0)
+                    g.Connect(startNode, g.Nodes[i]);
+                else
+                {
+                    g.Connect(g.Nodes[i-1], g.Nodes[i]);
+                }
+            }
             return g;
         }
 
@@ -38,6 +68,7 @@ namespace ProjectFactory
             var monsterType = CreateMonsterType();
             project.AddType(monsterType);
             project.AddGraph(CreateTestGraph_1(monsterType));
+            project.AddGraph(CreateTestGraph_2(monsterType));
         }
 
         public void Save(Project project)
