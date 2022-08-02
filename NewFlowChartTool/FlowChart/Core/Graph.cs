@@ -24,6 +24,7 @@ namespace FlowChart.Core
         public Dictionary<string, Node> NodeDict { get; set; }
         public List<Connector> Connectors { get; set; }
         public List<Variable> Variables { get; set; }
+        public bool AutoLayout { get; set; }
         #endregion
 
         #region REF PROPERTY

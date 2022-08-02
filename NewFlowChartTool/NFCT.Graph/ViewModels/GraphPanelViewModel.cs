@@ -4,11 +4,14 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
 using FlowChartCommon;
 using NLog.Fluent;
+using Prism.Commands;
 
 namespace NFCT.Graph.ViewModels
 {
@@ -38,6 +41,7 @@ namespace NFCT.Graph.ViewModels
             Nodes = new ObservableCollection<BaseNodeViewModel>();
             NodeDict = new Dictionary<Node, BaseNodeViewModel>();
             Connectors = new ObservableCollection<ConnectorViewModel>();
+            ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             Initialize();
         }
 
@@ -85,6 +89,32 @@ namespace NFCT.Graph.ViewModels
 
         public double _height;
         public double Height { get => _height; set => SetProperty(ref _height, value); }
+
+        public bool AutoLayout
+        {
+            get => _graph.AutoLayout;
+        }
+
+        public DelegateCommand ChangeLayoutCommand { get; set; }
+
+        public void ChangeAutoLayout()
+        {
+            if (AutoLayout)
+            {
+                _graph.AutoLayout = false;
+                RaisePropertyChanged(nameof(AutoLayout));
+            }
+            else
+            {
+                var result = MessageBox.Show("Switch to AutoLayout, all nodes position will change", "Be careful",
+                    MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.No)
+                    return;
+                _graph.AutoLayout = true;
+                NeedLayout = true;
+                RaisePropertyChanged(nameof(AutoLayout));
+            }
+        }
 
         public bool Relayout()
         {

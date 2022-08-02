@@ -14,9 +14,7 @@
     mc:Ignorable="d">
     <DockPanel Dock="Top" LastChildFill="True">
         <DockPanel DockPanel.Dock="Top">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Background="DarkSeaGreen" Text="{Binding FullPath}" />
-            </StackPanel>
+            <local:GraphPanelHeaderBar DataContext="{Binding}" />
         </DockPanel>
         <Grid Background="PowderBlue" LayoutUpdated="Graph_LayoutUpdated">
             <ScrollViewer
