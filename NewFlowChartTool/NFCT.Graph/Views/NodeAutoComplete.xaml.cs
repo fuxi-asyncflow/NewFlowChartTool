@@ -24,5 +24,22 @@ namespace NFCT.Graph.Views
         {
             InitializeComponent();
         }
+
+        private void NodeContentEditBox_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            var vm = WPFHelper.GetDataContext<NodeAutoCompleteViewModel>(this);
+            if (vm == null)
+                return;
+            vm.Node.ExitEditingMode(vm);
+        }
+
+        public void SetFocus()
+        {
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                NodeContentEditBox.Focus(); // Don't care about false values.
+                Keyboard.Focus(NodeContentEditBox);
+            }), DispatcherPriority.Render);
+        }
     }
 }

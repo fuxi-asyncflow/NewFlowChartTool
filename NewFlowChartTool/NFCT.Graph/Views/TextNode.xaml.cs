@@ -80,6 +80,7 @@ namespace NFCT.Graph.Views
                     acVm.Text = nodeVm.Text;
                 }
                 NodeStack.Children.Add(ac);
+                ac.SetFocus();
             }
         }
     }
