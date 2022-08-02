@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using NLog;
+using NLog.Conditions;
+using NLog.Targets;
 
 namespace FlowChartCommon
 {
@@ -11,10 +13,21 @@ namespace FlowChartCommon
 
             // Targets where to log to: File and Console
             var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "file.txt" };
-            var logconsole = new NLog.Targets.ConsoleTarget("logconsole")
+            //var logconsole = new NLog.Targets.ConsoleTarget("logconsole")
+            var logconsole = new NLog.Targets.ColoredConsoleTarget("logconsole")
             {
                 Layout = "${longdate}|${level:uppercase=true} ${message:withexception=true}"
             };
+            logconsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule((ConditionExpression)("level == LogLevel.Debug")
+                , ConsoleOutputColor.DarkGray, ConsoleOutputColor.NoChange));
+            logconsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule((ConditionExpression)("level == LogLevel.Info")
+                , ConsoleOutputColor.Gray, ConsoleOutputColor.NoChange));
+            logconsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule((ConditionExpression)("level == LogLevel.Warn")
+                , ConsoleOutputColor.Yellow, ConsoleOutputColor.NoChange));
+            logconsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule((ConditionExpression)("level == LogLevel.Error")
+                , ConsoleOutputColor.Red, ConsoleOutputColor.NoChange));
+            logconsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule((ConditionExpression)("level == LogLevel.Debug")
+                , ConsoleOutputColor.Red, ConsoleOutputColor.White));
 
             // Rules for mapping loggers to targets            
 #if DEBUG
