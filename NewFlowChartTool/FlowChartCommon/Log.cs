@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using System.Diagnostics;
+using NLog;
 
 namespace FlowChartCommon
 {
@@ -16,7 +17,11 @@ namespace FlowChartCommon
             };
 
             // Rules for mapping loggers to targets            
+#if DEBUG
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
+#else
             config.AddRule(LogLevel.Info, LogLevel.Fatal, logconsole);
+#endif
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
 
             // Apply config           
@@ -36,6 +41,7 @@ namespace FlowChartCommon
             FCLogger.Error(msg);
         }
 
+        [Conditional("DEBUG")]
         public static void DBG(string msg)
         {
             FCLogger.Debug(msg);
