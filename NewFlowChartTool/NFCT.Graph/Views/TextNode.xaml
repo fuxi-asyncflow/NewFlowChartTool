@@ -47,7 +47,10 @@
                     x:Name="NodeTexts"
                     IsVisibleChanged="NodeTexts_OnIsVisibleChanged"
                     Visibility="{Binding IsEditing, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
-                    <TextBlock Background="Transparent" Text="{Binding Text}" />
+                    <TextBlock
+                        Background="Transparent"
+                        FontSize="16"
+                        Text="{Binding Text}" />
                 </StackPanel>
             </StackPanel>
 

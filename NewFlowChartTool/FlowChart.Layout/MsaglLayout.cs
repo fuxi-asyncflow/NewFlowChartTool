@@ -75,7 +75,8 @@ namespace FlowChart.Layout
             {
                 // Transformation 用于控制布局方向 0 - TB, PI - BT, PI/2 - LR, -PI/2 - RL
                 //Transformation = PlaneTransformation.Rotation(Math.PI / 2),
-                EdgeRoutingSettings = { EdgeRoutingMode = EdgeRoutingMode.SugiyamaSplines }
+                EdgeRoutingSettings = { EdgeRoutingMode = EdgeRoutingMode.SugiyamaSplines },
+                NodeSeparation = 30
             };
 
             // 计算布局
