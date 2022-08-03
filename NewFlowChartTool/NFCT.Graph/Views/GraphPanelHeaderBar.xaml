@@ -13,6 +13,7 @@
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
             <Button Command="{Binding ChangeLayoutCommand}" Content="layout" />
+            <Button Command="{Binding CreateGroupCommand}" Content="group" />
         </StackPanel>
         <StackPanel DockPanel.Dock="Right">
             <TextBlock Background="DarkSeaGreen" Text="{Binding FullPath}" />

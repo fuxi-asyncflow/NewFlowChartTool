@@ -41,8 +41,10 @@ namespace NFCT.Graph.ViewModels
             Nodes = new ObservableCollection<BaseNodeViewModel>();
             NodeDict = new Dictionary<Node, BaseNodeViewModel>();
             Connectors = new ObservableCollection<ConnectorViewModel>();
+            Groups = new ObservableCollection<GroupBoxViewModel>();
             SelectedNodes = new List<BaseNodeViewModel>();
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
+            CreateGroupCommand = new DelegateCommand(CreateGroupFromSelectedNodes);
             Initialize();
         }
 
@@ -83,6 +85,7 @@ namespace NFCT.Graph.ViewModels
         public ObservableCollection<BaseNodeViewModel> Nodes { get; set; }
         public Dictionary<Node, BaseNodeViewModel> NodeDict { get; set; }
         public ObservableCollection<ConnectorViewModel> Connectors { get; set; }
+        public ObservableCollection<GroupBoxViewModel> Groups { get; set; }
         public bool NeedLayout { get; set; }
         public bool IsFirstLayout { get; set; }
         private double _width;
@@ -97,6 +100,7 @@ namespace NFCT.Graph.ViewModels
         }
 
         public DelegateCommand ChangeLayoutCommand { get; set; }
+        public DelegateCommand CreateGroupCommand { get; set; }
 
         public void ChangeAutoLayout()
         {
@@ -275,6 +279,20 @@ namespace NFCT.Graph.ViewModels
                     selectNodeVms.Add(nodeVm);
                     SelectNode(nodeVm, false);
                 }
+            }
+        }
+
+        public void CreateGroupFromSelectedNodes()
+        {
+            var nodes = new List<Node>();
+            SelectedNodes.ForEach(node => nodes.Add(node.Node));
+            var group = Graph.CreateGroup(nodes);
+            if (group != null)
+            {
+                var groupVm = new GroupBoxViewModel(group, this);
+                groupVm.Nodes = SelectedNodes;
+                Groups.Add(groupVm);
+                groupVm.Resize();
             }
         }
 

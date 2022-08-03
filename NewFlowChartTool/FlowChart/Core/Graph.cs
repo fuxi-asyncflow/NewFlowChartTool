@@ -15,6 +15,7 @@ namespace FlowChart.Core
             NodeDict = new Dictionary<string, Node>();
             Connectors = new List<Connector>();
             Variables = new List<Variable>();
+            Groups = new List<Group>();
         }
 
         #region PROPERTY
@@ -24,6 +25,7 @@ namespace FlowChart.Core
         public Dictionary<string, Node> NodeDict { get; set; }
         public List<Connector> Connectors { get; set; }
         public List<Variable> Variables { get; set; }
+        public List<Group> Groups { get; set; }
         public bool AutoLayout { get; set; }
         #endregion
 
@@ -76,6 +78,13 @@ namespace FlowChart.Core
                 Variables.Add(v);
                 return v;
             }
+        }
+
+        public Group? CreateGroup(List<Node> nodes)
+        {
+            var group = new Group("--");
+            group.Nodes.AddRange(nodes);
+            return group;
         }
     }
 }

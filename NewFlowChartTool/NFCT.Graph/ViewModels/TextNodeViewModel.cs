@@ -50,11 +50,11 @@ namespace NFCT.Graph.ViewModels
 
     public class BaseNodeViewModel : BindableBase, INode
     {
-        private Node _node;
+        public Node Node;
        
         public BaseNodeViewModel(Node node, GraphPaneViewModel g)
         {
-            _node = node;
+            Node = node;
             node.ParseEvent += OnParse;
             Owner = g;
 
@@ -64,6 +64,7 @@ namespace NFCT.Graph.ViewModels
         }
 
         public GraphPaneViewModel Owner { get; set; }
+        public GroupBoxViewModel? OwnerGroup { get; set; }
         public List<ConnectorViewModel> ParentLines;
         public List<ConnectorViewModel> ChildLines;
 
@@ -206,12 +207,13 @@ namespace NFCT.Graph.ViewModels
                 var child = (BaseNodeViewModel)line.End;
                 line.StaightLineConnect(new Point(mid, bottom), new Point(child.Left + child.ActualWidth * 0.5, child.Top));
             });
+            OwnerGroup?.Resize();
         }
     }
 
     public class TextNodeViewModel : BaseNodeViewModel
     {
-        public TextNode Node { get; set; }
+        public new TextNode Node { get; set; }
         public string Text { get => Node.Text; }
         public TextNodeViewModel(TextNode node, GraphPaneViewModel g) :base(node, g)
         {
@@ -230,7 +232,7 @@ namespace NFCT.Graph.ViewModels
 
     public class StartNodeViewModel : BaseNodeViewModel
     {
-        public StartNode Node { get; set; }
+        public new StartNode Node { get; set; }
         public StartNodeViewModel(StartNode node, GraphPaneViewModel g) : base(node, g)
         {
             Node = node;

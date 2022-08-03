@@ -221,8 +221,8 @@ end
         [LuaCallCSharp]
         public static  List<System.Type> LuaCallCSharp = new List<System.Type>()
         {
-            typeof(List<Group>),
-            typeof(List<Group>.Enumerator),
+            //typeof(List<Group>),
+            //typeof(List<Group>.Enumerator),
         };
     }
 }
