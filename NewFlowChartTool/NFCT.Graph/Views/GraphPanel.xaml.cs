@@ -20,11 +20,12 @@ using NLog.Fluent;
 
 namespace NFCT.Graph.Views
 {
-    enum GraphCanvasState
+    public enum GraphCanvasState
     {
-        IDLE = 0,
-        DRAG = 1,
-        BOX_SELECT = 2
+        IDLE = 0,   // default states
+        DRAG = 1,   // drag canvas by modify scroll
+        BOX_SELECT = 2, // select nodes by box
+        MOVE = 3   // move nodes or other items
     }
     /// <summary>
     /// Interaction logic for GraphPanel.xaml
@@ -87,38 +88,38 @@ namespace NFCT.Graph.Views
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 vm.ClearSelectedItems("all");
+                if (!_isBoxSelecting)
+                {
+                    CanvasState = GraphCanvasState.BOX_SELECT;
+                    _mouseScreenPos = Mouse.GetPosition((UIElement)sender);
+                    SelectBox.Visibility = Visibility;
+                    SetSelectBoxRect(_mouseScreenPos, _mouseScreenPos);
+                }
+                e.Handled = true;
             }
-            
+
+            if (e.RightButton == MouseButtonState.Pressed)
+            {
+                _mouseScreenPos = Mouse.GetPosition(CanvasScroll);
+                CanvasState = GraphCanvasState.DRAG;
+            }
+
         }
 
         #region CANVAS MOUSE HANDLER
 
-        private GraphCanvasState CanvasState;
+        public GraphCanvasState CanvasState;
         private Point _mouseScreenPos; // 目前使用相对于scrollviewer的坐标
         private bool _isDragingCanvas => CanvasState == GraphCanvasState.DRAG;
         private bool _isBoxSelecting => CanvasState == GraphCanvasState.BOX_SELECT;
+        private bool _isMoveingNodes => CanvasState == GraphCanvasState.MOVE;
 
         private void GraphCanvas_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             var vm = WPFHelper.GetDataContext<GraphPaneViewModel>(this);
             if (vm == null) return;
             Logger.DBG($"canvas mouse down {Mouse.GetPosition((UIElement)sender)}");
-
-            if (!_isBoxSelecting && e.LeftButton == MouseButtonState.Pressed)
-            {
-                CanvasState = GraphCanvasState.BOX_SELECT;
-                vm.ClearSelectedItems("all");
-                _mouseScreenPos = Mouse.GetPosition((UIElement)sender);
-                SelectBox.Visibility = Visibility;
-                SetSelectBoxRect(_mouseScreenPos, _mouseScreenPos);
-            }
-
-            // drag and move
-            if (e.RightButton == MouseButtonState.Pressed)
-            {
-                _mouseScreenPos = Mouse.GetPosition(CanvasScroll);
-                CanvasState = GraphCanvasState.DRAG;
-            }
+            _mouseScreenPos = Mouse.GetPosition((UIElement)sender);
         }
 
         private void GraphCanvas_OnMouseUp(object sender, MouseButtonEventArgs e)
@@ -126,23 +127,32 @@ namespace NFCT.Graph.Views
             if (_isBoxSelecting)
             {
                 SelectBox.Visibility = Visibility.Collapsed;
-                CanvasState = GraphCanvasState.IDLE;
             }
-            if (e.ChangedButton == MouseButton.Right)
-            {
-                CanvasState = GraphCanvasState.IDLE;
-            }
+            CanvasState = GraphCanvasState.IDLE;
         }
 
         private void GraphCanvas_OnMouseMove(object sender, MouseEventArgs e)
         {
             var vm = WPFHelper.GetDataContext<GraphPaneViewModel>(this);
             if (vm == null) return;
-            if (e.LeftButton == MouseButtonState.Pressed && _isBoxSelecting)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var rect = SetSelectBoxRect(_mouseScreenPos, e.GetPosition((UIElement)sender));
-                vm.SelectNodeInBox(rect);
+                if (_isBoxSelecting)
+                {
+                    var rect = SetSelectBoxRect(_mouseScreenPos, e.GetPosition((UIElement)sender));
+                    vm.SelectNodeInBox(rect);
+                }
+                else if (_isMoveingNodes)
+                {
+                    
+                    var pos = e.GetPosition((UIElement)sender);
+                    var deltaX = pos.X - _mouseScreenPos.X;
+                    var deltaY = pos.Y - _mouseScreenPos.Y;
+                    Logger.DBG($"move node {deltaX} {deltaY}");
+                    vm.MoveSelectedItems(deltaX, deltaY);
+                }
             }
+        
             else if (e.RightButton == MouseButtonState.Pressed && _isDragingCanvas)
             {
                 var newPosition = e.GetPosition(CanvasScroll);

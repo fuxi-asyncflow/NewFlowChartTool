@@ -79,6 +79,9 @@ namespace NFCT.Graph.ViewModels
         public double ActualHeight { get; set; }
         public double ActualWidth { get; set; }
 
+        public double OriginalX;
+        public double OriginalY;
+
         public static BaseNodeViewModel? CreateNodeViewModel(Node node, GraphPaneViewModel graphVm)
         {
             if (node is TextNode textNode)
@@ -96,6 +99,8 @@ namespace NFCT.Graph.ViewModels
             {
                 SetProperty(ref _isSelect, value, nameof(IsSelect));
                 IsFocused = _isSelect;
+                OriginalX = _left;
+                OriginalY = _top;
                 RaisePropertyChanged(nameof(Left));
                 RaisePropertyChanged(nameof(Top));
             }
@@ -170,6 +175,14 @@ namespace NFCT.Graph.ViewModels
         public virtual void ExitEditingMode(NodeAutoCompleteViewModel acVm)
         {
 
+        }
+
+        public void Move(double dx, double dy)
+        {
+            _left = OriginalX + dx;
+            _top = OriginalY + dy;
+            RaisePropertyChanged(nameof(Left));
+            RaisePropertyChanged(nameof(Top));
         }
     }
 

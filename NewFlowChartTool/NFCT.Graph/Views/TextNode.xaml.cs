@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FlowChartCommon;
 using NFCT.Graph.ViewModels;
 using NFCT.Common;
 using Prism.Ioc;
@@ -26,6 +27,15 @@ namespace NFCT.Graph.Views
         public TextNode()
         {
             InitializeComponent();
+            
+
+        }
+
+        private GraphPanel? _graphPanel;
+
+        private GraphPanel? Graph
+        {
+            get { return _graphPanel ??= WPFHelper.GetVisualParent<GraphPanel>(this); }
         }
 
         private void NodeGrid_OnMouseDown(object sender, MouseButtonEventArgs e)
@@ -34,8 +44,10 @@ namespace NFCT.Graph.Views
             if (nodeVm == null) return;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                nodeVm.Owner.SelectNode(nodeVm);
-                e.Handled = true;
+                nodeVm.Owner.SelectNode(nodeVm, !Keyboard.Modifiers.HasFlag(ModifierKeys.Control));
+                Logger.DBG($"node mouse down {Graph}");
+                if (Graph != null) Graph.CanvasState = GraphCanvasState.MOVE;
+                
             }
             else if (e.RightButton == MouseButtonState.Pressed)
             {
@@ -48,10 +60,14 @@ namespace NFCT.Graph.Views
         private void NodeGrid_OnMouseMove(object sender, MouseEventArgs e)
         {
             // 防止在节点上右键拖动
-            if (e.RightButton == MouseButtonState.Pressed)
-            {
-                e.Handled = true;
-            }
+            //if (e.RightButton == MouseButtonState.Pressed)
+            //{
+            //    e.Handled = true;
+            //}
+            //else if (e.LeftButton == MouseButtonState.Pressed)
+            //{
+            //    Logger.DBG($"nodegrid mouse move {e.GetPosition((UIElement)sender)}");
+            //}
         }
 
         private void NodeTexts_OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)

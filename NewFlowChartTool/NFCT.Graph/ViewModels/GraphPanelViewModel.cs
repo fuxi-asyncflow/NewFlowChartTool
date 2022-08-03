@@ -212,6 +212,11 @@ namespace NFCT.Graph.ViewModels
             }
         }
 
+        public void MoveSelectedItems(double dx, double dy)
+        {
+            SelectedNodes.ForEach(node => node.Move(dx, dy));
+        }
+
         public void SetCurrentNode(BaseNodeViewModel? nodeVm)
         {
             if (CurrentNode == nodeVm)
@@ -266,8 +271,6 @@ namespace NFCT.Graph.ViewModels
                     SelectNode(nodeVm);
                 }
             }
-
-            
         }
 
         #endregion
