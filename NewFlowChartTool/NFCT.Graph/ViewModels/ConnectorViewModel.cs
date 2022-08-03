@@ -20,6 +20,8 @@ namespace NFCT.Graph.ViewModels
         {
             Start = start;
             End = end;
+            start.ChildLines.Add(this);
+            end.ParentLines.Add(this);
         }
 
         public PathGeometry? Path { get; set; }
@@ -109,6 +111,13 @@ namespace NFCT.Graph.ViewModels
 
             Path = geometry;
             RaisePropertyChanged(nameof(Path));
+        }
+
+        public void StaightLineConnect(Point start, Point end)
+        {
+            var curves = new List<Curve>();
+            curves.Add(new Curve(){Type = Curve.CurveType.Line, Points = new List<Position>() {new(start.X, start.Y), new (end.X, end.Y)}});
+            CreatePath(curves);
         }
     }
 }

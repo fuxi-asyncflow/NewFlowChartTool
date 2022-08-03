@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using FlowChart.AST;
@@ -58,9 +59,13 @@ namespace NFCT.Graph.ViewModels
             Owner = g;
 
             OnKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnKeyDown);
+            ParentLines = new List<ConnectorViewModel>();
+            ChildLines = new List<ConnectorViewModel>();
         }
 
         public GraphPaneViewModel Owner { get; set; }
+        public List<ConnectorViewModel> ParentLines;
+        public List<ConnectorViewModel> ChildLines;
 
         private double _left;
         public double Left{ get => _left - BorderWidth ; set => SetProperty(ref _left, value, nameof(Left)); }
@@ -187,6 +192,20 @@ namespace NFCT.Graph.ViewModels
             _top = OriginalY + dy;
             RaisePropertyChanged(nameof(Left));
             RaisePropertyChanged(nameof(Top));
+
+            double mid = _left + ActualWidth * 0.5;
+            double bottom = _top + ActualHeight;
+            
+            ParentLines.ForEach(line =>
+            {
+                var parent = (BaseNodeViewModel)line.Start;
+                line.StaightLineConnect(new Point(parent.Left + parent.ActualWidth * 0.5, parent.Top + ActualHeight), new Point(mid, _top));
+            });
+            ChildLines.ForEach(line =>
+            {
+                var child = (BaseNodeViewModel)line.End;
+                line.StaightLineConnect(new Point(mid, bottom), new Point(child.Left + child.ActualWidth * 0.5, child.Top));
+            });
         }
     }
 

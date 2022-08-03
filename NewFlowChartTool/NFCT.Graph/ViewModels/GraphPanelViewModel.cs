@@ -273,7 +273,7 @@ namespace NFCT.Graph.ViewModels
                 if (ll < rr && tt < bb)
                 {
                     selectNodeVms.Add(nodeVm);
-                    SelectNode(nodeVm);
+                    SelectNode(nodeVm, false);
                 }
             }
         }
