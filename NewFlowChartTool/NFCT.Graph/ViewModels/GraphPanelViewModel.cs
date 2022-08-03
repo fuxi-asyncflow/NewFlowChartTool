@@ -196,6 +196,11 @@ namespace NFCT.Graph.ViewModels
                 return;
             }
 
+            if (clearOthers)
+            {
+                ClearSelectedItems("all");
+            }
+
             nodeVm.IsSelect = true;
             SelectedNodes.Add(nodeVm);
         }

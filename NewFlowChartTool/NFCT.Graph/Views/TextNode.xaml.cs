@@ -27,8 +27,6 @@ namespace NFCT.Graph.Views
         public TextNode()
         {
             InitializeComponent();
-            
-
         }
 
         private GraphPanel? _graphPanel;
@@ -46,8 +44,7 @@ namespace NFCT.Graph.Views
             {
                 nodeVm.Owner.SelectNode(nodeVm, !Keyboard.Modifiers.HasFlag(ModifierKeys.Control));
                 Logger.DBG($"node mouse down {Graph}");
-                if (Graph != null) Graph.CanvasState = GraphCanvasState.MOVE;
-                
+                Graph?.BeginMove();
             }
             else if (e.RightButton == MouseButtonState.Pressed)
             {

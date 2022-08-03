@@ -82,6 +82,12 @@ namespace NFCT.Graph.ViewModels
         public double OriginalX;
         public double OriginalY;
 
+        public void SaveOriginalPos()
+        {
+            OriginalX = _left;
+            OriginalY = _top;
+        }
+
         public static BaseNodeViewModel? CreateNodeViewModel(Node node, GraphPaneViewModel graphVm)
         {
             if (node is TextNode textNode)
@@ -99,8 +105,6 @@ namespace NFCT.Graph.ViewModels
             {
                 SetProperty(ref _isSelect, value, nameof(IsSelect));
                 IsFocused = _isSelect;
-                OriginalX = _left;
-                OriginalY = _top;
                 RaisePropertyChanged(nameof(Left));
                 RaisePropertyChanged(nameof(Top));
             }

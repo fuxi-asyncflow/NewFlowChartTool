@@ -174,6 +174,15 @@ namespace NFCT.Graph.Views
             return rect;
         }
 
+        public void BeginMove()
+        {
+            var vm = WPFHelper.GetDataContext<GraphPaneViewModel>(this);
+            if (vm == null) return;
+
+            CanvasState = GraphCanvasState.MOVE;
+            vm.SelectedNodes.ForEach(node => node.SaveOriginalPos());
+        }
+
         #endregion
 
 
