@@ -41,6 +41,7 @@ namespace NFCT.Graph.ViewModels
             Nodes = new ObservableCollection<BaseNodeViewModel>();
             NodeDict = new Dictionary<Node, BaseNodeViewModel>();
             Connectors = new ObservableCollection<ConnectorViewModel>();
+            SelectedNodes = new List<BaseNodeViewModel>();
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             Initialize();
         }
@@ -185,24 +186,88 @@ namespace NFCT.Graph.ViewModels
 
         #region FUNCTION
 
-        private BaseNodeViewModel? SelectedNode { get; set; }
-        public void SelectNode(BaseNodeViewModel nodeVm)
+        // private BaseNodeViewModel? SelectedNode { get; set; }
+        public List<BaseNodeViewModel> SelectedNodes { get; set; }
+        private BaseNodeViewModel? CurrentNode { get; set; } // node will has keyboard focus
+        public void SelectNode(BaseNodeViewModel nodeVm, bool clearOthers = true)
         {
-            if (SelectedNode != null)
-                SelectedNode.IsSelect = false;
-            SelectedNode = nodeVm;
+            if (nodeVm.IsSelect)
+            {
+                return;
+            }
+
             nodeVm.IsSelect = true;
+            SelectedNodes.Add(nodeVm);
         }
 
         public void ClearSelectedItems(string items)
         {
             if (items == "all")
             {
-                var node = SelectedNode;
-                SelectedNode = null;
-                if(node != null)
+                foreach (var node in SelectedNodes)
+                {
                     node.IsSelect = false;
+                }
+                SelectedNodes.Clear();
             }
+        }
+
+        public void SetCurrentNode(BaseNodeViewModel? nodeVm)
+        {
+            if (CurrentNode == nodeVm)
+                return;
+
+            // clear focus on CurrentNode
+            if (CurrentNode != null)
+            {
+                CurrentNode.IsFocused = false;
+                CurrentNode = null;
+            }
+
+            CurrentNode = nodeVm;
+            if (CurrentNode != null)
+            {
+                CurrentNode.IsFocused = true;
+            }
+            
+        }
+
+        public void SelectNodeInBox(Rect box)
+        {
+            if (box.Width < 10 && box.Height < 10) return;
+            //TODO Ctrl
+            ClearSelectedItems("all");
+
+            double l = box.Left;
+            double r = box.Right;
+            double t = box.Top;
+            double b = box.Bottom;
+            var selectNodeVms = new List<BaseNodeViewModel>();
+
+            foreach (var nodeVm in Nodes)
+            {
+                //if (nodeVm.Cx > l && nodeVm.Cx < r && nodeVm.Cy > t && nodeVm.Cy < b)
+                //{
+                //    selNodeVm.Add(nodeVm);
+                //}
+                double nl = nodeVm.Left;
+                double nt = nodeVm.Top;
+                double nr = nl + nodeVm.Width;
+                double nb = nt + nodeVm.Height;
+
+                double ll = nl > l ? nl : l;
+                double tt = nt > t ? nt : t;
+                double rr = nr < r ? nr : r;
+                double bb = nb < b ? nb : b;
+
+                if (ll < rr && tt < bb)
+                {
+                    selectNodeVms.Add(nodeVm);
+                    SelectNode(nodeVm);
+                }
+            }
+
+            
         }
 
         #endregion

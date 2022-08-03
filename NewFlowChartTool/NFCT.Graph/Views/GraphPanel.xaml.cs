@@ -126,6 +126,7 @@ namespace NFCT.Graph.Views
             if (_isBoxSelecting)
             {
                 SelectBox.Visibility = Visibility.Collapsed;
+                CanvasState = GraphCanvasState.IDLE;
             }
             if (e.ChangedButton == MouseButton.Right)
             {
@@ -135,9 +136,12 @@ namespace NFCT.Graph.Views
 
         private void GraphCanvas_OnMouseMove(object sender, MouseEventArgs e)
         {
+            var vm = WPFHelper.GetDataContext<GraphPaneViewModel>(this);
+            if (vm == null) return;
             if (e.LeftButton == MouseButtonState.Pressed && _isBoxSelecting)
             {
-                SetSelectBoxRect(_mouseScreenPos, e.GetPosition((UIElement)sender));
+                var rect = SetSelectBoxRect(_mouseScreenPos, e.GetPosition((UIElement)sender));
+                vm.SelectNodeInBox(rect);
             }
             else if (e.RightButton == MouseButtonState.Pressed && _isDragingCanvas)
             {

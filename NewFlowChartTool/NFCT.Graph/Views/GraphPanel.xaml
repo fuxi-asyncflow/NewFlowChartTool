@@ -86,8 +86,8 @@
                     <!--  Other Items  -->
                     <Rectangle
                         x:Name="SelectBox"
-                        Fill="Pink"
-                        Stroke="Red" />
+                        Fill="#402B579A"
+                        Stroke="#702B579A" />
                 </Canvas>
 
             </ScrollViewer>
