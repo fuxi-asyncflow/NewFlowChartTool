@@ -30,6 +30,7 @@ namespace NFCT.Graph.Views
             InitializeComponent();
         }
 
+        #region LAYOUT
         private int LayoutCount = 0;
         private void Graph_LayoutUpdated(object sender, EventArgs e)
         {
@@ -69,6 +70,8 @@ namespace NFCT.Graph.Views
             }
         }
 
+        #endregion
+
         private void CanvasBackground_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             var vm = WPFHelper.GetDataContext<GraphPaneViewModel>(this);
@@ -80,5 +83,45 @@ namespace NFCT.Graph.Views
             }
             
         }
+
+        #region CANVAS MOUSE HANDLER
+        private Point _mouseScreenPos; // 目前使用相对于scrollviewer的坐标
+        private bool _isDragingCanvas;
+
+        private void GraphCanvas_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Logger.DBG($"canvas mouse down {Mouse.GetPosition((UIElement)sender)}");
+
+            // drag and move
+            if (e.RightButton == MouseButtonState.Pressed)
+            {
+                _mouseScreenPos = Mouse.GetPosition(CanvasScroll);
+                _isDragingCanvas = true;
+            }
+        }
+
+        private void GraphCanvas_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Right)
+            {
+                _isDragingCanvas = false;
+            }
+        }
+
+        private void GraphCanvas_OnMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.RightButton == MouseButtonState.Pressed && _isDragingCanvas)
+            {
+                var newPosition = e.GetPosition(CanvasScroll);
+                var deltaPosition = newPosition - _mouseScreenPos;
+                _mouseScreenPos = newPosition;
+                CanvasScroll.ScrollToHorizontalOffset(CanvasScroll.HorizontalOffset - deltaPosition.X);
+                CanvasScroll.ScrollToVerticalOffset(CanvasScroll.VerticalOffset - deltaPosition.Y);
+            }
+        }
+
+        #endregion
+
+
     }
 }

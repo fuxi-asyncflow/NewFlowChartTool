@@ -29,7 +29,10 @@
                 <Canvas
                     Name="GraphCanvas"
                     Width="{Binding Width}"
-                    Height="{Binding Height}">
+                    Height="{Binding Height}"
+                    MouseDown="GraphCanvas_OnMouseDown"
+                    MouseUp="GraphCanvas_OnMouseUp"
+                    MouseMove="GraphCanvas_OnMouseMove">
                     <Rectangle
                         x:Name="CanvasBackground"
                         Width="{Binding Width}"
