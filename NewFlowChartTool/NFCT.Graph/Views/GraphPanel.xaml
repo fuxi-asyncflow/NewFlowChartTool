@@ -31,8 +31,8 @@
                     Width="{Binding Width}"
                     Height="{Binding Height}"
                     MouseDown="GraphCanvas_OnMouseDown"
-                    MouseUp="GraphCanvas_OnMouseUp"
-                    MouseMove="GraphCanvas_OnMouseMove">
+                    MouseMove="GraphCanvas_OnMouseMove"
+                    MouseUp="GraphCanvas_OnMouseUp">
                     <Rectangle
                         x:Name="CanvasBackground"
                         Width="{Binding Width}"
@@ -82,6 +82,12 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+
+                    <!--  Other Items  -->
+                    <Rectangle
+                        x:Name="SelectBox"
+                        Fill="Pink"
+                        Stroke="Red" />
                 </Canvas>
 
             </ScrollViewer>
