@@ -102,6 +102,7 @@ namespace NFCT.Graph.Views
             {
                 _mouseScreenPos = Mouse.GetPosition(CanvasScroll);
                 CanvasState = GraphCanvasState.DRAG;
+                e.Handled = true;
             }
 
         }
