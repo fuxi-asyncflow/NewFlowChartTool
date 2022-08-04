@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Core;
 using FlowChart.Type;
+using ProjectFactory.DefaultProjectFactory;
 using Type = FlowChart.Type.Type;
 
 namespace ProjectFactory
@@ -41,8 +42,8 @@ namespace ProjectFactory
             var g = new FlowChart.Core.Graph("big_graph") { Path = "MonsterAI.big_graph", Type = tp };
             var startNode = new StartNode();
             var nodes = new List<Node>();
-            int rows = 30;
-            int cols = 20;
+            int rows = 3;
+            int cols = 2;
 
             int nodeCount = rows * cols;
             g.AddNode(startNode);
@@ -69,11 +70,15 @@ namespace ProjectFactory
             project.AddType(monsterType);
             project.AddGraph(CreateTestGraph_1(monsterType));
             project.AddGraph(CreateTestGraph_2(monsterType));
+
+            Save(project);
         }
 
         public void Save(Project project)
         {
-            Console.WriteLine("nothing to do when save memory project");
+            //Console.WriteLine("nothing to do when save memory project");
+            var saver = new Saver();
+            saver.SaveProject(project);
         }
     }
 }

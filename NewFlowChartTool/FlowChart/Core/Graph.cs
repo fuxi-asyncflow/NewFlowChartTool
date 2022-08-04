@@ -34,8 +34,10 @@ namespace FlowChart.Core
         public Type.Type Type { get; set; }
         #endregion
 
-        public void AddNode(Node node)
+        public void AddNode(Node? node)
         {
+            if (node == null)
+                return;
             if (NodeDict.ContainsKey(node.Uid))
                 return;
             node.OwnerGraph = this;

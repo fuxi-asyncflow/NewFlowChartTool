@@ -13,6 +13,7 @@ using FlowChart.AST;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
 using NFCT.Graph.ViewModels;
+using ProjectFactory.DefaultProjectFactory;
 
 namespace NewFlowChartTool.ViewModels
 {
@@ -75,7 +76,8 @@ namespace NewFlowChartTool.ViewModels
         {
             //var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
             //var p = new FlowChart.Core.Project(new ProjectFactory.LegacyProjectFactory());
-            var p = new FlowChart.Core.Project(new ProjectFactory.MemoryProjectFactory());
+            //var p = new FlowChart.Core.Project(new ProjectFactory.MemoryProjectFactory());
+            var p = new FlowChart.Core.Project(new DefaultProjectFactory());
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
