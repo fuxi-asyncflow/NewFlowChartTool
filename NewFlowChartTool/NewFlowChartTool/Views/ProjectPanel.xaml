@@ -7,18 +7,31 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
+    d:DataContext="{d:DesignInstance vm:ProjectPanelViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    d:DataContext="{d:DesignInstance vm:TypePanelViewModel}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/AvalonDock.Themes.VS2013;component/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <ContextMenu x:Key="ProjectTreeItemContext2" ItemsSource="{Binding Source={x:Static vm:ProjectTreeItemViewModel.MenuItems}}">
+                <ContextMenu.ItemContainerStyle>
+                    <Style TargetType="{x:Type MenuItem}">
+                        <Setter Property="Command" Value="{Binding Command}" />
+                        <Setter Property="Header" Value="{Binding Text}" />
+                        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeViewItem}}, Path=DataContext}" />
+                    </Style>
+                </ContextMenu.ItemContainerStyle>
+            </ContextMenu>
+            <ContextMenu x:Key="ProjectTreeItemContext">
+                <MenuItem Header="hello" />
+            </ContextMenu>
 
         </ResourceDictionary>
+
     </UserControl.Resources>
     <Grid Style="{DynamicResource GridStyle}">
         <TreeView
@@ -27,15 +40,16 @@
             ItemsSource="{Binding Roots}">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type vm:ProjectTreeFolderViewModel}" ItemsSource="{Binding Children}">
-                    <TextBlock Text="{Binding Name}" Style="{DynamicResource TextBlockStyle}" />
+                    <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding Name}" />
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
-                    <TextBlock Text="{Binding Name}" Style="{DynamicResource TextBlockStyle}" />
+                    <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding Name}" />
                 </DataTemplate>
             </TreeView.Resources>
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">
                     <EventSetter Event="MouseDoubleClick" Handler="ProjectTreeItem_MouseDoubleClick" />
+                    <Setter Property="ContextMenu" Value="{DynamicResource ProjectTreeItemContext2}" />
                 </Style>
             </TreeView.ItemContainerStyle>
         </TreeView>

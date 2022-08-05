@@ -62,7 +62,10 @@
             </DockingManager.LayoutItemContainerStyleSelector>
             <LayoutRoot>
                 <LayoutPanel x:Name="Root" Orientation="Horizontal">
-                    <LayoutPanel x:Name="LeftGroup" Orientation="Vertical" DockWidth="245">
+                    <LayoutPanel
+                        x:Name="LeftGroup"
+                        DockWidth="245"
+                        Orientation="Vertical">
                         <LayoutAnchorablePane DockHeight="2*">
                             <LayoutAnchorable Title="工程">
                                 <views:ProjectPanel x:Name="ProjectPanelView" />

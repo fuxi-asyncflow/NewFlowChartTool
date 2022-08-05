@@ -4,16 +4,35 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Prism.Mvvm;
 using Prism.Events;
 using Prism.Ioc;
 using FlowChart.Core;
 using NewFlowChartTool.Event;
+using Prism.Commands;
 
 namespace NewFlowChartTool.ViewModels
 {
+    public class MenuItemViewModel<T> : BindableBase where T : BindableBase
+    {
+        public string Text { get; set; }
+        public DelegateCommand<T> Command { get; set; }
+    }
     internal class ProjectTreeItemViewModel : BindableBase
     {
+        static ProjectTreeItemViewModel()
+        {
+            MenuItems = new ObservableCollection<MenuItemViewModel<ProjectTreeItemViewModel>>();
+            MenuItems.Add(new MenuItemViewModel<ProjectTreeItemViewModel>()
+            {
+                Text = "test",
+                Command = new DelegateCommand<ProjectTreeItemViewModel>((item) =>
+            {
+                MessageBox.Show($"{item.Name}");
+            })
+            });
+        }
         public ProjectTreeItemViewModel(Item item)
         {
             _item = item;           
@@ -29,7 +48,9 @@ namespace NewFlowChartTool.ViewModels
                 EventHelper.Pub<GraphOpenEvent, Graph>(graph);
                 graph.Project.BuildGraph(graph);
             }
-        }        
+        }
+
+        public static ObservableCollection<MenuItemViewModel<ProjectTreeItemViewModel>> MenuItems { get; set; }
     }
 
     internal class ProjectTreeFolderViewModel : ProjectTreeItemViewModel
@@ -85,6 +106,5 @@ namespace NewFlowChartTool.ViewModels
 
         public ProjectTreeItemViewModel? ProjectTreeRoot { get; set; }
         public ObservableCollection<ProjectTreeItemViewModel> Roots { get; set; }
-
     }
 }
