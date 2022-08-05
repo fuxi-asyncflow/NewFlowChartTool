@@ -70,10 +70,10 @@ namespace ProjectFactory
             for (int i = 0; i < nodeCount; i++)
             {
                 if(i % rows == 0)
-                    g.Connect(startNode, g.Nodes[i]);
+                    g.Connect(startNode, nodes[i]);
                 else
                 {
-                    g.Connect(g.Nodes[i-1], g.Nodes[i]);
+                    g.Connect(nodes[i-1], nodes[i]);
                 }
             }
             return g;
