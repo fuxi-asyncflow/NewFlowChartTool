@@ -96,17 +96,15 @@ namespace ProjectFactory
         public string Name { get; set; }
         public int Id { get; set; }
         public List<ParameterInfo>? Parameters { get; set; }
-        public FlowChart.Type.Event ToEvent()
+        public FlowChart.Type.EventType ToEvent()
         {
-            var ev = new FlowChart.Type.Event(Name);
+            var ev = new FlowChart.Type.EventType(Name);
+            ev.EventId = Id;
             if (Parameters != null)
             {
                 Parameters.ForEach(param =>
                 {
-                    ev.AddMember(new Property(param.Name)
-                    {
-                        Type = TypeJson.GetType(param.Type)
-                    });
+                    ev.AddParameter(param.ToParameter());
                 });
             }
             return ev;
@@ -297,7 +295,6 @@ namespace ProjectFactory
         {
             foreach (var eventJson in eventsJson)
             {
-
                 Project.AddEvent(eventJson.ToEvent());
             }
             return true;

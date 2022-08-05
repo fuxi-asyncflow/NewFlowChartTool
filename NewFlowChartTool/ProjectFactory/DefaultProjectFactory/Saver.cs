@@ -16,6 +16,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public const string TypeFolderName = "newtypes";
         public const string GraphFileExt = ".yaml";
         public const string TypeFileExt = ".yaml";
+        public const string EventFileName = "_event.yaml";
 
         private Saver saver;
         private Loader loader;
@@ -57,7 +58,6 @@ namespace ProjectFactory.DefaultProjectFactory
             PrepareFolder();
             SaveGraphs();
             SaveTypes();
-            SaveEvents();
         }
 
         public void PrepareFolder()
@@ -153,6 +153,11 @@ namespace ProjectFactory.DefaultProjectFactory
                 SaveType(tp, lines);
                 System.IO.File.WriteAllLines(filePath, lines);
             }
+
+            var evFilePath = System.IO.Path.Combine(typeFolder.FullName, DefaultProjectFactory.EventFileName);
+            var evlines = new List<string>();
+            SaveEvents(evlines);
+            System.IO.File.WriteAllLines(evFilePath, evlines);
         }
 
         public void SaveType(FlowChart.Type.Type type, List<string> lines)
@@ -211,9 +216,34 @@ namespace ProjectFactory.DefaultProjectFactory
             lines.Add("...");
         }
 
-        public void SaveEvents()
+        public void SaveEvents(List<string> lines)
         {
+            lines.Add("---");
+            var events = Project.EventDict.Values.ToList();
+            events.Sort((a, b) =>  a.EventId.CompareTo(b.EventId));
+            foreach (var ev in events)
+            {
+                lines.Add("-");
+                lines.Add($"  id: {ev.EventId}");
+                lines.Add($"  name: {ev.Name}");
+                if (!string.IsNullOrEmpty(ev.Description))
+                {
+                    lines.Add($"  description: {ev.Description}");
+                }
 
+                if (ev.Parameters.Count > 0)
+                {
+                    lines.Add("  parameters: ");
+                    foreach (var para in ev.Parameters)
+                    {
+                        if (string.IsNullOrEmpty(para.Description))
+                            lines.Add($"  - {{name: {para.Name}, type: {para.Type.Name}}}");
+                        else
+                            lines.Add($"  - {{name: {para.Name}, description: {para.Description}, type: {para.Type.Name}}}");
+                    }
+                }
+            }
+            lines.Add("...");
         }
         
     }

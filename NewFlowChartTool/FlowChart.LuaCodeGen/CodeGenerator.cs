@@ -100,7 +100,7 @@ namespace FlowChart.LuaCodeGen
                 }
             }
 
-            Error($"cannot find property or Event `{node.Text}`");
+            Error($"cannot find property or EventType `{node.Text}`");
             return NodeInfo.ErrorNodeInfo;
 
         }

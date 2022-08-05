@@ -25,7 +25,7 @@ namespace FlowChart.Core
             Root = new Folder("");
             TypeDict = new Dictionary<string, Type.Type>();
             GraphDict = new Dictionary<string, Graph>();
-            EventDict = new Dictionary<string, Event>();
+            EventDict = new Dictionary<string, EventType>();
             BuiltinTypes.Types.ForEach(AddType);
 
             EnumTypeDict = new Dictionary<string, EnumType>();
@@ -40,7 +40,7 @@ namespace FlowChart.Core
         public string Path { get; set; }
         public Folder Root { get; set; }
         public Dictionary<string, Type.Type> TypeDict { get; set; }
-        public Dictionary<string, Type.Event> EventDict { get; set; }
+        public Dictionary<string, Type.EventType> EventDict { get; set; }
         IProjectFactory Factory { get; set; }
         public Dictionary<string, Graph> GraphDict { get; set; }
         public Builder Builder { get; set; }
@@ -50,6 +50,11 @@ namespace FlowChart.Core
         {
             Factory?.Create(this);
             return true;
+        }
+
+        public void Save()
+        {
+            Factory?.Save(this);
         }
 
         public void AddType(Type.Type type)
@@ -69,7 +74,7 @@ namespace FlowChart.Core
             return BuiltinTypes.GlobalType;
         }
 
-        public bool AddEvent(Type.Event ev)
+        public bool AddEvent(Type.EventType ev)
         {
             if (EventDict.ContainsKey(ev.Name))
             {
@@ -80,7 +85,7 @@ namespace FlowChart.Core
             return true;
         }
 
-        public Event? GetEvent(string evName)
+        public EventType? GetEvent(string evName)
         {
             EventDict.TryGetValue(evName, out var ev);
             return ev;

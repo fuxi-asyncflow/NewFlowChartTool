@@ -48,7 +48,7 @@ namespace NewFlowChartTool.ViewModels
 
             _ea.GetEvent<Event.GraphOpenEvent>().Subscribe(OnOpenGraph);
 #if DEBUG
-            //OpenProject();
+            TestOpenProject();
 #endif
         }
 
@@ -74,18 +74,24 @@ namespace NewFlowChartTool.ViewModels
         #region COMMAND
         public DelegateCommand OpenProjectCommand { get; private set; }
         public DelegateCommand SwitchThemeCommand { get; private set; }
-        #endregion
 
-        public void OpenProject()
+        public void TestOpenProject()
         {
             //var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
             //var p = new FlowChart.Core.Project(new ProjectFactory.LegacyProjectFactory());
             //var p = new FlowChart.Core.Project(new ProjectFactory.MemoryProjectFactory());
-            //var p = new FlowChart.Core.Project(new DefaultProjectFactory());
-            //p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
-            //p.Load();
-            //p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
-            //_ea.GetEvent<Event.ProjectOpenEvent>().Publish(p);
+            var p = new FlowChart.Core.Project(new DefaultProjectFactory());
+            p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
+            p.Load();
+            p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
+            _ea.GetEvent<Event.ProjectOpenEvent>().Publish(p);
+            p.Save();
+        }
+        #endregion
+
+        public void OpenProject()
+        {
+            
 
             if (CurrentProject != null)
             {

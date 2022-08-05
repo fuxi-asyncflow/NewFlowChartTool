@@ -23,6 +23,21 @@ namespace ProjectFactory
             return tp;
         }
 
+        void AddEvents(Project p)
+        {
+            p.AddEvent(new EventType("Start") { EventId = 1 });
+            p.AddEvent(new EventType("Tick") { EventId = 2 });
+            p.AddEvent(new EventType("Event0Arg") { EventId = 3 });
+
+            p.AddEvent(new EventType("Event1Arg") { EventId = 4, Parameters = new List<Parameter>() {new Parameter("msg") {Type = BuiltinTypes.StringType}}});
+            p.AddEvent(new EventType("Event2Arg") { EventId = 5, Parameters = new List<Parameter>()
+            {
+                new Parameter("msg") { Type = BuiltinTypes.StringType }
+                , new Parameter("id") {Type = BuiltinTypes.NumberType}
+            } });
+
+        }
+
         FlowChart.Core.Graph CreateTestGraph_1(Type tp)
         {
             var g = new FlowChart.Core.Graph("test_0") { Path = "MonsterAI.test_0", Type = tp};
@@ -68,6 +83,7 @@ namespace ProjectFactory
         {
             var monsterType = CreateMonsterType();
             project.AddType(monsterType);
+            AddEvents(project);
             project.AddGraph(CreateTestGraph_1(monsterType));
             project.AddGraph(CreateTestGraph_2(monsterType));
 

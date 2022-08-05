@@ -15,12 +15,45 @@ using Type = FlowChart.Type.Type;
 
 namespace ProjectFactory.DefaultProjectFactory
 {
+    public static class YamlExtension
+    {
+        public static string? Get(this YamlMappingNode self, YamlScalarNode key)
+        {
+            if (self.Children.TryGetValue(key, out YamlNode? node))
+            {
+                if(node is YamlScalarNode scalarNode)
+                    return scalarNode.Value;
+            }
+            return null;
+        }
+
+        public static int? GetInt(this YamlMappingNode self, YamlScalarNode key)
+        {
+            if (self.Children.TryGetValue(key, out YamlNode? node))
+            {
+                if (node is YamlScalarNode scalarNode && scalarNode.Value != null)
+                    return Int32.Parse(scalarNode.Value);
+            }
+            return null;
+        }
+
+        public static YamlSequenceNode? GetArray(this YamlMappingNode self, YamlScalarNode key)
+        {
+            if (self.Children.TryGetValue(key, out YamlNode? node))
+            {
+                return node as YamlSequenceNode;
+            }
+            return null;
+        }
+    }
     public class Loader
     {
         public Project Project;
         public DirectoryInfo ProjectFolder;
 
         public static YamlScalarNode YAML_NAME = new YamlScalarNode("name");
+        public static YamlScalarNode YAML_DESCRIPTION = new YamlScalarNode("description");
+        public static YamlScalarNode YAML_ID = new YamlScalarNode("id");
         public static YamlScalarNode YAML_PATH = new YamlScalarNode("path");
         public static YamlScalarNode YAML_TYPE = new YamlScalarNode("type");
         public static YamlScalarNode YAML_NODES = new YamlScalarNode("nodes");
@@ -49,6 +82,8 @@ namespace ProjectFactory.DefaultProjectFactory
             Dictionary<Type, YamlMappingNode> yamls = new Dictionary<Type, YamlMappingNode>();
             foreach (var file in typeFolder.EnumerateFiles())
             {
+                if(file.FullName.EndsWith(DefaultProjectFactory.EventFileName))
+                    continue;
                 var yamlText = File.ReadAllText(file.FullName);
                 var input = new StringReader(yamlText);
                 var yaml = new YamlStream();
@@ -82,11 +117,6 @@ namespace ProjectFactory.DefaultProjectFactory
         public void LoadType(Type type, YamlMappingNode root)
         {
             YamlNode? node;
-            var nameNode = root.Children[YAML_NAME] as YamlScalarNode;
-            if (nameNode != null)
-            {
-                type = new Type(nameNode.Value);
-            }
 
             if (root.Children.TryGetValue(YAML_PROPERTIES, out node))
             {
@@ -128,7 +158,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
             var prop = new Property(nameNode.Value);
 
-            var typeNode = root.Children[YAML_NAME] as YamlScalarNode;
+            var typeNode = root.Children[YAML_TYPE] as YamlScalarNode;
             prop.Type = Project.GetType(typeNode.Value);
             return prop;
         }
@@ -173,6 +203,58 @@ namespace ProjectFactory.DefaultProjectFactory
 
 
             return method;
+        }
+
+        public void LoadEvent(string yamlText)
+        {
+            var input = new StringReader(yamlText);
+            var yaml = new YamlStream();
+            yaml.Load(input);
+
+            var doc = yaml.Documents.FirstOrDefault();
+            if(doc == null) return;
+
+            var eventsNode = doc.RootNode as YamlSequenceNode;
+            if (eventsNode == null) return;
+
+            YamlNode? tmpNode = null;
+            
+
+            foreach (var evNode in eventsNode)
+            {
+                var node = evNode as YamlMappingNode;
+                if(node == null) continue;
+
+                var evName = node.Get(YAML_NAME);
+                if(evName == null) continue;
+
+                var evType = new EventType(evName);
+
+                var description = node.Get(YAML_DESCRIPTION);
+                if(!string.IsNullOrEmpty(description))
+                    evType.Description = description;
+
+                var eventId = node.GetInt(YAML_ID);
+                if(eventId == null) continue;
+                evType.EventId = (int)eventId;
+
+                var paramsNode = node.GetArray(YAML_PARAMETERS);
+                if(paramsNode == null) continue;
+                foreach (var paramNode in paramsNode)
+                {
+                    if (paramNode is YamlMappingNode pNode)
+                    {
+                        var pName = pNode.Get(YAML_NAME);
+                        if(pName == null) continue;
+                        var para = new Parameter(pName);
+                        para.Description = pNode.Get(YAML_DESCRIPTION);
+                        var paraTypeName = pNode.Get(YAML_TYPE);
+                        para.Type = Project.GetType(paraTypeName);
+                    }
+                }
+
+                Project.AddEvent(evType);
+            }
         }
 
         public void LoadGraphs()

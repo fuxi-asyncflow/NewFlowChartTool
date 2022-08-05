@@ -40,7 +40,7 @@ namespace NewFlowChartTool.Views
 
             dc.Open();
             
-            //ContainerLocator.Current.Resolve<IEventAggregator>().GetEvent<Event.GraphOpenEvent>().Publish(dc.)
+            //ContainerLocator.Current.Resolve<IEventAggregator>().GetEvent<EventType.GraphOpenEvent>().Publish(dc.)
 
             e.Handled = true;
         }
