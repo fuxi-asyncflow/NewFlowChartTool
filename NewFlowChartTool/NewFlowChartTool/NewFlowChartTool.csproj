@@ -22,6 +22,7 @@
     <ProjectReference Include="..\FlowChart.LuaCodeGen\FlowChart.LuaCodeGen.csproj" />
     <ProjectReference Include="..\FlowChartCommon\FlowChartCommon.csproj" />
     <ProjectReference Include="..\FlowChart\FlowChart.csproj" />
+    <ProjectReference Include="..\NFCT.Common\NFCT.Common.csproj" />
     <ProjectReference Include="..\NFCT.FlowChart\NFCT.FlowChart.csproj" />
     <ProjectReference Include="..\NFCT.Graph\NFCT.Graph.csproj" />
     <ProjectReference Include="..\ProjectFactory\ProjectFactory.csproj" />

@@ -9,10 +9,13 @@ using Prism.Events;
 using FlowChart.Core;
 using System.Windows;
 using System.Collections.ObjectModel;
+using System.Security.AccessControl;
 using FlowChart.AST;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
+using NFCT.Common;
 using NFCT.Graph.ViewModels;
+using Prism.Services.Dialogs;
 using ProjectFactory.DefaultProjectFactory;
 
 namespace NewFlowChartTool.ViewModels
@@ -37,6 +40,7 @@ namespace NewFlowChartTool.ViewModels
             _testText = "Hello world";
             _ea = ea;
             _openedGraphs = new ObservableCollection<GraphPaneViewModel>();
+            CurrentProject = null;
 
 
             OpenProjectCommand = new DelegateCommand(OpenProject, () => true);
@@ -44,11 +48,11 @@ namespace NewFlowChartTool.ViewModels
 
             _ea.GetEvent<Event.GraphOpenEvent>().Subscribe(OnOpenGraph);
 #if DEBUG
-            OpenProject();
+            //OpenProject();
 #endif
         }
 
-
+        public Project? CurrentProject { get; set; }
 
         readonly IEventAggregator _ea;
 
@@ -77,9 +81,37 @@ namespace NewFlowChartTool.ViewModels
             //var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
             //var p = new FlowChart.Core.Project(new ProjectFactory.LegacyProjectFactory());
             //var p = new FlowChart.Core.Project(new ProjectFactory.MemoryProjectFactory());
-            var p = new FlowChart.Core.Project(new DefaultProjectFactory());
-            p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
+            //var p = new FlowChart.Core.Project(new DefaultProjectFactory());
+            //p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
+            //p.Load();
+            //p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
+            //_ea.GetEvent<Event.ProjectOpenEvent>().Publish(p);
+
+            if (CurrentProject != null)
+            {
+                MessageBox.Show("please close project before open another project");
+                return;
+            }
+
+            var folderPath = Dialogs.ChooseFolder();
+            if (folderPath == null)
+                return;
+
+            var p = new Project(new DefaultProjectFactory());
+            p.Path = folderPath;
+#if DEBUG
             p.Load();
+#else
+            try
+            {
+                p.Load();
+            }
+            catch (Exception e)
+            {
+
+            }
+#endif
+            CurrentProject = p;
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
             _ea.GetEvent<Event.ProjectOpenEvent>().Publish(p);
         }
