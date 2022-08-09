@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +15,16 @@ using Prism.Commands;
 
 namespace NewFlowChartTool.ViewModels
 {
+    [System.AttributeUsage(System.AttributeTargets.Method)]
+    public class MenuItemAttribute : System.Attribute
+    {
+        public string Name;
+
+        public MenuItemAttribute(string name)
+        {
+            Name = name;
+        }
+    }
     public class MenuItemViewModel<T> : BindableBase where T : BindableBase
     {
         public string Text { get; set; }
@@ -24,12 +35,21 @@ namespace NewFlowChartTool.ViewModels
         static ProjectTreeItemViewModel()
         {
             MenuItems = new ObservableCollection<MenuItemViewModel<ProjectTreeItemViewModel>>();
-            MenuItems.Add(new MenuItemViewModel<ProjectTreeItemViewModel>()
+            var tp = typeof(ProjectTreeItemViewModel);
+            foreach (var methodInfo in tp.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                var attr = methodInfo.GetCustomAttribute(typeof(MenuItemAttribute));
+                if (attr is MenuItemAttribute menuItemAttr)
                 {
-                    Text = "rename",
-                    Command = new DelegateCommand<ProjectTreeItemViewModel>(MenuRename)
+                    var menuDelegate = (Action<ProjectTreeItemViewModel>)
+                        Delegate.CreateDelegate(typeof(Action<ProjectTreeItemViewModel>), methodInfo);
+                    MenuItems.Add(new MenuItemViewModel<ProjectTreeItemViewModel>()
+                    {
+                        Text = menuItemAttr.Name,
+                        Command = new DelegateCommand<ProjectTreeItemViewModel>(menuDelegate)
+                    });
                 }
-            );
+            }
         }
         public ProjectTreeItemViewModel(Item item)
         {
@@ -131,6 +151,7 @@ namespace NewFlowChartTool.ViewModels
 
         public static ObservableCollection<MenuItemViewModel<ProjectTreeItemViewModel>> MenuItems { get; set; }
 
+        [MenuItem("rename")]
         public static void MenuRename(ProjectTreeItemViewModel item)
         {
             // entering editing name mode
