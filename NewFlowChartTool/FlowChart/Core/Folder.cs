@@ -23,7 +23,7 @@ namespace FlowChart.Core
             var child = Items.GetValueOrDefault(subFolderName);
             if(child == null)
             {
-                var item = new Folder(subFolderName) {Project = Project};
+                var item = new Folder(subFolderName) {Project = Project, Type = Type};
                 AddChild(item);
                 return item;
 

@@ -45,6 +45,7 @@ namespace NewFlowChartTool.ViewModels
         void SubscribeEvents()
         {
             EventHelper.Sub<ProjectOpenEvent, Project>(OnOpenProject, ThreadOption.UIThread);
+            EventHelper.Sub<ProjectCloseEvent, Project>(OnCloseProject, ThreadOption.UIThread);
         }
 
         public void OnOpenProject(Project project)
@@ -64,6 +65,11 @@ namespace NewFlowChartTool.ViewModels
             //    Roots = ((ProjectTreeFolderViewModel)TypeTreeRoot).Children;
             //    RaisePropertyChanged("Roots");
             //}
+        }
+
+        public void OnCloseProject(Project project)
+        {
+            Roots.Clear();
         }
 
         public void AddType(FlowChart.Type.Type tp)

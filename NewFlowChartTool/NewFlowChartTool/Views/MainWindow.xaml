@@ -28,6 +28,8 @@
         <Menu>
             <MenuItem Header="File">
                 <MenuItem Command="{Binding OpenProjectCommand}" Header="Open Project" />
+                <MenuItem Command="{Binding SaveProjectCommand}" Header="Save Project" />
+                <MenuItem Command="{Binding CloseProjectCommand}" Header="Close Project" />
             </MenuItem>
             <MenuItem Header="Theme">
                 <MenuItem Command="{Binding SwitchThemeCommand}" Header="switch theme" />

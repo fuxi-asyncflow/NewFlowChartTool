@@ -12,6 +12,7 @@ using Prism.Mvvm;
 using Prism.Events;
 using FlowChart.Core;
 using NewFlowChartTool.Event;
+using NFCT.Common;
 using Prism.Commands;
 
 namespace NewFlowChartTool.ViewModels
@@ -174,6 +175,21 @@ namespace NewFlowChartTool.ViewModels
                 item.Folder.AddNewGraph();
             }
         }
+
+        [MenuItem("add_folder")]
+        public static void MenuNewFolder(ProjectTreeItemViewModel item)
+        {
+            if (item is ProjectTreeFolderViewModel folder)
+            {
+                folder.AddNewFolder();
+                return;
+            }
+
+            if (item.Folder != null)
+            {
+                item.Folder.AddNewFolder();
+            }
+        }
     }
 
     internal class ProjectTreeFolderViewModel : ProjectTreeItemViewModel
@@ -242,6 +258,25 @@ namespace NewFlowChartTool.ViewModels
             folder.AddChild(graph);
             AddChild(new ProjectTreeItemViewModel(graph));
         }
+
+        public void AddNewFolder()
+        {
+            var folder = _item as Folder;
+            if (folder == null) return;
+            var newGraphName = "new_folder";
+            if (folder.ContainsChild(newGraphName))
+            {
+                int i = 1;
+                while (folder.ContainsChild(newGraphName))
+                {
+                    newGraphName = $"new_folder_{i}";
+                    i++;
+                }
+            }
+
+            var newFolder = folder.GetOrCreateSubFolder(newGraphName);
+            AddChild(new ProjectTreeFolderViewModel(newFolder));
+        }
     }
 
     internal class ProjectPanelViewModel : BindableBase
@@ -257,6 +292,7 @@ namespace NewFlowChartTool.ViewModels
         {
             
             _ea.GetEvent<Event.ProjectOpenEvent>().Subscribe(OnOpenProject, ThreadOption.UIThread);
+            EventHelper.Sub<ProjectCloseEvent, Project>(OnCloseProject, ThreadOption.UIThread);
         }
 
         private IEventAggregator _ea;
@@ -281,6 +317,11 @@ namespace NewFlowChartTool.ViewModels
                 Roots = ((ProjectTreeFolderViewModel)ProjectTreeRoot).Children;
                 RaisePropertyChanged("Roots");
             }            
+        }
+
+        public void OnCloseProject(Project p)
+        {
+            Roots.Clear();
         }
 
         public ProjectTreeItemViewModel? ProjectTreeRoot { get; set; }

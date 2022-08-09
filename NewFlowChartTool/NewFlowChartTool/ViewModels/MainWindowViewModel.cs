@@ -13,6 +13,7 @@ using System.Security.AccessControl;
 using FlowChart.AST;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
+using NewFlowChartTool.Event;
 using NFCT.Common;
 using NFCT.Graph.ViewModels;
 using Prism.Services.Dialogs;
@@ -43,8 +44,11 @@ namespace NewFlowChartTool.ViewModels
             CurrentProject = null;
 
 
-            OpenProjectCommand = new DelegateCommand(OpenProject, () => true);
+            OpenProjectCommand = new DelegateCommand(OpenProject, () => CurrentProject == null);
+            SaveProjectCommand = new DelegateCommand(SaveProject, () => CurrentProject != null);
+            CloseProjectCommand = new DelegateCommand(CloseProject, () => CurrentProject != null);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
+
 
             _ea.GetEvent<Event.GraphOpenEvent>().Subscribe(OnOpenGraph);
 #if DEBUG
@@ -52,7 +56,20 @@ namespace NewFlowChartTool.ViewModels
 #endif
         }
 
-        public Project? CurrentProject { get; set; }
+        private Project? _currentProject;
+        public Project? CurrentProject
+        {
+            get => _currentProject;
+            set
+            {
+                if (_currentProject == value)
+                    return;
+                _currentProject = value;
+                OpenProjectCommand.RaiseCanExecuteChanged();
+                SaveProjectCommand.RaiseCanExecuteChanged();
+                CloseProjectCommand.RaiseCanExecuteChanged();
+            }
+        }
 
         readonly IEventAggregator _ea;
 
@@ -73,6 +90,8 @@ namespace NewFlowChartTool.ViewModels
 
         #region COMMAND
         public DelegateCommand OpenProjectCommand { get; private set; }
+        public DelegateCommand SaveProjectCommand { get; private set; }
+        public DelegateCommand CloseProjectCommand { get; private set; }
         public DelegateCommand SwitchThemeCommand { get; private set; }
 
         public void TestOpenProject()
@@ -86,6 +105,7 @@ namespace NewFlowChartTool.ViewModels
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
             _ea.GetEvent<Event.ProjectOpenEvent>().Publish(p);
             p.Save();
+            CurrentProject = p;
         }
         #endregion
 
@@ -142,6 +162,23 @@ namespace NewFlowChartTool.ViewModels
                 Application.Current.Resources.MergedDictionaries[1].Source
                     = new Uri("pack://application:,,,/NFCT.Themes;component/DarkTheme.xaml");
             }
+        }
+
+        public void SaveProject()
+        {
+            if (CurrentProject == null)
+                return;
+            CurrentProject.Save();
+
+        }
+
+        public void CloseProject()
+        {
+            if (CurrentProject == null) return;
+            OpenedGraphs.Clear();
+            EventHelper.Pub<Event.ProjectCloseEvent, Project>(CurrentProject);
+            CurrentProject = null;
+            CloseProjectCommand.RaiseCanExecuteChanged();
         }
 
         public void OnOpenGraph(Graph graph)
