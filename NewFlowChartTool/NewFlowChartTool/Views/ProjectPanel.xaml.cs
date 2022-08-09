@@ -16,6 +16,9 @@ using Prism.Events;
 using Prism.Ioc;
 using NewFlowChartTool.ViewModels;
 using NFCT.Common;
+using NFCT.Common.ViewModels;
+using NFCT.Common.Views;
+using NFCT.Graph.ViewModels;
 
 namespace NewFlowChartTool.Views
 {
@@ -44,5 +47,44 @@ namespace NewFlowChartTool.Views
 
             e.Handled = true;
         }
+
+        //private void ProjectTreeItem_OnNameVisibleChange(object sender, DependencyPropertyChangedEventArgs e)
+        //{
+        //    var vm = WPFHelper.GetDataContext<ProjectTreeItemViewModel>(sender);
+        //    if (vm == null)
+        //        return;
+        //    var stack = WPFHelper.GetVisualParent<StackPanel>(sender);
+        //    Console.WriteLine($"STACK: {sender.GetHashCode()} ${stack.GetHashCode()}");
+        //    if (stack == null) return;
+
+        //    bool visible = (bool)e.NewValue;
+        //    var seb = ContainerLocator.Current.Resolve<SimpleEditBox>();
+        //    if (visible)
+        //    {
+        //        seb.DataContext = null;
+        //        stack.Children.Remove(seb);
+        //    }
+        //    else
+        //    {
+        //        seb.AddToPanel(stack);
+                
+        //        seb.DataContext ??= ContainerLocator.Current.Resolve<SimpleEditBoxViewModel>();
+        //        if (seb.DataContext is SimpleEditBoxViewModel sebVm)
+        //        {
+        //            sebVm.Text = vm.Name;
+        //            seb.SelectText(vm.Name);
+        //        }
+
+        //        seb.SetFocus();
+        //        seb.OnExit = (box, save) =>
+        //        {
+        //            var sebVm = box.DataContext as SimpleEditBoxViewModel;
+        //            if (sebVm == null)
+        //                return;
+        //            var text = sebVm.Text;
+        //            vm.ExitingRenameMode(text, save);
+        //        };
+        //    }
+        //}
     }
 }

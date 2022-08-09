@@ -12,7 +12,7 @@ namespace NFCT.Common
             return (obj is FrameworkElement) ? ((FrameworkElement)obj).DataContext as T : null;
         }
 
-        public static T GetVisualParent<T>(object obj)
+        public static T? GetVisualParent<T>(object obj)
             where T : DependencyObject
         {
             var depo = obj as DependencyObject;

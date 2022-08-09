@@ -88,5 +88,25 @@ namespace FlowChart.Core
             group.Nodes.AddRange(nodes);
             return group;
         }
+
+        public void Rename(string newName)
+        {
+            if (Name == newName)
+                return;
+            Name = newName;
+            var paths = Path.Split('.');
+            if (paths.Length == 0)
+                Path = Name;
+            else
+            {
+                paths[paths.Length - 1] = newName;
+                Path = string.Join('.', paths);
+            }
+        }
+
+        public void SetPath(string path)
+        {
+            Path = path;
+        }
     }
 }

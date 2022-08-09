@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Prism.Mvvm;
 using Prism.Events;
-using Prism.Ioc;
 using FlowChart.Core;
 using NewFlowChartTool.Event;
 using Prism.Commands;
@@ -25,21 +25,20 @@ namespace NewFlowChartTool.ViewModels
         {
             MenuItems = new ObservableCollection<MenuItemViewModel<ProjectTreeItemViewModel>>();
             MenuItems.Add(new MenuItemViewModel<ProjectTreeItemViewModel>()
-            {
-                Text = "test",
-                Command = new DelegateCommand<ProjectTreeItemViewModel>((item) =>
-            {
-                MessageBox.Show($"{item.Name}");
-            })
-            });
+                {
+                    Text = "rename",
+                    Command = new DelegateCommand<ProjectTreeItemViewModel>(MenuRename)
+                }
+            );
         }
         public ProjectTreeItemViewModel(Item item)
         {
             _item = item;           
         }
-        readonly Item _item;
+        protected readonly Item _item;
         public string Name { get => _item.Name; }
         public string Description { get => _item.Description; }
+        public ProjectTreeFolderViewModel? Folder { get; set; }
 
         public virtual void Open()
         {
@@ -50,7 +49,92 @@ namespace NewFlowChartTool.ViewModels
             }
         }
 
+        private bool _isEditingName;
+        public bool IsEditingName
+        {
+            get => _isEditingName;
+            set => SetProperty(ref _isEditingName, value);
+        }
+
+        public void EnterRenameMode()
+        {
+            IsEditingName = true;
+        }
+
+        public void ExitingRenameMode(string newName, bool save = true)
+        {
+            IsEditingName = false;
+            if (!save)
+                return;
+            if (newName == Name)
+                return;
+            if (string.IsNullOrEmpty(newName))
+            {
+                MessageBox.Show("name is empty");
+                return;
+            }
+
+            if (Folder != null && Folder.GetChild(newName) != null)
+            {
+                MessageBox.Show("item with same name exist");
+                return;
+            }
+
+            if (newName.Contains('.'))
+            {
+                MessageBox.Show("graph name cannot contains `.`");
+                return;
+            }
+
+            // rename
+            Rename(newName);
+        }
+
+        public virtual void Rename(string newName)
+        {
+            var graph = _item as Graph;
+            if (graph == null)
+                return;
+            graph.Name = newName;
+            graph.Path = GetPath();
+            RaisePropertyChanged(nameof(Name));
+        }
+
+        public string GetPath()
+        {
+            var paths = new Stack<string>();
+            var cur = this;
+            while (cur != null)
+            {
+                paths.Push(cur.Name);
+                cur = cur.Folder;
+            }
+
+            var pathList = new List<string>();
+            while (paths.Count > 0)
+            {
+                pathList.Add(paths.Pop());
+            }
+
+            return string.Join('.', pathList);
+        }
+
+        public virtual void SetPath(string path)
+        {
+            var graph = _item as Graph;
+            if (graph == null)
+                return;
+            graph.Path = path;
+        }
+
         public static ObservableCollection<MenuItemViewModel<ProjectTreeItemViewModel>> MenuItems { get; set; }
+
+        public static void MenuRename(ProjectTreeItemViewModel item)
+        {
+            // entering editing name mode
+            Console.WriteLine($"RENAME {item.GetHashCode()}");
+            item.EnterRenameMode();
+        }
     }
 
     internal class ProjectTreeFolderViewModel : ProjectTreeItemViewModel
@@ -62,7 +146,40 @@ namespace NewFlowChartTool.ViewModels
         }
         public ObservableCollection<ProjectTreeItemViewModel> Children { get; set; }
 
-        public void AddChild(ProjectTreeItemViewModel? child) { if (child != null) Children.Add(child); }
+        public void AddChild(ProjectTreeItemViewModel? child)
+        {
+            if (child == null) return;
+            child.Folder = this;
+            Children.Add(child);
+        }
+
+        public ProjectTreeItemViewModel? GetChild(string name)
+        {
+            foreach (var item in Children)
+            {
+                if (item.Name == name)
+                    return item;
+            }
+            return null;
+        }
+
+        public override void Rename(string newName)
+        {
+            var folder = _item as Folder;
+            if(folder == null) return;
+            folder.Name = newName;
+            SetPath(GetPath());
+        }
+
+        public override void SetPath(string path)
+        {
+            var folder = _item as Folder;
+            if (folder == null) return;
+            foreach (var projectTreeItemViewModel in Children)
+            {
+                projectTreeItemViewModel.SetPath($"{path}.{Name}");
+            }
+        }
     }
 
     internal class ProjectPanelViewModel : BindableBase

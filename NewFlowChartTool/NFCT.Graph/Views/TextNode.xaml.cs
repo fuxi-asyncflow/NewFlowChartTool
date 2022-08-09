@@ -77,7 +77,7 @@ namespace NFCT.Graph.Views
             if (visible)
             {
                 ac.DataContext = null;
-                NodeStack.Children.Remove(ContainerLocator.Current.Resolve<NodeAutoComplete>());
+                NodeStack.Children.Remove(ac);
             }
             else
             {

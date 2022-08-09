@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using FlowChartCommon;
+using NFCT.Common.Views;
+using NFCT.Common.ViewModels;
 using NFCT.Graph.ViewModels;
 using Prism.Ioc;
 using Prism.Unity;
@@ -47,6 +49,9 @@ namespace NewFlowChartTool
             containerRegistry.RegisterSingleton<NodeAutoCompleteViewModel>();
             containerRegistry.RegisterSingleton<NodeAutoComplete>();
             
+            containerRegistry.RegisterSingleton<SimpleEditBoxViewModel>();
+            containerRegistry.RegisterSingleton<SimpleEditBox>();
+
 
             //throw new NotImplementedException();
         }

@@ -17,7 +17,10 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/AvalonDock.Themes.VS2013;component/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <ContextMenu x:Key="ProjectTreeItemContext2" ItemsSource="{Binding Source={x:Static vm:ProjectTreeItemViewModel.MenuItems}}">
+            <ContextMenu
+                x:Key="ProjectTreeItemContext2"
+                x:Shared="False"
+                ItemsSource="{Binding Source={x:Static vm:ProjectTreeItemViewModel.MenuItems}}">
                 <ContextMenu.ItemContainerStyle>
                     <Style TargetType="{x:Type MenuItem}">
                         <Setter Property="Command" Value="{Binding Command}" />
@@ -43,7 +46,7 @@
                     <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding Name}" />
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
-                    <TextBlock Style="{DynamicResource TextBlockStyle}" Text="{Binding Name}" />
+                    <local:ProjectTreeItem />
                 </DataTemplate>
             </TreeView.Resources>
             <TreeView.ItemContainerStyle>
