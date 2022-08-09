@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -158,6 +159,21 @@ namespace NewFlowChartTool.ViewModels
             Console.WriteLine($"RENAME {item.GetHashCode()}");
             item.EnterRenameMode();
         }
+
+        [MenuItem("add_graph")]
+        public static void MenuNewGraph(ProjectTreeItemViewModel item)
+        {
+            if (item is ProjectTreeFolderViewModel folder)
+            {
+                folder.AddNewGraph();
+                return;
+            }
+
+            if (item.Folder != null)
+            {
+                item.Folder.AddNewGraph();
+            }
+        }
     }
 
     internal class ProjectTreeFolderViewModel : ProjectTreeItemViewModel
@@ -202,6 +218,29 @@ namespace NewFlowChartTool.ViewModels
             {
                 projectTreeItemViewModel.SetPath($"{path}.{Name}");
             }
+        }
+
+        public void AddNewGraph()
+        {
+            var folder = _item as Folder;
+            if(folder == null) return;
+            var newGraphName = "new_graph";
+            if (folder.ContainsChild(newGraphName))
+            {
+                int i = 1;
+                while (folder.ContainsChild(newGraphName))
+                {
+                    newGraphName = $"new_graph_{i}";
+                    i++;
+                }
+            }
+            var graph = Graph.EmptyGraph.Clone();
+            graph.Name = newGraphName;
+            graph.Path = $"{GetPath()}.{newGraphName}";
+            graph.Project = folder.Project;
+            graph.Type = folder.Type;
+            folder.AddChild(graph);
+            AddChild(new ProjectTreeItemViewModel(graph));
         }
     }
 

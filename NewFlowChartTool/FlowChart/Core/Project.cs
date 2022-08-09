@@ -22,7 +22,7 @@ namespace FlowChart.Core
         public Project(IProjectFactory factory)
         {
             Factory = factory;
-            Root = new Folder("");
+            Root = new Folder("") {Project = this};
             TypeDict = new Dictionary<string, Type.Type>();
             GraphDict = new Dictionary<string, Graph>();
             EventDict = new Dictionary<string, EventType>();
@@ -110,10 +110,15 @@ namespace FlowChart.Core
                 {
                     break;
                 }
+                if (folder.Type == null)
+                {
+                    folder.Type = graph.Type;
+                }
             }
             if (folder == null)
                 return;
             folder.AddChild(graph);
+            
             // Console.WriteLine($"graph path: {graph.Path}");
             
             GraphDict.Add(graph.Path, graph);

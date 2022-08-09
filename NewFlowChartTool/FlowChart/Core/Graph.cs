@@ -8,6 +8,11 @@ namespace FlowChart.Core
 {
     public class Graph : Item
     {
+        static Graph()
+        {
+            EmptyGraph = new Graph("empty");
+            EmptyGraph.AddNode(new StartNode());
+        }
         public Graph(string Name)
         : base(Name)
         {
@@ -104,6 +109,26 @@ namespace FlowChart.Core
             var group = new Group("--");
             group.Nodes.AddRange(nodes);
             return group;
+        }
+
+        public static Graph EmptyGraph { get; set; }
+
+        public virtual Graph Clone()
+        {
+            var graph = new Graph(Name) {Path = Path, Project = Project, Type = Type};
+            var nodeDict = new Dictionary<Node, Node>();
+            Nodes.ForEach(node =>
+            {
+                var newNode = node.Clone(graph);
+                nodeDict.Add(node, newNode);
+                graph.AddNode(newNode);
+            });
+
+            Connectors.ForEach(conn =>
+            {
+                graph.Connect(nodeDict[conn.Start], nodeDict[conn.End]);
+            });
+            return graph;
         }
     }
 }

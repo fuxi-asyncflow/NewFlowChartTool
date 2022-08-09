@@ -22,6 +22,12 @@ namespace FlowChart.Core
         public delegate void OnParseDelegate(Node sender, ParseResult pr);
         public event OnParseDelegate ParseEvent;
         public void OnParse(ParseResult pr) { ParseEvent?.Invoke(this, pr); }
+
+        public virtual Node Clone(Graph graph)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
 
@@ -29,11 +35,21 @@ namespace FlowChart.Core
 
     public class StartNode : Node
     {
-
+        public override Node Clone(Graph graph)
+        {
+            return new StartNode();
+        }
     }
 
     public class TextNode : Node
     {
         public string Text { get; set; }
+        public override Node Clone(Graph graph)
+        {
+            var node = new TextNode();
+            node.Text = Text;
+            node.Description = Description;
+            return node;
+        }
     }
 }

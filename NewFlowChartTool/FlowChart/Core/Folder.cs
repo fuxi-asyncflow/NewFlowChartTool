@@ -14,6 +14,8 @@ namespace FlowChart.Core
             Children = new List<Item>();
             Items = new Dictionary<string, Item>();
         }
+        public Project Project { get; set; }
+        public Type.Type? Type { get; set; }
         public List<Item> Children { get; set; }
         public Dictionary<string, Item> Items { get; set; }
         public Folder? GetOrCreateSubFolder(string subFolderName)
@@ -21,7 +23,7 @@ namespace FlowChart.Core
             var child = Items.GetValueOrDefault(subFolderName);
             if(child == null)
             {
-                var item = new Folder(subFolderName);
+                var item = new Folder(subFolderName) {Project = Project};
                 AddChild(item);
                 return item;
 
@@ -45,6 +47,11 @@ namespace FlowChart.Core
 
             Items.Add(item.Name, item);
             Children.Add(item);
+        }
+
+        public bool ContainsChild(string name)
+        {
+            return Items.ContainsKey(name);
         }
     }
 }
