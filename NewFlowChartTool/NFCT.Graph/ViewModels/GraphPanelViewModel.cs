@@ -74,6 +74,8 @@ namespace NFCT.Graph.ViewModels
             _graph.Connectors.ForEach(Connect);
             IsFirstLayout = true;
             NeedLayout = true;
+
+            _graph.GraphPathChangeEvent += OnGraphPathChange;
         }
 
         public string Name => _graph.Name;
@@ -294,6 +296,16 @@ namespace NFCT.Graph.ViewModels
                 Groups.Add(groupVm);
                 groupVm.Resize();
             }
+        }
+
+        #endregion
+
+        #region CallBack
+
+        void OnGraphPathChange(FlowChart.Core.Graph graph, string oldPath, string newPath)
+        {
+            RaisePropertyChanged(nameof(FullPath));
+            RaisePropertyChanged(nameof(Name));
         }
 
         #endregion

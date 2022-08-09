@@ -113,7 +113,9 @@ namespace NewFlowChartTool.ViewModels
             var pathList = new List<string>();
             while (paths.Count > 0)
             {
-                pathList.Add(paths.Pop());
+                var s = paths.Pop();
+                if(!string.IsNullOrEmpty(s))
+                    pathList.Add(s);
             }
 
             return string.Join('.', pathList);

@@ -20,7 +20,24 @@ namespace FlowChart.Core
 
         #region PROPERTY
         public string Uid { get; set; }
-        public string Path { get; set; }
+
+        private string _path;
+        public string Path
+        {
+            get => _path;
+            set => SetPath(value);
+        }
+        public delegate void GraphPathChangeHandler(Graph graph, string oldPath, string newPath);
+        public event GraphPathChangeHandler GraphPathChangeEvent;
+        public void SetPath(string path)
+        {
+            if (string.Equals(_path, path))
+                return;
+            var oldPath = _path;
+            _path = path;
+            GraphPathChangeEvent?.Invoke(this, oldPath, path);
+        }
+
         public List<Node> Nodes { get; set; }
         public Dictionary<string, Node> NodeDict { get; set; }
         public List<Connector> Connectors { get; set; }
@@ -87,26 +104,6 @@ namespace FlowChart.Core
             var group = new Group("--");
             group.Nodes.AddRange(nodes);
             return group;
-        }
-
-        public void Rename(string newName)
-        {
-            if (Name == newName)
-                return;
-            Name = newName;
-            var paths = Path.Split('.');
-            if (paths.Length == 0)
-                Path = Name;
-            else
-            {
-                paths[paths.Length - 1] = newName;
-                Path = string.Join('.', paths);
-            }
-        }
-
-        public void SetPath(string path)
-        {
-            Path = path;
         }
     }
 }
