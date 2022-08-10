@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using FlowChartCommon;
 using NFCT.Common.Views;
 using NFCT.Common.ViewModels;
@@ -34,6 +35,11 @@ namespace NewFlowChartTool
         {
 #if DEBUG
             AllocConsole();
+            EventManager.RegisterClassHandler(
+                typeof(UIElement),
+                Keyboard.PreviewGotKeyboardFocusEvent,
+                (KeyboardFocusChangedEventHandler)OnPreviewGotKeyboardFocus);
+
 #endif
             Logger.FCLogger.Info("application startup");
 
@@ -56,9 +62,15 @@ namespace NewFlowChartTool
             //throw new NotImplementedException();
         }
 
+        private void OnPreviewGotKeyboardFocus(object sender,
+            KeyboardFocusChangedEventArgs e)
+        {
+            Console.WriteLine($"keyboard focus changed : {sender} {e}");
+        }
+
         //private void Application_Startup(object sender, StartupEventArgs e)
         //{
-            
+
 
         //}
     }
