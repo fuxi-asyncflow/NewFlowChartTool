@@ -175,6 +175,7 @@ namespace NewFlowChartTool.ViewModels
         public void CloseProject()
         {
             if (CurrentProject == null) return;
+            ActiveGraph = null;
             OpenedGraphs.Clear();
             EventHelper.Pub<Event.ProjectCloseEvent, Project>(CurrentProject);
             CurrentProject = null;
