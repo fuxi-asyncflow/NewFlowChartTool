@@ -43,8 +43,10 @@ namespace NFCT.Graph.ViewModels
             Connectors = new ObservableCollection<GraphConnectorViewModel>();
             Groups = new ObservableCollection<GroupBoxViewModel>();
             SelectedNodes = new List<BaseNodeViewModel>();
+            SelectedConnectors = new List<GraphConnectorViewModel>();
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             CreateGroupCommand = new DelegateCommand(CreateGroupFromSelectedNodes);
+            OnPreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnPreviewKeyDown);
             Initialize();
         }
 
@@ -62,7 +64,7 @@ namespace NFCT.Graph.ViewModels
             BaseNodeViewModel? startVm, endVm;
             if (NodeDict.TryGetValue(start, out startVm) && NodeDict.TryGetValue(end, out endVm))
             {
-                Connectors.Add(new GraphConnectorViewModel(conn, startVm, endVm));
+                Connectors.Add(new GraphConnectorViewModel(conn, startVm, endVm, this));
             }
         }
 
@@ -194,7 +196,9 @@ namespace NFCT.Graph.ViewModels
 
         // private BaseNodeViewModel? SelectedNode { get; set; }
         public List<BaseNodeViewModel> SelectedNodes { get; set; }
+        public List<GraphConnectorViewModel> SelectedConnectors { get; set; }
         private BaseNodeViewModel? CurrentNode { get; set; } // node will has keyboard focus
+        private GraphConnectorViewModel? CurrentConnector { get; set; }
         public void SelectNode(BaseNodeViewModel nodeVm, bool clearOthers = true)
         {
             if (nodeVm.IsSelect)
@@ -211,6 +215,18 @@ namespace NFCT.Graph.ViewModels
             SelectedNodes.Add(nodeVm);
         }
 
+        public void SelectConnector(GraphConnectorViewModel connectorVm, bool clearOthers = true)
+        {
+            if (connectorVm.IsSelect)
+                return;
+            if (clearOthers)
+            {
+                ClearSelectedItems("all");
+            }
+            connectorVm.IsSelect = true;
+            SelectedConnectors.Add(connectorVm);
+        }
+
         public void ClearSelectedItems(string items)
         {
             if (items == "all")
@@ -220,6 +236,9 @@ namespace NFCT.Graph.ViewModels
                     node.IsSelect = false;
                 }
                 SelectedNodes.Clear();
+
+                SelectedConnectors.ForEach(conn => conn.IsSelect = false);
+                SelectedConnectors.Clear();
             }
         }
 
@@ -246,6 +265,30 @@ namespace NFCT.Graph.ViewModels
                 CurrentNode.IsFocused = true;
             }
             
+        }
+
+        public void SetCurrentConnector(GraphConnectorViewModel? connVm)
+        {
+            if (CurrentConnector == connVm)
+                return;
+
+            if (CurrentConnector != null)
+            {
+                CurrentConnector.IsFocused = false;
+                CurrentConnector = null;
+            }
+
+            if (CurrentNode != null)
+            {
+                CurrentNode.IsFocused = false;
+                CurrentNode = null;
+            }
+
+            CurrentConnector = connVm;
+            if (CurrentConnector != null)
+            {
+                CurrentConnector.IsFocused = true;
+            }
         }
 
         public void SelectNodeInBox(Rect box)
@@ -309,5 +352,16 @@ namespace NFCT.Graph.ViewModels
         }
 
         #endregion
+
+        public void OnPreviewKeyDown(KeyEventArgs arg)
+        {
+            if (arg.Key == Key.Tab)
+            {
+                if (CurrentConnector != null)
+                    CurrentConnector.OnKeyDown(arg);
+                arg.Handled = true; // disable tab navigation
+            }
+        }
+        public DelegateCommand<KeyEventArgs> OnPreviewKeyDownCommand { get; set; }
     }
 }

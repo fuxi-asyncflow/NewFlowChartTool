@@ -17,6 +17,25 @@ namespace FlowChart.Core
         }
         public Node Start { get; set; }
         public Node End { get; set; }
-        public ConnectorType ConnType { get; set; }
+
+        private ConnectorType _conntype;
+
+        public ConnectorType ConnType
+        {
+            get => _conntype;
+            set
+            {
+                if (value == _conntype) return;
+                var oldValue = _conntype;
+                _conntype = value;
+                ConnectorTypeChangeEvent?.Invoke(this,  oldValue, _conntype);
+            }
+        }
+
+        public delegate void
+            ConnectorTypeChangeDelegate(Connector conn, ConnectorType oldValue, ConnectorType newValue);
+        public event ConnectorTypeChangeDelegate? ConnectorTypeChangeEvent;
+
+
     }
 }

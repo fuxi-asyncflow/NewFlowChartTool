@@ -7,7 +7,9 @@ using Prism.Mvvm;
 using FlowChart.Layout;
 using FlowChart.Core;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
+using Prism.Commands;
 
 
 namespace NFCT.Graph.ViewModels
@@ -16,16 +18,40 @@ namespace NFCT.Graph.ViewModels
     {
         public INode Start { get; set; }
         public INode End { get; set; }
-        public Connector.ConnectorType ConnType { get; set; }
-        public GraphConnectorViewModel(Connector conn, BaseNodeViewModel start, BaseNodeViewModel end)
+        public Connector.ConnectorType ConnType => _conn.ConnType;
+
+        public GraphConnectorViewModel(Connector conn, BaseNodeViewModel start, BaseNodeViewModel end, GraphPaneViewModel g)
         {
             Start = start;
             End = end;
+            Owner = g;
+            _conn = conn;
             start.ChildLines.Add(this);
             end.ParentLines.Add(this);
-            ConnType = conn.ConnType;
+
+            _conn.ConnectorTypeChangeEvent += OnConnectTypeChange;
+
+            OnMouseUpCommand = new DelegateCommand<MouseEventArgs>(OnMouseUp);
         }
 
+        public GraphPaneViewModel Owner { get; set; }
+        private Connector _conn;
+
+        private bool _isSelect;
+        public bool IsSelect
+        {
+            get => _isSelect;
+            set
+            {
+                SetProperty(ref _isSelect, value, nameof(IsSelect));
+                IsFocused = _isSelect;
+            }
+        }
+
+        private bool _isFocused;
+        public bool IsFocused { get => _isFocused; set => SetProperty(ref _isFocused, value, nameof(IsFocused)); }
+
+        #region DRAW
         public PathGeometry? Path { get; set; }
         public List<Curve> Curves
         {
@@ -121,5 +147,49 @@ namespace NFCT.Graph.ViewModels
             curves.Add(new Curve(){Type = Curve.CurveType.Line, Points = new List<Position>() {new(start.X, start.Y), new (end.X, end.Y)}});
             CreatePath(curves);
         }
+
+        #endregion
+
+        void OnConnectTypeChange(Connector conn, Connector.ConnectorType ov, Connector.ConnectorType nv)
+        {
+            RaisePropertyChanged(nameof(ConnType));
+        }
+        public DelegateCommand<MouseEventArgs> OnMouseUpCommand { get; set; }
+
+        public void OnMouseUp(MouseEventArgs arg)
+        {
+            Console.WriteLine($"connector mouse up {arg}");
+            Owner.SetCurrentConnector(this);
+        }
+
+
+
+        public void OnKeyDown(KeyEventArgs arg)
+        {
+            Console.WriteLine($"connector key down {arg.Key}");
+            if (arg.Key == Key.Tab)
+            {
+                switch (ConnType)
+                {
+                    case Connector.ConnectorType.FAILURE:
+                        _conn.ConnType = Connector.ConnectorType.SUCCESS;
+                        break;
+                    case Connector.ConnectorType.SUCCESS:
+                        _conn.ConnType = Connector.ConnectorType.ALWAYS;
+                        break;
+                    case Connector.ConnectorType.ALWAYS:
+                        _conn.ConnType = Connector.ConnectorType.FAILURE;
+                        break;
+                    case Connector.ConnectorType.DELETE:
+                        _conn.ConnType = Connector.ConnectorType.ALWAYS;
+                        break;
+                }
+            }
+        }
+
+
+
+       
+
     }
 }
