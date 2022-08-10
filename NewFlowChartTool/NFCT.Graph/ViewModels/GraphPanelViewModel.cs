@@ -40,7 +40,7 @@ namespace NFCT.Graph.ViewModels
             _graph = graph;
             Nodes = new ObservableCollection<BaseNodeViewModel>();
             NodeDict = new Dictionary<Node, BaseNodeViewModel>();
-            Connectors = new ObservableCollection<ConnectorViewModel>();
+            Connectors = new ObservableCollection<GraphConnectorViewModel>();
             Groups = new ObservableCollection<GroupBoxViewModel>();
             SelectedNodes = new List<BaseNodeViewModel>();
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
@@ -62,7 +62,7 @@ namespace NFCT.Graph.ViewModels
             BaseNodeViewModel? startVm, endVm;
             if (NodeDict.TryGetValue(start, out startVm) && NodeDict.TryGetValue(end, out endVm))
             {
-                Connectors.Add(new ConnectorViewModel(conn, startVm, endVm));
+                Connectors.Add(new GraphConnectorViewModel(conn, startVm, endVm));
             }
         }
 
@@ -86,7 +86,7 @@ namespace NFCT.Graph.ViewModels
 
         public ObservableCollection<BaseNodeViewModel> Nodes { get; set; }
         public Dictionary<Node, BaseNodeViewModel> NodeDict { get; set; }
-        public ObservableCollection<ConnectorViewModel> Connectors { get; set; }
+        public ObservableCollection<GraphConnectorViewModel> Connectors { get; set; }
         public ObservableCollection<GroupBoxViewModel> Groups { get; set; }
         public bool NeedLayout { get; set; }
         public bool IsFirstLayout { get; set; }

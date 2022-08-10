@@ -75,14 +75,14 @@ namespace NFCT.Graph.ViewModels
             Owner = g;
 
             OnKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnKeyDown);
-            ParentLines = new List<ConnectorViewModel>();
-            ChildLines = new List<ConnectorViewModel>();
+            ParentLines = new List<GraphConnectorViewModel>();
+            ChildLines = new List<GraphConnectorViewModel>();
         }
 
         public GraphPaneViewModel Owner { get; set; }
         public GroupBoxViewModel? OwnerGroup { get; set; }
-        public List<ConnectorViewModel> ParentLines;
-        public List<ConnectorViewModel> ChildLines;
+        public List<GraphConnectorViewModel> ParentLines;
+        public List<GraphConnectorViewModel> ChildLines;
 
         private double _left;
         public double Left{ get => _left - BorderWidth ; set => SetProperty(ref _left, value, nameof(Left)); }

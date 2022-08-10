@@ -12,12 +12,12 @@ using System.Windows.Media;
 
 namespace NFCT.Graph.ViewModels
 {
-    public class ConnectorViewModel : BindableBase, IEdge
+    public class GraphConnectorViewModel : BindableBase, IEdge
     {
         public INode Start { get; set; }
         public INode End { get; set; }
         public Connector.ConnectorType ConnType { get; set; }
-        public ConnectorViewModel(Connector conn, BaseNodeViewModel start, BaseNodeViewModel end)
+        public GraphConnectorViewModel(Connector conn, BaseNodeViewModel start, BaseNodeViewModel end)
         {
             Start = start;
             End = end;
