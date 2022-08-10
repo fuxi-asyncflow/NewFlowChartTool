@@ -12,9 +12,6 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <utility:ConnectorColorConverter x:Key="ConnectorColorConverter" />
-    </UserControl.Resources>
     <DockPanel Dock="Top" LastChildFill="True">
         <DockPanel DockPanel.Dock="Top">
             <local:GraphPanelHeaderBar DataContext="{Binding}" />
@@ -73,7 +70,7 @@
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Path Data="{Binding Path}" Stroke="{Binding ConnType, Converter={StaticResource ConnectorColorConverter}}" />
+                                <local:GraphConnector />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
