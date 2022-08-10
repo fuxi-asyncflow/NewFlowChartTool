@@ -15,6 +15,7 @@
     <Grid>
         <TextBox
             x:Name="EditBox"
+            FontSize="16"
             IsReadOnly="False"
             KeyDown="EditBox_OnKeyDown"
             LostFocus="EditBox_OnLostFocus"
