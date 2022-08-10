@@ -47,8 +47,8 @@ namespace NFCT.Common.Views
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                this.Focus();
-                Keyboard.Focus(this);
+                EditBox.Focus();
+                Keyboard.Focus(EditBox);
             }), DispatcherPriority.Render);
         }
 
