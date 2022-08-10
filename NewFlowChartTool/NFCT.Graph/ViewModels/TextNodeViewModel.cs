@@ -182,7 +182,7 @@ namespace NFCT.Graph.ViewModels
             IsEditing = true;
         }
 
-        public virtual void ExitEditingMode(NodeAutoCompleteViewModel acVm)
+        public virtual void ExitEditingMode(NodeAutoCompleteViewModel acVm, bool save)
         {
 
         }
@@ -220,12 +220,16 @@ namespace NFCT.Graph.ViewModels
             Node = node;
         }
 
-        public override void ExitEditingMode(NodeAutoCompleteViewModel acVm)
+        public override void ExitEditingMode(NodeAutoCompleteViewModel acVm, bool save)
         {
             Logger.DBG($"[{nameof(TextNodeViewModel)}] ExitEditingMode");
-            Node.Text = acVm.Text;
-            RaisePropertyChanged(nameof(Text));
-            Owner.NeedLayout = true;
+            if (save)
+            {
+                Node.Text = acVm.Text;
+                RaisePropertyChanged(nameof(Text));
+                Owner.NeedLayout = true;
+            }
+
             IsEditing = false;
         }
     }

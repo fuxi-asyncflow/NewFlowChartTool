@@ -55,20 +55,20 @@ namespace NFCT.Graph.Views
             var ac = ContainerLocator.Current.Resolve<NodeAutoComplete>();
             if (visible)
             {
-                NodeStack.Children.Remove(ac);
+                ac.RemoveFromPanel();
             }
             else
             {
-                if(ac.Parent is StackPanel sp)
-                    sp.Children.Remove(ac);
+                ac.AddToPanel(NodeStack);
                 // show autocomplete
                 if (ac.DataContext is NodeAutoCompleteViewModel acVm)
                 {
                     acVm.Node = nodeVm;
                     acVm.Text = nodeVm.Text;
                 }
-                NodeStack.Children.Add(ac);
+
                 ac.SetFocus();
+                ac.SetCursor(-1);
             }
         }
     }

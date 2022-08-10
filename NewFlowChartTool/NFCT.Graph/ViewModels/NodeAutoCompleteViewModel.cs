@@ -16,5 +16,7 @@ namespace NFCT.Graph.ViewModels
             get => _text;
             set => SetProperty(ref _text, value, nameof(Text));
         }
+
+
     }
 }

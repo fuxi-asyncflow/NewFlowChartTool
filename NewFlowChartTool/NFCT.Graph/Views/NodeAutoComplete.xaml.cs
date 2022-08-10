@@ -28,21 +28,67 @@ namespace NFCT.Graph.Views
             InitializeComponent();
         }
 
-        private void NodeContentEditBox_OnLostFocus(object sender, RoutedEventArgs e)
+        public Panel? ParentPanel { get; set; }
+
+        public void AddToPanel(Panel panel)
         {
-            var vm = WPFHelper.GetDataContext<NodeAutoCompleteViewModel>(this);
-            if (vm == null)
+            RemoveFromPanel();
+            ParentPanel = panel;
+            ParentPanel.Children.Add(this);
+        }
+
+        public void RemoveFromPanel()
+        {
+            if (ParentPanel == null)
                 return;
-            vm.Node.ExitEditingMode(vm);
+            ParentPanel.Children.Remove(this);
+            ParentPanel = null;
         }
 
         public void SetFocus()
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                NodeContentEditBox.Focus();
-                Keyboard.Focus(NodeContentEditBox);
+                EditBox.Focus();
+                Keyboard.Focus(EditBox);
             }), DispatcherPriority.Render);
+        }
+
+        public void SelectText(string s)
+        {
+            //EditBox.SelectionStart = 0;
+            //EditBox.SelectionLength = s.Length;
+            //EditBox.SelectAll();
+        }
+
+        // -1 - end
+        public void SetCursor(int pos)
+        {
+            if (pos < 0)
+                EditBox.CaretIndex = EditBox.Text.Length;
+        }
+
+        public Action<NodeAutoComplete, bool> OnExit = (complete, b) =>
+        {
+            var vm = complete.DataContext as NodeAutoCompleteViewModel;
+            if (vm == null) return;
+
+            vm.Node.ExitEditingMode(vm, b);
+
+            //TODO set focus to grid
+        };
+
+        private void EditBox_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            OnExit?.Invoke(this, true);
+        }
+
+        private void EditBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                OnExit?.Invoke(this, true);
+            else if (e.Key == Key.Escape)
+                OnExit?.Invoke(this, false);
         }
     }
 }
