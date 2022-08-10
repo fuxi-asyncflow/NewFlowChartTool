@@ -38,6 +38,19 @@ namespace NFCT.Graph.ViewModels
                 BackgroundBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BackgroundColors[i].R, BackgroundColors[i].G, BackgroundColors[i].B));
                 BorderBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BorderColors[i].R, BorderColors[i].G, BorderColors[i].B));
             }
+
+            LineColors = new Color[]
+            {
+                Color.FromArgb(0xD5362E), Color.FromArgb(0x03950F), Color.FromArgb(0x0A6CC1), Color.FromArgb(0x808080)
+            };
+            LineBrushes = new Brush[LineColors.Length];
+            for (int i = 0; i < LineBrushes.Length; i++)
+            {
+                LineBrushes[i] =
+                    new SolidColorBrush(
+                        System.Windows.Media.Color.FromRgb(LineColors[i].R, LineColors[i].G, LineColors[i].B));
+            }
+
         }
         public static double DefaultBorderWidth { get => 1.0; }
         public static double SelectedBorderWidth { get => 3.0; }
@@ -46,6 +59,9 @@ namespace NFCT.Graph.ViewModels
         public static Brush[] BackgroundBrushes;
         public static Color[] BorderColors;
         public static Brush[] BorderBrushes;
+
+        public static Color[] LineColors;
+        public static Brush[] LineBrushes;
     }
 
     public class BaseNodeViewModel : BindableBase, INode

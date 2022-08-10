@@ -153,7 +153,7 @@ namespace ProjectFactory
             g.Path = Path;
             Nodes.ForEach(node => g.AddNode(node.ToNode()));
             //g.Nodes[0] = new StartNode() { Uid = g.Nodes[0].Uid };
-            Connectors.ForEach(con => g.Connect(con.Start, con.End));
+            Connectors.ForEach(con => g.Connect(con.Start, con.End, (Connector.ConnectorType)(con.Type)));
         }
     }
 

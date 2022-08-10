@@ -74,6 +74,20 @@ namespace NFCT.Graph.Utility
         }
     }
 
+    [ValueConversion(typeof(Connector.ConnectorType), typeof(Brush))]
+    class ConnectorColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return CanvasNodeResource.LineBrushes[(int)value];
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     #endregion
 
 }

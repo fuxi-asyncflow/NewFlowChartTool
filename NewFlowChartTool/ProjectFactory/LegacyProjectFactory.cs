@@ -396,10 +396,11 @@ namespace ProjectFactory
             {
                 //var l = sub as JArray;
                 var endId = Int32.Parse(sub[0].ToString());
+                var connType = Int32.Parse(sub[1].ToString());
                 //var lineType = Connector.ToLineType(sub[1].Value<int>());
                 if (idMap.ContainsKey(endId))
                 {
-                    chart.Connect(node.Uid, idMap[endId]);
+                    chart.Connect(node.Uid, idMap[endId], (Connector.ConnectorType)connType);
                 }
                 else
                 {
@@ -508,7 +509,7 @@ namespace ProjectFactory
                 {
                     var id = Int32.Parse(jToken.GetString());
 
-                    chart.Connect(startNode.Uid, idMap[id]);
+                    chart.Connect(startNode.Uid, idMap[id], Connector.ConnectorType.ALWAYS);
                 }
             }
 

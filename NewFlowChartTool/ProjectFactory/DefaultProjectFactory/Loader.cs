@@ -323,7 +323,8 @@ namespace ProjectFactory.DefaultProjectFactory
                     var connectNode = tmpNode as YamlMappingNode;
                     var start = ((YamlScalarNode)(connectNode.Children[YAML_START])).Value;
                     var end = ((YamlScalarNode)(connectNode.Children[YAML_END])).Value;
-                    graph.Connect(start, end);
+                    var connType = ((YamlScalarNode)(connectNode.Children[YAML_TYPE])).Value;
+                    graph.Connect(start, end, (Connector.ConnectorType)(Int32.Parse(connType)));
                 }
             }
 

@@ -16,12 +16,14 @@ namespace NFCT.Graph.ViewModels
     {
         public INode Start { get; set; }
         public INode End { get; set; }
+        public Connector.ConnectorType ConnType { get; set; }
         public ConnectorViewModel(Connector conn, BaseNodeViewModel start, BaseNodeViewModel end)
         {
             Start = start;
             End = end;
             start.ChildLines.Add(this);
             end.ParentLines.Add(this);
+            ConnType = conn.ConnType;
         }
 
         public PathGeometry? Path { get; set; }

@@ -48,7 +48,7 @@ namespace ProjectFactory
             g.AddNode(new TextNode() {Text = "self.age = 1"});
             g.AddNode(new TextNode() { Text = "$tbl = {1, 2}" });
             for(int i=0; i<g.Nodes.Count -1 ; i++)
-                g.Connect(g.Nodes[i], g.Nodes[i+1]);
+                g.Connect(g.Nodes[i], g.Nodes[i+1], Connector.ConnectorType.ALWAYS);
             return g;
         }
 
@@ -70,10 +70,10 @@ namespace ProjectFactory
             for (int i = 0; i < nodeCount; i++)
             {
                 if(i % rows == 0)
-                    g.Connect(startNode, nodes[i]);
+                    g.Connect(startNode, nodes[i], Connector.ConnectorType.ALWAYS);
                 else
                 {
-                    g.Connect(nodes[i-1], nodes[i]);
+                    g.Connect(nodes[i-1], nodes[i], Connector.ConnectorType.ALWAYS);
                 }
             }
             return g;

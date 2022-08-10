@@ -71,16 +71,16 @@ namespace FlowChart.Core
             return NodeDict[uid];
         }
 
-        public void Connect(string uidStart, string uidEnd)
+        public void Connect(string uidStart, string uidEnd, Connector.ConnectorType connType)
         {
-            Connect(GetNode(uidStart), GetNode(uidEnd));
+            Connect(GetNode(uidStart), GetNode(uidEnd), connType);
         }
 
-        public void Connect(Node? start, Node? end)
+        public void Connect(Node? start, Node? end, Connector.ConnectorType connType)
         {
             if (start == null || end == null)
                 return;
-            var con = new Connector() { Start = start, End = end };
+            var con = new Connector() { Start = start, End = end, ConnType = connType };
             Connectors.Add(con);
         }
 
@@ -126,7 +126,7 @@ namespace FlowChart.Core
 
             Connectors.ForEach(conn =>
             {
-                graph.Connect(nodeDict[conn.Start], nodeDict[conn.End]);
+                graph.Connect(nodeDict[conn.Start], nodeDict[conn.End], conn.ConnType);
             });
             return graph;
         }

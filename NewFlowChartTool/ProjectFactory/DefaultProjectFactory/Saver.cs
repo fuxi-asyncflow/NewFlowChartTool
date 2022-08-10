@@ -30,6 +30,8 @@ namespace ProjectFactory.DefaultProjectFactory
         public void Create(Project project)
         {
             //throw new NotImplementedException();
+            // test = new TestProjectFactory();
+            // test.Create(project);
             loader.Load(project);
         }
 
@@ -133,6 +135,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 lines.Add("-");
                 lines.Add($"  start: {connector.Start.Uid}");
                 lines.Add($"  end: {connector.End.Uid}");
+                lines.Add($"  type: {(int)connector.ConnType}");
             }
         }
 
