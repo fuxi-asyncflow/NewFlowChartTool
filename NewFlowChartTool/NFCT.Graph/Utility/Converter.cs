@@ -23,6 +23,7 @@ namespace NFCT.Graph.Utility
                 return TextNodeTemplate;
             else if (item is StartNodeViewModel)
                 return StartNodeTemplate;
+            return StartNodeTemplate;
             return base.SelectTemplate(item, container);
         }
     }

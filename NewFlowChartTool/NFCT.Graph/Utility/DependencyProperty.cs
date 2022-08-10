@@ -12,39 +12,9 @@ using System.Windows.Media;
 namespace NFCT.Graph.Utility
 // From http://blog.scottlogic.com/2010/07/21/exposing-and-binding-to-a-silverlight-scrollviewers-scrollbars.html
 {
-    public static class FocusExtension
-    {
-        public static bool GetIsFocused(DependencyObject obj)
-        {
-            return (bool)obj.GetValue(IsFocusedProperty);
-        }
-
-        public static void SetIsFocused(DependencyObject obj, bool value)
-        {
-            obj.SetValue(IsFocusedProperty, value);
-        }
-
-        public static readonly DependencyProperty IsFocusedProperty =
-            DependencyProperty.RegisterAttached(
-                "IsFocused", typeof(bool), typeof(FocusExtension),
-                new UIPropertyMetadata(false, OnIsFocusedPropertyChanged));
-
-        private static void OnIsFocusedPropertyChanged(
-            DependencyObject d,
-            DependencyPropertyChangedEventArgs e)
-        {
-            var uie = (UIElement)d;
-            if ((bool)e.NewValue)
-            {
-                uie.Focus(); // Don't care about false values.
-                Keyboard.Focus(uie);
-            }
-        }
-    }
-
     public static class ScrollViewerBinding
     {
-        #region VerticalOffset attached property
+#region VerticalOffset attached property
 
         /// <summary>
         /// Gets the vertical offset value
@@ -69,9 +39,9 @@ namespace NFCT.Graph.Utility
             DependencyProperty.RegisterAttached("VerticalOffset", typeof(double),
             typeof(ScrollViewerBinding), new PropertyMetadata(0.0, OnVerticalOffsetPropertyChanged));
 
-        #endregion
+#endregion
 
-        #region HorizontalOffset attached property
+#region HorizontalOffset attached property
 
         /// <summary>
         /// Gets the horizontal offset value
@@ -96,9 +66,9 @@ namespace NFCT.Graph.Utility
             DependencyProperty.RegisterAttached("HorizontalOffset", typeof(double),
             typeof(ScrollViewerBinding), new PropertyMetadata(0.0, OnHorizontalOffsetPropertyChanged));
 
-        #endregion
+#endregion
 
-        #region VerticalScrollBar attached property
+#region VerticalScrollBar attached property
 
         /// <summary>
         /// An attached property which holds a reference to the vertical scrollbar which
@@ -117,7 +87,7 @@ namespace NFCT.Graph.Utility
             DependencyProperty.RegisterAttached("HorizontalScrollBar", typeof(ScrollBar),
             typeof(ScrollViewerBinding), new PropertyMetadata(null));
 
-        #endregion
+#endregion
 
 
         /// <summary>

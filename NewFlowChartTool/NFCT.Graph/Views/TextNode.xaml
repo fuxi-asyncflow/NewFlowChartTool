@@ -21,20 +21,7 @@
         <common:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
-    <Grid
-        x:Name="NodeGrid"
-        common:FocusExtension.IsFocused="{Binding IsFocused}"
-        utility:SizeObserver.Observe="True"
-        utility:SizeObserver.ObservedHeight="{Binding ActualHeight, Mode=OneWayToSource}"
-        utility:SizeObserver.ObservedWidth="{Binding ActualWidth, Mode=OneWayToSource}"
-        Focusable="True"
-        MouseDown="NodeGrid_OnMouseDown"
-        MouseMove="NodeGrid_OnMouseMove">
-        <b:Interaction.Triggers>
-            <b:EventTrigger EventName="KeyDown">
-                <prism:InvokeCommandAction Command="{Binding OnKeyDownCommand}" />
-            </b:EventTrigger>
-        </b:Interaction.Triggers>
+    <Grid Background="Gold">
         <Border
             BorderBrush="{Binding BgType, Converter={StaticResource BorderColorConverter}, Mode=OneWay}"
             BorderThickness="{Binding IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}"
@@ -56,4 +43,5 @@
 
         </Border>
     </Grid>
+
 </UserControl>

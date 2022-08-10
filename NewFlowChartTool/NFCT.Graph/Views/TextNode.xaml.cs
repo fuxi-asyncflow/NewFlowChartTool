@@ -29,30 +29,9 @@ namespace NFCT.Graph.Views
             InitializeComponent();
         }
 
-        private GraphPanel? _graphPanel;
 
-        private GraphPanel? Graph
-        {
-            get { return _graphPanel ??= WPFHelper.GetVisualParent<GraphPanel>(this); }
-        }
 
-        private void NodeGrid_OnMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            var nodeVm = WPFHelper.GetDataContext<BaseNodeViewModel>(sender);
-            if (nodeVm == null) return;
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                nodeVm.Owner.SelectNode(nodeVm, !Keyboard.Modifiers.HasFlag(ModifierKeys.Control));
-                Logger.DBG($"node mouse down {Graph}");
-                Graph?.BeginMove();
-            }
-            else if (e.RightButton == MouseButtonState.Pressed)
-            {
-                //bool nodeIsSelected = UnitCanvasViewModel.Current.SelectedNodes.Contains(nodeVm);
-                //UnitCanvasViewModel.Current.SetCurrentNode(nodeVm, !nodeIsSelected, false);
-                //e.Handled = true;
-            }
-        }
+
 
         private void NodeGrid_OnMouseMove(object sender, MouseEventArgs e)
         {
@@ -76,7 +55,6 @@ namespace NFCT.Graph.Views
             var ac = ContainerLocator.Current.Resolve<NodeAutoComplete>();
             if (visible)
             {
-                ac.DataContext = null;
                 NodeStack.Children.Remove(ac);
             }
             else
@@ -84,8 +62,6 @@ namespace NFCT.Graph.Views
                 if(ac.Parent is StackPanel sp)
                     sp.Children.Remove(ac);
                 // show autocomplete
-                //TODO use DI BY ViewModelLocator
-                ac.DataContext ??= ContainerLocator.Current.Resolve<NodeAutoCompleteViewModel>();
                 if (ac.DataContext is NodeAutoCompleteViewModel acVm)
                 {
                     acVm.Node = nodeVm;

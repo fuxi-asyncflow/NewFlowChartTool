@@ -52,20 +52,11 @@
                                 <Setter Property="Canvas.Top" Value="{Binding Top}" />
                             </Style>
                         </ItemsControl.ItemContainerStyle>
-                        <ItemsControl.ItemTemplateSelector>
-                            <utility:GraphNodesTemplateSelector>
-                                <utility:GraphNodesTemplateSelector.TextNodeTemplate>
-                                    <DataTemplate>
-                                        <views:TextNode />
-                                    </DataTemplate>
-                                </utility:GraphNodesTemplateSelector.TextNodeTemplate>
-                                <utility:GraphNodesTemplateSelector.StartNodeTemplate>
-                                    <DataTemplate>
-                                        <views:StartNode />
-                                    </DataTemplate>
-                                </utility:GraphNodesTemplateSelector.StartNodeTemplate>
-                            </utility:GraphNodesTemplateSelector>
-                        </ItemsControl.ItemTemplateSelector>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:GraphNode />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
                     <!--  Paths  -->
