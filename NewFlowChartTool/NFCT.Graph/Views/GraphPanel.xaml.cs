@@ -121,6 +121,7 @@ namespace NFCT.Graph.Views
             if (vm == null) return;
             Logger.DBG($"canvas mouse down {Mouse.GetPosition((UIElement)sender)}");
             _mouseScreenPos = Mouse.GetPosition((UIElement)sender);
+            e.Handled = true;
         }
 
         private void GraphCanvas_OnMouseUp(object sender, MouseButtonEventArgs e)
