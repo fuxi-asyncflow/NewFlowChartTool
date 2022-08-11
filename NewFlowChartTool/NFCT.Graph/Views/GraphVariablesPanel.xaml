@@ -20,7 +20,8 @@
         <Expander Header="Variables" IsExpanded="True">
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="add" />
+                    <Button Command="{Binding AddVariableCommand}" Content="add" />
+                    <Button Command="{Binding ModifyVariableCommand}" Content="modify" />
                 </StackPanel>
                 <!--  add varialbes  -->
                 <StackPanel Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -37,9 +38,15 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0">name</TextBlock>
-                            <TextBox Grid.Row="0" Grid.Column="1" />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Text="{Binding TmpName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <TextBlock Grid.Row="1" Grid.Column="0">type</TextBlock>
-                            <TextBox Grid.Row="1" Grid.Column="1" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Text="{Binding TmpTypeName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <TextBlock Grid.Row="2" Grid.Column="0">default</TextBlock>
                             <TextBox Grid.Row="2" Grid.Column="1" />
                             <TextBlock Grid.Row="3" Grid.Column="0">variadic</TextBlock>
@@ -50,13 +57,19 @@
                         </Grid>
                     </Border>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="OK" />
-                        <Button Content="Cancel" />
+                        <Button Command="{Binding ConfirmCommand}" Content="OK" />
+                        <Button Command="{Binding CancelCommand}" Content="Cancel" />
                     </StackPanel>
 
                 </StackPanel>
 
-                <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Variables}">
+                <DataGrid
+                    AutoGenerateColumns="False"
+                    ItemsSource="{Binding Variables}"
+                    ScrollViewer.CanContentScroll="True"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    SelectedItem="{Binding SelectedItem}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Id, Mode=OneWay}" Header="Id" />
                         <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="name" />

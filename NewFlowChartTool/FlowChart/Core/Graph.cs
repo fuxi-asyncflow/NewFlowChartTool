@@ -100,9 +100,14 @@ namespace FlowChart.Core
             {
                 v = new Variable(name);
                 Variables.Add(v);
+                GraphAddVariableEvent?.Invoke(this, v);
                 return v;
             }
         }
+
+        public delegate void GraphAddVariableDelegate(Graph graph, Variable variable);
+        public event GraphAddVariableDelegate? GraphAddVariableEvent;
+
 
         public Group? CreateGroup(List<Node> nodes)
         {
