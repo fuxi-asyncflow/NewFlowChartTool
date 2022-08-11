@@ -15,7 +15,8 @@ namespace FlowChart.Core
         }
 
         public bool Initialized => Type != BuiltinTypes.UndefinedType;
-        public bool IsParam;
         public FlowChart.Type.Type Type;
+        public string DefaultValue { get; set; }
+        public bool IsVariadic { get; set; }
     }
 }

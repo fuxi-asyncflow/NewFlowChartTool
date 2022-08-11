@@ -44,6 +44,7 @@ namespace NFCT.Graph.ViewModels
             Groups = new ObservableCollection<GroupBoxViewModel>();
             SelectedNodes = new List<BaseNodeViewModel>();
             SelectedConnectors = new List<GraphConnectorViewModel>();
+            VariablesPanel = new GraphVariablesPanelViewModel(this);
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             CreateGroupCommand = new DelegateCommand(CreateGroupFromSelectedNodes);
             OnPreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnPreviewKeyDown);
@@ -90,6 +91,8 @@ namespace NFCT.Graph.ViewModels
         public Dictionary<Node, BaseNodeViewModel> NodeDict { get; set; }
         public ObservableCollection<GraphConnectorViewModel> Connectors { get; set; }
         public ObservableCollection<GroupBoxViewModel> Groups { get; set; }
+        public GraphVariablesPanelViewModel VariablesPanel { get; set; }
+        
         public bool NeedLayout { get; set; }
         public bool IsFirstLayout { get; set; }
         private double _width;

@@ -1,0 +1,71 @@
+﻿<UserControl
+    x:Class="NFCT.Graph.Views.GraphVariablesPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:NFCT.Graph.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:NFCT.Graph.ViewModels"
+    d:DataContext="{d:DesignInstance vm:GraphVariablesPanelViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid
+        Width="200"
+        Height="400"
+        Background="LightBlue">
+        <Expander Header="Variables" IsExpanded="True">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="add" />
+                </StackPanel>
+                <!--  add varialbes  -->
+                <StackPanel Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Border>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0">name</TextBlock>
+                            <TextBox Grid.Row="0" Grid.Column="1" />
+                            <TextBlock Grid.Row="1" Grid.Column="0">type</TextBlock>
+                            <TextBox Grid.Row="1" Grid.Column="1" />
+                            <TextBlock Grid.Row="2" Grid.Column="0">default</TextBlock>
+                            <TextBox Grid.Row="2" Grid.Column="1" />
+                            <TextBlock Grid.Row="3" Grid.Column="0">variadic</TextBlock>
+                            <CheckBox
+                                Grid.Row="3"
+                                Grid.Column="1"
+                                HorizontalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="OK" />
+                        <Button Content="Cancel" />
+                    </StackPanel>
+
+                </StackPanel>
+
+                <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding Variables}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Id, Mode=OneWay}" Header="Id" />
+                        <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="name" />
+                        <DataGridTextColumn Binding="{Binding Type, Mode=OneWay}" Header="type" />
+                        <DataGridTextColumn Binding="{Binding Value, Mode=OneWay}" Header="value" />
+                        <DataGridTextColumn Binding="{Binding Description, Mode=OneWay}" Header="description" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </Expander>
+    </Grid>
+</UserControl>

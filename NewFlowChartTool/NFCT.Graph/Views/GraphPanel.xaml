@@ -112,6 +112,11 @@
                 </Canvas>
 
             </ScrollViewer>
+            <local:GraphVariablesPanel
+                Margin="10"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                DataContext="{Binding VariablesPanel}" />
         </Grid>
     </DockPanel>
 </UserControl>
