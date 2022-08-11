@@ -84,6 +84,15 @@ namespace FlowChart.Core
             Connectors.Add(con);
         }
 
+        public bool AddVariable(Variable v)
+        {
+            if (GetVar(v.Name) != null)
+                return false;
+            Variables.Add(v);
+            GraphAddVariableEvent?.Invoke(this, v);
+            return true;
+        }
+
         public Variable? GetVar(string varName)
         {
             return Variables.Find(v => v.Name == varName);
@@ -99,8 +108,7 @@ namespace FlowChart.Core
             else
             {
                 v = new Variable(name);
-                Variables.Add(v);
-                GraphAddVariableEvent?.Invoke(this, v);
+                AddVariable(v);
                 return v;
             }
         }

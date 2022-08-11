@@ -118,6 +118,20 @@ namespace ProjectFactory.DefaultProjectFactory
             lines.Add($"type: {graph.Type.Name}");
             if(!string.IsNullOrEmpty(graph.Description))
                 lines.Add($"description: {graph.Description}");
+
+            if (graph.Variables.Count > 0)
+            {
+                lines.Add("variables: ");
+                foreach (var variable in graph.Variables)
+                {
+                    lines.Add("-");
+                    lines.Add($"  name: {variable.Name}");
+                    if (!string.IsNullOrEmpty(variable.Description))
+                        lines.Add($"  description: {variable.Description}");
+                    lines.Add($"  type: {variable.Type.Name}");
+                }
+            }
+
             lines.Add("nodes: ");
             foreach (var node in graph.Nodes)
             {
@@ -129,13 +143,16 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
             }
 
-            lines.Add("connectors: ");
-            foreach (var connector in graph.Connectors)
+            if (graph.Connectors.Count > 0)
             {
-                lines.Add("-");
-                lines.Add($"  start: {connector.Start.Uid}");
-                lines.Add($"  end: {connector.End.Uid}");
-                lines.Add($"  type: {(int)connector.ConnType}");
+                lines.Add("connectors: ");
+                foreach (var connector in graph.Connectors)
+                {
+                    lines.Add("-");
+                    lines.Add($"  start: {connector.Start.Uid}");
+                    lines.Add($"  end: {connector.End.Uid}");
+                    lines.Add($"  type: {(int)connector.ConnType}");
+                }
             }
         }
 

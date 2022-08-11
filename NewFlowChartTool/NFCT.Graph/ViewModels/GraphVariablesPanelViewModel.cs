@@ -22,7 +22,7 @@ namespace NFCT.Graph.ViewModels
             Variables = new ObservableCollection<GraphVariableViewModel>();
             _graphVm.Graph.Variables.ForEach(v =>
             {
-                Variables.Add(new GraphVariableViewModel(Variable.Default.Clone()));
+                Variables.Add(new GraphVariableViewModel(v));
             });
             _graphVm.Graph.GraphAddVariableEvent += OnAddVariable;
 

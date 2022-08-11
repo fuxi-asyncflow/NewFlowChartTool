@@ -56,6 +56,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public static YamlScalarNode YAML_ID = new YamlScalarNode("id");
         public static YamlScalarNode YAML_PATH = new YamlScalarNode("path");
         public static YamlScalarNode YAML_TYPE = new YamlScalarNode("type");
+        public static YamlScalarNode YAML_VARIABLES = new YamlScalarNode("variables");
         public static YamlScalarNode YAML_NODES = new YamlScalarNode("nodes");
         public static YamlScalarNode YAML_UID = new YamlScalarNode("uid");
         public static YamlScalarNode YAML_TEXT = new YamlScalarNode("text");
@@ -308,6 +309,14 @@ namespace ProjectFactory.DefaultProjectFactory
                 graph.Type = Project.GetType(typeName);
             }
 
+            if (graphNode.Children.TryGetValue(YAML_VARIABLES, out node))
+            {
+                foreach (var tmpNode in ((YamlSequenceNode)node))
+                {
+                    graph.AddVariable(LoadGraphVariable(tmpNode as YamlMappingNode));
+                }
+            }
+
             if (graphNode.Children.TryGetValue(YAML_NODES, out node))
             {
                 foreach (var tmpNode in ((YamlSequenceNode)node))
@@ -356,6 +365,24 @@ namespace ProjectFactory.DefaultProjectFactory
             }
 
             return node;
+        }
+
+        public Variable? LoadGraphVariable(YamlMappingNode root)
+        {
+            YamlNode? tmpNode;
+            Variable? v = null;
+            if (!root.Children.TryGetValue(YAML_NAME, out tmpNode))
+                return null;
+            
+            var name = ((YamlScalarNode)tmpNode).Value;
+            v = new Variable(name);
+
+            if (root.Children.TryGetValue(YAML_TYPE, out tmpNode))
+            {
+                var typeName = ((YamlScalarNode)tmpNode).Value;
+                v.Type = Project.GetType(typeName);
+            }
+            return v;
         }
     }
 }
