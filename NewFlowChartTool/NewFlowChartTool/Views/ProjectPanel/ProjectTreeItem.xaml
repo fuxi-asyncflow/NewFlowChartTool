@@ -18,6 +18,7 @@
                 Text="{Binding Name}"
                 Visibility="{Binding IsEditingName, Converter={StaticResource InvertBooleanToVisibilityConverter}}" />
             <!--  TextBox Visibility="{Binding IsEditingName, Converter={StaticResource BooleanToVisibilityConverter}}" /  -->
+            <TextBlock Foreground="DarkGreen" Text="{Binding Description}" />
         </StackPanel>
     </Grid>
 </UserControl>
