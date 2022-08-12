@@ -44,7 +44,7 @@ namespace ProjectFactory
                 {
                     member = new Method(Name)
                     {
-                        Parameters = Parameters.ConvertAll(p => p == null ? new Parameter("__error") : p.ToParameter()),
+                        Parameters = Parameters.ConvertAll(p => p == null ? new Parameter("__error") {Type = BuiltinTypes.UndefinedType} : p.ToParameter()),
                         Type = TypeJson.GetType(Type)
                     };
                 }
@@ -143,6 +143,7 @@ namespace ProjectFactory
     {
         public string Uid { get; set;}
         public string Path { get; set; }
+        public string? Description { get; set; }
         public string Type { get; set; }
         public List<NodeJson> Nodes { get; set;}
         public List<ConnectorJson> Connectors { get; set;}
@@ -151,6 +152,7 @@ namespace ProjectFactory
         {
             g.Uid = Uid;
             g.Path = Path;
+            g.Description = Description;
             Nodes.ForEach(node => g.AddNode(node.ToNode()));
             //g.Nodes[0] = new StartNode() { Uid = g.Nodes[0].Uid };
             Connectors.ForEach(con => g.Connect(con.Start, con.End, (Connector.ConnectorType)(con.Type)));
@@ -195,7 +197,9 @@ namespace ProjectFactory
 
         public void Save(Project project)
         {
-            throw new NotImplementedException();
+            var saver = new DefaultProjectFactory.Saver();
+            saver.SaveProject(project);
+            //throw new NotImplementedException();
         }
 
         public FileStream GetFileStream(string fileName)

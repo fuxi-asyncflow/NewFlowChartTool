@@ -27,6 +27,7 @@ namespace FlowChart.LuaCodeGen
             try
             {
                 var nodeInfo = ast.OnVisit(this);
+                PrepareCode(nodeInfo);
                 if (!string.IsNullOrEmpty(Pr.ErrorMessage))
                     Console.WriteLine(Pr.ErrorMessage);
                 else
@@ -38,8 +39,21 @@ namespace FlowChart.LuaCodeGen
             {
 
             }
-            
             return Pr;
+        }
+
+        private void PrepareCode(NodeInfo info)
+        {
+            var content = Pr.Content;
+            if (Pr.IsError)
+            {
+                content.Type = GenerateContent.ContentType.ERROR;
+                content.Contents.Add(Pr.ErrorMessage);
+                return;
+            }
+
+            content.Type = GenerateContent.ContentType.FUNC;
+            content.Contents.Add(info.Code);
         }
 
         public void Error(string msg)

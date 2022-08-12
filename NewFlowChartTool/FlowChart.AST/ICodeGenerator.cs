@@ -8,13 +8,38 @@ using FlowChart.AST.Nodes;
 
 namespace FlowChart.AST
 {
+    public class GenerateContent
+    {
+        public enum ContentType
+        {
+            ERROR = 0,
+            FUNC = 1,
+            TIMER = 2,
+            EVENT = 3,
+            CONTROL = 4
+        }
+
+        public GenerateContent()
+        {
+            Type = ContentType.ERROR;
+            Contents = new List<object>();
+        }
+
+        public ContentType Type;
+        public List<object> Contents;
+    }
     public class ParseResult
     {
+        public ParseResult()
+        {
+            Content = new GenerateContent();
+        }
         public bool IsWait => !string.IsNullOrEmpty(EventName);
         public bool IsAction;
         public bool IsError => !string.IsNullOrEmpty(ErrorMessage);
         public string ErrorMessage { get; set; }
         public string EventName { get; set; }
+        public GenerateContent Content { get; set; }
     }
 
     public interface ICodeGenerator

@@ -129,7 +129,10 @@ namespace FlowChart.Core
 
         public void Build()
         {
-
+            foreach (var graph in GraphDict.Values)
+            {
+                BuildGraph(graph);
+            }
         }
 
         public void BuildGraph(Graph graph)

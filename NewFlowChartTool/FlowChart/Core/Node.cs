@@ -21,7 +21,13 @@ namespace FlowChart.Core
         #region EVENTS
         public delegate void OnParseDelegate(Node sender, ParseResult pr);
         public event OnParseDelegate ParseEvent;
-        public void OnParse(ParseResult pr) { ParseEvent?.Invoke(this, pr); }
+
+        public void OnParse(ParseResult pr)
+        {
+            Content = pr.Content;
+            ParseEvent?.Invoke(this, pr);
+        }
+        public GenerateContent? Content { get; set; }
 
         public virtual Node Clone(Graph graph)
         {
@@ -29,8 +35,6 @@ namespace FlowChart.Core
         }
 
         #endregion
-
-
     }
 
     public class StartNode : Node

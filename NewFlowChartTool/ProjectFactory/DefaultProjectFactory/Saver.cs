@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using FlowChart.AST;
 using FlowChart.Core;
 using FlowChart.Type;
 
@@ -47,6 +48,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public DirectoryInfo ProjectFolder;
 
         public Func<Graph, string>? GraphToFileRule;
+        private bool SaveCode = true;
 
         public static string SaveGraphByRoot(Graph graph)
         {
@@ -140,6 +142,29 @@ namespace ProjectFactory.DefaultProjectFactory
                 if (node is TextNode textNode)
                 {
                     lines.Add($"  text: {textNode.Text}");
+                    if (SaveCode && node.Content != null)
+                    {
+                        lines.Add($"  code: ");
+                        var content = node.Content;
+                        lines.Add($"    type: {content.Type}");
+
+                        if (content.Type == GenerateContent.ContentType.ERROR)
+                        {
+                            foreach (var c in content.Contents)
+                            {
+                                if(c is string s)
+                                    lines.Add($"    content: {c.ToString()}");
+                            }
+                        }
+                        else if (content.Type == GenerateContent.ContentType.FUNC)
+                        {
+                            foreach (var c in content.Contents)
+                            {
+                                if (c is string s)
+                                    lines.Add($"    content: {c.ToString()}");
+                            }
+                        }
+                    }
                 }
             }
 

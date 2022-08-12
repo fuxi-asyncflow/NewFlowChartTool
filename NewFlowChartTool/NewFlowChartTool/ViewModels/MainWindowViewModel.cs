@@ -47,6 +47,7 @@ namespace NewFlowChartTool.ViewModels
             OpenProjectCommand = new DelegateCommand(OpenProject, () => CurrentProject == null);
             SaveProjectCommand = new DelegateCommand(SaveProject, () => CurrentProject != null);
             CloseProjectCommand = new DelegateCommand(CloseProject, () => CurrentProject != null);
+            BuildAllCommand = new DelegateCommand(BuildAll, () => CurrentProject != null);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
 
 
@@ -93,13 +94,14 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand SaveProjectCommand { get; private set; }
         public DelegateCommand CloseProjectCommand { get; private set; }
         public DelegateCommand SwitchThemeCommand { get; private set; }
+        public DelegateCommand BuildAllCommand { get; private set; }
 
         public void TestOpenProject()
         {
-            //var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
+            var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
             //var p = new FlowChart.Core.Project(new ProjectFactory.LegacyProjectFactory());
             //var p = new FlowChart.Core.Project(new ProjectFactory.MemoryProjectFactory());
-            var p = new FlowChart.Core.Project(new DefaultProjectFactory());
+            //var p = new FlowChart.Core.Project(new DefaultProjectFactory());
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
@@ -180,6 +182,13 @@ namespace NewFlowChartTool.ViewModels
             EventHelper.Pub<Event.ProjectCloseEvent, Project>(CurrentProject);
             CurrentProject = null;
             CloseProjectCommand.RaiseCanExecuteChanged();
+        }
+
+        public void BuildAll()
+        {
+            if(CurrentProject == null) return;
+            CurrentProject.Build();
+            CurrentProject.Save();
         }
 
         public void OnOpenGraph(Graph graph)
