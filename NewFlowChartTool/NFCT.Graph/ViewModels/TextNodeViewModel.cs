@@ -96,8 +96,12 @@ namespace NFCT.Graph.ViewModels
 
         //private double _height;
         public double Height { get => ActualHeight + (CanvasNodeResource.DefaultBorderWidth - BorderWidth) * 2.0; }
-        public double X { set { Left= value; } }
-        public double Y { set { Top = value; } }
+        public double X { set { Left= value; }
+            get => _left + 0.5 * ActualWidth;
+        }
+        public double Y { set { Top = value; }
+            get => _top + 0.5 * ActualHeight;
+        }
         public List<INode> Children => ChildLines.ConvertAll(line => line.End);
 
         public double ActualHeight { get; set; }
@@ -180,16 +184,37 @@ namespace NFCT.Graph.ViewModels
 
         public void OnKeyDown(KeyEventArgs args)
         {
-            Logger.DBG($"[{nameof(BaseNodeViewModel)}] KeyDown : {args.Key}");
-            if (args.Key == Key.Space)
+            bool isCtrlDown = false;
+            Logger.DBG($"{this} KeyDown : {args.Key}");
+            switch (args.Key)
             {
-                EnterEditingMode();
+                case Key.Space:
+                    EnterEditingMode();
+                    args.Handled = true;
+                    break;
+                case Key.Enter:
+                    if (!IsEditing)
+                        Owner.AddNewNode();
+                    args.Handled = true;
+                    break;
+                case Key.Down:
+                    Owner.FindNearestItem(X, Y, 270.0, isCtrlDown);
+                    args.Handled = true;
+                    break;
+                case Key.Up:
+                    Owner.FindNearestItem(X, Y, 90.0, isCtrlDown);
+                    args.Handled = true;
+                    break;
+                case Key.Left:
+                    Owner.FindNearestItem(X, Y, 180.0, isCtrlDown);
+                    args.Handled = true;
+                    break;
+                case Key.Right:
+                    Owner.FindNearestItem(X, Y, 0.0, isCtrlDown);
+                    args.Handled = true;
+                    break;
             }
-            else if (args.Key == Key.Enter)
-            {
-                if(!IsEditing)
-                    Owner.AddNewNode();
-            }
+
         }
 
         #endregion
@@ -254,6 +279,11 @@ namespace NFCT.Graph.ViewModels
             }
 
             IsEditing = false;
+        }
+
+        public override string ToString()
+        {
+            return $"[{nameof(TextNodeViewModel)}] {Text}";
         }
     }
 

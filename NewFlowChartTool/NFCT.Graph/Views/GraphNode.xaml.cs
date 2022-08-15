@@ -41,7 +41,7 @@ namespace NFCT.Graph.Views
             if (nodeVm == null) return;
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                nodeVm.Owner.SelectNode(nodeVm, !Keyboard.Modifiers.HasFlag(ModifierKeys.Control));
+                nodeVm.Owner.SetCurrentNode(nodeVm, !Keyboard.Modifiers.HasFlag(ModifierKeys.Control));
                 Logger.DBG($"node mouse down {Graph}");
                 Graph?.BeginMove();
             }

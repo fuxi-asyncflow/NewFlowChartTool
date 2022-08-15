@@ -238,7 +238,6 @@ namespace NFCT.Graph.ViewModels
             if (clearOthers)
             {
                 ClearSelectedItems("all");
-                SetCurrentNode(nodeVm);
             }
 
             nodeVm.IsSelect = true;
@@ -277,7 +276,7 @@ namespace NFCT.Graph.ViewModels
             SelectedNodes.ForEach(node => node.Move(dx, dy));
         }
 
-        public void SetCurrentNode(BaseNodeViewModel? nodeVm)
+        public void SetCurrentNode(BaseNodeViewModel? nodeVm, bool clearOthers = true)
         {
             if (CurrentNode == nodeVm)
                 return;
@@ -292,6 +291,7 @@ namespace NFCT.Graph.ViewModels
             CurrentNode = nodeVm;
             if (CurrentNode != null)
             {
+                SelectNode(CurrentNode, clearOthers);
                 CurrentNode.IsFocused = true;
             }
             
@@ -384,7 +384,7 @@ namespace NFCT.Graph.ViewModels
             NeedLayout = true;
 
             // set newnode as currentnode
-            SelectNode(vm, true);
+            SetCurrentNode(vm);
 
             Graph.Build();
         }
@@ -411,5 +411,68 @@ namespace NFCT.Graph.ViewModels
             }
         }
         public DelegateCommand<KeyEventArgs> OnPreviewKeyDownCommand { get; set; }
+
+        public BaseNodeViewModel? FindNearestItem(double cx, double cy, double angle, bool targetIsLine)
+        {
+            angle = angle / 180.0 * Math.PI;    // 角度转弧度
+            double cosAngle = Math.Cos(angle);
+            double sinAngle = Math.Sin(angle);
+
+            // 计算权重的函数
+            const double k = 16;
+            Func<double, double, double> weightFunc = (x, y) =>
+            {
+                double dx = x - cx;
+                double dy = -(y - cy); // 因为坐标系与数学上的坐标系Y轴是相反的
+                double dist = Math.Sqrt(dx * dx + dy * dy);
+                if (dist < 10.0) return 0.0; // 自身的权值设为0
+
+                double cosTheta = (dx * cosAngle + dy * sinAngle) / dist;
+                if (cosTheta < 0) return 0.0;
+                return (cosTheta + 1 / (k - 1)) / dist;
+            };
+
+            double maxWeight = 0.0;
+            if (targetIsLine)
+            {
+                //GraphConnectorViewModel maxWeightLine = null;
+                //// 获得权值最大的节点
+                //foreach (var lineVm in Connectors)
+                //{
+                //    double w = weightFunc(lineVm.Cx, lineVm.Cy);
+                //    if (w > maxWeight)
+                //    {
+                //        maxWeight = w;
+                //        maxWeightLine = lineVm;
+                //    }
+                //}
+                //// 将最大节点设为当前节点
+                //if (maxWeightLine != null)
+                //{
+                //    SetCurrentLine(maxWeightLine);
+                //}
+            }
+            else
+            {
+                BaseNodeViewModel maxWeightNode = null;
+                // 获得权值最大的节点
+                foreach (var nodeVm in Nodes)
+                {
+                    double w = weightFunc(nodeVm.X, nodeVm.Y);
+                    if (w > maxWeight)
+                    {
+                        maxWeight = w;
+                        maxWeightNode = nodeVm;
+                    }
+                }
+                // 将最大节点设为当前节点
+                if (maxWeightNode != null)
+                {
+                    SetCurrentNode(maxWeightNode);
+                }
+            }
+
+            return null;
+        }
     }
 }
