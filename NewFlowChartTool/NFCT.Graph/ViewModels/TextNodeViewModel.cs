@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -182,8 +183,12 @@ namespace NFCT.Graph.ViewModels
             Logger.DBG($"[{nameof(BaseNodeViewModel)}] KeyDown : {args.Key}");
             if (args.Key == Key.Space)
             {
-                Console.WriteLine("textnode keydown");
                 EnterEditingMode();
+            }
+            else if (args.Key == Key.Enter)
+            {
+                if(!IsEditing)
+                    Owner.AddNewNode();
             }
         }
 
@@ -245,6 +250,7 @@ namespace NFCT.Graph.ViewModels
                 Node.Text = acVm.Text;
                 RaisePropertyChanged(nameof(Text));
                 Owner.NeedLayout = true;
+                Owner.Graph.Build();
             }
 
             IsEditing = false;

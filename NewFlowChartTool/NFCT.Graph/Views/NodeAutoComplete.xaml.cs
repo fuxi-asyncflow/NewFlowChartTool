@@ -74,8 +74,10 @@ namespace NFCT.Graph.Views
             if (vm == null) return;
 
             vm.Node.ExitEditingMode(vm, b);
-
-            //TODO set focus to grid
+            
+            // set focus back
+            vm.Node.IsFocused = false;
+            vm.Node.IsFocused = true;
         };
 
         private void EditBox_OnLostFocus(object sender, RoutedEventArgs e)
@@ -86,7 +88,10 @@ namespace NFCT.Graph.Views
         private void EditBox_OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
+            {
                 OnExit?.Invoke(this, true);
+                e.Handled = true;
+            }
             else if (e.Key == Key.Escape)
                 OnExit?.Invoke(this, false);
         }

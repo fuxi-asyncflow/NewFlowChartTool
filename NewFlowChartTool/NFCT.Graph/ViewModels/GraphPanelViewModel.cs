@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,13 +52,17 @@ namespace NFCT.Graph.ViewModels
             Initialize();
         }
 
-        public void AddNode(Node node)
+        public BaseNodeViewModel? AddNode(Node node)
         {
             var vm = BaseNodeViewModel.CreateNodeViewModel(node, this);
+            if (vm == null)
+                return null;
             Nodes.Add(vm);
             NodeDict.Add(node, vm);
+            return vm;
         }
 
+        // used when GraphViewModel create
         public void Connect(Connector conn)
         {
             var start = conn.Start;
@@ -67,6 +72,27 @@ namespace NFCT.Graph.ViewModels
             {
                 Connectors.Add(new GraphConnectorViewModel(conn, startVm, endVm, this));
             }
+        }
+
+        public void Connect(Node start, Node end)
+        {
+            BaseNodeViewModel? startVm, endVm;
+            if (!NodeDict.TryGetValue(start, out startVm) || !NodeDict.TryGetValue(end, out endVm))
+            {
+                Logger.WARN("connect nodes error: node has no viewmodel");
+                return;
+            }
+
+            if (startVm.ChildLines.Any(line => line.End == endVm))
+            {
+                Logger.WARN("connect nodes error: line exist");
+                return;
+            }
+            
+            var conn = Graph.Connect(start, end, Connector.ConnectorType.SUCCESS);
+            if (conn == null)
+                return;
+            Connectors.Add(new GraphConnectorViewModel(conn, startVm, endVm, this));
         }
 
         public void Initialize()
@@ -200,8 +226,8 @@ namespace NFCT.Graph.ViewModels
         // private BaseNodeViewModel? SelectedNode { get; set; }
         public List<BaseNodeViewModel> SelectedNodes { get; set; }
         public List<GraphConnectorViewModel> SelectedConnectors { get; set; }
-        private BaseNodeViewModel? CurrentNode { get; set; } // node will has keyboard focus
-        private GraphConnectorViewModel? CurrentConnector { get; set; }
+        public BaseNodeViewModel? CurrentNode { get; set; } // node will has keyboard focus
+        public GraphConnectorViewModel? CurrentConnector { get; set; }
         public void SelectNode(BaseNodeViewModel nodeVm, bool clearOthers = true)
         {
             if (nodeVm.IsSelect)
@@ -212,6 +238,7 @@ namespace NFCT.Graph.ViewModels
             if (clearOthers)
             {
                 ClearSelectedItems("all");
+                SetCurrentNode(nodeVm);
             }
 
             nodeVm.IsSelect = true;
@@ -342,6 +369,24 @@ namespace NFCT.Graph.ViewModels
                 Groups.Add(groupVm);
                 groupVm.Resize();
             }
+        }
+
+        public void AddNewNode()
+        {
+            // add new node
+            Debug.Assert(CurrentNode != null);
+            var newNode = Node.DefaultNode.Clone(Graph);
+            var vm = AddNode(newNode);
+            if (vm == null)
+                return;
+            Graph.AddNode(newNode);
+            Connect(CurrentNode.Node, newNode);
+            NeedLayout = true;
+
+            // set newnode as currentnode
+            SelectNode(vm, true);
+
+            Graph.Build();
         }
 
         #endregion

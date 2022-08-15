@@ -56,6 +56,11 @@ namespace FlowChart.Core
         public Type.Type Type { get; set; }
         #endregion
 
+        public void Build()
+        {
+            Project.BuildGraph(this);
+        }
+
         public void AddNode(Node? node)
         {
             if (node == null)
@@ -76,12 +81,13 @@ namespace FlowChart.Core
             Connect(GetNode(uidStart), GetNode(uidEnd), connType);
         }
 
-        public void Connect(Node? start, Node? end, Connector.ConnectorType connType)
+        public Connector? Connect(Node? start, Node? end, Connector.ConnectorType connType)
         {
             if (start == null || end == null)
-                return;
+                return null;
             var con = new Connector() { Start = start, End = end, ConnType = connType };
             Connectors.Add(con);
+            return con;
         }
 
         public bool AddVariable(Variable v)

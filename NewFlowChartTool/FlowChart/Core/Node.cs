@@ -9,6 +9,11 @@ namespace FlowChart.Core
 {
     public class Node
     {
+        static Node()
+        {
+            DefaultNode = new TextNode() {Text = ""};
+        }
+
         public Node()
         {
             Uid = Project.GenUUID().ToString();
@@ -28,13 +33,14 @@ namespace FlowChart.Core
             ParseEvent?.Invoke(this, pr);
         }
         public GenerateContent? Content { get; set; }
+        #endregion
 
         public virtual Node Clone(Graph graph)
         {
             throw new NotImplementedException();
         }
 
-        #endregion
+        public static Node DefaultNode { get; set; }
     }
 
     public class StartNode : Node
