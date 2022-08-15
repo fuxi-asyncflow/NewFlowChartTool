@@ -16,14 +16,20 @@ namespace NFCT.Graph.ViewModels
 {
     public class GraphConnectorViewModel : BindableBase, IEdge
     {
-        public INode Start { get; set; }
-        public INode End { get; set; }
+        public INode Start => StartNode;
+        public INode End => EndNode;
         public Connector.ConnectorType ConnType => _conn.ConnType;
+
+        public BaseNodeViewModel StartNode { get; set; }
+        public BaseNodeViewModel EndNode { get; set; }
+
+        public double X => (StartNode.X + EndNode.X) * 0.5f;
+        public double Y => (StartNode.Y + EndNode.Y) * 0.5f;
 
         public GraphConnectorViewModel(Connector conn, BaseNodeViewModel start, BaseNodeViewModel end, GraphPaneViewModel g)
         {
-            Start = start;
-            End = end;
+            StartNode = start;
+            EndNode = end;
             Owner = g;
             _conn = conn;
             start.ChildLines.Add(this);
@@ -44,7 +50,8 @@ namespace NFCT.Graph.ViewModels
             set
             {
                 SetProperty(ref _isSelect, value, nameof(IsSelect));
-                IsFocused = _isSelect;
+                if(_isSelect)
+                    Console.WriteLine("line is selcected");
             }
         }
 
@@ -162,34 +169,44 @@ namespace NFCT.Graph.ViewModels
             Owner.SetCurrentConnector(this);
         }
 
-
-
-        public void OnKeyDown(KeyEventArgs arg)
+        public void ChangeToNextType()
         {
-            Console.WriteLine($"connector key down {arg.Key}");
-            if (arg.Key == Key.Tab)
+            switch (ConnType)
             {
-                switch (ConnType)
-                {
-                    case Connector.ConnectorType.FAILURE:
-                        _conn.ConnType = Connector.ConnectorType.SUCCESS;
-                        break;
-                    case Connector.ConnectorType.SUCCESS:
-                        _conn.ConnType = Connector.ConnectorType.ALWAYS;
-                        break;
-                    case Connector.ConnectorType.ALWAYS:
-                        _conn.ConnType = Connector.ConnectorType.FAILURE;
-                        break;
-                    case Connector.ConnectorType.DELETE:
-                        _conn.ConnType = Connector.ConnectorType.ALWAYS;
-                        break;
-                }
+                case Connector.ConnectorType.FAILURE:
+                    _conn.ConnType = Connector.ConnectorType.SUCCESS;
+                    break;
+                case Connector.ConnectorType.SUCCESS:
+                    _conn.ConnType = Connector.ConnectorType.ALWAYS;
+                    break;
+                case Connector.ConnectorType.ALWAYS:
+                    _conn.ConnType = Connector.ConnectorType.FAILURE;
+                    break;
+                case Connector.ConnectorType.DELETE:
+                    _conn.ConnType = Connector.ConnectorType.ALWAYS;
+                    break;
             }
         }
 
-
-
-       
-
+        public void OnKeyDown(KeyEventArgs args)
+        {
+            bool isCtrlDown = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
+            Console.WriteLine($"connector key down {args.Key}");
+            switch (args.Key)
+            {
+                case Key.Tab:
+                    ChangeToNextType();
+                    args.Handled = true;
+                    break;
+                case Key.Down:
+                case Key.Up:
+                case Key.Left:
+                case Key.Right:
+                    Owner.FindNearestItem(X, Y, args.Key, isCtrlDown);
+                    args.Handled = true;
+                    break;
+            }
+           
+        }
     }
 }

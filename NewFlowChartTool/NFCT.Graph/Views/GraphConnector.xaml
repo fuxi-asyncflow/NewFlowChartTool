@@ -16,16 +16,18 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <utility:ConnectorColorConverter x:Key="ConnectorColorConverter" />
+        <utility:ConnectorStrokeWidthConverter x:Key="ConnectorStrokeWidthConverter" />
     </UserControl.Resources>
     <Canvas>
         <Path
             Data="{Binding Path}"
             Stroke="{Binding ConnType, Converter={StaticResource ConnectorColorConverter}}"
-            StrokeThickness="4" />
+            StrokeThickness="{Binding IsSelect, Converter={StaticResource ConnectorStrokeWidthConverter}}" />
 
         <Path
             common:FocusExtension.IsFocused="{Binding IsFocused}"
             Data="{Binding Path}"
+            FocusVisualStyle="{x:Null}"
             Focusable="True"
             Stroke="Transparent"
             StrokeThickness="10">

@@ -184,7 +184,7 @@ namespace NFCT.Graph.ViewModels
 
         public void OnKeyDown(KeyEventArgs args)
         {
-            bool isCtrlDown = false;
+            bool isCtrlDown = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
             Logger.DBG($"{this} KeyDown : {args.Key}");
             switch (args.Key)
             {
@@ -198,19 +198,10 @@ namespace NFCT.Graph.ViewModels
                     args.Handled = true;
                     break;
                 case Key.Down:
-                    Owner.FindNearestItem(X, Y, 270.0, isCtrlDown);
-                    args.Handled = true;
-                    break;
                 case Key.Up:
-                    Owner.FindNearestItem(X, Y, 90.0, isCtrlDown);
-                    args.Handled = true;
-                    break;
                 case Key.Left:
-                    Owner.FindNearestItem(X, Y, 180.0, isCtrlDown);
-                    args.Handled = true;
-                    break;
                 case Key.Right:
-                    Owner.FindNearestItem(X, Y, 0.0, isCtrlDown);
+                    Owner.FindNearestItem(X, Y, args.Key, isCtrlDown);
                     args.Handled = true;
                     break;
             }

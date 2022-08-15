@@ -276,17 +276,30 @@ namespace NFCT.Graph.ViewModels
             SelectedNodes.ForEach(node => node.Move(dx, dy));
         }
 
+        public void ClearCurrentItem()
+        {
+            if (CurrentNode != null)
+            {
+                CurrentNode.IsFocused = false;
+                CurrentNode.IsSelect = false;
+                CurrentNode = null;
+            }
+
+            if (CurrentConnector != null)
+            {
+                CurrentConnector.IsFocused = false;
+                CurrentConnector.IsSelect = false;
+                CurrentConnector = null;
+            }
+        }
+
         public void SetCurrentNode(BaseNodeViewModel? nodeVm, bool clearOthers = true)
         {
             if (CurrentNode == nodeVm)
                 return;
 
             // clear focus on CurrentNode
-            if (CurrentNode != null)
-            {
-                CurrentNode.IsFocused = false;
-                CurrentNode = null;
-            }
+            ClearCurrentItem();
 
             CurrentNode = nodeVm;
             if (CurrentNode != null)
@@ -294,7 +307,8 @@ namespace NFCT.Graph.ViewModels
                 SelectNode(CurrentNode, clearOthers);
                 CurrentNode.IsFocused = true;
             }
-            
+
+            Console.WriteLine("set current node");
         }
 
         public void SetCurrentConnector(GraphConnectorViewModel? connVm)
@@ -302,23 +316,15 @@ namespace NFCT.Graph.ViewModels
             if (CurrentConnector == connVm)
                 return;
 
-            if (CurrentConnector != null)
-            {
-                CurrentConnector.IsFocused = false;
-                CurrentConnector = null;
-            }
-
-            if (CurrentNode != null)
-            {
-                CurrentNode.IsFocused = false;
-                CurrentNode = null;
-            }
+            ClearCurrentItem();
 
             CurrentConnector = connVm;
             if (CurrentConnector != null)
             {
                 CurrentConnector.IsFocused = true;
+                CurrentConnector.IsSelect = true;
             }
+            Console.WriteLine("set current connector");
         }
 
         public void SelectNodeInBox(Rect box)
@@ -403,17 +409,25 @@ namespace NFCT.Graph.ViewModels
 
         public void OnPreviewKeyDown(KeyEventArgs arg)
         {
-            if (arg.Key == Key.Tab)
+            if (CurrentConnector != null)
             {
-                if (CurrentConnector != null)
-                    CurrentConnector.OnKeyDown(arg);
-                arg.Handled = true; // disable tab navigation
+                CurrentConnector.OnKeyDown(arg);
+                arg.Handled = true;
             }
         }
         public DelegateCommand<KeyEventArgs> OnPreviewKeyDownCommand { get; set; }
 
-        public BaseNodeViewModel? FindNearestItem(double cx, double cy, double angle, bool targetIsLine)
+        public BaseNodeViewModel? FindNearestItem(double cx, double cy, Key direction, bool targetIsLine)
         {
+            Console.WriteLine($"findnearestitem {targetIsLine}");
+            double angle = 0.0;
+            switch (direction)
+            {
+                case Key.Left: angle = 180.0; break;
+                case Key.Right: angle = 0.0f; break;
+                case Key.Up: angle = 90.0; break;
+                case Key.Down: angle = 270.0f; break;
+            }
             angle = angle / 180.0 * Math.PI;    // 角度转弧度
             double cosAngle = Math.Cos(angle);
             double sinAngle = Math.Sin(angle);
@@ -435,22 +449,22 @@ namespace NFCT.Graph.ViewModels
             double maxWeight = 0.0;
             if (targetIsLine)
             {
-                //GraphConnectorViewModel maxWeightLine = null;
-                //// 获得权值最大的节点
-                //foreach (var lineVm in Connectors)
-                //{
-                //    double w = weightFunc(lineVm.Cx, lineVm.Cy);
-                //    if (w > maxWeight)
-                //    {
-                //        maxWeight = w;
-                //        maxWeightLine = lineVm;
-                //    }
-                //}
-                //// 将最大节点设为当前节点
-                //if (maxWeightLine != null)
-                //{
-                //    SetCurrentLine(maxWeightLine);
-                //}
+                GraphConnectorViewModel maxWeightLine = null;
+                // 获得权值最大的节点
+                foreach (var lineVm in Connectors)
+                {
+                    double w = weightFunc(lineVm.X, lineVm.Y);
+                    if (w > maxWeight)
+                    {
+                        maxWeight = w;
+                        maxWeightLine = lineVm;
+                    }
+                }
+                // 将最大节点设为当前节点
+                if (maxWeightLine != null)
+                {
+                    SetCurrentConnector(maxWeightLine);
+                }
             }
             else
             {
