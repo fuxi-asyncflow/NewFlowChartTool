@@ -13,11 +13,12 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
-    <Grid
-        Width="200"
-        Height="400"
-        Background="LightBlue">
-        <Expander Header="Variables" IsExpanded="True">
+    <Expander Header="Variables" IsExpanded="True">
+        <Grid
+            Width="200"
+            Height="400"
+            Background="LightBlue">
+
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding AddVariableCommand}" Content="add" />
@@ -79,6 +80,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
-        </Expander>
-    </Grid>
+
+        </Grid>
+    </Expander>
 </UserControl>
