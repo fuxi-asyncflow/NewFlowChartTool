@@ -16,6 +16,10 @@ namespace FlowChart.Layout
 {
     public class MsaglLayout : ILayout
     {
+        private static double MinWidth = 1920.0;
+        private static double MinHeight = 1080.0;
+        private static double Padding = 64.0;
+        
         GeometryGraph CreateGraph(IGraph graph)
         {
             var gg = new GeometryGraph();
@@ -87,6 +91,23 @@ namespace FlowChart.Layout
             double ox = graph.BoundingBox.Left;
             double oy = graph.BoundingBox.Top;
 
+            var actualWidth = graph.BoundingBox.Width + Padding * 2.0;
+            if (actualWidth < MinWidth)
+            {
+                ox -= (MinWidth - actualWidth) * 0.5f;
+                actualWidth = MinWidth;
+            }
+            else
+            {
+                ox -= Padding;
+            }
+
+            var actualHeight = graph.BoundingBox.Height + Padding * 2.0;
+            if (actualHeight < MinHeight)
+                actualHeight = MinHeight;
+
+            oy += Padding;
+
             Func<double, double> transX = _X => (_X - ox);
             Func<double, double> transY = _y => (oy - _y);
 
@@ -125,8 +146,8 @@ namespace FlowChart.Layout
             }
             // Console.WriteLine($"{graph.BoundingBox.Left}, {graph.BoundingBox.Top}, {graph.BoundingBox.Right}, {graph.BoundingBox.Bottom}");
             
-            _graph.Width = (float)graph.BoundingBox.Width;
-            _graph.Height = (float)graph.BoundingBox.Height;
+            _graph.Width = actualWidth;
+            _graph.Height = actualHeight;
             //Console.WriteLine($"canvas width height {graph.BoundingBox.Width}, {graph.BoundingBox.Height}");
         }
 
