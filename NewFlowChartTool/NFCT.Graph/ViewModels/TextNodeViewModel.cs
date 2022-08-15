@@ -97,6 +97,7 @@ namespace NFCT.Graph.ViewModels
         public double Height { get => ActualHeight + (CanvasNodeResource.DefaultBorderWidth - BorderWidth) * 2.0; }
         public double X { set { Left= value; } }
         public double Y { set { Top = value; } }
+        public List<INode> Children => ChildLines.ConvertAll(line => line.End);
 
         public double ActualHeight { get; set; }
         public double ActualWidth { get; set; }

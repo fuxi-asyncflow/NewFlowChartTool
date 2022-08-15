@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlowChartCommon;
 using Microsoft.Msagl.Core.Geometry;
 using Microsoft.Msagl.Core.Geometry.Curves;
 using Microsoft.Msagl.Core.Layout;
@@ -19,25 +21,25 @@ namespace FlowChart.Layout
         private static double MinWidth = 1920.0;
         private static double MinHeight = 1080.0;
         private static double Padding = 64.0;
-        
+        private Dictionary<INode, GraphNode> _nodeDict;
+
         GeometryGraph CreateGraph(IGraph graph)
         {
+            _nodeDict = new Dictionary<INode, Node>();
             var gg = new GeometryGraph();
-
-            var nodeDict = new Dictionary<INode, GraphNode>();
 
             foreach (var n in graph.Nodes)
             {
                 var node = new GraphNode(CurveFactory.CreateRectangle(n.Width, n.Height, new Point()), n);
                 // Console.WriteLine($"layout node size: {n.Width} {n.Height}");
-                nodeDict.Add(n, node);
+                _nodeDict.Add(n, node);
                 gg.Nodes.Add(node);
             }
 
             foreach (var conn in graph.Edges)
             {
                 
-                gg.Edges.Add(new Edge(nodeDict[conn.Start], nodeDict[conn.End]) { UserData = conn });
+                gg.Edges.Add(new Edge(_nodeDict[conn.Start], _nodeDict[conn.End]) { UserData = conn });
             }
             return gg;
         }
@@ -72,6 +74,7 @@ namespace FlowChart.Layout
         }
         public void Layout(IGraph _graph)
         {
+            
             var graph = CreateGraph(_graph);
 
             // 准备 settings
@@ -83,9 +86,23 @@ namespace FlowChart.Layout
                 NodeSeparation = 30
             };
 
+            foreach (var graphNode in _graph.Nodes)
+            {
+                var childNodes = graphNode.Children;
+                if (childNodes.Count > 1)
+                {
+                    for (int i = 1; i < childNodes.Count; i++)
+                        settings.AddLeftRightConstraint(_nodeDict[childNodes[i - 1]], _nodeDict[childNodes[i]]);
+                }
+            }
+
             // 计算布局
             var layout = new LayeredLayout(graph, settings);
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
             layout.Run();
+            stopWatch.Stop();
+            Logger.LOG($"layout time: {stopWatch.ElapsedMilliseconds}");
 
             // ox 和 oy 用于画布左上角的归0
             double ox = graph.BoundingBox.Left;

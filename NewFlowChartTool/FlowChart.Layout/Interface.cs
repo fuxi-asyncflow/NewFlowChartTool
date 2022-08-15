@@ -33,6 +33,7 @@
         public double Height { get; }
         public double X { set; }
         public double Y { set; }
+        public List<INode> Children { get; }
     }
 
     

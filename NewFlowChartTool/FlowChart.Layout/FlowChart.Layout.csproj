@@ -11,4 +11,8 @@
     <PackageReference Include="AutomaticGraphLayout" Version="1.1.12" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FlowChartCommon\FlowChartCommon.csproj" />
+  </ItemGroup>
+
 </Project>
