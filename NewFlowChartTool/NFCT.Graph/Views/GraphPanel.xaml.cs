@@ -25,7 +25,8 @@ namespace NFCT.Graph.Views
         IDLE = 0,   // default states
         DRAG = 1,   // drag canvas by modify scroll
         BOX_SELECT = 2, // select nodes by box
-        MOVE = 3   // move nodes or other items
+        MOVE = 3,   // move nodes or other items
+        CONNECT = 4 // connect two nodes
     }
     /// <summary>
     /// Interaction logic for GraphPanel.xaml
@@ -154,7 +155,6 @@ namespace NFCT.Graph.Views
                     vm.MoveSelectedItems(deltaX, deltaY);
                 }
             }
-        
             else if (e.RightButton == MouseButtonState.Pressed && _isDragingCanvas)
             {
                 var newPosition = e.GetPosition(CanvasScroll);
@@ -163,6 +163,16 @@ namespace NFCT.Graph.Views
 
                 CanvasScroll.ScrollToHorizontalOffset(CanvasScroll.HorizontalOffset - deltaPosition.X);
                 CanvasScroll.ScrollToVerticalOffset(CanvasScroll.VerticalOffset - deltaPosition.Y);
+            }
+            else
+            {
+                if (vm.IsConnecting)
+                {
+                    var pos = e.GetPosition((UIElement)sender);
+                    Console.WriteLine($"connecting line {pos}");
+                    ConnectingLine.X2 = pos.X;
+                    ConnectingLine.Y2 = pos.Y;
+                }
             }
         }
 
@@ -180,6 +190,9 @@ namespace NFCT.Graph.Views
         {
             var vm = WPFHelper.GetDataContext<GraphPaneViewModel>(this);
             if (vm == null) return;
+
+            if (vm.AutoLayout)
+                return;
 
             CanvasState = GraphCanvasState.MOVE;
             vm.SelectedNodes.ForEach(node => node.SaveOriginalPos());

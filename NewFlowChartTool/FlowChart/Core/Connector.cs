@@ -36,6 +36,12 @@ namespace FlowChart.Core
             ConnectorTypeChangeDelegate(Connector conn, ConnectorType oldValue, ConnectorType newValue);
         public event ConnectorTypeChangeDelegate? ConnectorTypeChangeEvent;
 
+        public delegate void ConnectorDelegate(Connector conn);
+        public event ConnectorDelegate ConnectorRemoveEvent;
 
+        public void OnDestroy()
+        {
+            ConnectorRemoveEvent?.Invoke(this);
+        }
     }
 }

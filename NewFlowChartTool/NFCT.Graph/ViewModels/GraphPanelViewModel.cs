@@ -49,6 +49,9 @@ namespace NFCT.Graph.ViewModels
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             CreateGroupCommand = new DelegateCommand(CreateGroupFromSelectedNodes);
             OnPreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnPreviewKeyDown);
+
+            _graph.GraphConnectEvent += OnConnect;
+
             Initialize();
         }
 
@@ -63,7 +66,7 @@ namespace NFCT.Graph.ViewModels
         }
 
         // used when GraphViewModel create
-        public void Connect(Connector conn)
+        void _createConnectorViewModel(Connector conn)
         {
             var start = conn.Start;
             var end = conn.End;
@@ -100,7 +103,7 @@ namespace NFCT.Graph.ViewModels
             Nodes.Clear();
             NodeDict.Clear();
             _graph.Nodes.ForEach(node => AddNode(node));
-            _graph.Connectors.ForEach(Connect);
+            _graph.Connectors.ForEach(_createConnectorViewModel);
             IsFirstLayout = true;
             NeedLayout = true;
 
@@ -171,7 +174,7 @@ namespace NFCT.Graph.ViewModels
             }
             catch (Exception e)
             {
-                Console.WriteLine($"[error] layout failed {e.Message}");
+                Logger.ERR($"[error] layout failed {e.Message}");
                 return false;
             }
 
@@ -395,6 +398,21 @@ namespace NFCT.Graph.ViewModels
             Graph.Build();
         }
 
+        public void RemoveNode(BaseNodeViewModel nodeVm)
+        {
+            var node = nodeVm.Node;
+            Graph.RemoveNode(node);
+            NodeDict.Remove(node);
+            Nodes.Remove(nodeVm);
+            NeedLayout = true;
+        }
+
+        public void RemoveConnector(GraphConnectorViewModel connVm)
+        {
+            Connectors.Remove(connVm);
+            NeedLayout = true;
+        }
+
         #endregion
 
         #region CallBack
@@ -403,6 +421,12 @@ namespace NFCT.Graph.ViewModels
         {
             RaisePropertyChanged(nameof(FullPath));
             RaisePropertyChanged(nameof(Name));
+        }
+
+        void OnConnect(FlowChart.Core.Graph g, Connector conn)
+        {
+            Debug.Assert(g == _graph);
+            _createConnectorViewModel(conn);
         }
 
         #endregion
@@ -487,6 +511,31 @@ namespace NFCT.Graph.ViewModels
             }
 
             return null;
+        }
+
+        public BaseNodeViewModel? ConnectStartNode { get; set; }
+        
+        public bool IsConnecting { get; set; }
+        public void BeginConnect()
+        {
+            Console.WriteLine($"begin connect {CurrentNode.X} {CurrentNode.Y}");
+            ConnectStartNode = CurrentNode;
+            IsConnecting = true;
+            RaisePropertyChanged(nameof(IsConnecting));
+            RaisePropertyChanged(nameof(ConnectStartNode));
+        }
+
+        public void EndConnect()
+        {
+            if (!IsConnecting)
+                return;
+            IsConnecting = false;
+            RaisePropertyChanged(nameof(IsConnecting));
+            if (ConnectStartNode == null || CurrentNode == null)
+                return;
+            Connect(ConnectStartNode.Node, CurrentNode.Node);
+            ConnectStartNode = null;
+            NeedLayout = true;
         }
     }
 }

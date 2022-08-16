@@ -17,11 +17,20 @@ namespace FlowChart.Core
         public Node()
         {
             Uid = Project.GenUUID().ToString();
+            Parents = new List<Connector>();
+            Children = new List<Connector>();
         }
         public string Uid { get; set; }
         public Graph OwnerGraph { get; set; }
         public Group? OwnerGroup { get; set; }
         public string? Description { get; set; }
+
+        #region REF PROPERTYIES
+
+        public List<Connector> Parents { get; set; }
+        public List<Connector> Children { get; set; }
+
+        #endregion
 
         #region EVENTS
         public delegate void OnParseDelegate(Node sender, ParseResult pr);

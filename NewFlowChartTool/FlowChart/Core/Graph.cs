@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,11 @@ namespace FlowChart.Core
             Connectors = new List<Connector>();
             Variables = new List<Variable>();
             Groups = new List<Group>();
+            AutoLayout = true;
         }
+
+        public delegate void GraphNodeDelegate(Graph graph, Node node);
+        public delegate void GraphConnectorDelegate(Graph graph, Connector conn);
 
         #region PROPERTY
         public string Uid { get; set; }
@@ -45,6 +50,7 @@ namespace FlowChart.Core
 
         public List<Node> Nodes { get; set; }
         public Dictionary<string, Node> NodeDict { get; set; }
+        public Node Root => Nodes[0];
         public List<Connector> Connectors { get; set; }
         public List<Variable> Variables { get; set; }
         public List<Group> Groups { get; set; }
@@ -71,6 +77,74 @@ namespace FlowChart.Core
             NodeDict.Add(node.Uid, node);
             Nodes.Add(node);
         }
+
+        
+        public event GraphNodeDelegate? GraphRemoveNodeEvent;
+
+        public void RemoveNode_atom(Node? node)
+        {
+            if (node == null)
+                return;
+            var tmp = GetNode(node.Uid);
+            Debug.Assert(tmp == node);
+            NodeDict.Remove(node.Uid);
+            Nodes.Remove(node);
+            GraphRemoveNodeEvent?.Invoke(this, node);
+        }
+
+        public void RemoveNode(Node node)
+        {
+            // remove node
+            RemoveNode_atom(node);
+
+            // remove connectors
+            var parents = node.Parents.ConvertAll(conn => conn.Start);
+            parents.ForEach(p => RemoveConnector_atom(p, node));
+
+            var children = node.Children.ConvertAll(conn => conn.End);
+            children.ForEach(c => RemoveConnector_atom(node, c));
+
+            // find a parent node who can connect to start node after node deleted
+            var parent = parents.Find(IsNodeConnectToRoot) ?? Root;
+
+            // add orphan nodes to parent node
+            foreach (var child in children)
+            {
+                if (!IsNodeConnectToRoot(child))
+                {
+                    Connect_atom(parent, child, Connector.ConnectorType.DELETE);
+                }
+            }
+        }
+
+        private bool IsNodeConnectToRoot(Node node)
+        {
+            var startNode = Nodes[0];
+            Queue<Node> nodeQueue = new Queue<Node>();
+            HashSet<Node> HandledNodes = new HashSet<Node>();
+            nodeQueue.Enqueue(node);
+            HandledNodes.Add(node);
+
+            while (nodeQueue.Count > 0)
+            {
+                var curNode = nodeQueue.Dequeue();
+                if (curNode == startNode)
+                    return true;
+
+                curNode.Parents.ForEach(conn =>
+                {
+                    var parent = conn.Start;
+                    if (!HandledNodes.Contains(parent))
+                    {
+                        HandledNodes.Add(parent);
+                        nodeQueue.Enqueue(parent);
+                    }
+                });
+            }
+
+            return false;
+        }
+
         public Node? GetNode(string uid)
         {
             return NodeDict[uid];
@@ -85,9 +159,36 @@ namespace FlowChart.Core
         {
             if (start == null || end == null)
                 return null;
-            var con = new Connector() { Start = start, End = end, ConnType = connType };
-            Connectors.Add(con);
-            return con;
+            
+            return Connect_atom(start, end, connType);
+        }
+
+        public event GraphConnectorDelegate? GraphConnectEvent;
+        public Connector? Connect_atom(Node start, Node end, Connector.ConnectorType connType)
+        {
+            // check exist connector
+            var conn = start.Parents.Find(conn => conn.End == end);
+            if (conn != null)
+                return null;
+            conn = new Connector() { Start = start, End = end, ConnType = connType };
+            Connectors.Add(conn);
+            conn.Start.Children.Add(conn);
+            conn.End.Parents.Add(conn);
+            GraphConnectEvent?.Invoke(this, conn);
+            return conn;
+        }
+
+        
+
+        public void RemoveConnector_atom(Node start, Node end)
+        {
+            var conn = start.Children.Find(conn => conn.End == end);
+            if (conn == null)
+                return;
+            Connectors.Remove(conn);
+            start.Children.Remove(conn);
+            end.Parents.Remove(conn);
+            conn.OnDestroy();
         }
 
         public bool AddVariable(Variable v)

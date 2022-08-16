@@ -26,6 +26,11 @@
             StartNodeTemplate="{StaticResource StartNodeTemplate}"
             TextNodeTemplate="{StaticResource TextNodeTemplate}" />
     </UserControl.Resources>
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem Command="{Binding BeginConnectCommand}" Header="connect" />
+        </ContextMenu>
+    </UserControl.ContextMenu>
     <Grid
         common:FocusExtension.IsFocused="{Binding IsFocused}"
         utility:SizeObserver.Observe="True"

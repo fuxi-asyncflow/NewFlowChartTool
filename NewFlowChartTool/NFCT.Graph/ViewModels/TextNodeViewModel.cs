@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -76,6 +73,7 @@ namespace NFCT.Graph.ViewModels
             Owner = g;
 
             OnKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnKeyDown);
+            BeginConnectCommand = new DelegateCommand(() => Owner.BeginConnect());
             ParentLines = new List<GraphConnectorViewModel>();
             ChildLines = new List<GraphConnectorViewModel>();
         }
@@ -197,6 +195,9 @@ namespace NFCT.Graph.ViewModels
                         Owner.AddNewNode();
                     args.Handled = true;
                     break;
+                case Key.Delete:
+                    Owner.RemoveNode(this);
+                    break;
                 case Key.Down:
                 case Key.Up:
                 case Key.Left:
@@ -247,6 +248,12 @@ namespace NFCT.Graph.ViewModels
             });
             OwnerGroup?.Resize();
         }
+
+        #region MENU COMMAND
+        public DelegateCommand BeginConnectCommand { get; set; }
+
+
+        #endregion
     }
 
     public class TextNodeViewModel : BaseNodeViewModel
