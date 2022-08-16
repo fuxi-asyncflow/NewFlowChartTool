@@ -29,6 +29,7 @@
             Data="{Binding Path}"
             FocusVisualStyle="{x:Null}"
             Focusable="True"
+            RequestBringIntoView="ConnectorPath_OnRequestBringIntoView"
             Stroke="Transparent"
             StrokeThickness="10">
             <b:Interaction.Triggers>

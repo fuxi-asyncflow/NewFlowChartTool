@@ -24,5 +24,10 @@ namespace NFCT.Graph.Views
         {
             InitializeComponent();
         }
+
+        private void ConnectorPath_OnRequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
+        {
+            e.Handled = true;
+        }
     }
 }
