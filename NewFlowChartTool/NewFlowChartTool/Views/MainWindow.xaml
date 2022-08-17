@@ -25,20 +25,42 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Menu>
-            <MenuItem Header="File">
-                <MenuItem Command="{Binding OpenProjectCommand}" Header="Open Project" />
-                <MenuItem Command="{Binding SaveProjectCommand}" Header="Save Project" />
-                <MenuItem Command="{Binding CloseProjectCommand}" Header="Close Project" />
-            </MenuItem>
-            <MenuItem Header="Build">
-                <MenuItem Command="{Binding BuildAllCommand}" Header="Build All" />
-            </MenuItem>
-            <MenuItem Header="Theme">
-                <MenuItem Command="{Binding SwitchThemeCommand}" Header="switch theme" />
-            </MenuItem>
-        </Menu>
-
+        <StackPanel Orientation="Horizontal">
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Command="{Binding OpenProjectCommand}" Header="Open Project" />
+                    <MenuItem Command="{Binding SaveProjectCommand}" Header="Save Project" />
+                    <MenuItem Command="{Binding CloseProjectCommand}" Header="Close Project" />
+                </MenuItem>
+                <MenuItem Header="Build">
+                    <MenuItem Command="{Binding BuildAllCommand}" Header="Build All" />
+                </MenuItem>
+                <MenuItem Header="Theme">
+                    <MenuItem Command="{Binding SwitchThemeCommand}" Header="switch theme" />
+                </MenuItem>
+            </Menu>
+            <ToolBar>
+                <ToolBar.Resources>
+                    <Style x:Key="ToolBarIconStyle" TargetType="{x:Type Viewbox}">
+                        <Setter Property="Width" Value="24" />
+                        <Setter Property="Height" Value="24" />
+                        <Setter Property="Stretch" Value="Fill" />
+                    </Style>
+                </ToolBar.Resources>
+                <Button>
+                    <StackPanel>
+                        <Viewbox Child="{StaticResource Icon_Undo}" Style="{StaticResource ToolBarIconStyle}" />
+                        <TextBlock>undo</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button>
+                    <StackPanel>
+                        <Viewbox Child="{StaticResource Icon_Redo}" Style="{StaticResource ToolBarIconStyle}" />
+                        <TextBlock>undo</TextBlock>
+                    </StackPanel>
+                </Button>
+            </ToolBar>
+        </StackPanel>
 
         <DockingManager
             Grid.Row="1"
