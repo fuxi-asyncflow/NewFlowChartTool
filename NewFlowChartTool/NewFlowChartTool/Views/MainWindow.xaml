@@ -75,6 +75,10 @@
                                         <Setter Property="Background" Value="{DynamicResource HightlightBackGroundBrush}" />
                                         <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HightlightBorderBrush}" />
                                     </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                                        <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HightlightBorderBrush}" />
+                                    </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>
