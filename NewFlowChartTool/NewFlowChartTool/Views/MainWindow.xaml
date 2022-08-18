@@ -86,16 +86,16 @@
                     </DrawingBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <Button>
+            <Button Margin="8,4,8,2">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Undo}" />
-                    <TextBlock>undo</TextBlock>
+                    <TextBlock Height="16">undo</TextBlock>
                 </StackPanel>
             </Button>
-            <Button>
+            <Button Margin="8,4,8,2">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Redo}" />
-                    <TextBlock>undo</TextBlock>
+                    <TextBlock Height="16">undo</TextBlock>
                 </StackPanel>
             </Button>
         </StackPanel>
