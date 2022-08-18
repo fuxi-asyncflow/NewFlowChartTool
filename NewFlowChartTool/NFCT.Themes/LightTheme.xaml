@@ -2,6 +2,7 @@
     <!--  from AvalonDock.Themes.VS2013 reskeys:ResourceKeys.Background  -->
     <SolidColorBrush x:Key="BackGroundBrush" Color="#EEEEF2" />
     <SolidColorBrush x:Key="ForeGroundBrush" Color="Black" />
+    <SolidColorBrush x:Key="NormalForeGroundBrush" Color="Black" />
     <!--  used for icons from visual studio image library  -->
     <SolidColorBrush
         x:Key="light-defaultgrey"
