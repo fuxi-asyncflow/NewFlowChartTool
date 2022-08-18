@@ -39,6 +39,8 @@ namespace NewFlowChartTool.Views
 
                 RestoreButton.Visibility = Visibility.Visible;
                 MaximizeButton.Visibility = Visibility.Collapsed;
+
+                MainWindow.BorderThickness = new Thickness(5);
             }
         }
 
@@ -58,6 +60,8 @@ namespace NewFlowChartTool.Views
 
             RestoreButton.Visibility = Visibility.Collapsed;
             MaximizeButton.Visibility = Visibility.Visible;
+
+            MainWindow.BorderThickness = new Thickness(1);
         }
 
         private void ButtonMinimize_OnClick(object sender, RoutedEventArgs e)
