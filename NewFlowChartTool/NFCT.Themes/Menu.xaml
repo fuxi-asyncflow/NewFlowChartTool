@@ -232,12 +232,13 @@
                     Margin="6,0,6,0"
                     VerticalAlignment="Center"
                     ContentSource="Icon" />
-                
+
                 <ContentPresenter
                     x:Name="HeaderHost"
                     Grid.Column="1"
+                    VerticalAlignment="Center"
                     ContentSource="Header"
-                    RecognizesAccessKey="True" VerticalAlignment="Center"/>
+                    RecognizesAccessKey="True" />
                 <TextBlock
                     x:Name="InputGestureText"
                     Grid.Column="2"

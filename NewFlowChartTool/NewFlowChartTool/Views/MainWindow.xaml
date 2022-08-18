@@ -35,13 +35,14 @@
         </Style>
     </Window.Style>
 
-    <Grid>
+    <Grid Background="{DynamicResource BackGroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <views:MainWindowTitleBar x:Name="TitleBar" DataContext="{Binding}" />
+
 
 
         <StackPanel
@@ -56,7 +57,30 @@
                 </Style>
                 <Style TargetType="{x:Type Button}">
                     <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="BorderThickness" Value="15" />
+
+                    <!--<Setter Property="Margin" Value="8,4,8,2"></Setter>-->
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Border
+                                    x:Name="Border"
+                                    Padding="8,2,8,2"
+                                    Background="{TemplateBinding Background}"
+                                    BorderThickness="1">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{DynamicResource HightlightBackGroundBrush}" />
+                                        <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HightlightBorderBrush}" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+
+
                 </Style>
             </StackPanel.Resources>
             <Rectangle
@@ -86,19 +110,20 @@
                     </DrawingBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <Button Margin="8,4,8,2">
+            <Button>
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Undo}" />
                     <TextBlock Height="16">undo</TextBlock>
                 </StackPanel>
             </Button>
-            <Button Margin="8,4,8,2">
+            <Button>
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Redo}" />
                     <TextBlock Height="16">undo</TextBlock>
                 </StackPanel>
             </Button>
         </StackPanel>
+
 
 
         <DockingManager
