@@ -23,6 +23,17 @@
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
     </WindowChrome.WindowChrome>
+    <Window.Style>
+        <Style TargetType="{x:Type Window}">
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource WindowBorderBrush}" />
+            <Style.Triggers>
+                <Trigger Property="IsActive" Value="False">
+                    <Setter Property="BorderBrush" Value="{DynamicResource WindowInactiveBorderBrush}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Style>
 
     <Grid>
         <Grid.RowDefinitions>

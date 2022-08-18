@@ -22,4 +22,7 @@
         <Setter Property="Foreground" Value="Black" />
     </Style>
 
+    <SolidColorBrush x:Key="WindowBorderBrush" Color="#9A9EB8" />
+    <SolidColorBrush x:Key="WindowInactiveBorderBrush" Color="#CBCDDA" />
+
 </ResourceDictionary>
