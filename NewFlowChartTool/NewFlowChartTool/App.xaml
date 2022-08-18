@@ -11,10 +11,13 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/AvalonDock.Themes.VS2013;component/DarkTheme.xaml" />
                 <ResourceDictionary Source="/NFCT.Themes;component/DarkTheme.xaml" />
+                <ResourceDictionary Source="/NFCT.Themes;component/Generic.xaml" />
                 <ResourceDictionary Source="/NFCT.Common;component/IconsDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <common:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <Style BasedOn="{StaticResource MenuItemStyle}" TargetType="{x:Type MenuItem}" />
+            <Style BasedOn="{StaticResource TextBlockStyle}" TargetType="{x:Type TextBlock}" />
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
