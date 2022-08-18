@@ -1,8 +1,11 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!--  from AvalonDock.Themes.VS2013 reskeys:ResourceKeys.Background  -->
+    <SolidColorBrush x:Key="HightlightBackGroundBrush" Color="#C9DEF5" />
+    <SolidColorBrush x:Key="HightlightBorderBrush" Color="#CCCEDB" />
     <SolidColorBrush x:Key="BackGroundBrush" Color="#EEEEF2" />
     <SolidColorBrush x:Key="ForeGroundBrush" Color="Black" />
     <SolidColorBrush x:Key="NormalForeGroundBrush" Color="Black" />
+    <SolidColorBrush x:Key="BorderBrush" Color="#CCCEDB" />
     <!--  used for icons from visual studio image library  -->
     <SolidColorBrush
         x:Key="light-defaultgrey"
