@@ -61,7 +61,7 @@
             </StackPanel.Resources>
             <Rectangle
                 Width="5"
-                Margin="5,2,2,2"
+                Margin="5,5,2,5"
                 RenderOptions.BitmapScalingMode="NearestNeighbor"
                 UseLayoutRounding="True">
                 <Rectangle.Fill>

@@ -4,6 +4,7 @@
     <SolidColorBrush x:Key="BackGroundBrush" Color="#2D2D30" />
     <SolidColorBrush x:Key="ForeGroundBrush" Color="#FAFAFA" />
     <SolidColorBrush x:Key="NormalForeGroundBrush" Color="#D6D6D6" />
+    <SolidColorBrush x:Key="BorderBrush" Color="#3F3F46" />
     <!--  used for icons from visual studio image library  -->
     <SolidColorBrush
         x:Key="light-defaultgrey"

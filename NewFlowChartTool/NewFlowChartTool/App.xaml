@@ -16,7 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
             <common:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            <Style BasedOn="{StaticResource MenuItemStyle}" TargetType="{x:Type MenuItem}" />
+            <!--  Style BasedOn="{StaticResource MenuStyle}" TargetType="{x:Type Menu}" /  -->
             <Style BasedOn="{StaticResource TextBlockStyle}" TargetType="{x:Type TextBlock}" />
         </ResourceDictionary>
     </Application.Resources>
