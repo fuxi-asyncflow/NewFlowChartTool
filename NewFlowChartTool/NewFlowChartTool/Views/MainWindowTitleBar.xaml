@@ -12,6 +12,7 @@
     d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
     d:DesignHeight="24"
     d:DesignWidth="800"
+    Background="{DynamicResource BackGroundBrush}"
     mc:Ignorable="d">
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
