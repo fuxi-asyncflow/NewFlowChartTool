@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NewFlowChartTool.ViewModels;
+using NFCT.Common;
 
 namespace NewFlowChartTool.Views
 {
@@ -23,6 +26,18 @@ namespace NewFlowChartTool.Views
         public MainWindow()
         {
             InitializeComponent();
+            TitleBar.MainWindow = this;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            var vm = DataContext as MainWindowViewModel;
+            if (vm == null) return;
+
+            if (!vm.CloseWindow())
+                e.Cancel = true;
+            else
+                base.OnClosing(e);
         }
     }
 }

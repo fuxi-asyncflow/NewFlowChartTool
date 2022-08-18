@@ -42,13 +42,15 @@ namespace NewFlowChartTool.ViewModels
             _ea = ea;
             _openedGraphs = new ObservableCollection<GraphPaneViewModel>();
             CurrentProject = null;
-
+            IsMaximized = false;
 
             OpenProjectCommand = new DelegateCommand(OpenProject, () => CurrentProject == null);
             SaveProjectCommand = new DelegateCommand(SaveProject, () => CurrentProject != null);
             CloseProjectCommand = new DelegateCommand(CloseProject, () => CurrentProject != null);
             BuildAllCommand = new DelegateCommand(BuildAll, () => CurrentProject != null);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
+
+            
 
 
             _ea.GetEvent<Event.GraphOpenEvent>().Subscribe(OnOpenGraph);
@@ -88,6 +90,7 @@ namespace NewFlowChartTool.ViewModels
             get { return _openedGraphs; }
         }
 
+        public bool IsMaximized { get; set; }
 
         #region COMMAND
         public DelegateCommand OpenProjectCommand { get; private set; }
@@ -95,12 +98,12 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand CloseProjectCommand { get; private set; }
         public DelegateCommand SwitchThemeCommand { get; private set; }
         public DelegateCommand BuildAllCommand { get; private set; }
-
+        
         public void TestOpenProject()
         {
-            var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
+            //var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
             //var p = new FlowChart.Core.Project(new ProjectFactory.LegacyProjectFactory());
-            //var p = new FlowChart.Core.Project(new ProjectFactory.MemoryProjectFactory());
+            var p = new FlowChart.Core.Project(new ProjectFactory.MemoryProjectFactory());
             //var p = new FlowChart.Core.Project(new DefaultProjectFactory());
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
@@ -204,6 +207,11 @@ namespace NewFlowChartTool.ViewModels
 
             OpenedGraphs.Add(new GraphPaneViewModel(graph));
             ActiveGraph = OpenedGraphs.Last();
+        }
+
+        public bool CloseWindow()
+        {
+            return true;
         }
     }
 }

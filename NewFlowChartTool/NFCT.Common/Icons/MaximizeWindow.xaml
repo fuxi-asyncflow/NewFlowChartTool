@@ -1,0 +1,31 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Viewbox
+        x:Key="Icon_MaximizeWindow"
+        Width="16 "
+        Height="16">
+        <Rectangle Width="16 " Height="16">
+            <Rectangle.Resources>
+                <SolidColorBrush x:Key="canvas" Opacity="0" />
+                <SolidColorBrush
+                    x:Key="light-defaultgrey"
+                    Opacity="1"
+                    Color="#212121" />
+            </Rectangle.Resources>
+            <Rectangle.Fill>
+                <DrawingBrush Stretch="None">
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <DrawingGroup x:Name="canvas">
+                                <GeometryDrawing Brush="{DynamicResource canvas}" Geometry="F1M16,16H0V0H16Z" />
+                            </DrawingGroup>
+                            <DrawingGroup x:Name="level_1">
+                                <GeometryDrawing Brush="{DynamicResource light-defaultgrey}" Geometry="F1M12,12L4,12 4,4 12,4z M3,13L13,13 13,3 3,3z" />
+                            </DrawingGroup>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+    </Viewbox>
+</ResourceDictionary>

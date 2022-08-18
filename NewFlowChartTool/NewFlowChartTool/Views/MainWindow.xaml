@@ -14,56 +14,50 @@
     Width="800"
     Height="450"
     d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
+    WindowStyle="None"
     mc:Ignorable="d">
     <Window.Resources>
         <conv:ActiveGraphConverter x:Key="ActiveGraphConverter" />
 
     </Window.Resources>
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
+    </WindowChrome.WindowChrome>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <Menu>
-                <MenuItem Header="File">
-                    <MenuItem Command="{Binding OpenProjectCommand}" Header="Open Project" />
-                    <MenuItem Command="{Binding SaveProjectCommand}" Header="Save Project" />
-                    <MenuItem Command="{Binding CloseProjectCommand}" Header="Close Project" />
-                </MenuItem>
-                <MenuItem Header="Build">
-                    <MenuItem Command="{Binding BuildAllCommand}" Header="Build All" />
-                </MenuItem>
-                <MenuItem Header="Theme">
-                    <MenuItem Command="{Binding SwitchThemeCommand}" Header="switch theme" />
-                </MenuItem>
-            </Menu>
-            <ToolBar>
-                <ToolBar.Resources>
-                    <Style x:Key="ToolBarIconStyle" TargetType="{x:Type Viewbox}">
-                        <Setter Property="Width" Value="24" />
-                        <Setter Property="Height" Value="24" />
-                        <Setter Property="Stretch" Value="Fill" />
-                    </Style>
-                </ToolBar.Resources>
-                <Button>
-                    <StackPanel>
-                        <Viewbox Child="{StaticResource Icon_Undo}" Style="{StaticResource ToolBarIconStyle}" />
-                        <TextBlock>undo</TextBlock>
-                    </StackPanel>
-                </Button>
-                <Button>
-                    <StackPanel>
-                        <Viewbox Child="{StaticResource Icon_Redo}" Style="{StaticResource ToolBarIconStyle}" />
-                        <TextBlock>undo</TextBlock>
-                    </StackPanel>
-                </Button>
-            </ToolBar>
-        </StackPanel>
+        <views:MainWindowTitleBar x:Name="TitleBar" DataContext="{Binding}" />
+
+
+        <ToolBar Grid.Row="1">
+            <ToolBar.Resources>
+                <Style x:Key="ToolBarIconStyle" TargetType="{x:Type Viewbox}">
+                    <Setter Property="Width" Value="24" />
+                    <Setter Property="Height" Value="24" />
+                    <Setter Property="Stretch" Value="Fill" />
+                </Style>
+            </ToolBar.Resources>
+            <Button>
+                <StackPanel>
+                    <Viewbox Child="{StaticResource Icon_Undo}" Style="{StaticResource ToolBarIconStyle}" />
+                    <TextBlock>undo</TextBlock>
+                </StackPanel>
+            </Button>
+            <Button>
+                <StackPanel>
+                    <Viewbox Child="{StaticResource Icon_Redo}" Style="{StaticResource ToolBarIconStyle}" />
+                    <TextBlock>undo</TextBlock>
+                </StackPanel>
+            </Button>
+        </ToolBar>
+
 
         <DockingManager
-            Grid.Row="1"
+            Grid.Row="2"
             ActiveContent="{Binding ActiveGraph, Mode=TwoWay, Converter={StaticResource ActiveGraphConverter}}"
             DocumentsSource="{Binding OpenedGraphs}">
 
