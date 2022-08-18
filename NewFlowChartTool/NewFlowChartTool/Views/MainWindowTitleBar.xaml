@@ -23,16 +23,18 @@
                     <Setter Property="Width" Value="48" />
                 </Style>
             </StackPanel.Resources>
-            <Button Content="{StaticResource Icon_MinimizeWindow}" Style="{StaticResource MinMaxCloseButtonStyle}" />
+            <Button Click="ButtonMinimize_OnClick" Content="{StaticResource Icon_MinimizeWindow}" Style="{StaticResource MinMaxCloseButtonStyle}" />
             <Button
+                x:Name="RestoreButton"
+                Click="ButtonRestore_OnClick"
                 Content="{StaticResource Icon_RestoreWindow}"
                 Style="{StaticResource MinMaxCloseButtonStyle}"
-                Visibility="{Binding IsMaximized, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                Visibility="Collapsed" />
             <Button
+                x:Name="MaximizeButton"
                 Click="ButtonMaximize_OnClick"
                 Content="{StaticResource Icon_MaximizeWindow}"
-                Style="{StaticResource MinMaxCloseButtonStyle}"
-                Visibility="{Binding IsMaximized, Converter={StaticResource InvertBooleanToVisibilityConverter}}" />
+                Style="{StaticResource MinMaxCloseButtonStyle}" />
             <Button
                 Click="ButtonClose_OnClick"
                 Content="{StaticResource Icon_Close}"

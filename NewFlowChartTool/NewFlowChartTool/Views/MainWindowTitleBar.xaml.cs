@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NewFlowChartTool.ViewModels;
 
 namespace NewFlowChartTool.Views
 {
@@ -31,9 +32,13 @@ namespace NewFlowChartTool.Views
         {
             if (MainWindow.WindowState == WindowState.Normal)
             {
+                // if not set windowsStyle, windows maximized will hidden taskbar and fulfill entire screen
                 MainWindow.WindowStyle = WindowStyle.SingleBorderWindow;
                 MainWindow.WindowState = WindowState.Maximized;
                 MainWindow.WindowStyle = WindowStyle.None;
+
+                RestoreButton.Visibility = Visibility.Visible;
+                MaximizeButton.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -44,8 +49,20 @@ namespace NewFlowChartTool.Views
 
         private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Console.WriteLine("drag move mouse down");
             MainWindow.DragMove();
+        }
+
+        private void ButtonRestore_OnClick(object sender, RoutedEventArgs e)
+        {
+            MainWindow.WindowState = WindowState.Normal;
+
+            RestoreButton.Visibility = Visibility.Collapsed;
+            MaximizeButton.Visibility = Visibility.Visible;
+        }
+
+        private void ButtonMinimize_OnClick(object sender, RoutedEventArgs e)
+        {
+            MainWindow.WindowState = WindowState.Minimized;
         }
     }
 }

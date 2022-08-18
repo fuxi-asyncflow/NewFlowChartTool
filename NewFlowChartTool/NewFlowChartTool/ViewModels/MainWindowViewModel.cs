@@ -9,14 +9,13 @@ using Prism.Events;
 using FlowChart.Core;
 using System.Windows;
 using System.Collections.ObjectModel;
-using System.Security.AccessControl;
 using FlowChart.AST;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
 using NewFlowChartTool.Event;
 using NFCT.Common;
 using NFCT.Graph.ViewModels;
-using Prism.Services.Dialogs;
+
 using ProjectFactory.DefaultProjectFactory;
 
 namespace NewFlowChartTool.ViewModels
@@ -42,7 +41,6 @@ namespace NewFlowChartTool.ViewModels
             _ea = ea;
             _openedGraphs = new ObservableCollection<GraphPaneViewModel>();
             CurrentProject = null;
-            IsMaximized = false;
 
             OpenProjectCommand = new DelegateCommand(OpenProject, () => CurrentProject == null);
             SaveProjectCommand = new DelegateCommand(SaveProject, () => CurrentProject != null);
@@ -89,8 +87,6 @@ namespace NewFlowChartTool.ViewModels
         {
             get { return _openedGraphs; }
         }
-
-        public bool IsMaximized { get; set; }
 
         #region COMMAND
         public DelegateCommand OpenProjectCommand { get; private set; }
