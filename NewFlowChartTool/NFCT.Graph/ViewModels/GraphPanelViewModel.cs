@@ -62,8 +62,8 @@ namespace NFCT.Graph.ViewModels
         {
             Nodes.Clear();
             NodeDict.Clear();
-            _graph.Nodes.ForEach(node => AddNodeViewModel(node));
-            _graph.Connectors.ForEach(_createConnectorViewModel);
+            _graph.Nodes.ForEach(node => _addNodeViewModel(node));
+            _graph.Connectors.ForEach(conn => _createConnectorViewModel(conn));
             IsFirstLayout = true;
             NeedLayout = true;
 
@@ -341,12 +341,6 @@ namespace NFCT.Graph.ViewModels
             RaisePropertyChanged(nameof(Name));
         }
 
-        void OnConnect(Connector conn)
-        {
-            Debug.Assert(conn.OwnerGraph == _graph);
-            _createConnectorViewModel(conn);
-        }
-
         #endregion
 
         public void OnPreviewKeyDown(KeyEventArgs arg)
@@ -451,7 +445,7 @@ namespace NFCT.Graph.ViewModels
             RaisePropertyChanged(nameof(IsConnecting));
             if (ConnectStartNode == null || CurrentNode == null)
                 return;
-            Connect(ConnectStartNode.Node, CurrentNode.Node);
+            ConnectOperation(ConnectStartNode.Node, CurrentNode.Node);
             ConnectStartNode = null;
             NeedLayout = true;
         }

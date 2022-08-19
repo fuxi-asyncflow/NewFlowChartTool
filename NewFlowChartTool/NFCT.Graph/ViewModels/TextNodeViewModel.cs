@@ -192,7 +192,7 @@ namespace NFCT.Graph.ViewModels
                     break;
                 case Key.Enter:
                     if (!IsEditing)
-                        Owner.AddNewNode();
+                        Owner.AddNewNodeOperation();
                     args.Handled = true;
                     break;
                 case Key.Delete:

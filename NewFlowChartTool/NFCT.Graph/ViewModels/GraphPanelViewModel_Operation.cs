@@ -11,7 +11,9 @@ namespace NFCT.Graph.ViewModels
 {
     public partial class GraphPaneViewModel 
     {
-        public BaseNodeViewModel? AddNodeViewModel(Node node, int idx = -1)
+        #region add node
+        private BaseNodeViewModel? _tmpNewBaseNodeViewModel;
+        public BaseNodeViewModel? _addNodeViewModel(Node node, int idx = -1)
         {
             Debug.Assert(node.OwnerGraph == _graph);
             var vm = BaseNodeViewModel.CreateNodeViewModel(node, this);
@@ -27,66 +29,35 @@ namespace NFCT.Graph.ViewModels
             return vm;
         }
 
-        // used when GraphViewModel create
-        void _createConnectorViewModel(Connector conn)
+        public void AddNewNodeOperation()
         {
-            var start = conn.Start;
-            var end = conn.End;
-            BaseNodeViewModel? startVm, endVm;
-            if (NodeDict.TryGetValue(start, out startVm) && NodeDict.TryGetValue(end, out endVm))
-            {
-                var connVm = new GraphConnectorViewModel(conn, startVm, endVm, this);
-                Connectors.Add(connVm);
-                ConnectorDict.Add(conn, connVm);
-            }
-        }
-
-        public void Connect(Node start, Node end)
-        {
-            BaseNodeViewModel? startVm, endVm;
-            if (!NodeDict.TryGetValue(start, out startVm) || !NodeDict.TryGetValue(end, out endVm))
-            {
-                Logger.WARN("connect nodes error: node has no viewmodel");
-                return;
-            }
-
-            if (startVm.ChildLines.Any(line => line.End == endVm))
-            {
-                Logger.WARN("connect nodes error: line exist");
-                return;
-            }
-
-            var conn = Graph.Connect(start, end, Connector.ConnectorType.SUCCESS);
-            if (conn == null)
-                return;
-            var connVm = new GraphConnectorViewModel(conn, startVm, endVm, this);
-            Connectors.Add(connVm);
-            ConnectorDict.Add(conn, connVm);
-        }
-        public void AddNewNode()
-        {
+            UndoRedoManager.Begin("Add New Node");
             // add new node
             Debug.Assert(CurrentNode != null);
             var newNode = Node.DefaultNode.Clone(Graph);
-            var vm = AddNodeViewModel(newNode);
+            Graph.AddNode_atom(newNode);
+
+            var vm = _tmpNewBaseNodeViewModel;
+            _tmpNewBaseNodeViewModel = null;
             if (vm == null)
                 return;
-            Graph.AddNode(newNode);
-            Connect(CurrentNode.Node, newNode);
+            //Connect(CurrentNode.Node, newNode);
+            Graph.Connect_atom(CurrentNode.Node, newNode, Connector.ConnectorType.ALWAYS);
             NeedLayout = true;
-
             // set newnode as currentnode
             SetCurrentNode(vm);
-
             Graph.Build();
+            UndoRedoManager.End();
         }
 
         public void OnAddNode(Node node)
         {
             var idx = _graph.Nodes.IndexOf(node);
-            AddNodeViewModel(node, idx);
+            _tmpNewBaseNodeViewModel = _addNodeViewModel(node, idx);
         }
+        #endregion
 
+        #region remove node
         public void RemoveNodeOperation(BaseNodeViewModel nodeVm)
         {
             UndoRedoManager.Begin("Remove Node");
@@ -129,6 +100,64 @@ namespace NFCT.Graph.ViewModels
             Nodes.Remove(vm);
             return index;
         }
+
+        #endregion
+
+        #region connect
+
+        private GraphConnectorViewModel? _tmpNewConnectorViewModel;
+        // used when GraphViewModel create
+        GraphConnectorViewModel? _createConnectorViewModel(Connector conn)
+        {
+            var start = conn.Start;
+            var end = conn.End;
+            BaseNodeViewModel? startVm, endVm;
+            if (NodeDict.TryGetValue(start, out startVm) && NodeDict.TryGetValue(end, out endVm))
+            {
+                var connVm = new GraphConnectorViewModel(conn, startVm, endVm, this);
+                Connectors.Add(connVm);
+                ConnectorDict.Add(conn, connVm);
+                return connVm;
+            }
+
+            return null;
+        }
+
+        public void ConnectOperation(Node start, Node end)
+        {
+            UndoRedoManager.Begin("Connect Nodes");
+            BaseNodeViewModel? startVm, endVm;
+            if (!NodeDict.TryGetValue(start, out startVm) || !NodeDict.TryGetValue(end, out endVm))
+            {
+                Logger.WARN("connect nodes error: node has no viewmodel");
+                return;
+            }
+
+            if (startVm.ChildLines.Any(line => line.End == endVm))
+            {
+                Logger.WARN("connect nodes error: line exist");
+                return;
+            }
+
+            Graph.Connect_atom(start, end, Connector.ConnectorType.ALWAYS);
+
+           
+            var connVm = _tmpNewConnectorViewModel;
+            _tmpNewConnectorViewModel = null;
+            if (connVm != null)
+            {
+                SetCurrentConnector(connVm);
+            }
+           
+            UndoRedoManager.End();
+        }
+
+        void OnConnect(Connector conn)
+        {
+            Debug.Assert(conn.OwnerGraph == _graph);
+            _tmpNewConnectorViewModel = _createConnectorViewModel(conn);
+        }
+        #endregion
 
         public void RemoveConnectorViewModel(Connector conn)
         {

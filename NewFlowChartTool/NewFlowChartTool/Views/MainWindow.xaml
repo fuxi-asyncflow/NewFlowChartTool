@@ -11,8 +11,8 @@
     xmlns:views="clr-namespace:NewFlowChartTool.Views"
     xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
     Title="MainWindow"
-    Width="800"
-    Height="450"
+    Width="1280"
+    Height="720"
     d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
     WindowStyle="None"
     mc:Ignorable="d">
