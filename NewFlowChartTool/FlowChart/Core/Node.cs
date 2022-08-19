@@ -70,5 +70,10 @@ namespace FlowChart.Core
             node.Description = Description;
             return node;
         }
+
+        public override string ToString()
+        {
+            return $"`[TextNode] {Text}`";
+        }
     }
 }

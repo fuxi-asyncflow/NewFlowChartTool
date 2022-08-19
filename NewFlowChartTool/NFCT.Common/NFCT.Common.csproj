@@ -15,4 +15,8 @@
     <Folder Include="Icons\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FlowChartCommon\FlowChartCommon.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -20,6 +20,8 @@ namespace FlowChart.Core
 
         private ConnectorType _conntype;
 
+        public Graph OwnerGraph => Start.OwnerGraph;
+
         public ConnectorType ConnType
         {
             get => _conntype;
@@ -35,13 +37,5 @@ namespace FlowChart.Core
         public delegate void
             ConnectorTypeChangeDelegate(Connector conn, ConnectorType oldValue, ConnectorType newValue);
         public event ConnectorTypeChangeDelegate? ConnectorTypeChangeEvent;
-
-        public delegate void ConnectorDelegate(Connector conn);
-        public event ConnectorDelegate ConnectorRemoveEvent;
-
-        public void OnDestroy()
-        {
-            ConnectorRemoveEvent?.Invoke(this);
-        }
     }
 }

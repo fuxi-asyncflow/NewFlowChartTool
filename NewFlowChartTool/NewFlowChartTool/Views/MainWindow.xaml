@@ -114,16 +114,16 @@
                     </DrawingBrush>
                 </Rectangle.Fill>
             </Rectangle>
-            <Button>
+            <Button Command="{Binding UndoCommand}">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Undo}" />
-                    <TextBlock Height="16">undo</TextBlock>
+                    <TextBlock Height="16">Undo</TextBlock>
                 </StackPanel>
             </Button>
-            <Button>
+            <Button Command="{Binding RedoCommand}">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Redo}" />
-                    <TextBlock Height="16">undo</TextBlock>
+                    <TextBlock Height="16">Redo</TextBlock>
                 </StackPanel>
             </Button>
         </StackPanel>

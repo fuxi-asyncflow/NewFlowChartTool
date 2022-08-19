@@ -48,8 +48,8 @@ namespace NewFlowChartTool.ViewModels
             BuildAllCommand = new DelegateCommand(BuildAll, () => CurrentProject != null);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
 
-            
-
+            UndoCommand = new DelegateCommand(Undo);
+            RedoCommand = new DelegateCommand(Redo);
 
             _ea.GetEvent<Event.GraphOpenEvent>().Subscribe(OnOpenGraph);
 #if DEBUG
@@ -94,6 +94,9 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand CloseProjectCommand { get; private set; }
         public DelegateCommand SwitchThemeCommand { get; private set; }
         public DelegateCommand BuildAllCommand { get; private set; }
+
+        public DelegateCommand UndoCommand { get; private set; }
+        public DelegateCommand RedoCommand { get; private set; }
         
         public void TestOpenProject()
         {
@@ -208,6 +211,18 @@ namespace NewFlowChartTool.ViewModels
         public bool CloseWindow()
         {
             return true;
+        }
+
+        public void Redo()
+        {
+            if(ActiveGraph == null) return;
+            ActiveGraph.UndoRedoManager.Redo();
+        }
+
+        public void Undo()
+        {
+            if (ActiveGraph == null) return;
+            ActiveGraph.UndoRedoManager.Undo();
         }
     }
 }

@@ -196,7 +196,7 @@ namespace NFCT.Graph.ViewModels
                     args.Handled = true;
                     break;
                 case Key.Delete:
-                    Owner.RemoveNode(this);
+                    Owner.RemoveNodeOperation(this);
                     break;
                 case Key.Down:
                 case Key.Up:

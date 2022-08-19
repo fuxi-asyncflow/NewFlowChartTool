@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlowChartCommon;
 
 namespace FlowChart.Core
 {
@@ -23,10 +24,30 @@ namespace FlowChart.Core
             Variables = new List<Variable>();
             Groups = new List<Group>();
             AutoLayout = true;
+
+#if DEBUG
+            GraphAddNodeEvent += node => Logger.DBG($"[event] add node event: {node}");
+            GraphRemoveNodeEvent += node => Logger.DBG($"[event] remove node event: {node}");
+            GraphConnectEvent += conn => Logger.DBG($"[event] connect event: {conn.Start} -> {conn.End}");
+            ConnectorRemoveEvent += conn => Logger.DBG($"[event] disconnect event: {conn.Start} -> {conn.End}");
+#endif
         }
 
-        public delegate void GraphNodeDelegate(Graph graph, Node node);
-        public delegate void GraphConnectorDelegate(Graph graph, Connector conn);
+        #region Events
+        public delegate void GraphNodeDelegate(Node node);
+        public delegate void GraphConnectorDelegate(Connector conn);
+        public delegate void GraphPathChangeHandler(Graph graph, string oldPath, string newPath);
+
+        public event GraphPathChangeHandler GraphPathChangeEvent;
+        public event GraphNodeDelegate? GraphRemoveNodeEvent;
+        public event GraphNodeDelegate GraphAddNodeEvent;
+        public event GraphConnectorDelegate GraphConnectEvent;
+        public event GraphConnectorDelegate ConnectorRemoveEvent;
+
+
+
+        #endregion
+
 
         #region PROPERTY
         public string Uid { get; set; }
@@ -37,8 +58,7 @@ namespace FlowChart.Core
             get => _path;
             set => SetPath(value);
         }
-        public delegate void GraphPathChangeHandler(Graph graph, string oldPath, string newPath);
-        public event GraphPathChangeHandler GraphPathChangeEvent;
+        
         public void SetPath(string path)
         {
             if (string.Equals(_path, path))
@@ -78,8 +98,16 @@ namespace FlowChart.Core
             Nodes.Add(node);
         }
 
-        
-        public event GraphNodeDelegate? GraphRemoveNodeEvent;
+        public void AddNode_atom(Node node, int idx = -1)
+        {
+            if(idx < 0)
+                Nodes.Add(node);
+            else
+                Nodes.Insert(idx, node);
+            node.OwnerGraph = this;
+            NodeDict.Add(node.Uid, node);
+            GraphAddNodeEvent?.Invoke(node);
+        }
 
         public void RemoveNode_atom(Node? node)
         {
@@ -89,20 +117,20 @@ namespace FlowChart.Core
             Debug.Assert(tmp == node);
             NodeDict.Remove(node.Uid);
             Nodes.Remove(node);
-            GraphRemoveNodeEvent?.Invoke(this, node);
+            GraphRemoveNodeEvent?.Invoke(node);
         }
 
         public void RemoveNode(Node node)
         {
-            // remove node
-            RemoveNode_atom(node);
-
             // remove connectors
             var parents = node.Parents.ConvertAll(conn => conn.Start);
             parents.ForEach(p => RemoveConnector_atom(p, node));
 
             var children = node.Children.ConvertAll(conn => conn.End);
             children.ForEach(c => RemoveConnector_atom(node, c));
+
+            // remove node
+            RemoveNode_atom(node);
 
             // find a parent node who can connect to start node after node deleted
             var parent = parents.Find(IsNodeConnectToRoot) ?? Root;
@@ -163,8 +191,9 @@ namespace FlowChart.Core
             return Connect_atom(start, end, connType);
         }
 
-        public event GraphConnectorDelegate? GraphConnectEvent;
-        public Connector? Connect_atom(Node start, Node end, Connector.ConnectorType connType)
+        
+        public Connector? Connect_atom(Node start, Node end, Connector.ConnectorType connType
+            , int startIdx = -1, int endIdx = -1)
         {
             // check exist connector
             var conn = start.Parents.Find(conn => conn.End == end);
@@ -172,13 +201,20 @@ namespace FlowChart.Core
                 return null;
             conn = new Connector() { Start = start, End = end, ConnType = connType };
             Connectors.Add(conn);
-            conn.Start.Children.Add(conn);
-            conn.End.Parents.Add(conn);
-            GraphConnectEvent?.Invoke(this, conn);
+            if (startIdx < 0)
+                conn.Start.Children.Add(conn);
+            else
+                conn.Start.Children.Insert(startIdx, conn);
+            if (endIdx < 0)
+                conn.End.Parents.Add(conn);
+            else
+                conn.End.Parents.Insert(endIdx, conn);
+            GraphConnectEvent?.Invoke(conn);
             return conn;
         }
 
         
+
 
         public void RemoveConnector_atom(Node start, Node end)
         {
@@ -188,7 +224,7 @@ namespace FlowChart.Core
             Connectors.Remove(conn);
             start.Children.Remove(conn);
             end.Parents.Remove(conn);
-            conn.OnDestroy();
+            ConnectorRemoveEvent?.Invoke(conn);
         }
 
         public bool AddVariable(Variable v)

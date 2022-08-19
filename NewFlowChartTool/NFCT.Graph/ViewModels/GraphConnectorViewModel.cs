@@ -38,7 +38,6 @@ namespace NFCT.Graph.ViewModels
             end.ParentLines.Add(this);
 
             _conn.ConnectorTypeChangeEvent += OnConnectTypeChange;
-            _conn.ConnectorRemoveEvent += OnDestroy;
 
             OnMouseUpCommand = new DelegateCommand<MouseEventArgs>(OnMouseUp);
         }
@@ -192,15 +191,7 @@ namespace NFCT.Graph.ViewModels
             }
         }
 
-        public void OnDestroy(Connector conn)
-        {
-            Debug.Assert(conn == _conn);
-            _conn.ConnectorRemoveEvent -= OnDestroy;
-            StartNode.ChildLines.Remove(this);
-            EndNode.ParentLines.Remove(this);
-            Owner.RemoveConnector(this);
-            Logger.DBG($"connector is remove {StartNode} {EndNode}");
-        }
+
 
         public void OnKeyDown(KeyEventArgs args)
         {

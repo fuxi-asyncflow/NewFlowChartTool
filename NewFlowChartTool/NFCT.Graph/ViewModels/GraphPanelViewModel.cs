@@ -11,6 +11,7 @@ using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
 using FlowChartCommon;
+using NFCT.Common.ViewModels;
 using NLog.Fluent;
 using Prism.Commands;
 
@@ -42,26 +43,35 @@ namespace NFCT.Graph.ViewModels
             Nodes = new ObservableCollection<BaseNodeViewModel>();
             NodeDict = new Dictionary<Node, BaseNodeViewModel>();
             Connectors = new ObservableCollection<GraphConnectorViewModel>();
+            ConnectorDict = new Dictionary<Connector, GraphConnectorViewModel>();
             Groups = new ObservableCollection<GroupBoxViewModel>();
             SelectedNodes = new List<BaseNodeViewModel>();
             SelectedConnectors = new List<GraphConnectorViewModel>();
             VariablesPanel = new GraphVariablesPanelViewModel(this);
+            UndoRedoManager = new UndoRedoManagerViewModel();
+
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             CreateGroupCommand = new DelegateCommand(CreateGroupFromSelectedNodes);
             OnPreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnPreviewKeyDown);
 
-            _graph.GraphConnectEvent += OnConnect;
+            
 
             Initialize();
         }
 
-        public BaseNodeViewModel? AddNode(Node node)
+        public BaseNodeViewModel? AddNodeViewModel(Node node, int idx = -1)
         {
+            Debug.Assert(node.OwnerGraph == _graph);
             var vm = BaseNodeViewModel.CreateNodeViewModel(node, this);
             if (vm == null)
                 return null;
-            Nodes.Add(vm);
+            if(idx < 0)
+                Nodes.Add(vm);
+            else
+                Nodes.Insert(idx, vm);
+            
             NodeDict.Add(node, vm);
+            NeedLayout = true;
             return vm;
         }
 
@@ -73,7 +83,9 @@ namespace NFCT.Graph.ViewModels
             BaseNodeViewModel? startVm, endVm;
             if (NodeDict.TryGetValue(start, out startVm) && NodeDict.TryGetValue(end, out endVm))
             {
-                Connectors.Add(new GraphConnectorViewModel(conn, startVm, endVm, this));
+                var connVm = new GraphConnectorViewModel(conn, startVm, endVm, this);
+                Connectors.Add(connVm);
+                ConnectorDict.Add(conn, connVm);
             }
         }
 
@@ -95,19 +107,25 @@ namespace NFCT.Graph.ViewModels
             var conn = Graph.Connect(start, end, Connector.ConnectorType.SUCCESS);
             if (conn == null)
                 return;
-            Connectors.Add(new GraphConnectorViewModel(conn, startVm, endVm, this));
+            var connVm = new GraphConnectorViewModel(conn, startVm, endVm, this);
+            Connectors.Add(connVm);
+            ConnectorDict.Add(conn, connVm);
         }
 
         public void Initialize()
         {
             Nodes.Clear();
             NodeDict.Clear();
-            _graph.Nodes.ForEach(node => AddNode(node));
+            _graph.Nodes.ForEach(node => AddNodeViewModel(node));
             _graph.Connectors.ForEach(_createConnectorViewModel);
             IsFirstLayout = true;
             NeedLayout = true;
 
             _graph.GraphPathChangeEvent += OnGraphPathChange;
+            _graph.GraphRemoveNodeEvent += RemoveNodeViewModel;
+            _graph.ConnectorRemoveEvent += RemoveConnectorViewModel;
+            _graph.GraphConnectEvent += OnConnect;
+            _graph.GraphAddNodeEvent += OnAddNode;
         }
 
         public string Name => _graph.Name;
@@ -119,8 +137,10 @@ namespace NFCT.Graph.ViewModels
         public ObservableCollection<BaseNodeViewModel> Nodes { get; set; }
         public Dictionary<Node, BaseNodeViewModel> NodeDict { get; set; }
         public ObservableCollection<GraphConnectorViewModel> Connectors { get; set; }
+        public Dictionary<Connector, GraphConnectorViewModel> ConnectorDict { get; set; }
         public ObservableCollection<GroupBoxViewModel> Groups { get; set; }
         public GraphVariablesPanelViewModel VariablesPanel { get; set; }
+        public UndoRedoManagerViewModel UndoRedoManager { get; set; }
         
         public bool NeedLayout { get; set; }
         public bool IsFirstLayout { get; set; }
@@ -385,7 +405,7 @@ namespace NFCT.Graph.ViewModels
             // add new node
             Debug.Assert(CurrentNode != null);
             var newNode = Node.DefaultNode.Clone(Graph);
-            var vm = AddNode(newNode);
+            var vm = AddNodeViewModel(newNode);
             if (vm == null)
                 return;
             Graph.AddNode(newNode);
@@ -398,18 +418,95 @@ namespace NFCT.Graph.ViewModels
             Graph.Build();
         }
 
-        public void RemoveNode(BaseNodeViewModel nodeVm)
+        public void OnAddNode(Node node)
         {
-            var node = nodeVm.Node;
-            Graph.RemoveNode(node);
-            NodeDict.Remove(node);
-            Nodes.Remove(nodeVm);
-            NeedLayout = true;
+            var idx = _graph.Nodes.IndexOf(node);
+            AddNodeViewModel(node, idx);
         }
 
-        public void RemoveConnector(GraphConnectorViewModel connVm)
+        public void RemoveNodeOperation(BaseNodeViewModel nodeVm)
         {
-            Connectors.Remove(connVm);
+            UndoRedoManager.Begin("Remove Node");
+            var node = nodeVm.Node;
+            Graph.RemoveNode(node);
+            NeedLayout = true;
+            UndoRedoManager.End();
+        }
+
+        public void RemoveNodeViewModel(Node node)
+        {
+            Logger.DBG($"view model for {node} is removed from graph viewmodel");
+            if (!NodeDict.ContainsKey(node))
+            {
+                Logger.WARN($"remove node viewmodel failed! cannot find viewmodel for {node}");
+                return;
+            }
+
+            var idx = _removeNodeViewModel(node);
+            UndoRedoManager.AddAction(
+                () =>
+                {
+                    Logger.DBG("redo");
+                    _removeNodeViewModel(node);
+                },
+                () =>
+                {
+                    Logger.DBG("undo");
+                    //AddNodeViewModel(node, idx);
+                    Graph.AddNode_atom(node, idx);
+                });
+        }
+
+        private int _removeNodeViewModel(Node node)
+        {
+            var vm = NodeDict[node];
+            Debug.Assert(vm.Node == node);
+            NodeDict.Remove(vm.Node);
+            int index = Nodes.IndexOf(vm);
+            Nodes.Remove(vm);
+            return index;
+        }
+
+        public void RemoveConnectorViewModel(Connector conn)
+        {
+            Debug.Assert(conn.OwnerGraph == _graph);
+            if (!ConnectorDict.ContainsKey(conn))
+            {
+                Logger.WARN($"remove connector viewmodel failed! cannot find viewmodel for {conn}");
+                return;
+            }
+
+            var vm = ConnectorDict[conn];
+
+            var starts = vm.StartNode.ChildLines;
+            var startIdx = starts.IndexOf(vm);
+            starts.Remove(vm);
+
+            var ends = vm.EndNode.ParentLines;
+            var endIdx = ends.IndexOf(vm);
+            ends.Remove(vm);
+            
+            Logger.DBG($"connector is remove {vm}");
+
+            Connectors.Remove(vm);
+            ConnectorDict.Remove(conn);
+
+            UndoRedoManager.AddAction(
+                () =>
+                {
+                    var start = conn.Start;
+                    var c = start.Children.Find(_c => _c.End == conn.End);
+                    var connVm = ConnectorDict[c];
+                    connVm.StartNode.ChildLines.Remove(connVm);
+                    connVm.EndNode.ChildLines.Remove(connVm);
+                    Connectors.Remove(connVm);
+                    ConnectorDict.Remove(c);
+                },
+                () =>
+                {
+                    _graph.Connect_atom(conn.Start, conn.End, conn.ConnType, startIdx, endIdx);
+                });
+
             NeedLayout = true;
         }
 
@@ -423,9 +520,9 @@ namespace NFCT.Graph.ViewModels
             RaisePropertyChanged(nameof(Name));
         }
 
-        void OnConnect(FlowChart.Core.Graph g, Connector conn)
+        void OnConnect(Connector conn)
         {
-            Debug.Assert(g == _graph);
+            Debug.Assert(conn.OwnerGraph == _graph);
             _createConnectorViewModel(conn);
         }
 
