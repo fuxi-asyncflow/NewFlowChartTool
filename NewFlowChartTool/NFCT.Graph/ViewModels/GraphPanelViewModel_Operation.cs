@@ -217,6 +217,15 @@ namespace NFCT.Graph.ViewModels
         }
         #endregion
 
+        #region change connector type
+
+        public void ChangeConnectorType_Operation(Connector conn, Connector.ConnectorType newValue)
+        {
+            UndoRedoManager.Begin("change connector type");
+            Graph.ChangeConnectorType_atom(conn, newValue);
+            UndoRedoManager.End();
+        }
+
         public void OnConnectorTypeChange(Connector conn, Connector.ConnectorType oldValue)
         {
             Debug.Assert(ConnectorDict.ContainsKey(conn));
@@ -226,10 +235,10 @@ namespace NFCT.Graph.ViewModels
 
             UndoRedoManager.AddAction(
                 () => { Graph.ChangeConnectorType_atom(conn, newValue); },
-                () => { Graph.ChangeConnectorType_atom(conn, oldValue);}
+                () => { Graph.ChangeConnectorType_atom(conn, oldValue); }
             );
         }
-
+        #endregion
 
         public void CreateGroupFromSelectedNodes()
         {

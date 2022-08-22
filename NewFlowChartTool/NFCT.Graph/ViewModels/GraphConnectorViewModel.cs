@@ -173,21 +173,24 @@ namespace NFCT.Graph.ViewModels
 
         public void ChangeToNextType()
         {
+            Connector.ConnectorType newValue = Connector.ConnectorType.ALWAYS;
             switch (ConnType)
             {
                 case Connector.ConnectorType.FAILURE:
-                    _conn.ConnType = Connector.ConnectorType.SUCCESS;
+                    newValue = Connector.ConnectorType.SUCCESS;
                     break;
                 case Connector.ConnectorType.SUCCESS:
-                    _conn.ConnType = Connector.ConnectorType.ALWAYS;
+                    newValue = Connector.ConnectorType.ALWAYS;
                     break;
                 case Connector.ConnectorType.ALWAYS:
-                    _conn.ConnType = Connector.ConnectorType.FAILURE;
+                    newValue = Connector.ConnectorType.FAILURE;
                     break;
                 case Connector.ConnectorType.DELETE:
-                    _conn.ConnType = Connector.ConnectorType.ALWAYS;
+                    newValue = Connector.ConnectorType.ALWAYS;
                     break;
             }
+
+            Owner.ChangeConnectorType_Operation(Connector, newValue);
         }
 
 
