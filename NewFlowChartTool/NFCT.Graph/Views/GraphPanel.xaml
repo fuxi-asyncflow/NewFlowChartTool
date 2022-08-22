@@ -17,6 +17,11 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <Style TargetType="TextBlock">
+                <Style.Setters>
+                    <Setter Property="Foreground" Value="Black" />
+                </Style.Setters>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel Dock="Top" LastChildFill="True">
@@ -49,7 +54,7 @@
                         x:Name="CanvasBackground"
                         Width="{Binding Width}"
                         Height="{Binding Height}"
-                        Fill="Cornsilk"
+                        Fill="{DynamicResource GraphBackGround}"
                         MouseDown="CanvasBackground_OnMouseDown" />
                     <!--  Nodes  -->
                     <ItemsControl ItemsSource="{Binding Nodes}">

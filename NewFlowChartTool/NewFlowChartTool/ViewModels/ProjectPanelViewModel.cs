@@ -13,6 +13,7 @@ using Prism.Events;
 using FlowChart.Core;
 using NewFlowChartTool.Event;
 using NFCT.Common;
+using NFCT.Common.Events;
 using Prism.Commands;
 
 namespace NewFlowChartTool.ViewModels
@@ -291,7 +292,7 @@ namespace NewFlowChartTool.ViewModels
         void SubscribeEvents()
         {
             
-            _ea.GetEvent<Event.ProjectOpenEvent>().Subscribe(OnOpenProject, ThreadOption.UIThread);
+            _ea.GetEvent<ProjectOpenEvent>().Subscribe(OnOpenProject, ThreadOption.UIThread);
             EventHelper.Sub<ProjectCloseEvent, Project>(OnCloseProject, ThreadOption.UIThread);
         }
 

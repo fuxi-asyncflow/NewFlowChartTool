@@ -9,6 +9,7 @@ using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
 using FlowChartCommon;
+using NFCT.Common;
 using Prism.Commands;
 using Prism.Ioc;
 using Color = System.Drawing.Color;
@@ -19,10 +20,15 @@ namespace NFCT.Graph.ViewModels
     {
         static CanvasNodeResource()
         {
+            EventHelper.Sub<NFCT.Common.Events.ThemeSwitchEvent, NFCT.Common.Theme>(OnThemeSwitch);
             BackgroundColors = new Color[]
             {
-                Color.White, Color.LightGray, Color.FromArgb(0xECB2AB)
-                , Color.FromArgb(0xB6D8EC), Color.FromArgb(0xC2E4C6), Color.FromArgb(0xECE1B0)
+                Color.White, 
+                Color.LightGray, 
+                Color.FromArgb(0xECB2AB), 
+                Color.FromArgb(0xB6D8EC), 
+                Color.FromArgb(0xC2E4C6), 
+                Color.FromArgb(0xECE1B0)
             };
             BorderColors = new Color[]
             {
@@ -33,9 +39,11 @@ namespace NFCT.Graph.ViewModels
             BorderBrushes = new Brush[BorderColors.Length];
             for (int i = 0; i<BackgroundColors.Length; i++)
             {
-                BackgroundBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BackgroundColors[i].R, BackgroundColors[i].G, BackgroundColors[i].B));
+                //BackgroundBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BackgroundColors[i].R, BackgroundColors[i].G, BackgroundColors[i].B));
                 BorderBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BorderColors[i].R, BorderColors[i].G, BorderColors[i].B));
             }
+
+            
 
             LineColors = new Color[]
             {
@@ -60,6 +68,17 @@ namespace NFCT.Graph.ViewModels
 
         public static Color[] LineColors;
         public static Brush[] LineBrushes;
+
+        public static void OnThemeSwitch(NFCT.Common.Theme theme)
+        {
+            
+            BackgroundBrushes[0] = Application.Current.FindResource("NodeBackGround") as SolidColorBrush;
+            BackgroundBrushes[1] = Application.Current.FindResource("NodeBackGround") as SolidColorBrush;
+            BackgroundBrushes[2] = Application.Current.FindResource("NodeErrorBackGround") as SolidColorBrush;
+            BackgroundBrushes[3] = Application.Current.FindResource("NodeConditionBackGround") as SolidColorBrush;
+            BackgroundBrushes[4] = Application.Current.FindResource("NodeActionBackGround") as SolidColorBrush;
+            BackgroundBrushes[5] = Application.Current.FindResource("NodeWaitBackGround") as SolidColorBrush;
+        }
     }
 
     public class BaseNodeViewModel : BindableBase, INode

@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Core;
 using NewFlowChartTool.Event;
+using NFCT.Common;
+using NFCT.Common.Events;
 using Prism.Events;
 using Prism.Mvvm;
 

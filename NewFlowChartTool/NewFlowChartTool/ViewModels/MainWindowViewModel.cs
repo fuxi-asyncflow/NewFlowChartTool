@@ -14,6 +14,7 @@ using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
 using NewFlowChartTool.Event;
 using NFCT.Common;
+using NFCT.Common.Events;
 using NFCT.Graph.ViewModels;
 
 using ProjectFactory.DefaultProjectFactory;
@@ -30,11 +31,7 @@ namespace NewFlowChartTool.ViewModels
 
     public class MainWindowViewModel : BindableBase
     {
-        public enum Theme
-        {
-            Dark = 0,
-            Light = 1,
-        }
+        
         public MainWindowViewModel(IEventAggregator ea)
         {
             _testText = "Hello world";
@@ -51,7 +48,7 @@ namespace NewFlowChartTool.ViewModels
             UndoCommand = new DelegateCommand(Undo);
             RedoCommand = new DelegateCommand(Redo);
 
-            _ea.GetEvent<Event.GraphOpenEvent>().Subscribe(OnOpenGraph);
+            _ea.GetEvent<GraphOpenEvent>().Subscribe(OnOpenGraph);
 #if DEBUG
             TestOpenProject();
 #endif
@@ -107,7 +104,7 @@ namespace NewFlowChartTool.ViewModels
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
-            _ea.GetEvent<Event.ProjectOpenEvent>().Publish(p);
+            _ea.GetEvent<ProjectOpenEvent>().Publish(p);
             p.Save();
             CurrentProject = p;
         }
@@ -143,7 +140,7 @@ namespace NewFlowChartTool.ViewModels
 #endif
             CurrentProject = p;
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
-            _ea.GetEvent<Event.ProjectOpenEvent>().Publish(p);
+            _ea.GetEvent<ProjectOpenEvent>().Publish(p);
         }
 
         public void SwitchTheme()
@@ -166,6 +163,8 @@ namespace NewFlowChartTool.ViewModels
                 Application.Current.Resources.MergedDictionaries[1].Source
                     = new Uri("pack://application:,,,/NFCT.Themes;component/DarkTheme.xaml");
             }
+
+            EventHelper.Pub<ThemeSwitchEvent, Theme>(SelectedTheme);
         }
 
         public void SaveProject()
@@ -181,7 +180,7 @@ namespace NewFlowChartTool.ViewModels
             if (CurrentProject == null) return;
             ActiveGraph = null;
             OpenedGraphs.Clear();
-            EventHelper.Pub<Event.ProjectCloseEvent, Project>(CurrentProject);
+            EventHelper.Pub<ProjectCloseEvent, Project>(CurrentProject);
             CurrentProject = null;
             CloseProjectCommand.RaiseCanExecuteChanged();
         }

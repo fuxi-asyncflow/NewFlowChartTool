@@ -13,10 +13,12 @@
 
   <ItemGroup>
     <Folder Include="Icons\" />
+    <Folder Include="Misc\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FlowChartCommon\FlowChartCommon.csproj" />
+    <ProjectReference Include="..\FlowChart\FlowChart.csproj" />
   </ItemGroup>
 
 </Project>
