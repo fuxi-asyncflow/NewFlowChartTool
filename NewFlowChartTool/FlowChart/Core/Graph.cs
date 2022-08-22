@@ -37,12 +37,16 @@ namespace FlowChart.Core
         public delegate void GraphNodeDelegate(Node node);
         public delegate void GraphConnectorDelegate(Connector conn);
         public delegate void GraphPathChangeHandler(Graph graph, string oldPath, string newPath);
+        public delegate void GraphAddVariableDelegate(Graph graph, Variable variable);
+        public delegate void GraphConnectorTypeChangeDelegate(Connector conn, Connector.ConnectorType oldValue);
 
         public event GraphPathChangeHandler GraphPathChangeEvent;
         public event GraphNodeDelegate? GraphRemoveNodeEvent;
         public event GraphNodeDelegate GraphAddNodeEvent;
         public event GraphConnectorDelegate GraphConnectEvent;
         public event GraphConnectorDelegate ConnectorRemoveEvent;
+        public event GraphConnectorTypeChangeDelegate ConnectorTypeChangeEvent;
+        public event GraphAddVariableDelegate? GraphAddVariableEvent;
 
 
 
@@ -145,6 +149,11 @@ namespace FlowChart.Core
             }
         }
 
+        public void RaiseConnectorTypeChangeEvent(Connector conn, Connector.ConnectorType oldValue)
+        {
+            ConnectorTypeChangeEvent?.Invoke(conn, oldValue);
+        }
+
         private bool IsNodeConnectToRoot(Node node)
         {
             var startNode = Nodes[0];
@@ -213,7 +222,26 @@ namespace FlowChart.Core
             return conn;
         }
 
-        
+        public void RemoveConnector(Connector conn)
+        {
+            var start = conn.Start;
+            var end = conn.End;
+            var connType = conn.ConnType;
+
+            // check if connector remove
+            conn.Start = conn.End;
+
+            bool connectToRoot = IsNodeConnectToRoot(end);
+            conn.Start = start;
+
+            if (!connectToRoot)
+            {
+                conn.ConnType = Connector.ConnectorType.DELETE;
+                return;
+            }
+
+            RemoveConnector_atom(conn.Start, conn.End);
+        }
 
 
         public void RemoveConnector_atom(Node start, Node end)
@@ -225,6 +253,11 @@ namespace FlowChart.Core
             start.Children.Remove(conn);
             end.Parents.Remove(conn);
             ConnectorRemoveEvent?.Invoke(conn);
+        }
+
+        public void ChangeConnectorType_atom(Connector conn, Connector.ConnectorType connType)
+        {
+            conn.ConnType = connType;
         }
 
         public bool AddVariable(Variable v)
@@ -256,8 +289,7 @@ namespace FlowChart.Core
             }
         }
 
-        public delegate void GraphAddVariableDelegate(Graph graph, Variable variable);
-        public event GraphAddVariableDelegate? GraphAddVariableEvent;
+        
 
 
         public Group? CreateGroup(List<Node> nodes)

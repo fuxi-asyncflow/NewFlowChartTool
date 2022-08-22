@@ -165,6 +165,15 @@ namespace NFCT.Graph.ViewModels
         }
         #endregion
 
+        #region disconnect
+
+        public void RemoveConnectorOperation(GraphConnectorViewModel connVm)
+        {
+            UndoRedoManager.Begin("Disconnect");
+            Graph.RemoveConnector(connVm.Connector);
+            UndoRedoManager.End();
+        }
+
         void OnRemoveConnector(Connector conn)
         {
             Debug.Assert(conn.OwnerGraph == _graph);
@@ -206,6 +215,21 @@ namespace NFCT.Graph.ViewModels
                 });
             NeedLayout = true;
         }
+        #endregion
+
+        public void OnConnectorTypeChange(Connector conn, Connector.ConnectorType oldValue)
+        {
+            Debug.Assert(ConnectorDict.ContainsKey(conn));
+            var vm = ConnectorDict[conn];
+            vm.OnConnectTypeChange(conn);
+            var newValue = conn.ConnType;
+
+            UndoRedoManager.AddAction(
+                () => { Graph.ChangeConnectorType_atom(conn, newValue); },
+                () => { Graph.ChangeConnectorType_atom(conn, oldValue);}
+            );
+        }
+
 
         public void CreateGroupFromSelectedNodes()
         {

@@ -78,6 +78,7 @@ namespace NFCT.Graph.ViewModels
             _graph.ConnectorRemoveEvent += OnRemoveConnector;
             _graph.GraphConnectEvent += OnConnect;
             _graph.GraphAddNodeEvent += OnAddNode;
+            _graph.ConnectorTypeChangeEvent += OnConnectorTypeChange;
         }
 
         public string Name => _graph.Name;

@@ -37,13 +37,12 @@ namespace NFCT.Graph.ViewModels
             start.ChildLines.Add(this);
             end.ParentLines.Add(this);
 
-            _conn.ConnectorTypeChangeEvent += OnConnectTypeChange;
-
             OnMouseUpCommand = new DelegateCommand<MouseEventArgs>(OnMouseUp);
         }
 
         public GraphPaneViewModel Owner { get; set; }
         private Connector _conn;
+        public Connector Connector => _conn;
 
         private bool _isSelect;
         public bool IsSelect
@@ -159,7 +158,7 @@ namespace NFCT.Graph.ViewModels
 
         #endregion
 
-        void OnConnectTypeChange(Connector conn, Connector.ConnectorType ov, Connector.ConnectorType nv)
+        public void OnConnectTypeChange(Connector conn)
         {
             RaisePropertyChanged(nameof(ConnType));
         }
@@ -202,6 +201,9 @@ namespace NFCT.Graph.ViewModels
                 case Key.Tab:
                     ChangeToNextType();
                     args.Handled = true;
+                    break;
+                case Key.Delete:
+                    Owner.RemoveConnectorOperation(this);
                     break;
                 case Key.Down:
                 case Key.Up:

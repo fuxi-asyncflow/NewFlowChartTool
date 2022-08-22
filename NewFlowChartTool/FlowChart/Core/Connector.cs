@@ -30,12 +30,9 @@ namespace FlowChart.Core
                 if (value == _conntype) return;
                 var oldValue = _conntype;
                 _conntype = value;
-                ConnectorTypeChangeEvent?.Invoke(this,  oldValue, _conntype);
+                OwnerGraph.RaiseConnectorTypeChangeEvent(this, oldValue);
+                //ConnectorTypeChangeEvent?.Invoke(this,  oldValue, _conntype);
             }
         }
-
-        public delegate void
-            ConnectorTypeChangeDelegate(Connector conn, ConnectorType oldValue, ConnectorType newValue);
-        public event ConnectorTypeChangeDelegate? ConnectorTypeChangeEvent;
     }
 }
