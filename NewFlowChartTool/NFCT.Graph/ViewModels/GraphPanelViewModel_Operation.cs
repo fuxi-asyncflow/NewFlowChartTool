@@ -54,6 +54,7 @@ namespace NFCT.Graph.ViewModels
         {
             var idx = _graph.Nodes.IndexOf(node);
             _tmpNewBaseNodeViewModel = _addNodeViewModel(node, idx);
+            NeedLayout = true;
         }
         #endregion
 
@@ -67,7 +68,7 @@ namespace NFCT.Graph.ViewModels
             UndoRedoManager.End();
         }
 
-        public void RemoveNodeViewModel(Node node)
+        void OnRemoveNode(Node node)
         {
             Logger.DBG($"view model for {node} is removed from graph viewmodel");
             if (!NodeDict.ContainsKey(node))
@@ -89,6 +90,7 @@ namespace NFCT.Graph.ViewModels
                     //AddNodeViewModel(node, idx);
                     Graph.AddNode_atom(node, idx);
                 });
+            NeedLayout = true;
         }
 
         private int _removeNodeViewModel(Node node)
@@ -156,10 +158,14 @@ namespace NFCT.Graph.ViewModels
         {
             Debug.Assert(conn.OwnerGraph == _graph);
             _tmpNewConnectorViewModel = _createConnectorViewModel(conn);
+            UndoRedoManager.AddAction(
+                () => { Graph.Connect_atom(conn.Start, conn.End, conn.ConnType); },
+                () => {Graph.RemoveConnector_atom(conn.Start, conn.End); });
+            NeedLayout = true;
         }
         #endregion
 
-        public void RemoveConnectorViewModel(Connector conn)
+        void OnRemoveConnector(Connector conn)
         {
             Debug.Assert(conn.OwnerGraph == _graph);
             if (!ConnectorDict.ContainsKey(conn))
@@ -198,7 +204,6 @@ namespace NFCT.Graph.ViewModels
                 {
                     _graph.Connect_atom(conn.Start, conn.End, conn.ConnType, startIdx, endIdx);
                 });
-
             NeedLayout = true;
         }
 

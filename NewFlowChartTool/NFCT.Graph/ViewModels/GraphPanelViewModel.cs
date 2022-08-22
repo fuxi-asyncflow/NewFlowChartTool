@@ -74,8 +74,8 @@ namespace NFCT.Graph.ViewModels
             NeedLayout = true;
 
             _graph.GraphPathChangeEvent += OnGraphPathChange;
-            _graph.GraphRemoveNodeEvent += RemoveNodeViewModel;
-            _graph.ConnectorRemoveEvent += RemoveConnectorViewModel;
+            _graph.GraphRemoveNodeEvent += OnRemoveNode;
+            _graph.ConnectorRemoveEvent += OnRemoveConnector;
             _graph.GraphConnectEvent += OnConnect;
             _graph.GraphAddNodeEvent += OnAddNode;
         }

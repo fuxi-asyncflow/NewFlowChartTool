@@ -40,7 +40,7 @@ namespace NFCT.Common.ViewModels
 
         Action actions;
         List<Action> reverts;
-        private string _cmdName;
+        private string? _cmdName;
 
         public void Begin(string str)
         {
@@ -56,10 +56,13 @@ namespace NFCT.Common.ViewModels
 
             actions = () => { };
             reverts.Clear();
+            _cmdName = null;
         }
 
         public void AddAction(Action action, Action revert)
         {
+            if (_cmdName == null)
+                return;
             actions += action;
             reverts.Add(revert);
         }
