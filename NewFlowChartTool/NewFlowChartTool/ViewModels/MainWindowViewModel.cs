@@ -217,12 +217,14 @@ namespace NewFlowChartTool.ViewModels
         {
             if(ActiveGraph == null) return;
             ActiveGraph.UndoRedoManager.Redo();
+            ActiveGraph.Graph.Build();
         }
 
         public void Undo()
         {
             if (ActiveGraph == null) return;
             ActiveGraph.UndoRedoManager.Undo();
+            ActiveGraph.Graph.Build();
         }
     }
 }
