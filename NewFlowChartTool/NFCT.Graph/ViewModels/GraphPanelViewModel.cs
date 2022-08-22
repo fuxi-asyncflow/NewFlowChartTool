@@ -11,6 +11,8 @@ using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
 using FlowChartCommon;
+using NFCT.Common;
+using NFCT.Common.Events;
 using NFCT.Common.ViewModels;
 using NLog.Fluent;
 using Prism.Commands;
@@ -52,7 +54,11 @@ namespace NFCT.Graph.ViewModels
 
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             CreateGroupCommand = new DelegateCommand(CreateGroupFromSelectedNodes);
+            OnCloseCommand = new DelegateCommand(OnClose);
             OnPreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnPreviewKeyDown);
+
+            EventHelper.Sub<ThemeSwitchEvent, Theme>(OnThemeSwitch);
+
             Initialize();
         }
 
@@ -103,6 +109,7 @@ namespace NFCT.Graph.ViewModels
 
         public DelegateCommand ChangeLayoutCommand { get; set; }
         public DelegateCommand CreateGroupCommand { get; set; }
+        public DelegateCommand OnCloseCommand { get; set; }
 
         public void ChangeAutoLayout()
         {
@@ -331,6 +338,11 @@ namespace NFCT.Graph.ViewModels
                 }
             }
         }
+
+        void OnClose()
+        {
+            EventHelper.Pub<GraphCloseEvent, FlowChart.Core.Graph>(Graph);
+        }
         #endregion
 
         #region CallBack
@@ -339,6 +351,15 @@ namespace NFCT.Graph.ViewModels
         {
             RaisePropertyChanged(nameof(FullPath));
             RaisePropertyChanged(nameof(Name));
+        }
+
+        void OnThemeSwitch(Theme theme)
+        {
+            Logger.DBG("graph theme switch");
+            foreach (var nodeVm in Nodes)
+            {
+                nodeVm.OnThemeSwitch();
+            }
         }
 
         #endregion

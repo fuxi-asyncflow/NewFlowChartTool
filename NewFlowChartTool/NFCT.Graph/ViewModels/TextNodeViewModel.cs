@@ -43,7 +43,7 @@ namespace NFCT.Graph.ViewModels
                 BorderBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BorderColors[i].R, BorderColors[i].G, BorderColors[i].B));
             }
 
-            
+            OnThemeSwitch(Theme.Dark);
 
             LineColors = new Color[]
             {
@@ -58,8 +58,8 @@ namespace NFCT.Graph.ViewModels
             }
 
         }
-        public static double DefaultBorderWidth { get => 1.0; }
-        public static double SelectedBorderWidth { get => 3.0; }
+        public static double DefaultBorderWidth { get => 2.0; }
+        public static double SelectedBorderWidth { get => 4.0; }
 
         public static Color[] BackgroundColors;
         public static Brush[] BackgroundBrushes;
@@ -71,7 +71,6 @@ namespace NFCT.Graph.ViewModels
 
         public static void OnThemeSwitch(NFCT.Common.Theme theme)
         {
-            
             BackgroundBrushes[0] = Application.Current.FindResource("NodeBackGround") as SolidColorBrush;
             BackgroundBrushes[1] = Application.Current.FindResource("NodeBackGround") as SolidColorBrush;
             BackgroundBrushes[2] = Application.Current.FindResource("NodeErrorBackGround") as SolidColorBrush;
@@ -181,6 +180,12 @@ namespace NFCT.Graph.ViewModels
 
         private NodeBgType _bgType;
         public NodeBgType BgType { get => _bgType; set => SetProperty(ref _bgType, value, nameof(BgType)); }
+
+        public void OnThemeSwitch()
+        {
+            //TODO some graph theme take effect after close and open again
+            RaisePropertyChanged(nameof(BgType));
+        }
 
         #endregion
 

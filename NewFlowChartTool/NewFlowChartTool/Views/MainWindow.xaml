@@ -150,7 +150,7 @@
                     <pane:PanesStyleSelector.GraphPaneStyle>
                         <Style TargetType="{x:Type LayoutItem}">
                             <Setter Property="Title" Value="{Binding Model.Name}" />
-                            <!--  Setter Property="CloseCommand" Value="{Binding Model.OnCloseUnit}" /  -->
+                            <Setter Property="CloseCommand" Value="{Binding Model.OnCloseCommand}" />
                         </Style>
                     </pane:PanesStyleSelector.GraphPaneStyle>
                 </pane:PanesStyleSelector>

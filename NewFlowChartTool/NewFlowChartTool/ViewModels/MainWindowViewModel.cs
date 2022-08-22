@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using FlowChart.AST;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
+using FlowChartCommon;
 using NewFlowChartTool.Event;
 using NFCT.Common;
 using NFCT.Common.Events;
@@ -49,6 +50,7 @@ namespace NewFlowChartTool.ViewModels
             RedoCommand = new DelegateCommand(Redo);
 
             _ea.GetEvent<GraphOpenEvent>().Subscribe(OnOpenGraph);
+            EventHelper.Sub<GraphCloseEvent, Graph>(OnCloseGraph);
 #if DEBUG
             TestOpenProject();
 #endif
@@ -205,6 +207,26 @@ namespace NewFlowChartTool.ViewModels
 
             OpenedGraphs.Add(new GraphPaneViewModel(graph));
             ActiveGraph = OpenedGraphs.Last();
+        }
+
+        public void OnCloseGraph(Graph graph)
+        {
+            GraphPaneViewModel? vm = null;
+            foreach (var gvm in OpenedGraphs)
+            {
+                if (gvm.Graph == graph)
+                {
+                    vm = gvm;
+                }
+            }
+
+            if (vm != null)
+            {
+                OpenedGraphs.Remove(vm);
+            }
+
+            //Logger.DBG($"{ActiveGraph.Name}");
+            ActiveGraph = null;
         }
 
         public bool CloseWindow()
