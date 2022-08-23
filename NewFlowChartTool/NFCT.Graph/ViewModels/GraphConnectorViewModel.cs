@@ -28,6 +28,9 @@ namespace NFCT.Graph.ViewModels
         public double X => (StartNode.X + EndNode.X) * 0.5f;
         public double Y => (StartNode.Y + EndNode.Y) * 0.5f;
 
+        public double Left { get; set; }
+        public double Top { get; set; }
+
         public GraphConnectorViewModel(Connector conn, BaseNodeViewModel start, BaseNodeViewModel end, GraphPaneViewModel g)
         {
             StartNode = start;
@@ -103,6 +106,28 @@ namespace NFCT.Graph.ViewModels
             if (curves.Count == 0)
                 return;
 
+            // get left and top of all curve points
+            Left = double.MaxValue;
+            Top = double.MaxValue;
+            foreach (var curve in curves)
+            {
+                foreach (var p in curve.Points)
+                {
+                    if (p.x < Left) Left = p.x;
+                    if (p.y < Top) Top = p.y;
+                }
+            }
+
+            foreach (var curve in curves)
+            {
+                for (var index = 0; index < curve.Points.Count; index++)
+                {
+                    var p = curve.Points[index];
+                    curve.Points[index] = new Position(p.x - Left, p.y - Top);
+                }
+            }
+
+
             // Console.WriteLine("=================");
             foreach (var curve in curves)
             {
@@ -122,7 +147,7 @@ namespace NFCT.Graph.ViewModels
                     var segments = new List<PathSegment>();
                     var s = curve.Points[0];
                     
-                    curve.Points.ForEach(p => Console.WriteLine($"{p}"));
+                    //curve.Points.ForEach(p => Console.WriteLine($"{p}"));
                     var seg = new PolyBezierSegment
                     {
                         Points = new PointCollection(curve.Points.Skip(1).ToList().ConvertAll( p => new Point(p.x, p.y)))
@@ -147,6 +172,8 @@ namespace NFCT.Graph.ViewModels
 
             Path = geometry;
             RaisePropertyChanged(nameof(Path));
+            RaisePropertyChanged(nameof(Left));
+            RaisePropertyChanged(nameof(Top));
         }
 
         public void StaightLineConnect(Point start, Point end)

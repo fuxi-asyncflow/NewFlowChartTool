@@ -10,6 +10,12 @@
         {
             return $"[{x}, {y}]";
         }
+
+        public void Minus(double a, double b)
+        {
+            x -= a;
+            y -= b;
+        }
     }
 
     public class Curve
