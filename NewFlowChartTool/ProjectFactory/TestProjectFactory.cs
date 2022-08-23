@@ -133,10 +133,10 @@ namespace ProjectFactory
         public int Type { get; set; }
         public int Shape { get; set; }
 
-        public Connector Connector()
-        {
-            return new Connector();
-        }
+        //public Connector Connector()
+        //{
+        //    return new Connector();
+        //}
     }
 
     class ChartJson

@@ -15,6 +15,15 @@ namespace FlowChart.Core
             ALWAYS = 2,
             DELETE = 3
         }
+
+        public Connector(Node start, Node end, ConnectorType type)
+        {
+            Start = start;
+            End = end;
+            _conntype = type; // don't raise event in ctor
+        }
+
+
         public Node Start { get; set; }
         public Node End { get; set; }
 

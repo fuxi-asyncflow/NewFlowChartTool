@@ -110,6 +110,7 @@ namespace FlowChart.Core
                 Nodes.Insert(idx, node);
             node.OwnerGraph = this;
             NodeDict.Add(node.Uid, node);
+            Logger.DBG($"AddNode_atom: {node}");
             GraphAddNodeEvent?.Invoke(node);
         }
 
@@ -121,6 +122,7 @@ namespace FlowChart.Core
             Debug.Assert(tmp == node);
             NodeDict.Remove(node.Uid);
             Nodes.Remove(node);
+            Logger.DBG($"RemoveNode_atom: {node}");
             GraphRemoveNodeEvent?.Invoke(node);
         }
 
@@ -208,7 +210,7 @@ namespace FlowChart.Core
             var conn = start.Parents.Find(conn => conn.End == end);
             if (conn != null)
                 return null;
-            conn = new Connector() { Start = start, End = end, ConnType = connType };
+            conn = new Connector(start, end, connType);
             Connectors.Add(conn);
             if (startIdx < 0)
                 conn.Start.Children.Add(conn);
@@ -218,6 +220,7 @@ namespace FlowChart.Core
                 conn.End.Parents.Add(conn);
             else
                 conn.End.Parents.Insert(endIdx, conn);
+            Logger.DBG($"Connect_atom: {start} -> {end}");
             GraphConnectEvent?.Invoke(conn);
             return conn;
         }
@@ -252,11 +255,13 @@ namespace FlowChart.Core
             Connectors.Remove(conn);
             start.Children.Remove(conn);
             end.Parents.Remove(conn);
+            Logger.DBG($"RemoveConnector_atom: {start} -> {end}");
             ConnectorRemoveEvent?.Invoke(conn);
         }
 
         public void ChangeConnectorType_atom(Connector conn, Connector.ConnectorType connType)
         {
+            Logger.DBG($"ChangeConnectorType_atom: {connType}");
             conn.ConnType = connType;
         }
 
