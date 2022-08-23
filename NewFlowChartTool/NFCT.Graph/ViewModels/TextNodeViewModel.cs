@@ -77,6 +77,17 @@ namespace NFCT.Graph.ViewModels
             BackgroundBrushes[3] = Application.Current.FindResource("NodeConditionBackGround") as SolidColorBrush;
             BackgroundBrushes[4] = Application.Current.FindResource("NodeActionBackGround") as SolidColorBrush;
             BackgroundBrushes[5] = Application.Current.FindResource("NodeWaitBackGround") as SolidColorBrush;
+
+            if (theme == Theme.Dark)
+            {
+                BorderBrushes[0] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(127, 127, 127));
+                BorderBrushes[1] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(127, 127, 127));
+            }
+            else
+            {
+                BorderBrushes[0] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0));
+                BorderBrushes[1] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0));
+            }
         }
     }
 
