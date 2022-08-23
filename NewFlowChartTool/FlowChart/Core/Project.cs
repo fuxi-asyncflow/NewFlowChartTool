@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using FlowChart.AST;
 using FlowChart.Parser;
 using FlowChart.Type;
 using XLua;
@@ -129,15 +130,12 @@ namespace FlowChart.Core
 
         public void Build()
         {
-            foreach (var graph in GraphDict.Values)
-            {
-                BuildGraph(graph);
-            }
+            Builder.Build(this);
         }
 
-        public void BuildGraph(Graph graph)
+        public void BuildGraph(Graph graph, ParserConfig cfg)
         {
-            Builder.BuildGraph(graph);
+            Builder.BuildGraph(graph, cfg);
         }
 
         #endregion

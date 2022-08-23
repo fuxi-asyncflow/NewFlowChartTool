@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using FlowChart.AST;
 using Prism.Mvvm;
 using Prism.Events;
 using FlowChart.Core;
@@ -68,7 +69,7 @@ namespace NewFlowChartTool.ViewModels
             if (_item is Graph graph)
             {
                 EventHelper.Pub<GraphOpenEvent, Graph>(graph);
-                graph.Project.BuildGraph(graph);
+                graph.Project.BuildGraph(graph, new ParserConfig(){GetTokens = true});
             }
         }
 

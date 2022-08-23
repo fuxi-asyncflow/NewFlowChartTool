@@ -33,9 +33,9 @@
     <SolidColorBrush x:Key="WindowInactiveBorderBrush" Color="#434346" />
 
     <!--  canvas colors  -->
-    <SolidColorBrush x:Key="GraphBackGround" Color="DarkGray" />
+    <SolidColorBrush x:Key="GraphBackGround" Color="Black" />
     <SolidColorBrush x:Key="NodeBackGround" Color="Red" />
-    <SolidColorBrush x:Key="NodeActionBackGround" Color="RoyalBlue" />
+    <SolidColorBrush x:Key="NodeActionBackGround" Color="#2060A0" />
     <SolidColorBrush x:Key="NodeConditionBackGround" Color="DarkGreen" />
     <SolidColorBrush x:Key="NodeWaitBackGround" Color="DarkGoldenrod" />
     <SolidColorBrush x:Key="NodeErrorBackGround" Color="DarkRed" />
@@ -43,8 +43,8 @@
     <SolidColorBrush x:Key="NodeForeGround" Color="White" />
     <SolidColorBrush x:Key="NodeVariableForeGround" Color="Yellow" />
     <SolidColorBrush x:Key="NodeMemberForeGround" Color="LawnGreen" />
-    <SolidColorBrush x:Key="NodeNumberForeGround" Color="Aqua" />
-    <SolidColorBrush x:Key="NodeStringForeGround" Color="HotPink" />
+    <SolidColorBrush x:Key="NodeNumberForeGround" Color="#DD82EE" />
+    <SolidColorBrush x:Key="NodeStringForeGround" Color="#0AFFF7" />
 
 
 </ResourceDictionary>

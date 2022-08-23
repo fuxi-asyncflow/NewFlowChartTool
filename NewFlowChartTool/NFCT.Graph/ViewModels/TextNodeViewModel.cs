@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
@@ -43,8 +44,6 @@ namespace NFCT.Graph.ViewModels
                 BorderBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BorderColors[i].R, BorderColors[i].G, BorderColors[i].B));
             }
 
-            OnThemeSwitch(Theme.Dark);
-
             LineColors = new Color[]
             {
                 Color.FromArgb(0xD5362E), Color.FromArgb(0x03950F), Color.FromArgb(0x0A6CC1), Color.FromArgb(0x808080)
@@ -57,6 +56,10 @@ namespace NFCT.Graph.ViewModels
                         System.Windows.Media.Color.FromRgb(LineColors[i].R, LineColors[i].G, LineColors[i].B));
             }
 
+            NodeTokenBrushes = new Brush[(int)TextToken.TokenType.End];
+
+            OnThemeSwitch(Theme.Dark);
+
         }
         public static double DefaultBorderWidth { get => 2.0; }
         public static double SelectedBorderWidth { get => 4.0; }
@@ -68,6 +71,8 @@ namespace NFCT.Graph.ViewModels
 
         public static Color[] LineColors;
         public static Brush[] LineBrushes;
+
+        public static Brush[] NodeTokenBrushes;
 
         public static void OnThemeSwitch(NFCT.Common.Theme theme)
         {
@@ -88,13 +93,23 @@ namespace NFCT.Graph.ViewModels
                 BorderBrushes[0] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0));
                 BorderBrushes[1] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0));
             }
+            BorderBrushes[2] = BackgroundBrushes[2];
+            BorderBrushes[3] = BackgroundBrushes[3];
+            BorderBrushes[4] = BackgroundBrushes[4];
+            BorderBrushes[5] = BackgroundBrushes[5];
+
+            NodeTokenBrushes[0] = Application.Current.FindResource("NodeForeGround") as SolidColorBrush;
+            NodeTokenBrushes[1] = Application.Current.FindResource("NodeVariableForeGround") as SolidColorBrush;
+            NodeTokenBrushes[2] = Application.Current.FindResource("NodeMemberForeGround") as SolidColorBrush;
+            NodeTokenBrushes[3] = Application.Current.FindResource("NodeNumberForeGround") as SolidColorBrush;
+            NodeTokenBrushes[4] = Application.Current.FindResource("NodeStringForeGround") as SolidColorBrush;
         }
     }
 
     public class BaseNodeViewModel : BindableBase, INode
     {
         public Node Node;
-       
+
         public BaseNodeViewModel(Node node, GraphPaneViewModel g)
         {
             Node = node;
@@ -210,6 +225,12 @@ namespace NFCT.Graph.ViewModels
                 BgType = NodeBgType.ACTION;
             else
                 BgType = NodeBgType.CONDITION;
+
+            OnParseEnd(pr);
+        }
+
+        public virtual void OnParseEnd(ParseResult pr)
+        {
         }
 
         #region COMMANDS
@@ -291,13 +312,23 @@ namespace NFCT.Graph.ViewModels
         #endregion
     }
 
+    public class TextTokenViewModel : BindableBase
+    {
+        public string Text { get; set; }
+        public TextToken.TokenType Type { get; set; }
+        public string  TipText { get; set; }
+        public Brush Color => CanvasNodeResource.NodeTokenBrushes[(int)Type];
+    }
+
     public class TextNodeViewModel : BaseNodeViewModel
     {
         public new TextNode Node { get; set; }
         public string Text { get => Node.Text; }
+        public ObservableCollection<TextTokenViewModel> Tokens { get; set; }
         public TextNodeViewModel(TextNode node, GraphPaneViewModel g) :base(node, g)
         {
             Node = node;
+            Tokens = new ObservableCollection<TextTokenViewModel>();
         }
 
         public override void ExitEditingMode(NodeAutoCompleteViewModel acVm, bool save)
@@ -308,7 +339,7 @@ namespace NFCT.Graph.ViewModels
                 Node.Text = acVm.Text;
                 RaisePropertyChanged(nameof(Text));
                 Owner.NeedLayout = true;
-                Owner.Graph.Build();
+                Owner.Build();
             }
 
             IsEditing = false;
@@ -317,6 +348,22 @@ namespace NFCT.Graph.ViewModels
         public override string ToString()
         {
             return $"[{nameof(TextNodeViewModel)}] {Text}";
+        }
+
+        public override void OnParseEnd(ParseResult pr)
+        {
+            if (pr.Tokens != null)
+            {
+                Tokens.Clear();
+                pr.Tokens.ForEach(token =>
+                {
+                    Tokens.Add(new TextTokenViewModel()
+                    {
+                        Text = Text.Substring(token.Start, token.End - token.Start),
+                        Type = token.Type
+                    });
+                });
+            }
         }
     }
 

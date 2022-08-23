@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
+using Antlr4.Runtime.Tree;
 using FlowChart.AST;
 using FlowChart.AST.Nodes;
 using FlowChart.Parser.ASTGenerator;
@@ -9,7 +10,8 @@ namespace FlowChart.Parser
 {
     public class Parser : IParser
     {
-        public ASTNode? Parse(string text)
+        public List<TextToken>? Tokens { get; set; }
+        public ASTNode? Parse(string text, ParserConfig cfg)
         {
             AntlrInputStream input = new AntlrInputStream(text);
             NodeParserLexer lexer = new NodeParserLexer(input);
@@ -32,6 +34,12 @@ namespace FlowChart.Parser
                 tree = parser.stat();
             }
             // System.Console.WriteLine(tree.ToStringTree(parser));
+            if (cfg.GetTokens)
+            {
+                Tokens = new List<TextToken>();
+                int pos = -1;
+                GetTokens(tree, ref pos);
+            }
 
             try
             {
@@ -44,6 +52,50 @@ namespace FlowChart.Parser
             }
 
             return null;
+        }
+
+        public TextToken.TokenType GetTokenType(int symbolType)
+        {
+            switch (symbolType)
+            {
+                case NodeParserLexer.VARIABLE:
+                    return TextToken.TokenType.Variable;
+                case NodeParserLexer.NUMBER:
+                    return TextToken.TokenType.Number;
+                case NodeParserLexer.STRING:
+                    return TextToken.TokenType.String;
+                case NodeParserLexer.NAME:
+                    return TextToken.TokenType.Member;
+                default:
+                    return TextToken.TokenType.Default;
+            }
+            
+        }
+
+        public void GetTokens(ParserRuleContext root, ref int pos)
+        {
+            if (root.ChildCount == 0)
+                return;
+            foreach (var child in root.children)
+            {
+                if (child is ParserRuleContext ruleContext)
+                {
+                    GetTokens(ruleContext, ref pos);
+                }
+                else if(child is TerminalNodeImpl term)
+                {
+                    var symbol = term.Symbol;
+                    if (symbol.StartIndex > pos + 1)
+                    {
+                        Tokens.Add(new TextToken(){Start = pos+1, End = symbol.StartIndex, Type = TextToken.TokenType.Default});
+                    }
+                    Tokens.Add(new TextToken()
+                    {
+                        Start = symbol.StartIndex, End = symbol.StartIndex + symbol.Text.Length, Type = GetTokenType(symbol.Type)
+                    });
+                    pos = symbol.StopIndex;
+                }
+            }
         }
     }
 }

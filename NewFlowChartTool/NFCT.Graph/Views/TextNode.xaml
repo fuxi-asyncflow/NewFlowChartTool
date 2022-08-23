@@ -32,11 +32,30 @@
                     x:Name="NodeTexts"
                     IsVisibleChanged="NodeTexts_OnIsVisibleChanged"
                     Visibility="{Binding IsEditing, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
-                    <TextBlock
+                    <ItemsControl ItemsSource="{Binding Tokens}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    FontSize="16"
+                                    Foreground="{Binding Color}"
+                                    Text="{Binding Text}" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+
+                    </ItemsControl>
+                    <!--
+                        TextBlock
                         Background="Transparent"
                         FontSize="16"
                         Foreground="{DynamicResource NodeForeGround}"
-                        Text="{Binding Text}" />
+                        Text="{Binding Text}" /
+                    -->
                 </StackPanel>
             </StackPanel>
 

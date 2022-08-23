@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlowChart.AST;
 using FlowChartCommon;
 
 namespace FlowChart.Core
@@ -86,9 +87,11 @@ namespace FlowChart.Core
         public Type.Type Type { get; set; }
         #endregion
 
-        public void Build()
+        public void Build(ParserConfig? cfg = null)
         {
-            Project.BuildGraph(this);
+            if (cfg == null)
+                cfg = new ParserConfig();
+            Project.BuildGraph(this, cfg);
         }
 
         public void AddNode(Node? node)

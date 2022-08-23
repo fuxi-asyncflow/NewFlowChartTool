@@ -40,6 +40,7 @@ namespace FlowChart.AST
         public string ErrorMessage { get; set; }
         public string EventName { get; set; }
         public GenerateContent Content { get; set; }
+        public List<TextToken>? Tokens { get; set; }
     }
 
     public interface ICodeGenerator
@@ -47,9 +48,36 @@ namespace FlowChart.AST
         public ParseResult GenerateCode(ASTNode ast);
     }
 
+    public class TextToken
+    {
+        public enum TokenType
+        {
+            Default = 0,
+            Variable = 1,
+            Member = 2,
+            Number = 3,
+            String = 4,
+            End = 5
+        }
+        public int Start;
+        public int End;
+        public TokenType Type;
+    }
+
+    public class ParserConfig
+    {
+        public ParserConfig()
+        {
+            GetTokens = false;
+        }
+
+        public bool GetTokens;
+    }
+
     public interface IParser
     {
-        public ASTNode? Parse(string text);
+        public ASTNode? Parse(string text, ParserConfig cfg);
+        public List<TextToken>? Tokens { get; }
     }
 
     public interface IASTNodeVisitor<T>

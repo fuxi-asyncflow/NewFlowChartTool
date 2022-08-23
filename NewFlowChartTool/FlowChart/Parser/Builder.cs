@@ -26,35 +26,42 @@ namespace FlowChart.Parser
         private ICodeGenFactory factory;
         public void Build(Project p)
         {
+            ParserConfig cfg = new ParserConfig();
             foreach (var graphKV in p.GraphDict)
             {
-                BuildGraph(graphKV.Value);
+                BuildGraph(graphKV.Value, cfg);
             }
         }
 
-        public void BuildGraph(Graph g)
+        public void BuildGraph(Graph g, ParserConfig cfg)
         {
+            if(cfg == null)
+                cfg = new ParserConfig();
             var generator = factory.CreateCodeGenerator(g.Project, g);
             foreach (var node in g.Nodes)
             {
                 if (node is TextNode textNode)
                 {
-                    BuildNode(textNode, generator);
+                    BuildNode(textNode, generator, cfg);
                 }
             }
         }
 
-        public void BuildNode(TextNode node, ICodeGenerator generator)
+        public void BuildNode(TextNode node, ICodeGenerator generator, ParserConfig cfg)
         {
             
-            var ast = parser.Parse(node.Text);
+            var ast = parser.Parse(node.Text, cfg);
             //var color = Console.ForegroundColor;
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine($"[parse]: {node.Text}");
             //Console.ForegroundColor = color;
             //Console.WriteLine($"ast: {ast}");
             if (ast != null)
-                node.OnParse(generator.GenerateCode(ast));
+            {
+                var pr = generator.GenerateCode(ast);
+                pr.Tokens = parser.Tokens;
+                node.OnParse(pr);
+            }
 
         }
     }

@@ -6,25 +6,30 @@
     xmlns:local="clr-namespace:NFCT.Graph.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="450"
-    d:DesignWidth="150"
+    d:DesignWidth="160"
     mc:Ignorable="d">
     <Grid>
         <Grid.Resources>
             <DataTemplate x:Key="NodeContent" />
         </Grid.Resources>
         <StackPanel Margin="10">
-            <Grid Background="{DynamicResource NodeActionBackGround}">
-                <StackPanel Margin="5" Orientation="Horizontal">
-                    <TextBlock Foreground="{DynamicResource NodeVariableForeGround}" Text="$a" />
-                    <TextBlock Foreground="{DynamicResource NodeForeGround}" Text=" = " />
-                    <TextBlock Foreground="{DynamicResource NodeMemberForeGround}" Text="test" />
-                    <TextBlock Foreground="{DynamicResource NodeForeGround}" Text="(" />
-                    <TextBlock Foreground="{DynamicResource NodeStringForeGround}">&quot;abc&quot;</TextBlock>
-                    <TextBlock Foreground="{DynamicResource NodeForeGround}" Text=", " />
-                    <TextBlock Foreground="{DynamicResource NodeNumberForeGround}" Text="123" />
-                    <TextBlock Foreground="{DynamicResource NodeForeGround}" Text=")" />
-                </StackPanel>
-            </Grid>
+            <Border
+                BorderBrush="{DynamicResource NodeActionBackGround}"
+                BorderThickness="3"
+                CornerRadius="3">
+                <Grid Background="{DynamicResource NodeActionBackGround}">
+                    <StackPanel Margin="5" Orientation="Horizontal">
+                        <TextBlock Foreground="{DynamicResource NodeVariableForeGround}" Text="$a" />
+                        <TextBlock Foreground="{DynamicResource NodeForeGround}" Text=" = " />
+                        <TextBlock Foreground="{DynamicResource NodeMemberForeGround}" Text="test" />
+                        <TextBlock Foreground="{DynamicResource NodeForeGround}" Text="(" />
+                        <TextBlock Foreground="{DynamicResource NodeStringForeGround}">&quot;abc&quot;</TextBlock>
+                        <TextBlock Foreground="{DynamicResource NodeForeGround}" Text=", " />
+                        <TextBlock Foreground="{DynamicResource NodeNumberForeGround}" Text="123" />
+                        <TextBlock Foreground="{DynamicResource NodeForeGround}" Text=")" />
+                    </StackPanel>
+                </Grid>
+            </Border>
             <Grid Height="20" />
             <Grid Background="{DynamicResource NodeConditionBackGround}">
                 <StackPanel Margin="5" Orientation="Horizontal">

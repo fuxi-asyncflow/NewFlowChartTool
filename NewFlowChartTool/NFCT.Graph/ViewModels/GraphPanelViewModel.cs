@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using FlowChart.AST;
 using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
@@ -153,6 +154,11 @@ namespace NFCT.Graph.ViewModels
             }
 
             return true;
+        }
+
+        public void Build()
+        {
+            Graph.Build(new ParserConfig(){GetTokens = true});
         }
 
         #region SCROLL
