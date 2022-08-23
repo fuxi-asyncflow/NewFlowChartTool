@@ -22,57 +22,27 @@ namespace NFCT.Graph.ViewModels
         static CanvasNodeResource()
         {
             EventHelper.Sub<NFCT.Common.Events.ThemeSwitchEvent, NFCT.Common.Theme>(OnThemeSwitch);
-            BackgroundColors = new Color[]
-            {
-                Color.White, 
-                Color.LightGray, 
-                Color.FromArgb(0xECB2AB), 
-                Color.FromArgb(0xB6D8EC), 
-                Color.FromArgb(0xC2E4C6), 
-                Color.FromArgb(0xECE1B0)
-            };
-            BorderColors = new Color[]
-            {
-                Color.Black, Color.Black, Color.FromArgb(0xDD786D)
-                , Color.FromArgb(0x67ACD4), Color.FromArgb(0x76C07F), Color.FromArgb(0xD5BD52)
-            };
-            BackgroundBrushes = new Brush[BackgroundColors.Length];
-            BorderBrushes = new Brush[BorderColors.Length];
-            for (int i = 0; i<BackgroundColors.Length; i++)
-            {
-                //BackgroundBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BackgroundColors[i].R, BackgroundColors[i].G, BackgroundColors[i].B));
-                BorderBrushes[i] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(BorderColors[i].R, BorderColors[i].G, BorderColors[i].B));
-            }
+            
+            BackgroundBrushes = new Brush[6];
+            
 
-            LineColors = new Color[]
-            {
-                Color.FromArgb(0xD5362E), Color.FromArgb(0x03950F), Color.FromArgb(0x0A6CC1), Color.FromArgb(0x808080)
-            };
-            LineBrushes = new Brush[LineColors.Length];
-            for (int i = 0; i < LineBrushes.Length; i++)
-            {
-                LineBrushes[i] =
-                    new SolidColorBrush(
-                        System.Windows.Media.Color.FromRgb(LineColors[i].R, LineColors[i].G, LineColors[i].B));
-            }
+           
+            LineBrushes = new Brush[4];
+
 
             NodeTokenBrushes = new Brush[(int)TextToken.TokenType.End];
 
             OnThemeSwitch(Theme.Dark);
 
         }
-        public static double DefaultBorderWidth { get => 2.0; }
-        public static double SelectedBorderWidth { get => 4.0; }
+        public static double DefaultBorderWidth { get => 0.0; }
+        public static double SelectedBorderWidth { get => 3.0; }
 
-        public static Color[] BackgroundColors;
+        
         public static Brush[] BackgroundBrushes;
-        public static Color[] BorderColors;
-        public static Brush[] BorderBrushes;
-
-        public static Color[] LineColors;
         public static Brush[] LineBrushes;
-
         public static Brush[] NodeTokenBrushes;
+        public static Brush SelectedNodeBorderBrush;
 
         public static void OnThemeSwitch(NFCT.Common.Theme theme)
         {
@@ -83,20 +53,27 @@ namespace NFCT.Graph.ViewModels
             BackgroundBrushes[4] = Application.Current.FindResource("NodeActionBackGround") as SolidColorBrush;
             BackgroundBrushes[5] = Application.Current.FindResource("NodeWaitBackGround") as SolidColorBrush;
 
+            LineBrushes[0] = Application.Current.FindResource("LineRedColor") as SolidColorBrush;
+            LineBrushes[1] = Application.Current.FindResource("LineGreenColor") as SolidColorBrush;
+            LineBrushes[2] = Application.Current.FindResource("LineBlueColor") as SolidColorBrush;
+            LineBrushes[3] = Application.Current.FindResource("LineGrayColor") as SolidColorBrush;
+
             if (theme == Theme.Dark)
             {
-                BorderBrushes[0] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(127, 127, 127));
-                BorderBrushes[1] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(127, 127, 127));
+                //BorderBrushes[0] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(127, 127, 127));
+                //BorderBrushes[1] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(127, 127, 127));
+                SelectedNodeBorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(224, 224, 0));
             }
             else
             {
-                BorderBrushes[0] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0));
-                BorderBrushes[1] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0));
+                //BorderBrushes[0] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0));
+                //BorderBrushes[1] = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 0));
+                SelectedNodeBorderBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(127, 127, 127));
             }
-            BorderBrushes[2] = BackgroundBrushes[2];
-            BorderBrushes[3] = BackgroundBrushes[3];
-            BorderBrushes[4] = BackgroundBrushes[4];
-            BorderBrushes[5] = BackgroundBrushes[5];
+            //BorderBrushes[2] = BackgroundBrushes[2];
+            //BorderBrushes[3] = BackgroundBrushes[3];
+            //BorderBrushes[4] = BackgroundBrushes[4];
+            //BorderBrushes[5] = BackgroundBrushes[5];
 
             NodeTokenBrushes[0] = Application.Current.FindResource("NodeForeGround") as SolidColorBrush;
             NodeTokenBrushes[1] = Application.Current.FindResource("NodeVariableForeGround") as SolidColorBrush;
@@ -207,7 +184,7 @@ namespace NFCT.Graph.ViewModels
         private NodeBgType _bgType;
         public NodeBgType BgType { get => _bgType; set => SetProperty(ref _bgType, value, nameof(BgType)); }
 
-        public void OnThemeSwitch()
+        public virtual void OnThemeSwitch()
         {
             //TODO some graph theme take effect after close and open again
             RaisePropertyChanged(nameof(BgType));
@@ -318,6 +295,11 @@ namespace NFCT.Graph.ViewModels
         public TextToken.TokenType Type { get; set; }
         public string  TipText { get; set; }
         public Brush Color => CanvasNodeResource.NodeTokenBrushes[(int)Type];
+
+        public void OnThemeSwitch()
+        {
+            RaisePropertyChanged(nameof(Color));
+        }
     }
 
     public class TextNodeViewModel : BaseNodeViewModel
@@ -348,6 +330,16 @@ namespace NFCT.Graph.ViewModels
         public override string ToString()
         {
             return $"[{nameof(TextNodeViewModel)}] {Text}";
+        }
+
+        public override void OnThemeSwitch()
+        {
+            RaisePropertyChanged(nameof(BgType));
+            //TODO some graph theme take effect after close and open again
+            foreach (var textTokenViewModel in Tokens)
+            {
+                textTokenViewModel.OnThemeSwitch();
+            }
         }
 
         public override void OnParseEnd(ParseResult pr)

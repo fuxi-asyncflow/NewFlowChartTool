@@ -194,6 +194,11 @@ namespace NFCT.Graph.ViewModels
         }
 
 
+        public void OnThemeSwitch()
+        {
+            RaisePropertyChanged(nameof(ConnType));
+        }
+
 
         public void OnKeyDown(KeyEventArgs args)
         {

@@ -367,6 +367,11 @@ namespace NFCT.Graph.ViewModels
             {
                 nodeVm.OnThemeSwitch();
             }
+
+            foreach (var connector in Connectors)
+            {
+                connector.OnThemeSwitch();
+            }
         }
 
         #endregion

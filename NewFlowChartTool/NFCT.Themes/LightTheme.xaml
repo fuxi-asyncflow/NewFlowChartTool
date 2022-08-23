@@ -38,9 +38,14 @@
     <SolidColorBrush x:Key="NodeErrorBackGround" Color="#ECB2AB" />
 
     <SolidColorBrush x:Key="NodeForeGround" Color="Black" />
-    <SolidColorBrush x:Key="NodeVariableForeGround" Color="Yellow" />
-    <SolidColorBrush x:Key="NodeMemberForeGround" Color="LawnGreen" />
-    <SolidColorBrush x:Key="NodeNumberForeGround" Color="Aqua" />
-    <SolidColorBrush x:Key="NodeStringForeGround" Color="HotPink" />
+    <SolidColorBrush x:Key="NodeVariableForeGround" Color="#404000" />
+    <SolidColorBrush x:Key="NodeMemberForeGround" Color="DarkGreen" />
+    <SolidColorBrush x:Key="NodeNumberForeGround" Color="DarkMagenta" />
+    <SolidColorBrush x:Key="NodeStringForeGround" Color="DarkBlue" />
+
+    <SolidColorBrush x:Key="LineRedColor" Color="#D5362E" />
+    <SolidColorBrush x:Key="LineGreenColor" Color="#03950F" />
+    <SolidColorBrush x:Key="LineBlueColor" Color="#0A6CC1" />
+    <SolidColorBrush x:Key="LineGrayColor" Color="#808080" />
 
 </ResourceDictionary>

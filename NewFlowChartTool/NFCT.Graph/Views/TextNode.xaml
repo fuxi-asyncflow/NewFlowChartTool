@@ -27,7 +27,7 @@
             BorderBrush="{Binding BgType, Converter={StaticResource BorderColorConverter}, Mode=OneWay}"
             BorderThickness="{Binding IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}"
             CornerRadius="3">
-            <StackPanel x:Name="NodeStack" Margin="4">
+            <StackPanel x:Name="NodeStack" Margin="6">
                 <StackPanel
                     x:Name="NodeTexts"
                     IsVisibleChanged="NodeTexts_OnIsVisibleChanged"

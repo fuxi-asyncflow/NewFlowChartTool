@@ -46,5 +46,10 @@
     <SolidColorBrush x:Key="NodeNumberForeGround" Color="#DD82EE" />
     <SolidColorBrush x:Key="NodeStringForeGround" Color="#0AFFF7" />
 
+    <SolidColorBrush x:Key="LineRedColor" Color="Red" />
+    <SolidColorBrush x:Key="LineGreenColor" Color="Green" />
+    <SolidColorBrush x:Key="LineBlueColor" Color="Blue" />
+    <SolidColorBrush x:Key="LineGrayColor" Color="#808080" />
+
 
 </ResourceDictionary>
