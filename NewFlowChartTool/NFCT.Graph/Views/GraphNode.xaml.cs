@@ -53,5 +53,11 @@ namespace NFCT.Graph.Views
                 //e.Handled = true;
             }
         }
+
+        private void Node_OnRequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
+        {
+            e.Handled = true;
+            //throw new NotImplementedException();
+        }
     }
 }

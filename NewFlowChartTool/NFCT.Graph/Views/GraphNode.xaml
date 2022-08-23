@@ -37,6 +37,7 @@
         utility:SizeObserver.ObservedHeight="{Binding ActualHeight, Mode=OneWayToSource}"
         utility:SizeObserver.ObservedWidth="{Binding ActualWidth, Mode=OneWayToSource}"
         Focusable="True"
+        RequestBringIntoView="Node_OnRequestBringIntoView"
         MouseDown="NodeGrid_OnMouseDown">
         <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource GraphNodesTemplateSelector}" />
         <b:Interaction.Triggers>

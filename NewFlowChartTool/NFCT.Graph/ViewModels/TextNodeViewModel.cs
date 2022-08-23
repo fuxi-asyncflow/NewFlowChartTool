@@ -151,7 +151,6 @@ namespace NFCT.Graph.ViewModels
             set
             {
                 SetProperty(ref _isSelect, value, nameof(IsSelect));
-                IsFocused = _isSelect;
                 RaisePropertyChanged(nameof(Left));
                 RaisePropertyChanged(nameof(Top));
             }
