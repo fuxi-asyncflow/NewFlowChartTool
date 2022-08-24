@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using FlowChartCommon;
 using NFCT.Common;
 using NFCT.Graph.ViewModels;
 
@@ -87,13 +88,38 @@ namespace NFCT.Graph.Views
 
         private void EditBox_OnKeyDown(object sender, KeyEventArgs e)
         {
+            Logger.WARN($"node editbox key down: {e.Key}");
             if (e.Key == Key.Enter)
             {
                 OnExit?.Invoke(this, true);
                 e.Handled = true;
             }
+            else if (e.Key == Key.Down)
+            {
+                Logger.WARN($"prompts: {PromptsListBox.SelectedIndex}");
+                PromptsListBox.SelectedIndex++;
+                PromptsListBox.ScrollIntoView(PromptsListBox.SelectedItem);
+            }
+            else if (e.Key == Key.Up)
+            {
+                if (PromptsListBox.SelectedIndex < 1) return;
+                PromptsListBox.SelectedIndex--;
+                PromptsListBox.ScrollIntoView(PromptsListBox.SelectedItem);
+            }
             else if (e.Key == Key.Escape)
                 OnExit?.Invoke(this, false);
+
+        }
+
+        private void EditBox_OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var newVisibility = (bool)e.NewValue;
+            if (newVisibility)
+            {
+                PromptsListBox.Focus();
+                Keyboard.Focus(PromptsListBox);
+                return;
+            }
         }
     }
 }

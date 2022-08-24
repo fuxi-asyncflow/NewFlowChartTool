@@ -234,8 +234,11 @@ namespace NFCT.Graph.ViewModels
                 case Key.Up:
                 case Key.Left:
                 case Key.Right:
-                    Owner.FindNearestItem(X, Y, args.Key, isCtrlDown);
-                    args.Handled = true;
+                    if (!IsEditing)
+                    {
+                        Owner.FindNearestItem(X, Y, args.Key, isCtrlDown);
+                        args.Handled = true;
+                    }
                     break;
             }
 

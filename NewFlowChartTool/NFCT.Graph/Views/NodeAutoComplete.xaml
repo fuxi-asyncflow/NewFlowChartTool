@@ -12,13 +12,50 @@
     d:DesignWidth="800"
     mvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ControlTemplate x:Key="AutoCompleteListBoxItemTemplate" TargetType="ListBoxItem">
+            <Border x:Name="Border" SnapsToDevicePixels="true">
+                <ContentPresenter />
+            </Border>
+        </ControlTemplate>
+
+    </UserControl.Resources>
     <Grid>
         <TextBox
             x:Name="EditBox"
             FontSize="16"
             IsReadOnly="False"
-            KeyDown="EditBox_OnKeyDown"
+            IsVisibleChanged="EditBox_OnIsVisibleChanged"
             LostFocus="EditBox_OnLostFocus"
+            PreviewKeyDown="EditBox_OnKeyDown"
             Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        <Popup
+            x:Name="AutoCompletePopup"
+            MinWidth="200"
+            IsOpen="True"
+            PlacementTarget="{Binding ElementName=EditBox}">
+            <ListBox
+                x:Name="PromptsListBox"
+                MaxHeight="400"
+                ItemsSource="{Binding Prompts}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Aqua">
+                            <Grid Background="{Binding BackGround}">
+                                <TextBlock Text="{Binding Text}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Template" Value="{StaticResource AutoCompleteListBoxItemTemplate}" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </Popup>
+
     </Grid>
 </UserControl>
