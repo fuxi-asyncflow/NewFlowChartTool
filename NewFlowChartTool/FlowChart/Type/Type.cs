@@ -58,7 +58,7 @@ namespace FlowChart.Type
         public Type(string name)
         : base(name)
         {
-            MemberDict = new Dictionary<string, Member>();
+            MemberDict = new SortedDictionary<string, Member>();
             CompatibleTypes = new List<Type>();
             BaseTypes = new List<Type>();
             IsBuiltinType = false;
@@ -66,7 +66,8 @@ namespace FlowChart.Type
 
         public List<Type> BaseTypes;
 
-        public Dictionary<string, Member> MemberDict;
+        public SortedDictionary<string, Member> MemberDict;
+        
 
         public List<Type> CompatibleTypes;
         public bool IsBuiltinType { get; set; }
