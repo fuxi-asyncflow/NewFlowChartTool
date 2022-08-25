@@ -129,7 +129,16 @@ namespace FlowChart.LuaCodeGen
 
         public NodeInfo Visit(VariableNode node)
         {
-            var v = G.GetOrAddVariable(node.Text);
+            Variable? v = null;
+            if (OnlyGetType)
+            {
+                v = G.GetVar(node.Text);
+                if (v == null)
+                    return new NodeInfo() { Code = $"get_var(\"{node.Text}\")", Type = v.Type };
+
+            }
+            else
+                v = G.GetOrAddVariable(node.Text);
             return new NodeInfo()
             {
                 Code = $"get_var(\"{node.Text}\")",

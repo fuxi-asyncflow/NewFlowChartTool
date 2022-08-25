@@ -64,6 +64,11 @@ namespace FlowChart.Type
             IsBuiltinType = false;
         }
 
+        public override string ToString()
+        {
+            return $"[Type] {Name}";
+        }
+
         public List<Type> BaseTypes;
 
         public SortedDictionary<string, Member> MemberDict;

@@ -65,7 +65,7 @@ namespace NewFlowChartTool
         private void OnPreviewGotKeyboardFocus(object sender,
             KeyboardFocusChangedEventArgs e)
         {
-            Console.WriteLine($"keyboard focus changed : {sender} {e}");
+            //Console.WriteLine($"keyboard focus changed : {sender} {e}");
         }
 
         //private void Application_Startup(object sender, StartupEventArgs e)

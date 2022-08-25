@@ -88,7 +88,7 @@ namespace NFCT.Graph.Views
 
         private void EditBox_OnKeyDown(object sender, KeyEventArgs e)
         {
-            Logger.WARN($"node editbox key down: {e.Key}");
+            Logger.DBG($"node editbox key down: {e.Key}");
             if (e.Key == Key.Enter)
             {
                 if (AutoCompletePopup.IsOpen)

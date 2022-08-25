@@ -42,7 +42,7 @@ namespace FlowChart.Parser.ASTGenerator
 
         public override ASTNode VisitAtom_variable(NodeParserParser.Atom_variableContext context)
         {
-            return new StringNode() { Text = context.VARIABLE().GetText() };
+            return new VariableNode() { Text = context.VARIABLE().GetText().Substring(1) };
         }
 
         public override ASTNode VisitAtom_true(NodeParserParser.Atom_trueContext context)
