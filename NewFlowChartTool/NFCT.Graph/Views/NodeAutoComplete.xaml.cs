@@ -91,7 +91,18 @@ namespace NFCT.Graph.Views
             Logger.WARN($"node editbox key down: {e.Key}");
             if (e.Key == Key.Enter)
             {
-                OnExit?.Invoke(this, true);
+                if (AutoCompletePopup.IsOpen)
+                {
+                    if (PromptsListBox.SelectedItem != null)
+                    {
+                        ReplaceWithPrompt((PromptItemViewModel)(PromptsListBox.SelectedItem));
+                    }
+                    AutoCompletePopup.IsOpen = false;
+                }
+                else
+                {
+                    OnExit?.Invoke(this, true);
+                }
                 e.Handled = true;
             }
             else if (e.Key == Key.Down)
@@ -106,9 +117,19 @@ namespace NFCT.Graph.Views
                 PromptsListBox.SelectedIndex--;
                 PromptsListBox.ScrollIntoView(PromptsListBox.SelectedItem);
             }
+            else if (e.Key == Key.Tab)
+            {
+                if (PromptsListBox.SelectedIndex == -1)
+                    PromptsListBox.SelectedIndex = 0;
+                var item = PromptsListBox.SelectedItem as PromptItemViewModel;
+                if (item != null)
+                {
+                    ReplaceWithPrompt(item);
+                }
+                e.Handled = true;
+            }
             else if (e.Key == Key.Escape)
                 OnExit?.Invoke(this, false);
-
         }
 
         private void EditBox_OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -120,6 +141,84 @@ namespace NFCT.Graph.Views
                 Keyboard.Focus(PromptsListBox);
                 return;
             }
+        }
+
+        private int _oldPosition = -1;
+        public void OnCursorPositionChange(int newPosition)
+        {
+            if (_oldPosition == newPosition) return;
+            _oldPosition = newPosition;
+            var vm = DataContext as NodeAutoCompleteViewModel;
+            if(vm == null) return;
+
+            //if (!vm.IsEditing)
+            //{
+            //    Logger.ERR(string.Format("node is not in editing when actb is shown: {0} {1}->{2}", vm.Command,
+            //        _oldPosition, newPosition));
+            //}
+            Logger.DBG("cur pos " + newPosition);
+            string currentText = vm.Text;
+            if (_oldPosition < 0)
+            {
+                _oldPosition = 0;   // 保证下面的substring不会出错
+            }
+            string leftCmd = currentText.Substring(0, _oldPosition);
+            string rightCmd = currentText.Substring(_oldPosition);
+            vm.PreparePromptList(leftCmd, rightCmd);
+
+            if (!AutoCompletePopup.IsOpen)
+            {
+                AutoCompletePopup.IsOpen = true;
+            }
+
+            PromptsListBox.SelectedIndex = -1;
+
+            // 显示tooltip
+            //if (vm.ActbFuncInfo != null)
+            //{
+            //    SetActbTooltipContent(vm.ActbFuncInfo, vm.ParameterPos);
+            //    ActbToolTip.PlacementTarget = CommandEditBox;
+            //    ActbToolTip.IsOpen = true;
+            //}
+            //else
+            //{
+            //    ActbToolTip.IsOpen = false;
+            //}
+
+        }
+
+        private void EditBox_OnSelectionChanged(object sender, RoutedEventArgs e)
+        {
+            int curPos = -1;
+            if (EditBox.SelectionLength == 0)
+            {
+                curPos = EditBox.SelectionStart;
+            }
+            OnCursorPositionChange(curPos);
+        }
+
+        private void ReplaceWithPrompt(PromptItemViewModel prompt)
+        {
+            string currentText = EditBox.Text;
+            string leftCmd = currentText.Substring(0, _oldPosition);
+            string rightCmd = currentText.Substring(_oldPosition);
+            var vm = DataContext as NodeAutoCompleteViewModel;
+            if (vm == null) return;
+            int curPos = 0;
+            EditBox.Text = vm.ApplyPrompt(prompt, ref curPos);
+
+            AutoCompletePopup.IsOpen = false;
+            if (PromptsListBox.Items.Count > 0)
+            {
+                PromptsListBox.ScrollIntoView(PromptsListBox.Items[0]);
+            }
+            // Set Cursor Position
+            EditBox.SelectionStart = curPos;
+            EditBox.SelectionLength = 0;
+            OnCursorPositionChange(curPos);
+            // 记录该接口已被使用
+            PromptItemViewModel.UsedPrompts.Add(prompt.Text.ToLower());
+            prompt.UseCount++;
         }
     }
 }

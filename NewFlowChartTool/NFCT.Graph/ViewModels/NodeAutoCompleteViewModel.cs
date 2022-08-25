@@ -49,7 +49,7 @@ namespace NFCT.Graph.ViewModels
         }
 
         public bool IsFunction { get; }
-
+        public int ParameterCount { get; set; }
         public PromptType Type { get; private set; }
 
         private string _text;
@@ -199,8 +199,9 @@ abc + test(a,b).ob+xyz
 
         private FlowChart.Type.Type? GetOwnerType(string ownerStr)
         {
-            throw new NotImplementedException();
-            //return Unit.GetOwnerType(ownerStr);
+            var project = GraphVm.Graph.Project;
+            var builder = project.Builder;
+            return builder.GetTextType(GraphVm.Graph, ownerStr);
         }
 
         #endregion
@@ -578,6 +579,17 @@ abc + test(a,b).ob+xyz
             //     //Prompts[0].IsSelected = true;
             // }
             Logger.DBG("prompt count " + Prompts.Count);
+        }
+
+        public string ApplyPrompt(PromptItemViewModel prompt, ref int cursorPos)
+        {
+            string replaceResult = _prehold + prompt.Text;
+            cursorPos = replaceResult.Length;
+            if (prompt.IsFunction && prompt.ParameterCount > 0)
+            {
+                cursorPos--;
+            }
+            return replaceResult + _posthold;
         }
 
 

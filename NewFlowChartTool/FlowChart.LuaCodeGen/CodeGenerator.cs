@@ -20,14 +20,22 @@ namespace FlowChart.LuaCodeGen
         public Project P;
         public Graph G;
         public ParseResult Pr;
+        public bool OnlyGetType;
 
-        public ParseResult GenerateCode(ASTNode ast)
+        public ParseResult GenerateCode(ASTNode ast, ParserConfig cfg)
         {
+            OnlyGetType = cfg.OnlyGetType;
             Pr = new ParseResult();
             try
             {
                 var nodeInfo = ast.OnVisit(this);
+                if (OnlyGetType)
+                {
+                    Pr.Type = nodeInfo.Type;
+                    return Pr;
+                }
                 PrepareCode(nodeInfo);
+                
                 if (!string.IsNullOrEmpty(Pr.ErrorMessage))
                     Console.WriteLine(Pr.ErrorMessage);
                 else
@@ -187,6 +195,14 @@ namespace FlowChart.LuaCodeGen
             {
                 Error($"cannot find method `{node.FuncName}`");
                 return NodeInfo.ErrorNodeInfo;
+            }
+
+            if (OnlyGetType)
+            {
+                return new NodeInfo()
+                {
+                    Type = method.Type
+                };
             }
 
             // check func args

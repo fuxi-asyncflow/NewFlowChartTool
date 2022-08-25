@@ -28,6 +28,7 @@
             IsVisibleChanged="EditBox_OnIsVisibleChanged"
             LostFocus="EditBox_OnLostFocus"
             PreviewKeyDown="EditBox_OnKeyDown"
+            SelectionChanged="EditBox_OnSelectionChanged"
             Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         <Popup
             x:Name="AutoCompletePopup"

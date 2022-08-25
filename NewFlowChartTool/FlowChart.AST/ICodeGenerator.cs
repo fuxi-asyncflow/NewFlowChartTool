@@ -41,11 +41,12 @@ namespace FlowChart.AST
         public string EventName { get; set; }
         public GenerateContent Content { get; set; }
         public List<TextToken>? Tokens { get; set; }
+        public object? Type { get; set; }
     }
 
     public interface ICodeGenerator
     {
-        public ParseResult GenerateCode(ASTNode ast);
+        public ParseResult GenerateCode(ASTNode ast, ParserConfig cfg);
     }
 
     public class TextToken
@@ -69,9 +70,11 @@ namespace FlowChart.AST
         public ParserConfig()
         {
             GetTokens = false;
+            OnlyGetType = false; // used for autoclomplete
         }
 
         public bool GetTokens;
+        public bool OnlyGetType;
     }
 
     public interface IParser

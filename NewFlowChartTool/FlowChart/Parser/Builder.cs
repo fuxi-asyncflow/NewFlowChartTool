@@ -58,10 +58,25 @@ namespace FlowChart.Parser
             //Console.WriteLine($"ast: {ast}");
             if (ast != null)
             {
-                var pr = generator.GenerateCode(ast);
+                var pr = generator.GenerateCode(ast, cfg);
                 pr.Tokens = parser.Tokens;
                 node.OnParse(pr);
             }
+        }
+
+        public FlowChart.Type.Type? GetTextType(Graph g, string text)
+        {
+            var cfg = new ParserConfig() { OnlyGetType = true };
+
+            var ast = parser.Parse(text, cfg);
+            if (ast != null)
+            {
+                var generator = factory.CreateCodeGenerator(g.Project, g);
+                var pr = generator.GenerateCode(ast, cfg);
+                return pr.Type as FlowChart.Type.Type;
+            }
+
+            return null;
 
         }
     }
