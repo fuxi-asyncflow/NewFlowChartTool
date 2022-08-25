@@ -40,6 +40,14 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             saver.SaveProject(project);
         }
+
+        public static Project CreateNewProject(string path)
+        {
+            var p = new Project(new DefaultProjectFactory()) {Path = path};
+            var factory = new MemoryProjectFactory();
+            factory.Create(p);
+            return p;
+        }
     }
 
     public class Saver

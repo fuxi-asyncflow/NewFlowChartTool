@@ -42,6 +42,7 @@ namespace NewFlowChartTool.ViewModels
 
             OpenProjectCommand = new DelegateCommand(OpenProject, () => CurrentProject == null);
             SaveProjectCommand = new DelegateCommand(SaveProject, () => CurrentProject != null);
+            NewProjectCommand = new DelegateCommand(NewProject, () => CurrentProject == null);
             CloseProjectCommand = new DelegateCommand(CloseProject, () => CurrentProject != null);
             BuildAllCommand = new DelegateCommand(BuildAll, () => CurrentProject != null);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
@@ -52,7 +53,7 @@ namespace NewFlowChartTool.ViewModels
             _ea.GetEvent<GraphOpenEvent>().Subscribe(OnOpenGraph);
             EventHelper.Sub<GraphCloseEvent, Graph>(OnCloseGraph);
 #if DEBUG
-            TestOpenProject();
+            //TestOpenProject();
 #endif
         }
 
@@ -90,6 +91,7 @@ namespace NewFlowChartTool.ViewModels
         #region COMMAND
         public DelegateCommand OpenProjectCommand { get; private set; }
         public DelegateCommand SaveProjectCommand { get; private set; }
+        public DelegateCommand NewProjectCommand { get; private set; }
         public DelegateCommand CloseProjectCommand { get; private set; }
         public DelegateCommand SwitchThemeCommand { get; private set; }
         public DelegateCommand BuildAllCommand { get; private set; }
@@ -114,8 +116,6 @@ namespace NewFlowChartTool.ViewModels
 
         public void OpenProject()
         {
-            
-
             if (CurrentProject != null)
             {
                 MessageBox.Show("please close project before open another project");
@@ -143,6 +143,19 @@ namespace NewFlowChartTool.ViewModels
             CurrentProject = p;
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
             _ea.GetEvent<ProjectOpenEvent>().Publish(p);
+        }
+
+        public void NewProject()
+        {
+            var folderPath = Dialogs.ChooseFolder();
+            if (folderPath == null)
+                return;
+
+            var p = DefaultProjectFactory.CreateNewProject(folderPath);
+            CurrentProject = p;
+            p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
+            _ea.GetEvent<ProjectOpenEvent>().Publish(p);
+            p.Save();
         }
 
         public void SwitchTheme()

@@ -86,15 +86,13 @@ namespace ProjectFactory
             AddEvents(project);
             project.AddGraph(CreateTestGraph_1(monsterType));
             project.AddGraph(CreateTestGraph_2(monsterType));
-
-            Save(project);
         }
 
         public void Save(Project project)
         {
             //Console.WriteLine("nothing to do when save memory project");
-            var saver = new Saver();
-            saver.SaveProject(project);
+            //var saver = new Saver();
+            //saver.SaveProject(project);
         }
     }
 }

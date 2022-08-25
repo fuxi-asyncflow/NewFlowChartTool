@@ -23,7 +23,10 @@
                     <Setter Property="Width" Value="48" />
                 </Style>
             </StackPanel.Resources>
-            <Button Click="ButtonMinimize_OnClick" Content="{StaticResource Icon_MinimizeWindow}" Style="{StaticResource MinMaxCloseButtonStyle}" />
+            <Button
+                Click="ButtonMinimize_OnClick"
+                Content="{StaticResource Icon_MinimizeWindow}"
+                Style="{StaticResource MinMaxCloseButtonStyle}" />
             <Button
                 x:Name="RestoreButton"
                 Click="ButtonRestore_OnClick"
@@ -46,6 +49,8 @@
                 <MenuItem Header="File">
                     <MenuItem Command="{Binding OpenProjectCommand}" Header="Open Project" />
                     <MenuItem Command="{Binding SaveProjectCommand}" Header="Save Project" />
+                    <Separator />
+                    <MenuItem Command="{Binding NewProjectCommand}" Header="New Project" />
                     <MenuItem Command="{Binding CloseProjectCommand}" Header="Close Project" />
                 </MenuItem>
                 <MenuItem Header="Build">
