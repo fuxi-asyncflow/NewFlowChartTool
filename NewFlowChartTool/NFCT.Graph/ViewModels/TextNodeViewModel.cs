@@ -317,10 +317,14 @@ namespace NFCT.Graph.ViewModels
 
         public override void ExitEditingMode(NodeAutoCompleteViewModel acVm, bool save)
         {
+            // avoid func is called twice: first called by Key.Esc, then called by LostFocus
+            if (IsEditing == false)
+                return;
             Logger.DBG($"[{nameof(TextNodeViewModel)}] ExitEditingMode");
             if (save)
             {
                 Node.Text = acVm.Text;
+                Logger.DBG($"node text is change to {Node.Text}");
                 RaisePropertyChanged(nameof(Text));
                 Owner.NeedLayout = true;
                 Owner.Build();

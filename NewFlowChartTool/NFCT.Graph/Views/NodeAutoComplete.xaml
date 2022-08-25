@@ -29,7 +29,13 @@
             LostFocus="EditBox_OnLostFocus"
             PreviewKeyDown="EditBox_OnKeyDown"
             SelectionChanged="EditBox_OnSelectionChanged"
-            Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TextBox.ToolTip>
+                <ToolTip x:Name="FuncInfoToolTip" Placement="Top">
+                    <TextBlock x:Name="FuncInfoToolTipText" />
+                </ToolTip>
+            </TextBox.ToolTip>
+        </TextBox>
         <Popup
             x:Name="AutoCompletePopup"
             MinWidth="200"

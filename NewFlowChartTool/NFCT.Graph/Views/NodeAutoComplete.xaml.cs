@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using FlowChart.Type;
 using FlowChartCommon;
 using NFCT.Common;
 using NFCT.Graph.ViewModels;
@@ -83,6 +84,10 @@ namespace NFCT.Graph.Views
 
         private void EditBox_OnLostFocus(object sender, RoutedEventArgs e)
         {
+            if(FuncInfoToolTip.IsOpen)
+                FuncInfoToolTip.IsOpen = false;
+            if(AutoCompletePopup.IsOpen)
+                AutoCompletePopup.IsOpen = false;
             OnExit?.Invoke(this, true);
         }
 
@@ -173,17 +178,16 @@ namespace NFCT.Graph.Views
 
             PromptsListBox.SelectedIndex = -1;
 
-            // 显示tooltip
-            //if (vm.ActbFuncInfo != null)
-            //{
-            //    SetActbTooltipContent(vm.ActbFuncInfo, vm.ParameterPos);
-            //    ActbToolTip.PlacementTarget = CommandEditBox;
-            //    ActbToolTip.IsOpen = true;
-            //}
-            //else
-            //{
-            //    ActbToolTip.IsOpen = false;
-            //}
+            if (vm.OutsideFuncInfo != null)
+            {
+                SetActbTooltipContent(vm.OutsideFuncInfo, vm.ParameterPos);
+                FuncInfoToolTip.PlacementTarget = EditBox;
+                FuncInfoToolTip.IsOpen = true;
+            }
+            else
+            {
+                FuncInfoToolTip.IsOpen = false;
+            }
 
         }
 
@@ -219,6 +223,30 @@ namespace NFCT.Graph.Views
             // 记录该接口已被使用
             PromptItemViewModel.UsedPrompts.Add(prompt.Text.ToLower());
             prompt.UseCount++;
+        }
+
+        private void SetActbTooltipContent(Method func, int pos)
+        {
+            var inlines = FuncInfoToolTipText.Inlines;
+            inlines.Clear();
+            inlines.Add(new Run(func.Name + "( \n"));
+            int i = 0;
+            foreach (var member in func.Parameters)
+            {
+                string paraStr = string.Format("{0} {1}", member.Type, member.Name);
+                if (!string.IsNullOrEmpty(member.Default))
+                {
+                    paraStr = String.Format("[{0} = {1}]", paraStr, member.Default);
+                }
+                paraStr = paraStr + ", " + member.Description + "\n";
+                inlines.Add(new Run(paraStr)
+                {
+                    Foreground = (i == pos) ? Brushes.Red : Brushes.Black,
+                    FontSize = (i == pos) ? 16 : 12,
+                });
+                i++;
+            }
+            inlines.Add(new Run(")"));
         }
     }
 }

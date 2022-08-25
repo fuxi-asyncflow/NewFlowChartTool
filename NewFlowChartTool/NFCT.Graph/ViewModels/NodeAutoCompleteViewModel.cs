@@ -207,6 +207,8 @@ abc + test(a,b).ob+xyz
         #endregion
 
         #region prepare promotions
+        public Method? OutsideFuncInfo { get; set; }
+        public int ParameterPos { get; set; }
 
         public void PreparePromptList(string leftCmd, string rightCmd)
         {
@@ -243,26 +245,24 @@ abc + test(a,b).ob+xyz
                     type = GetOwnerType(ownerString);
                 }
                 Logger.DBG(string.Format("inside function {0} of type {1}", funcName, type));
-                // 根据type与funcname 获得接口参数信息
-                //ActbFuncInfo = null;
-                //type = Project.UnwrapTableType(type);
-                //var category = MainViewModel.Inst.ActiveProject.GetCategoryByName(type);
-                //IMember member = null;
-                //if (category != null)
-                //{
-                //    member = category.GetMemberWithInherit(funcName);
-                //}
-                //if (member == null && type == "Global")
-                //{
-                //    category = MainViewModel.Inst.ActiveProject.GetCategoryByName(Unit.Unit.CategoryName);
-                //    member = category.GetMemberWithInherit(funcName);
-                //}
-                //ActbFuncInfo = member;
-                //// 如果接口参数获得成功
-                //if (member != null)
-                //{
-                //    ParameterPos = ParseParametersInCmd(leftCmd.Substring(leftPos + 1));
-                //}
+
+                OutsideFuncInfo = null;
+
+                if (type != null)
+                {
+                    OutsideFuncInfo = type.FindMember(funcName) as Method;
+                }
+                if (OutsideFuncInfo == null && type == BuiltinTypes.GlobalType) //TODO
+                {
+                    type = GraphVm.Graph.Type;
+                    OutsideFuncInfo = type.FindMember(funcName) as Method;
+                }
+               
+                // 如果接口参数获得成功
+                if (OutsideFuncInfo != null)
+                {
+                    ParameterPos = ParseParametersInCmd(leftCmd.Substring(leftPos + 1));
+                }
 
             }
 
@@ -283,7 +283,7 @@ abc + test(a,b).ob+xyz
                     AddPromptCategoryMembers(BuiltinTypes.GlobalType);
                     AddPromptCategoryMembers(graph.Type);
                     
-                    //TODO AddPromptFunctionParameters(ActbFuncInfo);
+                    AddPromptFunctionParameters(OutsideFuncInfo);
 
                 }
                 else
@@ -298,6 +298,45 @@ abc + test(a,b).ob+xyz
             }
             SortPromptList(_replace);
 
+        }
+
+        private int ParseParametersInCmd(string paraStr)
+        {
+            int paraPos = 0;
+            if (string.IsNullOrEmpty(paraStr)) return 0;
+            int leftParenthesisCount = 0;
+            int length = paraStr.Length;
+            bool inParentheses = false;
+            for (int i = 0; i < length; i++)
+            {
+                char c = paraStr[i];
+                if (c == '(' || c == '{')
+                {
+                    leftParenthesisCount++;
+                    if (!inParentheses)
+                    {
+                        inParentheses = true;
+                    }
+                }
+                else if (c == ')' || c == '}')
+                {
+                    // 碰到孤单的 ) 表示参数字符串结束了
+                    if (leftParenthesisCount == 0)
+                    {
+                        break;
+                    }
+                    leftParenthesisCount--;
+                    if (leftParenthesisCount == 0)
+                    {
+                        inParentheses = false;
+                    }
+                }
+                else if (c == ',' && !inParentheses)
+                {
+                    paraPos++;
+                }
+            }
+            return paraPos;
         }
 
         private int GetUnmatchLeftParenthesesPos(string leftCmd)
@@ -448,9 +487,11 @@ abc + test(a,b).ob+xyz
         // 将函数的参数名以 xx = 的形式添加到候选词列表中
         private void AddPromptFunctionParameters(FlowChart.Type.Method? func)
         {
+            if (func == null)
+                return;
             var prompts = new List<PromptItemViewModel>();
 
-            if (func != null && func.Parameters.Count > 0)
+            if (func.Parameters.Count > 0)
             {
                 func.Parameters.ForEach(p => prompts.Add(
                     new PromptItemViewModel(PromptItemViewModel.PromptType.Default, $"{p.Name} = ") 
