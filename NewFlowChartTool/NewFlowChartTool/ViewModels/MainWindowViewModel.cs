@@ -202,6 +202,8 @@ namespace NewFlowChartTool.ViewModels
                 Application.Current.Resources.MergedDictionaries[4].Source
                     = new Uri("pack://application:,,,/NFCT.Common;component/Localization/English.xaml");
             }
+
+            EventHelper.Pub<LangSwitchEvent, Lang>(SelectedLang);
         }
 
         public void SaveProject()

@@ -39,5 +39,13 @@ namespace NFCT.Common.Localization
         public static readonly ComponentResourceKey Pane_OutputKey = KEY("PaneName_Output");
         #endregion
 
+        #region ProjectTreeItemMenu
+
+        public const string Menu_RenameKey = "Menu_Rename";
+        public const string  Menu_NewGraphKey = "Menu_NewGraph";
+        public const string Menu_NewFolderKey = "Menu_NewFolder";
+
+        #endregion
+
     }
 }

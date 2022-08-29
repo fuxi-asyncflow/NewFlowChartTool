@@ -22,9 +22,9 @@ namespace NewFlowChartTool.ViewModels
     [System.AttributeUsage(System.AttributeTargets.Method)]
     public class MenuItemAttribute : System.Attribute
     {
-        public string Name;
+        public object Name;
 
-        public MenuItemAttribute(string name)
+        public MenuItemAttribute(object name)
         {
             Name = name;
         }
@@ -39,22 +39,10 @@ namespace NewFlowChartTool.ViewModels
         static ProjectTreeItemViewModel()
         {
             MenuItems = new ObservableCollection<MenuItemViewModel<ProjectTreeItemViewModel>>();
-            var tp = typeof(ProjectTreeItemViewModel);
-            foreach (var methodInfo in tp.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
-            {
-                var attr = methodInfo.GetCustomAttribute(typeof(MenuItemAttribute));
-                if (attr is MenuItemAttribute menuItemAttr)
-                {
-                    var menuDelegate = (Action<ProjectTreeItemViewModel>)
-                        Delegate.CreateDelegate(typeof(Action<ProjectTreeItemViewModel>), methodInfo);
-                    MenuItems.Add(new MenuItemViewModel<ProjectTreeItemViewModel>()
-                    {
-                        Text = menuItemAttr.Name,
-                        Command = new DelegateCommand<ProjectTreeItemViewModel>(menuDelegate)
-                    });
-                }
-            }
+            OnLangSwitch(Lang.Chinese);
+            EventHelper.Sub<LangSwitchEvent, Lang>(OnLangSwitch);
         }
+
         public ProjectTreeItemViewModel(Item item)
         {
             _item = item;           
@@ -155,7 +143,7 @@ namespace NewFlowChartTool.ViewModels
 
         public static ObservableCollection<MenuItemViewModel<ProjectTreeItemViewModel>> MenuItems { get; set; }
 
-        [MenuItem("rename")]
+        [MenuItem(NFCT.Common.Localization.ResourceKeys.Menu_RenameKey)]
         public static void MenuRename(ProjectTreeItemViewModel item)
         {
             // entering editing name mode
@@ -163,7 +151,7 @@ namespace NewFlowChartTool.ViewModels
             item.EnterRenameMode();
         }
 
-        [MenuItem("add_graph")]
+        [MenuItem(NFCT.Common.Localization.ResourceKeys.Menu_NewGraphKey)]
         public static void MenuNewGraph(ProjectTreeItemViewModel item)
         {
             if (item is ProjectTreeFolderViewModel folder)
@@ -178,7 +166,7 @@ namespace NewFlowChartTool.ViewModels
             }
         }
 
-        [MenuItem("add_folder")]
+        [MenuItem(NFCT.Common.Localization.ResourceKeys.Menu_NewFolderKey)]
         public static void MenuNewFolder(ProjectTreeItemViewModel item)
         {
             if (item is ProjectTreeFolderViewModel folder)
@@ -190,6 +178,26 @@ namespace NewFlowChartTool.ViewModels
             if (item.Folder != null)
             {
                 item.Folder.AddNewFolder();
+            }
+        }
+
+        public static void OnLangSwitch(Lang lang)
+        {
+            MenuItems.Clear();
+            var tp = typeof(ProjectTreeItemViewModel);
+            foreach (var methodInfo in tp.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+            {
+                var attr = methodInfo.GetCustomAttribute(typeof(MenuItemAttribute));
+                if (attr is MenuItemAttribute menuItemAttr)
+                {
+                    var menuDelegate = (Action<ProjectTreeItemViewModel>)
+                        Delegate.CreateDelegate(typeof(Action<ProjectTreeItemViewModel>), methodInfo);
+                    MenuItems.Add(new MenuItemViewModel<ProjectTreeItemViewModel>()
+                    {
+                        Text = Application.Current.FindResource(menuItemAttr.Name) as string,
+                        Command = new DelegateCommand<ProjectTreeItemViewModel>(menuDelegate)
+                    });
+                }
             }
         }
     }

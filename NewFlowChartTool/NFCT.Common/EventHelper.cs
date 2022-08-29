@@ -48,4 +48,6 @@ namespace NFCT.Common.Events
     public class GraphCloseEvent : PubSubEvent<Graph> { }
 
     public class ThemeSwitchEvent : PubSubEvent<NFCT.Common.Theme> { }
+
+    public class LangSwitchEvent : PubSubEvent<NFCT.Common.Lang> { }
 }
