@@ -4,7 +4,10 @@
     xmlns:themes="clr-namespace:AvalonDock.Themes.VS2013.Themes;assembly=AvalonDock.Themes.VS2013">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/NFCT.Themes;component/Menu.xaml" />
+        <ResourceDictionary Source="/NFCT.Themes;component/ContextMenu.xaml" />
+
     </ResourceDictionary.MergedDictionaries>
+
 
     <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="Background" Value="Transparent" />

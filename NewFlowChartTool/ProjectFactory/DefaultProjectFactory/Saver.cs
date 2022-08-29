@@ -14,7 +14,7 @@ namespace ProjectFactory.DefaultProjectFactory
     public class DefaultProjectFactory : IProjectFactory
     {
         public const string GraphFolderName = "graphs";
-        public const string TypeFolderName = "newtypes";
+        public const string TypeFolderName = "types";
         public const string GraphFileExt = ".yaml";
         public const string TypeFileExt = ".yaml";
         public const string EventFileName = "_event.yaml";

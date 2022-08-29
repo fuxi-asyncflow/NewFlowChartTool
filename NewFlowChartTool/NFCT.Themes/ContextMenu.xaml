@@ -1,0 +1,32 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Style x:Key="ContextMenuStyle" TargetType="{x:Type ContextMenu}">
+        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border Uid="Border_93">
+                        <Border
+                            Uid="Border_50"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer
+                                Uid="ScrollViewer_9"
+                                CanContentScroll="True"
+                                Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer,
+                                                                              TypeInTargetAssembly={x:Type FrameworkElement}}}">
+                                <ItemsPresenter
+                                    Uid="ItemsPresenter_5"
+                                    Margin="{TemplateBinding Padding}"
+                                    KeyboardNavigation.DirectionalNavigation="Cycle"
+                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                            </ScrollViewer>
+                        </Border>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

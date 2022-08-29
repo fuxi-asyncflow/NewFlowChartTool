@@ -17,10 +17,12 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/AvalonDock.Themes.VS2013;component/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
             <ContextMenu
                 x:Key="ProjectTreeItemContext2"
                 x:Shared="False"
                 ItemsSource="{Binding Source={x:Static vm:ProjectTreeItemViewModel.MenuItems}}">
+
                 <ContextMenu.ItemContainerStyle>
                     <Style TargetType="{x:Type MenuItem}">
                         <Setter Property="Command" Value="{Binding Command}" />
@@ -28,6 +30,8 @@
                         <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeViewItem}}, Path=DataContext}" />
                     </Style>
                 </ContextMenu.ItemContainerStyle>
+
+
             </ContextMenu>
             <ContextMenu x:Key="ProjectTreeItemContext">
                 <MenuItem Header="hello" />
@@ -48,6 +52,7 @@
                 <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
                     <local:ProjectTreeItem />
                 </DataTemplate>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{DynamicResource InactiveSelectionHighlightColor}" />
             </TreeView.Resources>
             <TreeView.ItemContainerStyle>
                 <Style TargetType="{x:Type TreeViewItem}">

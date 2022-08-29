@@ -2,6 +2,8 @@
     <!--  from AvalonDock.Themes.VS2013 reskeys:ResourceKeys.Background  -->
     <SolidColorBrush x:Key="HightlightBackGroundBrush" Color="#3F3F46" />
     <SolidColorBrush x:Key="HightlightBorderBrush" Color="#808080" />
+    <SolidColorBrush x:Key="InactiveSelectionHighlightBrush" Color="DarkBlue" />
+    <Color x:Key="InactiveSelectionHighlightColor">DarkBlue</Color>
     <SolidColorBrush x:Key="BackGroundBrush" Color="#2D2D30" />
     <SolidColorBrush x:Key="ForeGroundBrush" Color="#FAFAFA" />
     <SolidColorBrush x:Key="NormalForeGroundBrush" Color="#D6D6D6" />
