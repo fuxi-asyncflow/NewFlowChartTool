@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:reskeys="clr-namespace:NFCT.Common.Localization"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!--  Menu  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_FileKey}">File</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_OpenProjectKey}">Open Project</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_SaveProjectKey}">Save Project</system:String>
@@ -11,4 +12,9 @@
 
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BuildKey}">Build</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BuildAllKey}">Build All</system:String>
+
+    <!--  ToolBar  -->
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_UndoKey}">Redo</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_RedoKey}">Undo</system:String>
+
 </ResourceDictionary>

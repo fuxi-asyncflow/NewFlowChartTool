@@ -25,5 +25,12 @@ namespace NFCT.Common.Localization
         public static readonly ComponentResourceKey Menu_BuildAllKey = KEY("MainMenu_BuildAll");
 
         #endregion
+
+        #region ToolBar
+
+        public static readonly ComponentResourceKey ToolBar_UndoKey = KEY("ToolBar_Undo");
+        public static readonly ComponentResourceKey ToolBar_RedoKey = KEY("ToolBar_Redo");
+
+        #endregion
     }
 }

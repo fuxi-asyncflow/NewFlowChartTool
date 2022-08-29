@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:reskeys="clr-namespace:NFCT.Common.Localization"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
-
+    <!--  Menu  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_FileKey}">文件</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_OpenProjectKey}">打开项目</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_SaveProjectKey}">保存项目</system:String>
@@ -12,5 +12,9 @@
 
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BuildKey}">生成</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BuildAllKey}">全部生成</system:String>
+
+    <!--  ToolBar  -->
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_UndoKey}">撤销</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_RedoKey}">重做</system:String>
 
 </ResourceDictionary>

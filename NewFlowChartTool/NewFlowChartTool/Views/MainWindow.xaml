@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:graph_views="clr-namespace:NFCT.Graph.Views;assembly=NFCT.Graph"
     xmlns:local="clr-namespace:NewFlowChartTool"
+    xmlns:localization="clr-namespace:NFCT.Common.Localization;assembly=NFCT.Common"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pane="clr-namespace:NewFlowChartTool.Views.Pane"
     xmlns:views="clr-namespace:NewFlowChartTool.Views"
@@ -117,13 +118,13 @@
             <Button Command="{Binding UndoCommand}">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Undo}" />
-                    <TextBlock Height="16">Undo</TextBlock>
+                    <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_UndoKey}}" />
                 </StackPanel>
             </Button>
             <Button Command="{Binding RedoCommand}">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Redo}" />
-                    <TextBlock Height="16">Redo</TextBlock>
+                    <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_RedoKey}}" />
                 </StackPanel>
             </Button>
         </StackPanel>
