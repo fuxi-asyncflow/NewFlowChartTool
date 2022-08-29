@@ -163,12 +163,12 @@
                         DockWidth="245"
                         Orientation="Vertical">
                         <LayoutAnchorablePane DockHeight="2*">
-                            <LayoutAnchorable Title="工程">
+                            <LayoutAnchorable Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_ProjectKey}}">
                                 <views:ProjectPanel x:Name="ProjectPanelView" />
                             </LayoutAnchorable>
                         </LayoutAnchorablePane>
                         <LayoutAnchorablePane DockHeight="*">
-                            <LayoutAnchorable Title="类型">
+                            <LayoutAnchorable Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_TypeKey}}">
                                 <views:TypePanel x:Name="TypePanelView" />
                             </LayoutAnchorable>
                         </LayoutAnchorablePane>
@@ -178,7 +178,7 @@
                             <LayoutDocumentPane />
                         </LayoutDocumentPaneGroup>
                         <LayoutAnchorablePane DockHeight="200">
-                            <LayoutAnchorable Title="输出">
+                            <LayoutAnchorable Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_OutputKey}}">
                                 <views:OutputPanel x:Name="OutputPanelView" />
                             </LayoutAnchorable>
                         </LayoutAnchorablePane>

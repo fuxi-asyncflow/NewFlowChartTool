@@ -32,5 +32,12 @@ namespace NFCT.Common.Localization
         public static readonly ComponentResourceKey ToolBar_RedoKey = KEY("ToolBar_Redo");
 
         #endregion
+
+        #region PaneName
+        public static readonly ComponentResourceKey Pane_ProjectKey = KEY("PaneName_Project");
+        public static readonly ComponentResourceKey Pane_TypeKey = KEY("PaneName_Type");
+        public static readonly ComponentResourceKey Pane_OutputKey = KEY("PaneName_Output");
+        #endregion
+
     }
 }
