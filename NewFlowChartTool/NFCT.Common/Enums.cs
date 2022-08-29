@@ -11,4 +11,10 @@ namespace NFCT.Common
         Dark = 0,
         Light = 1,
     }
+
+    public enum Lang
+    {
+        Chinese = 0,
+        English = 1
+    }
 }

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:NewFlowChartTool.Views"
+    xmlns:localreskeys="clr-namespace:NFCT.Common.Localization;assembly=NFCT.Common"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reskeys="clr-namespace:AvalonDock.Themes.VS2013.Themes"
     xmlns:themes="clr-namespace:AvalonDock.Themes.VS2013.Themes;assembly=AvalonDock.Themes.VS2013"
@@ -46,18 +47,19 @@
 
         <StackPanel VerticalAlignment="Center" DockPanel.Dock="Left">
             <Menu>
-                <MenuItem Header="File">
-                    <MenuItem Command="{Binding OpenProjectCommand}" Header="Open Project" />
-                    <MenuItem Command="{Binding SaveProjectCommand}" Header="Save Project" />
+                <MenuItem Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_FileKey}}">
+                    <MenuItem Command="{Binding OpenProjectCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_OpenProjectKey}}" />
+                    <MenuItem Command="{Binding SaveProjectCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_SaveProjectKey}}" />
                     <Separator />
-                    <MenuItem Command="{Binding NewProjectCommand}" Header="New Project" />
-                    <MenuItem Command="{Binding CloseProjectCommand}" Header="Close Project" />
+                    <MenuItem Command="{Binding NewProjectCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_NewProjectKey}}" />
+                    <MenuItem Command="{Binding CloseProjectCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_CloseProjectKey}}" />
                 </MenuItem>
-                <MenuItem Header="Build">
-                    <MenuItem Command="{Binding BuildAllCommand}" Header="Build All" />
+                <MenuItem Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_BuildKey}}">
+                    <MenuItem Command="{Binding BuildAllCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_BuildAllKey}}" />
                 </MenuItem>
                 <MenuItem Header="Theme">
                     <MenuItem Command="{Binding SwitchThemeCommand}" Header="switch theme" />
+                    <MenuItem Command="{Binding SwitchLangCommand}" Header="switch lang" />
                 </MenuItem>
             </Menu>
         </StackPanel>

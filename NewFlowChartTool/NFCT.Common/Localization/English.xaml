@@ -1,0 +1,14 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:reskeys="clr-namespace:NFCT.Common.Localization"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_FileKey}">File</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_OpenProjectKey}">Open Project</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_SaveProjectKey}">Save Project</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewProjectKey}">New Project</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_CloseProjectKey}">Close Project</system:String>
+
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BuildKey}">Build</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BuildAllKey}">Build All</system:String>
+</ResourceDictionary>

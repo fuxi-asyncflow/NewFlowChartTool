@@ -46,6 +46,10 @@ namespace NewFlowChartTool.ViewModels
             CloseProjectCommand = new DelegateCommand(CloseProject, () => CurrentProject != null);
             BuildAllCommand = new DelegateCommand(BuildAll, () => CurrentProject != null);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
+            SwitchLangCommand = new DelegateCommand(SwitchLang, () => true);
+
+            SelectedLang = Lang.Chinese;
+            SelectedTheme = Theme.Dark;
 
             UndoCommand = new DelegateCommand(Undo);
             RedoCommand = new DelegateCommand(Redo);
@@ -78,6 +82,7 @@ namespace NewFlowChartTool.ViewModels
         public string TestText { get => _testText; set { SetProperty<string>(ref _testText, value); } }
 
         public Theme SelectedTheme;
+        public Lang SelectedLang;
 
         public GraphPaneViewModel? _activeGraph;
         public GraphPaneViewModel? ActiveGraph { get => _activeGraph; set => SetProperty(ref _activeGraph, value, nameof(ActiveGraph)); }
@@ -94,6 +99,7 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand NewProjectCommand { get; private set; }
         public DelegateCommand CloseProjectCommand { get; private set; }
         public DelegateCommand SwitchThemeCommand { get; private set; }
+        public DelegateCommand SwitchLangCommand { get; private set; }
         public DelegateCommand BuildAllCommand { get; private set; }
 
         public DelegateCommand UndoCommand { get; private set; }
@@ -180,6 +186,22 @@ namespace NewFlowChartTool.ViewModels
             }
 
             EventHelper.Pub<ThemeSwitchEvent, Theme>(SelectedTheme);
+        }
+
+        public void SwitchLang()
+        {
+            if (SelectedLang == Lang.English)
+            {
+                SelectedLang = Lang.Chinese;
+                Application.Current.Resources.MergedDictionaries[4].Source
+                    = new Uri("pack://application:,,,/NFCT.Common;component/Localization/Chinese.xaml");
+            }
+            else if (SelectedLang == Lang.Chinese)
+            {
+                SelectedLang = Lang.English;
+                Application.Current.Resources.MergedDictionaries[4].Source
+                    = new Uri("pack://application:,,,/NFCT.Common;component/Localization/English.xaml");
+            }
         }
 
         public void SaveProject()
