@@ -37,6 +37,10 @@
         x:Key="light-yellow"
         Opacity="1"
         Color="#FDE19D" />
+    <SolidColorBrush
+        x:Key="light-green"
+        Opacity="1"
+        Color="#8AE28A" />
 
     <Style x:Key="TreeViewStyle" TargetType="{x:Type TreeView}">
         <Setter Property="Background" Value="Transparent" />
