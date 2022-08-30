@@ -19,11 +19,32 @@
     mc:Ignorable="d">
     <Window.Resources>
         <conv:ActiveGraphConverter x:Key="ActiveGraphConverter" />
-
     </Window.Resources>
+
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
     </WindowChrome.WindowChrome>
+
+    <Window.InputBindings>
+        <KeyBinding
+            Key="S"
+            Command="{Binding SaveProjectCommand}"
+            Modifiers="Control" />
+        <KeyBinding
+            Key="Z"
+            Command="{Binding UndoCommand}"
+            Modifiers="Control" />
+        <KeyBinding
+            Key="Y"
+            Command="{Binding RedoCommand}"
+            Modifiers="Control" />
+        <KeyBinding
+            Key="B"
+            Command="{Binding BuildAllCommand}"
+            Modifiers="Control" />
+    </Window.InputBindings>
+
+
     <Window.Style>
         <Style TargetType="{x:Type Window}">
             <Setter Property="BorderThickness" Value="1" />
