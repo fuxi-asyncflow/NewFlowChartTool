@@ -11,8 +11,12 @@
         <ResourceDictionary Source="Icons/OpenFolder.xaml" />
         <ResourceDictionary Source="Icons/Save.xaml" />
         <ResourceDictionary Source="Icons/BuildSolution.xaml" />
+
         <ResourceDictionary Source="Icons/CSClassFile.xaml" />
         <ResourceDictionary Source="Icons/FolderClosed.xaml" />
+        <ResourceDictionary Source="Icons/Class.xaml" />
+        <ResourceDictionary Source="Icons/Method.xaml" />
+        <ResourceDictionary Source="Icons/Field.xaml" />
 
     </ResourceDictionary.MergedDictionaries>
 

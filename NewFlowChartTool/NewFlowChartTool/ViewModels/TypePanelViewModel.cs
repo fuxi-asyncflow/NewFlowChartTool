@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Core;
+using FlowChart.Type;
 using NewFlowChartTool.Event;
 using NFCT.Common;
 using NFCT.Common.Events;
@@ -15,6 +16,12 @@ namespace NewFlowChartTool.ViewModels
 {
     internal class TypeMemberTreeItemViewModel : BindableBase
     {
+        public enum TypeMemberType
+        {
+            Class = 0,
+            Method = 1,
+            Property = 2
+        }
         public TypeMemberTreeItemViewModel(Item item)
         {
             _item = item;
@@ -22,6 +29,17 @@ namespace NewFlowChartTool.ViewModels
         readonly Item _item;
         public string Name { get => _item.Name; }
         public string Description { get => _item.Description; }
+        public TypeMemberType MemberType
+        {
+            get
+            {
+                if (_item is Method)
+                    return TypeMemberType.Method;
+                if(_item is Property)
+                    return TypeMemberType.Property;
+                return TypeMemberType.Class;
+            }
+        }
     }
 
     internal class TypeMemberTreeFolderViewModel : TypeMemberTreeItemViewModel
