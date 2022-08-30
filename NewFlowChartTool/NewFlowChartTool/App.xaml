@@ -14,6 +14,8 @@
                 <ResourceDictionary Source="/NFCT.Themes;component/Generic.xaml" />
                 <ResourceDictionary Source="/NFCT.Common;component/IconsDictionary.xaml" />
                 <ResourceDictionary Source="/NFCT.Common;component/Localization/Chinese.xaml" />
+
+                <ResourceDictionary Source="/NFCT.Common;component/Styles/TreeViewItemStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <common:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
