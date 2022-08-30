@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -8,14 +9,17 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using FlowChart.AST;
 using Prism.Mvvm;
 using Prism.Events;
 using FlowChart.Core;
+using FlowChartCommon;
 using NewFlowChartTool.Event;
 using NFCT.Common;
 using NFCT.Common.Events;
 using Prism.Commands;
+using Prism.Ioc;
 
 namespace NewFlowChartTool.ViewModels
 {
@@ -43,14 +47,16 @@ namespace NewFlowChartTool.ViewModels
             EventHelper.Sub<LangSwitchEvent, Lang>(OnLangSwitch);
         }
 
-        public ProjectTreeItemViewModel(Item item)
+        public ProjectTreeItemViewModel(TreeItem item)
         {
-            _item = item;           
+            _item = item;
+            item.NameChangeEvent += OnRename;
         }
-        protected readonly Item _item;
+        protected readonly TreeItem _item;
         public string Name { get => _item.Name; }
         public string Description { get => _item.Description; }
         public ProjectTreeFolderViewModel? Folder { get; set; }
+        public ProjectTreeItemViewModel? Parent => Folder;
 
         public virtual void Open()
         {
@@ -59,6 +65,22 @@ namespace NewFlowChartTool.ViewModels
                 EventHelper.Pub<GraphOpenEvent, Graph>(graph);
                 graph.Project.BuildGraph(graph, new ParserConfig(){GetTokens = true});
             }
+        }
+
+        private bool _isSelected;
+
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set { SetProperty(ref _isSelected, value); }
+        }
+
+        private bool _isExpanded;
+
+        public bool IsExpanded
+        {
+            get { return _isExpanded; }
+            set { SetProperty(ref _isExpanded, value); RaisePropertyChanged("ItemIcon"); }
         }
 
         private bool _isEditingName;
@@ -107,9 +129,15 @@ namespace NewFlowChartTool.ViewModels
             var graph = _item as Graph;
             if (graph == null)
                 return;
-            graph.Name = newName;
-            graph.Path = GetPath();
+            graph.Rename(newName);
+        }
+
+        public void OnRename(TreeItem item, string newName)
+        {
+            Debug.Assert(item == _item);
+            Debug.Assert(newName == Name);
             RaisePropertyChanged(nameof(Name));
+            RaisePropertyChanged(nameof(Path));
         }
 
         public string GetPath()
@@ -131,14 +159,6 @@ namespace NewFlowChartTool.ViewModels
             }
 
             return string.Join('.', pathList);
-        }
-
-        public virtual void SetPath(string path)
-        {
-            var graph = _item as Graph;
-            if (graph == null)
-                return;
-            graph.Path = path;
         }
 
         public static ObservableCollection<MenuItemViewModel<ProjectTreeItemViewModel>> MenuItems { get; set; }
@@ -204,7 +224,7 @@ namespace NewFlowChartTool.ViewModels
 
     internal class ProjectTreeFolderViewModel : ProjectTreeItemViewModel
     {
-        public ProjectTreeFolderViewModel(Item item) : base(item)
+        public ProjectTreeFolderViewModel(TreeItem item) : base(item)
         {
             
             Children = new ObservableCollection<ProjectTreeItemViewModel>();
@@ -232,18 +252,7 @@ namespace NewFlowChartTool.ViewModels
         {
             var folder = _item as Folder;
             if(folder == null) return;
-            folder.Name = newName;
-            SetPath(GetPath());
-        }
-
-        public override void SetPath(string path)
-        {
-            var folder = _item as Folder;
-            if (folder == null) return;
-            foreach (var projectTreeItemViewModel in Children)
-            {
-                projectTreeItemViewModel.SetPath($"{path}.{Name}");
-            }
+            folder.Rename(newName);
         }
 
         public void AddNewGraph()
@@ -265,8 +274,9 @@ namespace NewFlowChartTool.ViewModels
             graph.Path = $"{GetPath()}.{newGraphName}";
             graph.Project = folder.Project;
             graph.Type = folder.Type;
-            folder.AddChild(graph);
-            AddChild(new ProjectTreeItemViewModel(graph));
+
+            folder.Project.AddGraph(graph);
+            
         }
 
         public void AddNewFolder()
@@ -298,6 +308,9 @@ namespace NewFlowChartTool.ViewModels
             SubscribeEvents();
         }
 
+
+        public Project? Project;
+
         void SubscribeEvents()
         {
             
@@ -309,7 +322,9 @@ namespace NewFlowChartTool.ViewModels
 
         public void OnOpenProject(Project project)
         {
-            ProjectTreeItemViewModel? CreateTreeItemViewModel(Item item)
+            Project = project;
+            Project.AddGraphEvent += OnAddGraph;
+            ProjectTreeItemViewModel? CreateTreeItemViewModel(TreeItem item)
             {                
                 if (item is Graph) return new ProjectTreeItemViewModel(item);
                 if (item is Folder)
@@ -334,7 +349,44 @@ namespace NewFlowChartTool.ViewModels
             Roots.Clear();
         }
 
+        public void OnAddGraph(Graph graph)
+        {
+            var folderVm = GetTreeItemViewModel(graph.Parent) as ProjectTreeFolderViewModel;
+            if (folderVm != null)
+            {
+                var treeItem = new ProjectTreeItemViewModel(graph);
+                folderVm.AddChild(treeItem);
+                AddGraphEvent?.Invoke(treeItem);
+            }
+        }
+
+        private ProjectTreeItemViewModel? GetTreeItemViewModel(TreeItem? item)
+        {
+            var list = new List<TreeItem>();
+            TreeItem? cur = item;
+            while (cur != Project.Root)
+            {
+                list.Add(cur);
+                cur = cur.Parent;
+            }
+            list.Reverse();
+
+            var root = ProjectTreeRoot;
+            foreach (var treeItem in list)
+            {
+                var vm = root as ProjectTreeFolderViewModel;
+                if (vm == null)
+                    return null;
+                root = vm.GetChild(treeItem.Name);
+            }
+            return root;
+        }
+
         public ProjectTreeItemViewModel? ProjectTreeRoot { get; set; }
         public ObservableCollection<ProjectTreeItemViewModel> Roots { get; set; }
+
+        public delegate void ProjectTreeItemDelegate(ProjectTreeItemViewModel item);
+
+        public event ProjectTreeItemDelegate AddGraphEvent;
     }
 }

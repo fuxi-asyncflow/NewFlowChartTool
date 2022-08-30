@@ -9,7 +9,56 @@ using FlowChartCommon;
 
 namespace FlowChart.Core
 {
-    public class Graph : Item
+    public class TreeItem : Item
+    {
+        public TreeItem(string name) : base(name)
+        {
+
+        }
+
+        public virtual void Rename(string newName)
+        {
+            throw new NotImplementedException();
+        }
+
+        #region REF PROPERTY
+        public Project Project { get; set; }
+        public Type.Type Type { get; set; }
+
+        public Folder? Parent { get; set; }
+        #endregion
+
+        public string JoinPath()
+        {
+            var list = new List<string>();
+            var item = this;
+
+            int i = 0;
+            while (item != Project.Root)
+            {
+                list.Add(item.Name);
+                item = item.Parent;
+                if (i++ > 100)
+                {
+                    Logger.ERR("JoinPath Error");
+                    break;
+                }
+            }
+
+            list.Reverse();
+            return string.Join('.', list);
+        }
+
+        public delegate void NameChangeDelegate(TreeItem item, string name);
+
+        public NameChangeDelegate? NameChangeEvent;
+
+        public void RaiseRenameEvent(string newName)
+        {
+            NameChangeEvent?.Invoke(this, newName);
+        }
+    }
+    public class Graph : TreeItem
     {
         static Graph()
         {
@@ -82,10 +131,7 @@ namespace FlowChart.Core
         public bool AutoLayout { get; set; }
         #endregion
 
-        #region REF PROPERTY
-        public Project Project { get; set; }
-        public Type.Type Type { get; set; }
-        #endregion
+        
 
         public void Build(ParserConfig? cfg = null)
         {
@@ -205,7 +251,6 @@ namespace FlowChart.Core
             return Connect_atom(start, end, connType);
         }
 
-        
         public Connector? Connect_atom(Node start, Node end, Connector.ConnectorType connType
             , int startIdx = -1, int endIdx = -1)
         {
@@ -297,9 +342,6 @@ namespace FlowChart.Core
             }
         }
 
-        
-
-
         public Group? CreateGroup(List<Node> nodes)
         {
             var group = new Group("--");
@@ -325,6 +367,20 @@ namespace FlowChart.Core
                 graph.Connect(nodeDict[conn.Start], nodeDict[conn.End], conn.ConnType);
             });
             return graph;
+        }
+
+        public override void Rename(string newName)
+        {
+            var parentPath = Parent.JoinPath();
+            Debug.Assert(Path == $"{parentPath}.{Name}");
+
+            Name = newName;
+            var newPath = $"{parentPath}.{Name}";
+            Project.GraphDict.Remove(Path);
+            Path = newPath;
+            Project.GraphDict.Add(newPath, this);
+
+            RaiseRenameEvent(newName);
         }
     }
 }

@@ -47,6 +47,13 @@ namespace FlowChart.Core
         public Builder Builder { get; set; }
         #endregion
 
+        #region Event
+
+        public delegate void GraphEventDelegate(Graph graph);
+        public event GraphEventDelegate? AddGraphEvent;
+
+        #endregion
+
         public bool Load()
         {
             Factory?.Create(this);
@@ -124,6 +131,8 @@ namespace FlowChart.Core
             
             GraphDict.Add(graph.Path, graph);
             graph.Project = this;
+
+            AddGraphEvent?.Invoke(graph);
         }
 
         #region PARSER and BUILDER
