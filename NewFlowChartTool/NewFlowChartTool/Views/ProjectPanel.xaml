@@ -100,48 +100,55 @@
                                                             Data="M 0 4 L 8 4 L 4 8 Z"
                                                             Fill="{DynamicResource ForeGroundBrush}"
                                                             Visibility="Hidden" />
+                                                        <VisualStateManager.VisualStateGroups>
+                                                            <VisualStateGroup x:Name="CheckStates">
+                                                                <VisualState x:Name="Checked">
+                                                                    <Storyboard>
+                                                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Collapsed" Storyboard.TargetProperty="(UIElement.Visibility)">
+                                                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Hidden}" />
+                                                                        </ObjectAnimationUsingKeyFrames>
+                                                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Expanded" Storyboard.TargetProperty="(UIElement.Visibility)">
+                                                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                                                        </ObjectAnimationUsingKeyFrames>
+                                                                    </Storyboard>
+                                                                </VisualState>
+                                                                <VisualState x:Name="Unchecked" />
+                                                                <VisualState x:Name="Indeterminate" />
+                                                            </VisualStateGroup>
+                                                        </VisualStateManager.VisualStateGroups>
                                                     </Grid>
                                                 </ControlTemplate>
                                             </Setter.Value>
                                         </Setter>
                                     </Style>
                                 </ControlTemplate.Resources>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" MinWidth="19" />
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
-                                    <ToggleButton
-                                        x:Name="Expander"
-                                        ClickMode="Press"
-                                        IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
-                                        Style="{StaticResource ExpandCollapseToggleStyle}" />
+                                <StackPanel>
                                     <Border
                                         x:Name="Bd"
-                                        Grid.Column="1"
                                         Padding="{TemplateBinding Padding}"
                                         Background="{TemplateBinding Background}"
                                         BorderBrush="{TemplateBinding BorderBrush}"
                                         BorderThickness="{TemplateBinding BorderThickness}">
-
-                                        <ContentPresenter
-                                            x:Name="PART_Header"
-                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                            ContentSource="Header" />
-
+                                        <Grid Margin="{Binding Converter={StaticResource lengthConverter}, RelativeSource={RelativeSource TemplatedParent}}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="19" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <ToggleButton
+                                                x:Name="Expander"
+                                                ClickMode="Press"
+                                                IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                                                Style="{StaticResource ExpandCollapseToggleStyle}" />
+                                            <ContentPresenter
+                                                x:Name="PART_Header"
+                                                Grid.Column="1"
+                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                ContentSource="Header" />
+                                        </Grid>
                                     </Border>
-                                    <ItemsPresenter
-                                        x:Name="ItemsHost"
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        Grid.ColumnSpan="2" />
+                                    <ItemsPresenter x:Name="ItemsHost" />
+                                </StackPanel>
 
-                                </Grid>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="HasItems" Value="false">
                                         <Setter TargetName="Expander" Property="Visibility" Value="Hidden" />
