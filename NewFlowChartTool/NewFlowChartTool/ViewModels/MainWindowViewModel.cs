@@ -210,6 +210,7 @@ namespace NewFlowChartTool.ViewModels
         {
             if (CurrentProject == null)
                 return;
+            Logger.LOG($"save project");
             CurrentProject.Save();
 
         }
@@ -275,14 +276,14 @@ namespace NewFlowChartTool.ViewModels
         {
             if(ActiveGraph == null) return;
             ActiveGraph.UndoRedoManager.Redo();
-            ActiveGraph.Graph.Build();
+            ActiveGraph.Graph.Build(new ParserConfig() { GetTokens = true });
         }
 
         public void Undo()
         {
             if (ActiveGraph == null) return;
             ActiveGraph.UndoRedoManager.Undo();
-            ActiveGraph.Graph.Build();
+            ActiveGraph.Graph.Build(new ParserConfig() {GetTokens = true});
         }
     }
 }

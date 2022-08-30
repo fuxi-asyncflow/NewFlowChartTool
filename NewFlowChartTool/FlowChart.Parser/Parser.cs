@@ -1,4 +1,5 @@
-﻿using Antlr4.Runtime;
+﻿using System.Diagnostics;
+using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Tree;
 using FlowChart.AST;
@@ -38,7 +39,14 @@ namespace FlowChart.Parser
             {
                 Tokens = new List<TextToken>();
                 int pos = -1;
-                GetTokens(tree, ref pos);
+                GetTokens(text, tree, ref pos);
+#if DEBUG
+                Console.WriteLine($"----- {text}");
+                Tokens.ForEach(token =>
+                {
+                    Console.WriteLine($"token: {text.Substring(token.Start, token.End - token.Start)}");
+                });
+#endif
             }
 
             try
@@ -72,7 +80,7 @@ namespace FlowChart.Parser
             
         }
 
-        public void GetTokens(ParserRuleContext root, ref int pos)
+        public void GetTokens(string text, ParserRuleContext root, ref int pos)
         {
             if (root.ChildCount == 0)
                 return;
@@ -80,7 +88,7 @@ namespace FlowChart.Parser
             {
                 if (child is ParserRuleContext ruleContext)
                 {
-                    GetTokens(ruleContext, ref pos);
+                    GetTokens(text, ruleContext, ref pos);
                 }
                 else if(child is TerminalNodeImpl term)
                 {
@@ -94,6 +102,8 @@ namespace FlowChart.Parser
                         Start = symbol.StartIndex, End = symbol.StartIndex + symbol.Text.Length, Type = GetTokenType(symbol.Type)
                     });
                     pos = symbol.StopIndex;
+                    Debug.Assert(pos <= text.Length);
+                    Debug.Assert(symbol.StartIndex < text.Length);
                 }
             }
         }
