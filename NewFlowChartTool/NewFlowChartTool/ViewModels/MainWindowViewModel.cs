@@ -72,7 +72,9 @@ namespace NewFlowChartTool.ViewModels
                 _currentProject = value;
                 OpenProjectCommand.RaiseCanExecuteChanged();
                 SaveProjectCommand.RaiseCanExecuteChanged();
+                NewProjectCommand.RaiseCanExecuteChanged();
                 CloseProjectCommand.RaiseCanExecuteChanged();
+                BuildAllCommand.RaiseCanExecuteChanged();
             }
         }
 
