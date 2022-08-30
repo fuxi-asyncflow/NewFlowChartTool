@@ -82,7 +82,7 @@ namespace NFCT.Graph.ViewModels
                 () =>
                 {
                     Logger.DBG("redo");
-                    _removeNodeViewModel(node);
+                    Graph.RemoveNode_atom(node);
                 },
                 () =>
                 {
