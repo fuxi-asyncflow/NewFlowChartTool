@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Icons\" />
-    <Folder Include="Misc\" />
   </ItemGroup>
 
   <ItemGroup>
