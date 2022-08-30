@@ -12,6 +12,9 @@
         <ResourceDictionary Source="Icons/Save.xaml" />
         <ResourceDictionary Source="Icons/BuildSolution.xaml" />
         <ResourceDictionary Source="Icons/CSClassFile.xaml" />
+        <ResourceDictionary Source="Icons/FolderClosed.xaml" />
+
     </ResourceDictionary.MergedDictionaries>
+
     <!--  Frame  x:Key="Icon_Undo" Source="Icons/Undo.xaml" /  -->
 </ResourceDictionary>

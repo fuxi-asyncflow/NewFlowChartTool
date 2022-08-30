@@ -49,7 +49,14 @@
             VirtualizingStackPanel.VirtualizationMode="Recycling">
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type vm:ProjectTreeFolderViewModel}" ItemsSource="{Binding Children}">
-                    <TextBlock Text="{Binding Name}" />
+                    <StackPanel Margin="2" Orientation="Horizontal">
+                        <Viewbox Child="{StaticResource Icon_FolderClosed}" />
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding Name}" />
+                    </StackPanel>
+
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
                     <local:ProjectTreeItem />

@@ -10,10 +10,11 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
+    <Grid Margin="2">
         <StackPanel Orientation="Horizontal">
             <Viewbox Child="{StaticResource Icon_CSClassFile}" />
             <TextBlock
+                Margin="5,0,0,0"
                 VerticalAlignment="Center"
                 IsVisibleChanged="ProjectTreeItem_OnNameVisibleChange"
                 Text="{Binding Name}"
