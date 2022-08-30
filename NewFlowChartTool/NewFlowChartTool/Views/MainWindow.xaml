@@ -136,6 +136,24 @@
                     </DrawingBrush>
                 </Rectangle.Fill>
             </Rectangle>
+            <Button Command="{Binding OpenProjectCommand}">
+                <StackPanel>
+                    <Viewbox Child="{StaticResource Icon_OpenFolder}" />
+                    <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.Menu_OpenProjectKey}}" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding SaveProjectCommand}">
+                <StackPanel>
+                    <Viewbox Child="{StaticResource Icon_Save}" />
+                    <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.Menu_SaveProjectKey}}" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding BuildAllCommand}">
+                <StackPanel>
+                    <Viewbox Child="{StaticResource Icon_BuildSolution}" />
+                    <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.Menu_BuildAllKey}}" />
+                </StackPanel>
+            </Button>
             <Button Command="{Binding UndoCommand}">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Undo}" />
