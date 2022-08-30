@@ -9,14 +9,6 @@
         <Rectangle Width="16 " Height="16">
             <Rectangle.Resources>
                 <SolidColorBrush x:Key="canvas" Opacity="0" />
-                <SolidColorBrush
-                    x:Key="light-blue-10"
-                    Opacity="0.1"
-                    Color="#005dba" />
-                <SolidColorBrush
-                    x:Key="light-blue"
-                    Opacity="1"
-                    Color="#005dba" />
                 <System:Double x:Key="cls-1">0.75</System:Double>
             </Rectangle.Resources>
             <Rectangle.Fill>
