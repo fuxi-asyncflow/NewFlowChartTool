@@ -17,9 +17,10 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            <Style TargetType="TextBlock">
+
+            <Style TargetType="Button">
                 <Style.Setters>
-                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="Background" Value="Transparent" />
                 </Style.Setters>
             </Style>
         </ResourceDictionary>

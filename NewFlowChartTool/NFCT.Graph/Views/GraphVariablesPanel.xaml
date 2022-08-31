@@ -14,7 +14,14 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <Style TargetType="TextBlock">
             <Style.Setters>
-                <Setter Property="Foreground" Value="Red" />
+                <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
+                <Setter Property="Background" Value="Transparent" />
+            </Style.Setters>
+        </Style>
+        <Style TargetType="Button">
+            <Style.Setters>
+                <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
+                <Setter Property="Background" Value="Transparent" />
             </Style.Setters>
         </Style>
     </UserControl.Resources>
@@ -22,7 +29,7 @@
         <Grid
             Width="200"
             Height="400"
-            Background="LightBlue">
+            Background="#408080ff">
 
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
@@ -76,6 +83,28 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     SelectedItem="{Binding SelectedItem}">
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                        </Style>
+                        <Style TargetType="DataGridRowHeader">
+                            <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                        </Style>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
+                            <Style.Triggers>
+                                <!--<DataTrigger Binding="{Binding IsActive}" Value="{x:Null}">
+                                    <Setter Property="Foreground" Value="Green" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                    <Setter Property="Foreground" Value="Red" />
+                                </DataTrigger>-->
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                        </Style>
+                    </DataGrid.Resources>
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Id, Mode=OneWay}" Header="Id" />
                         <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="name" />
