@@ -330,6 +330,7 @@ namespace ProjectFactory.DefaultProjectFactory
             if (graphNode.Children.TryGetValue(YAML_PATH, out node))
             {
                 graph.Path = ((YamlScalarNode)node).Value;
+                graph.Name = graph.Path.Split('.').Last();
             }
 
             if (graphNode.Children.TryGetValue(YAML_TYPE, out node))
@@ -348,6 +349,10 @@ namespace ProjectFactory.DefaultProjectFactory
             {
                 var returnType = ((YamlScalarNode)node).Value;
                 graph.ReturnType = Project.GetType(returnType);
+            }
+            else if(graph.IsSubGraph)
+            {
+                graph.ReturnType = BuiltinTypes.VoidType;
             }
 
             if (graphNode.Children.TryGetValue(YAML_VARIABLES, out node))
@@ -376,6 +381,21 @@ namespace ProjectFactory.DefaultProjectFactory
                     var connType = ((YamlScalarNode)(connectNode.Children[YAML_TYPE])).Value;
                     graph.Connect(start, end, (Connector.ConnectorType)(Int32.Parse(connType)));
                 }
+            }
+
+            // if graph is subgraph ,add it as a method
+            if (graph.IsSubGraph)
+            {
+                var method = new Method(graph.Name) { Type = graph.ReturnType };
+                foreach (var v in graph.Variables)
+                {
+                    if(v.IsParameter)
+                        method.Parameters.Add(new Parameter(v.Name)
+                        {
+                            Type = v.Type
+                        });
+                }
+                graph.Type.AddMember(method);
             }
 
             return true;

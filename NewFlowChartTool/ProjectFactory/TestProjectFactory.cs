@@ -297,7 +297,11 @@ namespace ProjectFactory
         bool LoadType(FlowChart.Type.Type tp, TypeJson js)
         {
             tp.Name = js.Name;
-            js.Members.ForEach(m => tp.AddMember(m.ToMember()));
+            js.Members.ForEach(m =>
+            {
+                if(m.From != 1)
+                    tp.AddMember(m.ToMember());
+            });
             return true;
         }
 
