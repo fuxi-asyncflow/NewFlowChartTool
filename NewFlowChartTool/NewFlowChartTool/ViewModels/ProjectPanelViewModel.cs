@@ -80,7 +80,7 @@ namespace NewFlowChartTool.ViewModels
         public bool IsExpanded
         {
             get { return _isExpanded; }
-            set { SetProperty(ref _isExpanded, value); RaisePropertyChanged("ItemIcon"); }
+            set { SetProperty(ref _isExpanded, value); }
         }
 
         private bool _isEditingName;
