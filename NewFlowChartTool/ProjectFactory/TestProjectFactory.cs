@@ -18,6 +18,7 @@ namespace ProjectFactory
         public string Uid { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
+        public string? IsParameter { get; set; }
 
         public Parameter ToParameter()
         {
@@ -145,8 +146,11 @@ namespace ProjectFactory
         public string Path { get; set; }
         public string? Description { get; set; }
         public string Type { get; set; }
+        public bool? IsSubChart { get; set; }
+        public string? ReturnType { get; set; }
         public List<NodeJson> Nodes { get; set;}
         public List<ConnectorJson> Connectors { get; set;}
+        public List<ParameterInfo> Variables { get; set; }
 
         public void ToGraph(Graph g)
         {
@@ -156,6 +160,8 @@ namespace ProjectFactory
             Nodes.ForEach(node => g.AddNode(node.ToNode()));
             //g.Nodes[0] = new StartNode() { Uid = g.Nodes[0].Uid };
             Connectors.ForEach(con => g.Connect(con.Start, con.End, (Connector.ConnectorType)(con.Type)));
+            if (IsSubChart != null)
+                g.IsSubChart = IsSubChart.Value;
         }
     }
 
@@ -314,6 +320,27 @@ namespace ProjectFactory
             {
                 var graph = new Graph(chart.Path.Split(".").Last()) {Type = tp};
                 chart.ToGraph(graph);
+                if (!string.IsNullOrEmpty(chart.ReturnType))
+                {
+                    graph.ReturnType = Project.GetType(chart.ReturnType);
+                }
+
+                if (chart.Variables != null)
+                {
+                    chart.Variables.ForEach(v =>
+                    {
+                        var variable = new Variable(v.Name)
+                        {
+                            Type = Project.GetType(v.Type),
+                        };
+                        if (!string.IsNullOrEmpty(v.IsParameter) && v.IsParameter == "true")
+                        {
+                            variable.IsParameter = true;
+                        }
+                        graph.Variables.Add(variable);
+                    });
+                }
+
                 Project.AddGraph(graph);
             });
         }

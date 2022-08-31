@@ -129,6 +129,10 @@ namespace FlowChart.Core
         public List<Variable> Variables { get; set; }
         public List<Group> Groups { get; set; }
         public bool AutoLayout { get; set; }
+
+        public bool IsSubChart { get; set; }
+        public FlowChart.Type.Type? ReturnType { get; set; }
+
         #endregion
 
         

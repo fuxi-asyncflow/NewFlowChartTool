@@ -69,6 +69,10 @@ namespace ProjectFactory.DefaultProjectFactory
         public static YamlScalarNode YAML_PROPERTIES = new YamlScalarNode("properties");
         public static YamlScalarNode YAML_PARAMETERS = new YamlScalarNode("parameters");
 
+        public static YamlScalarNode YAML_ISPARAMETER = new YamlScalarNode("is_parameter");
+        public static YamlScalarNode YAML_ISSUBCHART = new YamlScalarNode("is_subchart");
+        public static YamlScalarNode YAML_RETURNTYPE = new YamlScalarNode("return_type");
+
         public void Load(Project project)
         {
             Project = project;
@@ -274,6 +278,7 @@ namespace ProjectFactory.DefaultProjectFactory
                             para.Description = pNode.Get(YAML_DESCRIPTION);
                             var paraTypeName = pNode.Get(YAML_TYPE);
                             para.Type = Project.GetType(paraTypeName);
+                            evType.AddParameter(para);
                         }
                     }
                 }
@@ -331,6 +336,18 @@ namespace ProjectFactory.DefaultProjectFactory
             {
                 var typeName = ((YamlScalarNode)node).Value;
                 graph.Type = Project.GetType(typeName);
+            }
+
+            if (graphNode.Children.TryGetValue(YAML_ISSUBCHART, out node))
+            {
+                var isSubchart = ((YamlScalarNode)node).Value;
+                graph.IsSubChart = isSubchart != null && isSubchart == "true";
+            }
+
+            if (graphNode.Children.TryGetValue(YAML_RETURNTYPE, out node))
+            {
+                var returnType = ((YamlScalarNode)node).Value;
+                graph.ReturnType = Project.GetType(returnType);
             }
 
             if (graphNode.Children.TryGetValue(YAML_VARIABLES, out node))
@@ -406,6 +423,14 @@ namespace ProjectFactory.DefaultProjectFactory
                 var typeName = ((YamlScalarNode)tmpNode).Value;
                 v.Type = Project.GetType(typeName);
             }
+
+            if (root.Children.TryGetValue(YAML_ISPARAMETER, out tmpNode))
+            {
+                var isParameter = ((YamlScalarNode)tmpNode).Value;
+                v.IsParameter = isParameter != null && isParameter == "true";
+            }
+
+
             return v;
         }
     }

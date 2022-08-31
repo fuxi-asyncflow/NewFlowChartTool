@@ -36,7 +36,7 @@ namespace FlowChart.Core
                 VariableChangeEvent?.Invoke(this);
             }
         }
-        
+        public bool IsParameter { get; set; }
         public string? DefaultValue { get; set; }
         public bool IsVariadic { get; set; }
 

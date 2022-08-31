@@ -129,6 +129,13 @@ namespace ProjectFactory.DefaultProjectFactory
             if(!string.IsNullOrEmpty(graph.Description))
                 lines.Add($"description: {graph.Description}");
 
+            if (graph.IsSubChart)
+            {
+                lines.Add("is_subchart: true");
+                if(graph.ReturnType != null)
+                    lines.Add($"return_type: {graph.ReturnType.Name}");
+            }
+
             if (graph.Variables.Count > 0)
             {
                 lines.Add("variables: ");
@@ -139,6 +146,8 @@ namespace ProjectFactory.DefaultProjectFactory
                     if (!string.IsNullOrEmpty(variable.Description))
                         lines.Add($"  description: {variable.Description}");
                     lines.Add($"  type: {variable.Type.Name}");
+                    if(variable.IsParameter)
+                        lines.Add($"  is_parameter: true");
                 }
             }
 
