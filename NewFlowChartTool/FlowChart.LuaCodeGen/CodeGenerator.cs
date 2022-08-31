@@ -249,6 +249,17 @@ namespace FlowChart.LuaCodeGen
             var member = ownerNodeInfo.Type.FindMember(node.MemberName);
             if (member == null)
             {
+                // member can be event
+                if (node.MemberName.StartsWith("On"))
+                {
+                    var evType = P.GetEvent(node.MemberName.Substring(2));
+                    if (evType != null)
+                    {
+                        Pr.EventName = evType.Name;
+                        return new NodeInfo() { Code = $"wait_event({ownerNodeInfo.Type}, EventId.{evType.Name})", Type = BuiltinTypes.VoidType };
+                    }
+                }
+
                 Error($"cannot find method `{node.MemberName}` in type `{ownerNodeInfo.Type.Name}`");
                 return null;
             }
