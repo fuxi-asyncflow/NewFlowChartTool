@@ -161,7 +161,7 @@ namespace ProjectFactory
             //g.Nodes[0] = new StartNode() { Uid = g.Nodes[0].Uid };
             Connectors.ForEach(con => g.Connect(con.Start, con.End, (Connector.ConnectorType)(con.Type)));
             if (IsSubChart != null)
-                g.IsSubChart = IsSubChart.Value;
+                g.IsSubGraph = IsSubChart.Value;
         }
     }
 

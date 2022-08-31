@@ -130,7 +130,7 @@ namespace FlowChart.Core
         public List<Group> Groups { get; set; }
         public bool AutoLayout { get; set; }
 
-        public bool IsSubChart { get; set; }
+        public bool IsSubGraph { get; set; }
         public FlowChart.Type.Type? ReturnType { get; set; }
 
         #endregion

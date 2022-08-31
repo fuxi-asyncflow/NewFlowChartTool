@@ -70,7 +70,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public static YamlScalarNode YAML_PARAMETERS = new YamlScalarNode("parameters");
 
         public static YamlScalarNode YAML_ISPARAMETER = new YamlScalarNode("is_parameter");
-        public static YamlScalarNode YAML_ISSUBCHART = new YamlScalarNode("is_subchart");
+        public static YamlScalarNode YAML_ISSUBCHART = new YamlScalarNode("is_subgraph");
         public static YamlScalarNode YAML_RETURNTYPE = new YamlScalarNode("return_type");
 
         public void Load(Project project)
@@ -341,7 +341,7 @@ namespace ProjectFactory.DefaultProjectFactory
             if (graphNode.Children.TryGetValue(YAML_ISSUBCHART, out node))
             {
                 var isSubchart = ((YamlScalarNode)node).Value;
-                graph.IsSubChart = isSubchart != null && isSubchart == "true";
+                graph.IsSubGraph = isSubchart != null && isSubchart == "true";
             }
 
             if (graphNode.Children.TryGetValue(YAML_RETURNTYPE, out node))

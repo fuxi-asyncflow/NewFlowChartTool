@@ -129,9 +129,9 @@ namespace ProjectFactory.DefaultProjectFactory
             if(!string.IsNullOrEmpty(graph.Description))
                 lines.Add($"description: {graph.Description}");
 
-            if (graph.IsSubChart)
+            if (graph.IsSubGraph)
             {
-                lines.Add("is_subchart: true");
+                lines.Add("is_subgraph: true");
                 if(graph.ReturnType != null)
                     lines.Add($"return_type: {graph.ReturnType.Name}");
             }
