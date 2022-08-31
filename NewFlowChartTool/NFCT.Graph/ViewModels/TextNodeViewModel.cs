@@ -9,6 +9,7 @@ using FlowChart.AST;
 using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
+using FlowChart.Misc;
 using FlowChartCommon;
 using NFCT.Common;
 using Prism.Commands;
@@ -201,6 +202,11 @@ namespace NFCT.Graph.ViewModels
                 BgType = NodeBgType.ACTION;
             else
                 BgType = NodeBgType.CONDITION;
+
+            if (pr.IsError)
+            {
+                OutputMessage.Inst?.Output(pr.ErrorMessage, OutputMessageType.Error, node, node.OwnerGraph);
+            }
 
             OnParseEnd(pr);
         }

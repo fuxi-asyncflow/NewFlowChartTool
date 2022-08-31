@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.AST;
+using FlowChart.Misc;
 
 namespace FlowChart.Core
 {
@@ -39,6 +40,8 @@ namespace FlowChart.Core
         public void OnParse(ParseResult pr)
         {
             Content = pr.Content;
+            if(pr.IsError)
+                OutputMessage.Inst?.Output(pr.ErrorMessage, OutputMessageType.Error, this, OwnerGraph);
             ParseEvent?.Invoke(this, pr);
         }
         public GenerateContent? Content { get; set; }
