@@ -81,12 +81,17 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             var typeFolder = ProjectFolder.CreateSubdirectory(DefaultProjectFactory.TypeFolderName);
             Dictionary<Type, YamlMappingNode> yamls = new Dictionary<Type, YamlMappingNode>();
+            string? evFileName = null;
             foreach (var file in typeFolder.EnumerateFiles())
             {
                 if(!file.FullName.EndsWith(DefaultProjectFactory.TypeFileExt))
                     continue;
-                if(file.FullName.EndsWith(DefaultProjectFactory.EventFileName))
+                if (file.FullName.EndsWith(DefaultProjectFactory.EventFileName))
+                {
+                    evFileName = file.FullName;
                     continue;
+                }
+
                 var yamlText = File.ReadAllText(file.FullName);
                 var input = new StringReader(yamlText);
                 var yaml = new YamlStream();
@@ -124,6 +129,11 @@ namespace ProjectFactory.DefaultProjectFactory
             foreach (var kv in yamls)
             {
                 LoadType(kv.Key, kv.Value);
+            }
+
+            if (!string.IsNullOrEmpty(evFileName))
+            {
+                LoadEvent(File.ReadAllText(evFileName));
             }
         }
 
@@ -252,17 +262,19 @@ namespace ProjectFactory.DefaultProjectFactory
                 evType.EventId = (int)eventId;
 
                 var paramsNode = node.GetArray(YAML_PARAMETERS);
-                if(paramsNode == null) continue;
-                foreach (var paramNode in paramsNode)
+                if (paramsNode != null)
                 {
-                    if (paramNode is YamlMappingNode pNode)
+                    foreach (var paramNode in paramsNode)
                     {
-                        var pName = pNode.Get(YAML_NAME);
-                        if(pName == null) continue;
-                        var para = new Parameter(pName);
-                        para.Description = pNode.Get(YAML_DESCRIPTION);
-                        var paraTypeName = pNode.Get(YAML_TYPE);
-                        para.Type = Project.GetType(paraTypeName);
+                        if (paramNode is YamlMappingNode pNode)
+                        {
+                            var pName = pNode.Get(YAML_NAME);
+                            if (pName == null) continue;
+                            var para = new Parameter(pName);
+                            para.Description = pNode.Get(YAML_DESCRIPTION);
+                            var paraTypeName = pNode.Get(YAML_TYPE);
+                            para.Type = Project.GetType(paraTypeName);
+                        }
                     }
                 }
 
