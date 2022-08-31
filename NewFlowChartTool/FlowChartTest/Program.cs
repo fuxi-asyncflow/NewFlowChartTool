@@ -11,6 +11,7 @@ using FlowChart.AST.Nodes;
 using FlowChart.Core;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
+using ProjectFactory;
 
 namespace FlowChartTest // Note: actual namespace depends on the project name.
 {
@@ -51,7 +52,8 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
         static void Main(string[] args)
         {
             Logger.MyLogger.Info("hello");
-            OpenProjectTest();
+            ConvertProject(@"F:\asyncflow\asyncflow_new\test\flowchart");
+            //OpenProjectTest();
             //ParserTest();            
             //CodeGenTest();
         }
@@ -144,6 +146,13 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             node_10.Add(node_12);
 
             GenCode(node_10);
+        }
+
+        static void ConvertProject(string path)
+        {
+            var project = new Project(new TestProjectFactory()) { Path = path };
+            project.Load();
+            project.Save();
         }
     }
 }

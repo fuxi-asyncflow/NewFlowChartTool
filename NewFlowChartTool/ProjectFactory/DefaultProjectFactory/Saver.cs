@@ -298,6 +298,13 @@ namespace ProjectFactory.DefaultProjectFactory
             }
             lines.Add("...");
         }
-        
+
+        //TODO if string has #, it should inside double quotes
+        public static string CheckString(string str)
+        {
+            if (str.Contains('#'))
+                return $"\"{str}\"";
+            return str;
+        }
     }
 }

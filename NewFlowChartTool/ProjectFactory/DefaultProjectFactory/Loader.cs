@@ -83,12 +83,24 @@ namespace ProjectFactory.DefaultProjectFactory
             Dictionary<Type, YamlMappingNode> yamls = new Dictionary<Type, YamlMappingNode>();
             foreach (var file in typeFolder.EnumerateFiles())
             {
+                if(!file.FullName.EndsWith(DefaultProjectFactory.TypeFileExt))
+                    continue;
                 if(file.FullName.EndsWith(DefaultProjectFactory.EventFileName))
                     continue;
                 var yamlText = File.ReadAllText(file.FullName);
                 var input = new StringReader(yamlText);
                 var yaml = new YamlStream();
-                yaml.Load(input);
+                try
+                {
+                    yaml.Load(input);
+                }
+                catch (Exception e)
+                {
+                    Logger.ERR($"parse yaml file {file.FullName} failed : {e.Message}");
+#if DEBUG
+                    throw;
+#endif
+                }
 
                 var doc = yaml.Documents.FirstOrDefault();
                 if(doc == null)
