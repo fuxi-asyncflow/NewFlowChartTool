@@ -203,6 +203,11 @@ namespace FlowChart.Parser.ASTGenerator
             return node;
         }
 
+        public override ASTNode VisitExpr_parenthesis(NodeParserParser.Expr_parenthesisContext context)
+        {
+            return Visit(context.expr());
+        }
+
         #endregion
 
         private static readonly Dictionary<string, Operator> OpDict;

@@ -158,7 +158,7 @@ namespace FlowChart.LuaCodeGen
 
         public NodeInfo Visit(BinOpNode node)
         {
-            var nis = node.ChildNodes.ConvertAll(node => node.OnVisit(this));
+            var nis = node.ChildNodes.ConvertAll(_node => _node.OnVisit(this));
             //TODO handle compare operator
             var nodeInfo = new NodeInfo() { Code = $"{nis[0].Code} {node.Op.Text} {nis[1].Code}", Type = nis[0].Type };
             return nodeInfo;
@@ -171,7 +171,7 @@ namespace FlowChart.LuaCodeGen
 
         public NodeInfo Visit(ArgListNode node)
         {
-            var nis = node.ChildNodes.ConvertAll(node => node.OnVisit(this));
+            var nis = node.ChildNodes.ConvertAll(_node => _node.OnVisit(this));
             var nodeInfo = new NodeInfo() { Code = string.Join(", ", nis.ConvertAll(ni => ni.Code)), Type = nis[0].Type };
             return nodeInfo;
         }
