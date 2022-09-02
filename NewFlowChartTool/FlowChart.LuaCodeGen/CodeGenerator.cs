@@ -70,6 +70,31 @@ namespace FlowChart.LuaCodeGen
             throw new Exception(msg);
         }
 
+        #region CodeGen
+
+        public static string GenEventCode(string obj, string eventName)
+        {
+            return $"asyncflow.wait_event({obj}, EventId.{eventName})";
+        }
+
+        public static string GenGetVarCode(string varName)
+        {
+            return $"asyncflow.get_var(\"{varName}\")";
+        }
+
+        public static string GenSetVarCode(string varName, string expr)
+        {
+            return $"asyncflow.set_var(\"{varName}\", {expr})";
+        }
+
+        public static string GenEventParamCode(string evName, int paramIdx)
+        {
+            return $"asyncflow.get_event_param(EventId.{evName}, {paramIdx})";
+        }
+
+        #endregion
+
+        #region Visitor
         public NodeInfo Visit(NumberNode node)
         {
             return new NodeInfo() { Code = node.Text, Type = Type.BuiltinTypes.NumberType };
@@ -109,7 +134,7 @@ namespace FlowChart.LuaCodeGen
                 if (ev != null)
                 {
                     Pr.EventName = ev.Name;
-                    return new NodeInfo() { Type = ev, Code = $"wait_event(\"{evName}\")" };
+                    return new NodeInfo() { Type = ev, Code = GenEventCode("self", evName) };
                 }
             }
             else
@@ -118,7 +143,7 @@ namespace FlowChart.LuaCodeGen
                 var ev = P.GetEvent(evName);
                 if (ev != null)
                 {
-                    return new NodeInfo() { Type = ev, Code = $"wait_event(\"{evName}\")" };
+                    return new NodeInfo() { Type = ev, Code = "this text should not be used" };
                 }
             }
 
@@ -134,14 +159,14 @@ namespace FlowChart.LuaCodeGen
             {
                 v = G.GetVar(node.Text);
                 if (v == null)
-                    return new NodeInfo() { Code = $"get_var(\"{node.Text}\")", Type = v.Type };
+                    return new NodeInfo() { Code = GenGetVarCode(node.Text), Type = v.Type };
 
             }
             else
                 v = G.GetOrAddVariable(node.Text);
             return new NodeInfo()
             {
-                Code = $"get_var(\"{node.Text}\")",
+                Code = GenGetVarCode(node.Text),
                 Type = v.Type
             };
         }
@@ -246,6 +271,13 @@ namespace FlowChart.LuaCodeGen
         {
             //var nis = node.ChildNodes.ConvertAll(node => node.OnVisit(this));
             var ownerNodeInfo = node.Owner.OnVisit(this);
+            if (ownerNodeInfo.Type is EventType ev)
+            {
+                var idx = ev.GetParamIndex(node.MemberName);
+                if(idx == -1)
+                    Error($"cannot find param `{node.MemberName}` in event `{ev.Name}`");
+                return new NodeInfo() { Code = GenEventParamCode(ev.Name, idx), Type = ev.Parameters[idx].Type };
+            }
             var member = ownerNodeInfo.Type.FindMember(node.MemberName);
             if (member == null)
             {
@@ -256,7 +288,7 @@ namespace FlowChart.LuaCodeGen
                     if (evType != null)
                     {
                         Pr.EventName = evType.Name;
-                        return new NodeInfo() { Code = $"wait_event({ownerNodeInfo.Type}, EventId.{evType.Name})", Type = BuiltinTypes.VoidType };
+                        return new NodeInfo() { Code = GenEventCode(ownerNodeInfo.Code, evType.Name), Type = BuiltinTypes.VoidType };
                     }
                 }
 
@@ -287,7 +319,7 @@ namespace FlowChart.LuaCodeGen
                 else
                 {
                     v.Type = exprNodeInfo.Type;
-                    varNodeInfo.Code = $"set_var(\"{varNode.Text}\", {exprNodeInfo.Code})";
+                    varNodeInfo.Code = GenSetVarCode(varNode.Text, exprNodeInfo.Code);
                     return varNodeInfo;
                 }
             }
@@ -340,5 +372,6 @@ namespace FlowChart.LuaCodeGen
             nodeInfo.Code = $"{{{string.Join(", ", nis.ConvertAll(n => n.Code))}}}";
             return nodeInfo;
         }
+        #endregion
     }
 }

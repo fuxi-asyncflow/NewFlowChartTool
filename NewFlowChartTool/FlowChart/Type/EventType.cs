@@ -20,6 +20,18 @@ namespace FlowChart.Type
             AddMember(prop);
         }
 
+        //TODO optimization
+        public int GetParamIndex(string paraName)
+        {
+            var count = Parameters.Count;
+            for (int i = 0; i < count; i++)
+            {
+                if(Parameters[i].Name == paraName)
+                    return i;
+            }
+            return -1;
+        }
+
         public EventType(string name) : base(name)
         {
             Parameters = new List<Parameter>();
