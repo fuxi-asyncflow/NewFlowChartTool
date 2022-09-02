@@ -114,7 +114,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 var lines = new List<string>();
                 foreach (var graph in kv.Value)
                 {
-                    lines.Add("---");
+                    lines.Add("--- ");
                     SaveGraph(graph, lines);
                 }
                 lines.Add("...");
@@ -141,7 +141,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 lines.Add("variables: ");
                 foreach (var variable in graph.Variables)
                 {
-                    lines.Add("-");
+                    lines.Add("- ");
                     lines.Add($"  name: {variable.Name}");
                     if (!string.IsNullOrEmpty(variable.Description))
                         lines.Add($"  description: {variable.Description}");
@@ -154,7 +154,7 @@ namespace ProjectFactory.DefaultProjectFactory
             lines.Add("nodes: ");
             foreach (var node in graph.Nodes)
             {
-                lines.Add("-");
+                lines.Add("- ");
                 lines.Add($"  uid: {node.Uid}");
                 if (node is TextNode textNode)
                 {
@@ -190,7 +190,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 lines.Add("connectors: ");
                 foreach (var connector in graph.Connectors)
                 {
-                    lines.Add("-");
+                    lines.Add("- ");
                     lines.Add($"  start: {connector.Start.Uid}");
                     lines.Add($"  end: {connector.End.Uid}");
                     lines.Add($"  type: {(int)connector.ConnType}");
@@ -224,7 +224,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public void SaveType(FlowChart.Type.Type type, List<string> lines)
         {
-            lines.Add("---");
+            lines.Add("--- ");
             lines.Add($"name: {type.Name}");
             var props = new SortedList<string, Property>();
             var methods = new SortedList<string, Method>();
@@ -242,7 +242,7 @@ namespace ProjectFactory.DefaultProjectFactory
             foreach (var kv in props)
             {
                 var member = kv.Value;
-                lines.Add("-");
+                lines.Add("- ");
                 lines.Add($"  name: {member.Name}");
                 if (!string.IsNullOrEmpty(member.Description))
                     lines.Add($"description: {member.Description}");
@@ -254,7 +254,7 @@ namespace ProjectFactory.DefaultProjectFactory
             foreach (var kv in methods)
             {
                 var method = kv.Value;
-                lines.Add("-");
+                lines.Add("- ");
                 lines.Add($"  name: {method.Name}");
                 if (!string.IsNullOrEmpty(method.Description))
                     lines.Add($"description: {method.Description}");
@@ -280,12 +280,12 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public void SaveEvents(List<string> lines)
         {
-            lines.Add("---");
+            lines.Add("--- ");
             var events = Project.EventDict.Values.ToList();
             events.Sort((a, b) =>  a.EventId.CompareTo(b.EventId));
             foreach (var ev in events)
             {
-                lines.Add("-");
+                lines.Add("- ");
                 lines.Add($"  id: {ev.EventId}");
                 lines.Add($"  name: {ev.Name}");
                 if (!string.IsNullOrEmpty(ev.Description))
