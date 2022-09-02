@@ -147,7 +147,7 @@ namespace ProjectFactory.DefaultProjectFactory
                         lines.Add($"  description: {variable.Description}");
                     lines.Add($"  type: {variable.Type.Name}");
                     if(variable.IsParameter)
-                        lines.Add($"  is_parameter: true");
+                        lines.Add($"  is_param: true");
                 }
             }
 

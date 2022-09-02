@@ -69,7 +69,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public static YamlScalarNode YAML_PROPERTIES = new YamlScalarNode("properties");
         public static YamlScalarNode YAML_PARAMETERS = new YamlScalarNode("parameters");
 
-        public static YamlScalarNode YAML_ISPARAMETER = new YamlScalarNode("is_parameter");
+        public static YamlScalarNode YAML_ISPARAMETER = new YamlScalarNode("is_param");
         public static YamlScalarNode YAML_ISSUBCHART = new YamlScalarNode("is_subgraph");
         public static YamlScalarNode YAML_RETURNTYPE = new YamlScalarNode("return_type");
 
