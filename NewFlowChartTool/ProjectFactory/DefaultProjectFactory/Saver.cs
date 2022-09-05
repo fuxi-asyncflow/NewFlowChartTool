@@ -175,10 +175,11 @@ namespace ProjectFactory.DefaultProjectFactory
                         }
                         else if (content.Type == GenerateContent.ContentType.FUNC)
                         {
+                            lines.Add($"    content: |");
                             foreach (var c in content.Contents)
                             {
                                 if (c is string s)
-                                    lines.Add($"    content: {c.ToString()}");
+                                    lines.Add($"      {c.ToString()}");
                             }
                         }
                     }

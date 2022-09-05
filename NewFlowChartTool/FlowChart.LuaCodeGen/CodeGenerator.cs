@@ -62,6 +62,7 @@ namespace FlowChart.LuaCodeGen
 
             content.Type = GenerateContent.ContentType.FUNC;
             content.Contents.Add(info.Code);
+            content.Contents.Add("return true");
         }
 
         public void Error(string msg)
