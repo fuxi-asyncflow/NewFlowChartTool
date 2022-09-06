@@ -246,8 +246,10 @@ namespace ProjectFactory.DefaultProjectFactory
                 lines.Add("- ");
                 lines.Add($"  name: {member.Name}");
                 if (!string.IsNullOrEmpty(member.Description))
-                    lines.Add($"description: {member.Description}");
+                    lines.Add($"  description: {member.Description}");
                 lines.Add($"  type: {member.Type.Name}");
+                if (!string.IsNullOrEmpty(member.Template))
+                    lines.Add($"  template: {member.Template}");
             }
 
             if(methods.Count > 0)
@@ -258,9 +260,11 @@ namespace ProjectFactory.DefaultProjectFactory
                 lines.Add("- ");
                 lines.Add($"  name: {method.Name}");
                 if (!string.IsNullOrEmpty(method.Description))
-                    lines.Add($"description: {method.Description}");
+                    lines.Add($"  description: {method.Description}");
                 lines.Add($"  type: {method.Type.Name}");
-                
+                if (!string.IsNullOrEmpty(method.Template))
+                    lines.Add($"  template: {method.Template}");
+
                 if (method.Parameters.Count > 0)
                 {
                     lines.Add("  parameters: ");

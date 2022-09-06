@@ -13,5 +13,6 @@ namespace FlowChart.Type
 
         }
         public Type Type { get; set; }
+        public string? Template { get; set; }
     }
 }

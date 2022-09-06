@@ -34,6 +34,7 @@ namespace ProjectFactory
         public string? Description { get; set; }
         public int MemberType { get; set; }
         public int From { get; set; }
+        public string? Source { get; set; }
         public List<ParameterInfo> Parameters { get; set; }
 
         public Member ToMember()
@@ -46,14 +47,18 @@ namespace ProjectFactory
                     member = new Method(Name)
                     {
                         Parameters = Parameters.ConvertAll(p => p == null ? new Parameter("__error") {Type = BuiltinTypes.UndefinedType} : p.ToParameter()),
-                        Type = TypeJson.GetType(Type)
+                        Type = TypeJson.GetType(Type),
+                        Description = Description,
+                        Template = Source
                     };
                 }
                 else if (MemberType == 1)
                 {
                     member = new Property(Name)
                     {
-                        Type = TypeJson.GetType(Type)
+                        Type = TypeJson.GetType(Type),
+                        Description = Description,
+                        Template = Source
                     };
                 }
             }

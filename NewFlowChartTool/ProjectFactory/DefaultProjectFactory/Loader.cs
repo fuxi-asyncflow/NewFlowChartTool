@@ -56,6 +56,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public static YamlScalarNode YAML_ID = new YamlScalarNode("id");
         public static YamlScalarNode YAML_PATH = new YamlScalarNode("path");
         public static YamlScalarNode YAML_TYPE = new YamlScalarNode("type");
+        public static YamlScalarNode YAML_TEMPLATE = new YamlScalarNode("template");
         public static YamlScalarNode YAML_VARIABLES = new YamlScalarNode("variables");
         public static YamlScalarNode YAML_NODES = new YamlScalarNode("nodes");
         public static YamlScalarNode YAML_UID = new YamlScalarNode("uid");
@@ -187,6 +188,13 @@ namespace ProjectFactory.DefaultProjectFactory
 
             var typeNode = root.Children[YAML_TYPE] as YamlScalarNode;
             prop.Type = Project.GetType(typeNode.Value);
+
+            if (root.Children.ContainsKey(YAML_DESCRIPTION) && root.Children[YAML_DESCRIPTION] is YamlScalarNode descriptionNode)
+                prop.Description = descriptionNode.Value;
+
+            if (root.Children.ContainsKey(YAML_TEMPLATE) && root.Children[YAML_TEMPLATE] is YamlScalarNode templateNode)
+                prop.Template = templateNode.Value;
+
             return prop;
         }
 
@@ -208,6 +216,12 @@ namespace ProjectFactory.DefaultProjectFactory
                 var typeNode = node as YamlScalarNode;
                 method.Type = Project.GetType(typeNode.Value);
             }
+
+            if (root.Children.ContainsKey(YAML_DESCRIPTION) && root.Children[YAML_DESCRIPTION] is YamlScalarNode descriptionNode)
+                method.Description = descriptionNode.Value;
+
+            if (root.Children.ContainsKey(YAML_TEMPLATE) && root.Children[YAML_TEMPLATE] is YamlScalarNode templateNode)
+                method.Template = templateNode.Value;
 
             if (root.Children.TryGetValue(YAML_PARAMETERS, out node))
             {

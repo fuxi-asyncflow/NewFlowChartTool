@@ -123,7 +123,8 @@ namespace FlowChart.LuaCodeGen
 
             if (member is Property prop)
             {
-                return new NodeInfo() { Type = prop.Type, Code = code + prop.Name };
+                var propCode = prop.Template ?? prop.Name;
+                return new NodeInfo() { Type = prop.Type, Code = code + propCode };
                 
             }
 
@@ -261,10 +262,12 @@ namespace FlowChart.LuaCodeGen
             
             Pr.IsAction = method.IsAction;
 
+            var funcName = method.Template ?? method.Name;
+
             return new NodeInfo()
             {
                 Type = method.Type,
-                Code = $"{code}{node.FuncName}({argsString})"
+                Code = $"{code}{funcName}({argsString})"
             };
         }
 
