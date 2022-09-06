@@ -19,15 +19,24 @@ namespace ProjectFactory
         public string Name { get; set; }
         public string Type { get; set; }
         public string? IsParameter { get; set; }
+        public int Count { get; set; }
 
         public Parameter ToParameter()
         {
-            return new Parameter(Name) { Type = TypeJson.GetType(Type) };
+            return new Parameter(Name) { Type = TypeJson.GetType(Type), IsVariadic = Count == -1};
         }
     }
 
     class MemberJson
     {
+        static MemberJson()
+        {
+            SpecialFuncs = new HashSet<string>();
+            SpecialFuncs.Add("stopflow");
+            SpecialFuncs.Add("stopnode");
+            SpecialFuncs.Add("gotonode");
+            SpecialFuncs.Add("waitall");
+        }
         public string Uid { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
@@ -36,6 +45,8 @@ namespace ProjectFactory
         public int From { get; set; }
         public string? Source { get; set; }
         public List<ParameterInfo> Parameters { get; set; }
+
+        public static HashSet<string> SpecialFuncs { get; set; }
 
         public Member ToMember()
         {
@@ -51,6 +62,10 @@ namespace ProjectFactory
                         Description = Description,
                         Template = Source
                     };
+                    if (SpecialFuncs.Contains(Name))
+                    {
+                        ((Method)member).IsCustomGen = true;
+                    }
                 }
                 else if (MemberType == 1)
                 {

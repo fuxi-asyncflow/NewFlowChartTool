@@ -165,21 +165,34 @@ namespace ProjectFactory.DefaultProjectFactory
                         var content = node.Content;
                         lines.Add($"    type: {content.Type}");
 
-                        if (content.Type == GenerateContent.ContentType.ERROR)
+                        if (content.Contents.Count != 0)
                         {
-                            foreach (var c in content.Contents)
+                            if (content.Type == GenerateContent.ContentType.ERROR)
                             {
-                                if(c is string s)
-                                    lines.Add($"    content: {c.ToString()}");
+                                lines.Add($"    content: |");
+                                foreach (var c in content.Contents)
+                                {
+                                    if (c is string s)
+                                        lines.Add($"      {c.ToString()}");
+                                }
                             }
-                        }
-                        else if (content.Type == GenerateContent.ContentType.FUNC)
-                        {
-                            lines.Add($"    content: |");
-                            foreach (var c in content.Contents)
+                            else if (content.Type == GenerateContent.ContentType.FUNC)
                             {
-                                if (c is string s)
-                                    lines.Add($"      {c.ToString()}");
+                                lines.Add($"    content: |");
+                                foreach (var c in content.Contents)
+                                {
+                                    if (c is string s)
+                                        lines.Add($"      {c.ToString()}");
+                                }
+                            }
+                            else if (content.Type == GenerateContent.ContentType.CONTROL)
+                            {
+                                lines.Add($"    content: ");
+                                foreach (var c in content.Contents)
+                                {
+                                    if (c is string s)
+                                        lines.Add($"    - {c.ToString()}");
+                                }
                             }
                         }
                     }
@@ -264,16 +277,20 @@ namespace ProjectFactory.DefaultProjectFactory
                 lines.Add($"  type: {method.Type.Name}");
                 if (!string.IsNullOrEmpty(method.Template))
                     lines.Add($"  template: {method.Template}");
+                if (method.IsCustomGen)
+                    lines.Add($"  custom_gen: true");
 
                 if (method.Parameters.Count > 0)
                 {
                     lines.Add("  parameters: ");
                     foreach (var para in method.Parameters)
                     {
-                        if (string.IsNullOrEmpty(para.Description))
-                            lines.Add($"  - {{name: {para.Name}, type: {para.Type.Name}}}");
-                        else
-                            lines.Add($"  - {{name: {para.Name}, description: {para.Description}, type: {para.Type.Name}}}");
+                        var tmp = $"name: {para.Name}, type: {para.Type.Name}";
+                        if (!string.IsNullOrEmpty(para.Description))
+                            tmp += $", description: {para.Description}";
+                        if (para.IsVariadic)
+                            tmp += ", variadic: true";
+                        lines.Add($"  - {{{tmp}}}");
                     }
                 }
                 

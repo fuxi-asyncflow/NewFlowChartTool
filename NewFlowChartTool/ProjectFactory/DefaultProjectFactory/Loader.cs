@@ -69,6 +69,8 @@ namespace ProjectFactory.DefaultProjectFactory
         public static YamlScalarNode YAML_METHODS = new YamlScalarNode("methods");
         public static YamlScalarNode YAML_PROPERTIES = new YamlScalarNode("properties");
         public static YamlScalarNode YAML_PARAMETERS = new YamlScalarNode("parameters");
+        public static YamlScalarNode YAML_VARIADIC = new YamlScalarNode("variadic");
+        public static YamlScalarNode YAML_CUSTOMGEN = new YamlScalarNode("custom_gen");
 
         public static YamlScalarNode YAML_ISPARAMETER = new YamlScalarNode("is_param");
         public static YamlScalarNode YAML_ISSUBCHART = new YamlScalarNode("is_subgraph");
@@ -223,6 +225,9 @@ namespace ProjectFactory.DefaultProjectFactory
             if (root.Children.ContainsKey(YAML_TEMPLATE) && root.Children[YAML_TEMPLATE] is YamlScalarNode templateNode)
                 method.Template = templateNode.Value;
 
+            if (root.Children.ContainsKey(YAML_CUSTOMGEN) && root.Children[YAML_CUSTOMGEN] is YamlScalarNode customGenNode)
+                method.IsCustomGen = customGenNode.Value == "true";
+
             if (root.Children.TryGetValue(YAML_PARAMETERS, out node))
             {
                 var parasNode = node as YamlSequenceNode;
@@ -237,12 +242,12 @@ namespace ProjectFactory.DefaultProjectFactory
                     para.Type = Project.GetType(typeNode.Value);
                     method.Parameters.Add(para);
 
+                    if(paraNode.Children.ContainsKey(YAML_DESCRIPTION) && paraNode.Children[YAML_DESCRIPTION] is YamlScalarNode paraDescripNode)
+                        para.Description = paraDescripNode.Value;
+                    if (paraNode.Children.ContainsKey(YAML_VARIADIC) && paraNode.Children[YAML_VARIADIC] is YamlScalarNode variadicNode)
+                        para.IsVariadic = variadicNode.Value == "true";
                 }
-                
             }
-
-
-
             return method;
         }
 

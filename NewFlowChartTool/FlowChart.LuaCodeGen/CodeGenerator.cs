@@ -60,9 +60,28 @@ namespace FlowChart.LuaCodeGen
                 return;
             }
 
+            if (content.Type == GenerateContent.ContentType.CONTROL)
+                return;
+
             content.Type = GenerateContent.ContentType.FUNC;
-            content.Contents.Add(info.Code);
-            content.Contents.Add("return true");
+            if (info.Type == BuiltinTypes.VoidType)
+            {
+                content.Contents.Add(info.Code);
+                content.Contents.Add("return true");
+            }
+            else
+            {
+                content.Contents.Add($"local __ret__ = {info.Code}");
+                if (info.Type == BuiltinTypes.NumberType)
+                    content.Contents.Add("return __ret__ ~= 0");
+                else if (info.Type == BuiltinTypes.ArrayType)
+                    content.Contents.Add("return (__ret__ ~= nil) and (next(__ret__) ~= nil)");
+                else
+                    content.Contents.Add("return __ret__");
+            }
+
+            
+            
         }
 
         public void Error(string msg)
@@ -258,6 +277,21 @@ namespace FlowChart.LuaCodeGen
                     }
                 }
             }
+
+            if (method.IsCustomGen)
+            {
+                Pr.Content.Type = GenerateContent.ContentType.CONTROL;
+                Pr.Content.Contents.Add(method.Name);
+                inputArgsNodeInfo.ForEach(ni =>
+                {
+                    if(ni.Code.StartsWith('"'))
+                        Pr.Content.Contents.Add(ni.Code.Trim('"'));
+                    else
+                        Pr.Content.Contents.Add(ni.Code);
+                });
+                return new NodeInfo() { Type = method.Type, Code = "" };
+            }
+
             string argsString = string.Join(", ", inputArgsNodeInfo.ConvertAll(ni => ni.Code));
             
             Pr.IsAction = method.IsAction;

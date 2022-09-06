@@ -16,5 +16,6 @@ namespace FlowChart.Type
         }
         public List<Parameter> Parameters { get; set; }
         public bool IsAction => Type == BuiltinTypes.VoidType;
+        public bool IsCustomGen { get; set; } // generation code for this method is customized
     }
 }
