@@ -4,6 +4,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlowChart.Core;
+using FlowChartCommon;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace FlowChart.Type
@@ -33,7 +35,7 @@ namespace FlowChart.Type
             UndefinedType = new Type("Undefined") { IsBuiltinType = true };
             Types.Add(UndefinedType);
             
-            ArrayType = new GenericType("Array") { IsBuiltinType = true };
+            ArrayType = new GenericTypeOne("Array") { IsBuiltinType = true };
             Types.Add(ArrayType);
 
             GlobalType = new Type("Global");
@@ -47,7 +49,7 @@ namespace FlowChart.Type
         public static Type VoidType;
         public static Type AnyType;
         public static Type UndefinedType;
-        public static Type ArrayType;
+        public static GenericType ArrayType;
         public static Type GlobalType;
 
         public static List<Type> Types;
@@ -127,12 +129,18 @@ namespace FlowChart.Type
 
     public class GenericType : Type
     {
-        public List<Type> templateTypes;
-        public Dictionary<string, GenericType> InstanceTypes;
+        public virtual int TemplateTypeCount { get; set; }
+        public Project Project { get; set; }
+
         public GenericType(string name) : base(name)
         {
-            templateTypes = new List<Type>();
-            InstanceTypes = new Dictionary<string, GenericType>();
+            
+            
+        }
+
+        public virtual InstanceType GetInstance(List<Type> tmpls)
+        {
+            throw new NotImplementedException();
         }
 
         public override bool CanAccept(Type inType)
@@ -142,18 +150,18 @@ namespace FlowChart.Type
             if (inType is not GenericType genericType)
                 return false;
             // both genericType
-            if (templateTypes.Count != genericType.templateTypes.Count)
-            {
-                return false;
-            }
+            //if (templateTypes.Count != genericType.templateTypes.Count)
+            //{
+            //    return false;
+            //}
 
-            for (int i = 0; i < templateTypes.Count; i++)
-            {
-                if (!templateTypes[i].CanAccept(genericType.templateTypes[i]))
-                {
-                    return false;
-                }
-            }
+            //for (int i = 0; i < templateTypes.Count; i++)
+            //{
+            //    if (!templateTypes[i].CanAccept(genericType.templateTypes[i]))
+            //    {
+            //        return false;
+            //    }
+            //}
 
             return true;
         }
@@ -165,5 +173,79 @@ namespace FlowChart.Type
         
     }
 
-    
+    public class GenericTypeOne : GenericType
+    {
+        public GenericTypeOne(string name) : base(name)
+        {
+            InstanceTypes = new Dictionary<Type, InstanceType>();
+        }
+
+        public override int TemplateTypeCount => 1;
+        public Dictionary<Type, InstanceType> InstanceTypes;
+
+        public override InstanceType GetInstance(List<Type> tmpls)
+        {
+            if (tmpls.Count != 1)
+            {
+                Logger.ERR($"GenericType `{Name}` only receive 1 template type");
+                return GetInstance(new List<Type>() {BuiltinTypes.UndefinedType});
+            }
+
+            InstanceType ret;
+            var tmpl = tmpls[0];
+            if (InstanceTypes.TryGetValue(tmpl, out ret))
+                return ret;
+            ret = new InstanceType(Name) { GenType = this };
+            ret.templateTypes.AddRange(tmpls);
+            ret.Name = $"{Name}<{tmpl.Name}>";
+            InstanceTypes.Add(tmpl, ret);
+            ret.IsBuiltinType = true;
+            Project.AddType(ret);
+            return ret;
+        }
+    }
+
+    public class InstanceType : Type
+    {
+        public GenericType GenType;
+        public List<Type> templateTypes;
+
+
+        public InstanceType(string name) : base(name)
+        {
+            templateTypes = new List<Type>();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+
+        public override bool CanAccept(Type inType)
+        {
+            if (inType == this)
+                return true;
+            if (inType is not InstanceType instType)
+                return false;
+            if (instType.GenType != GenType)
+                return false;
+            if (templateTypes.Count != instType.templateTypes.Count)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < templateTypes.Count; i++)
+            {
+                if (!templateTypes[i].CanAccept(instType.templateTypes[i]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+
+
 }

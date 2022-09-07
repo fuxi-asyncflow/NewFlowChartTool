@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,12 @@ namespace FlowChart.Core
             TypeDict = new Dictionary<string, Type.Type>();
             GraphDict = new Dictionary<string, Graph>();
             EventDict = new Dictionary<string, EventType>();
-            BuiltinTypes.Types.ForEach(AddType);
+            BuiltinTypes.Types.ForEach(tp =>
+            {
+                if (tp is GenericType gt)
+                    gt.Project = this;
+                AddType(tp);
+            });
 
             EnumTypeDict = new Dictionary<string, EnumType>();
         }
@@ -74,7 +80,27 @@ namespace FlowChart.Core
         {
             Type.Type? type = null;
             TypeDict.TryGetValue(typeName, out type);
+            if (type == null && typeName.Contains('<'))
+            {
+                return AddGenericTypeInstance(typeName);
+            }
             return type;
+        }
+
+        public Type.Type? AddGenericTypeInstance(string typeName)
+        {
+            var idx = typeName.IndexOf('<');
+            var genericTypeName = typeName.Substring(0, idx);
+            var genericType = GetType(genericTypeName);
+            if (genericType == null)
+                return null;
+            if (genericType is not GenericType genType)
+            {
+                return null;
+            }
+            var tmplStr = typeName.Substring(idx + 1, typeName.Length - idx - 2);
+            var tmpls = tmplStr.Split(',').ToList().ConvertAll(s => GetType(s.Trim()));
+            return genType.GetInstance(tmpls);
         }
 
         public Type.Type GetGlobalType()
