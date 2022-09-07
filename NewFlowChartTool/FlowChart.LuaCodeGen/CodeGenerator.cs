@@ -43,9 +43,9 @@ namespace FlowChart.LuaCodeGen
                     Console.WriteLine(nodeInfo.Code);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                throw;
             }
             return Pr;
         }
@@ -53,6 +53,7 @@ namespace FlowChart.LuaCodeGen
         private void PrepareCode(NodeInfo info)
         {
             var content = Pr.Content;
+
             if (Pr.IsError)
             {
                 content.Type = GenerateContent.ContentType.ERROR;
@@ -64,6 +65,8 @@ namespace FlowChart.LuaCodeGen
                 return;
 
             content.Type = GenerateContent.ContentType.FUNC;
+            if (Pr.IsWait)
+                content.Type = GenerateContent.ContentType.EVENT;
             if (info.Type == BuiltinTypes.VoidType)
             {
                 content.Contents.Add(info.Code);
@@ -79,9 +82,6 @@ namespace FlowChart.LuaCodeGen
                 else
                     content.Contents.Add("return __ret__");
             }
-
-            
-            
         }
 
         public void Error(string msg)
@@ -94,7 +94,7 @@ namespace FlowChart.LuaCodeGen
 
         public static string GenEventCode(string obj, string eventName)
         {
-            return $"asyncflow.wait_event({obj}, EventId.{eventName})";
+            return $"asyncflow.wait_event({obj}, asyncflow.EventId.{eventName})";
         }
 
         public static string GenGetVarCode(string varName)
@@ -109,7 +109,7 @@ namespace FlowChart.LuaCodeGen
 
         public static string GenEventParamCode(string evName, int paramIdx)
         {
-            return $"asyncflow.get_event_param(EventId.{evName}, {paramIdx})";
+            return $"asyncflow.get_event_param(asyncflow.EventId.{evName}, {paramIdx})";
         }
 
         #endregion
@@ -206,6 +206,10 @@ namespace FlowChart.LuaCodeGen
         {
             var nis = node.ChildNodes.ConvertAll(_node => _node.OnVisit(this));
             //TODO handle compare operator
+            if (node.Op == Operator.Add && nis[0].Type == BuiltinTypes.StringType)
+            {
+                return new NodeInfo() { Code = $"{nis[0].Code} .. {nis[1].Code}", Type = nis[0].Type };
+            }
             var nodeInfo = new NodeInfo() { Code = $"{nis[0].Code} {node.Op.Text} {nis[1].Code}", Type = nis[0].Type };
             return nodeInfo;
         }
@@ -298,6 +302,18 @@ namespace FlowChart.LuaCodeGen
 
             var funcName = method.Template ?? method.Name;
 
+            if (funcName.Contains('$'))
+            {
+                var codeStr = funcName.Replace("$caller", code.Substring(0, code.Length - 1));
+                codeStr = codeStr.Replace("$params", argsString);
+                return new NodeInfo()
+                {
+                    Type = method.Type,
+                    Code = codeStr
+                };
+
+            }
+
             return new NodeInfo()
             {
                 Type = method.Type,
@@ -339,7 +355,30 @@ namespace FlowChart.LuaCodeGen
 
         public NodeInfo Visit(SubscriptNode node)
         {
-            throw new NotImplementedException();
+            var ownerInfo = node.Owner.OnVisit(this);
+            var keyInfo = node.Key.OnVisit(this);
+            // TODO check condition
+            if (ownerInfo.Type == BuiltinTypes.ArrayType )
+            {
+                throw new NotImplementedException("not supported generic type");
+            }
+            else if(ownerInfo.Type is InstanceType instType)
+            {
+                if (instType.GenType == BuiltinTypes.ArrayType)
+                    ownerInfo.Type = instType.templateTypes.First();
+                else
+                {
+                    throw new NotImplementedException("not supported generic type");
+                }
+            }
+            else
+            {
+                Error($"{ownerInfo.Code} should be an array");
+                return null;
+            }
+
+            ownerInfo.Code = $"({ownerInfo.Code})[{keyInfo.Code}]";
+            return ownerInfo;
         }
 
         public NodeInfo Visit(AssignmentNode node)
@@ -407,6 +446,7 @@ namespace FlowChart.LuaCodeGen
                 }
             }
 
+            nodeInfo.Type = BuiltinTypes.ArrayType.GetInstance(new List<Type.Type> { nodeInfo.Type });
             nodeInfo.Code = $"{{{string.Join(", ", nis.ConvertAll(n => n.Code))}}}";
             return nodeInfo;
         }

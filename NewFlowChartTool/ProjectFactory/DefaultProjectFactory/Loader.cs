@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -405,7 +406,11 @@ namespace ProjectFactory.DefaultProjectFactory
             // if graph is subgraph ,add it as a method
             if (graph.IsSubGraph)
             {
-                var method = new Method(graph.Name) { Type = graph.ReturnType };
+                var method = new Method(graph.Name)
+                {
+                    Type = graph.ReturnType,
+                    SaveToFile = false
+                };
                 foreach (var v in graph.Variables)
                 {
                     if(v.IsParameter)
@@ -414,6 +419,12 @@ namespace ProjectFactory.DefaultProjectFactory
                             Type = v.Type
                         });
                 }
+
+                //TODO when subgraph path changes, template should update
+                if (method.Parameters.Count == 0)
+                    method.Template = $"asyncflow.call_sub(\"{graph.Path}\", $caller)";
+                else
+                    method.Template = $"asyncflow.call_sub(\"{graph.Path}\", $caller, $params)";
                 graph.Type.AddMember(method);
             }
 
@@ -461,6 +472,7 @@ namespace ProjectFactory.DefaultProjectFactory
             {
                 var typeName = ((YamlScalarNode)tmpNode).Value;
                 v.Type = Project.GetType(typeName);
+                Debug.Assert(v.Type != null);
             }
 
             if (root.Children.TryGetValue(YAML_ISPARAMETER, out tmpNode))

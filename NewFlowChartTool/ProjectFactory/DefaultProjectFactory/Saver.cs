@@ -176,7 +176,8 @@ namespace ProjectFactory.DefaultProjectFactory
                                         lines.Add($"      {c.ToString()}");
                                 }
                             }
-                            else if (content.Type == GenerateContent.ContentType.FUNC)
+                            else if (content.Type == GenerateContent.ContentType.FUNC
+                                     || content.Type == GenerateContent.ContentType.EVENT)
                             {
                                 lines.Add($"    content: |");
                                 foreach (var c in content.Contents)
@@ -244,6 +245,8 @@ namespace ProjectFactory.DefaultProjectFactory
             var methods = new SortedList<string, Method>();
             foreach (var kv in type.MemberDict)
             {
+                if (!kv.Value.SaveToFile)
+                    continue;
                 if (kv.Value is Property prop)
                     props.Add(prop.Name, prop);
                 else if(kv.Value is Method method)

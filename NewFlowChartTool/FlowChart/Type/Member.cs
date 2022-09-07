@@ -10,9 +10,10 @@ namespace FlowChart.Type
     {
         public Member(string name) : base(name)
         {
-
+            SaveToFile = true;
         }
         public Type Type { get; set; }
         public string? Template { get; set; }
+        public bool SaveToFile { get; set; }
     }
 }
