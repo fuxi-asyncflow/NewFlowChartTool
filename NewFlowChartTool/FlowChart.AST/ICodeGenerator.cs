@@ -22,11 +22,11 @@ namespace FlowChart.AST
         public GenerateContent()
         {
             Type = ContentType.ERROR;
-            Contents = new List<object>();
+            Contents = new List<string>();
         }
 
         public ContentType Type;
-        public List<object> Contents;
+        public List<string> Contents;
     }
     public class ParseResult
     {

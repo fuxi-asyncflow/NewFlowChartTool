@@ -42,6 +42,14 @@ namespace FlowChart.Core
             Content = pr.Content;
             if(pr.IsError)
                 OutputMessage.Inst?.Output(pr.ErrorMessage, OutputMessageType.Error, this, OwnerGraph);
+            if (pr.Content.Type == GenerateContent.ContentType.CONTROL)
+            {
+                var contents = pr.Content.Contents;
+                if (contents.Count > 0 && contents[0] == "waitall")
+                {
+                    Parents.ForEach(conn => contents.Add(conn.Start.Uid));
+                }
+            }
             ParseEvent?.Invoke(this, pr);
         }
         public GenerateContent? Content { get; set; }
