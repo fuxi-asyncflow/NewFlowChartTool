@@ -68,6 +68,18 @@ namespace FlowChart.Layout
                 }
                 return c;
             }
+            else if (curve is Ellipse ellipse)
+            {
+                var c = new Curve() { Type = Curve.CurveType.Ellipse };
+                c.Points.Add(ToPosition(ellipse.Center));
+                c.Points.Add(ToPosition(ellipse.AxisA));
+                c.Points.Add(ToPosition(ellipse.AxisB));
+                c.Points.Add(new Position(ellipse.ParStart, ellipse.ParEnd));
+                Logger.WARN("Ellipse curve not supported");
+                return c;
+            }
+
+            Logger.ERR($"[layout] unsupported curve type: {curve.GetType()}");
 
             return null;
 

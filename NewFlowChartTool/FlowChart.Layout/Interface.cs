@@ -28,6 +28,7 @@
         {
             Line = 0,
             SPLINE = 1,
+            Ellipse = 2
         }
         public CurveType Type { get; set; }
         public List<Position> Points { get; set; }
