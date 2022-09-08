@@ -421,6 +421,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
 
                 //TODO when subgraph path changes, template should update
+                method.IsAsync = true;
                 if (method.Parameters.Count == 0)
                     method.Template = $"asyncflow.call_sub(\"{graph.Path}\", $caller)";
                 else

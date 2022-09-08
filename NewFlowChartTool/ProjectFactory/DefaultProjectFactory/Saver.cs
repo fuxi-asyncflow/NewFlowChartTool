@@ -179,6 +179,8 @@ namespace ProjectFactory.DefaultProjectFactory
                             else if (content.Type == GenerateContent.ContentType.FUNC
                                      || content.Type == GenerateContent.ContentType.EVENT)
                             {
+                                if(content.ReturnVarName != null)
+                                    lines.Add($"    return_var_name: {content.ReturnVarName}");
                                 lines.Add($"    content: |");
                                 foreach (var c in content.Contents)
                                 {

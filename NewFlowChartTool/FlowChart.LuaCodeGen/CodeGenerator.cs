@@ -264,6 +264,9 @@ namespace FlowChart.LuaCodeGen
                 };
             }
 
+            if (method.IsAsync)
+                Pr.IsAsync = true;
+
             // check func args
             var inputArgsNodeInfo = node.Args.ChildNodes.ConvertAll(node => node.OnVisit(this));
             var argsDef = method.Parameters;
@@ -395,9 +398,18 @@ namespace FlowChart.LuaCodeGen
                 }
                 else
                 {
-                    v.Type = exprNodeInfo.Type;
-                    varNodeInfo.Code = GenSetVarCode(varNode.Text, exprNodeInfo.Code);
-                    return varNodeInfo;
+                    if (Pr.IsAsync) // subchart or asyncfunction, not set variable
+                    {
+                        Pr.Content.ReturnVarName = v.Name;
+                        return exprNodeInfo;
+                    }
+                    else
+                    {
+                        v.Type = exprNodeInfo.Type;
+                        varNodeInfo.Code = GenSetVarCode(varNode.Text, exprNodeInfo.Code);
+                        return varNodeInfo;
+                    }
+                    
                 }
             }
             else if (node.Left is SubscriptNode subNode)

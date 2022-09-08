@@ -27,6 +27,7 @@ namespace FlowChart.AST
 
         public ContentType Type;
         public List<string> Contents;
+        public string? ReturnVarName;
     }
     public class ParseResult
     {
@@ -42,6 +43,7 @@ namespace FlowChart.AST
         public GenerateContent Content { get; set; }
         public List<TextToken>? Tokens { get; set; }
         public object? Type { get; set; }
+        public bool IsAsync { get; set; }
     }
 
     public interface ICodeGenerator
