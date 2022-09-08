@@ -210,7 +210,7 @@ namespace FlowChart.LuaCodeGen
             {
                 return new NodeInfo() { Code = $"{nis[0].Code} .. {nis[1].Code}", Type = nis[0].Type };
             }
-            var nodeInfo = new NodeInfo() { Code = $"{nis[0].Code} {node.Op.Text} {nis[1].Code}", Type = nis[0].Type };
+            var nodeInfo = new NodeInfo() { Code = $"{nis[0].Code} {node.Op.Text} {nis[1].Code}", Type = node.Op.IsBoolOp ? BuiltinTypes.BoolType : nis[0].Type };
             return nodeInfo;
         }
 

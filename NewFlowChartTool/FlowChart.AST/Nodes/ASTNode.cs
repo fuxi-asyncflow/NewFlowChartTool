@@ -18,6 +18,10 @@ namespace FlowChart.AST.Nodes
             MOD = 5,
             LT = 6,
             GT = 7,
+            LE = 8,
+            GE = 9,
+            NE = 10,
+            EQ = 11
         }
 
         public Operator(OPERATOR op, string text)
@@ -28,6 +32,7 @@ namespace FlowChart.AST.Nodes
 
         public OPERATOR Op;
         public string Text;
+        public bool IsBoolOp; // operator will return boolean
 
         public static Operator Unkown = new Operator(OPERATOR.UNKOWN, "Unkown Operator");
         public static Operator Add = new Operator(OPERATOR.ADD, "+");
@@ -35,8 +40,13 @@ namespace FlowChart.AST.Nodes
         public static Operator Mul = new Operator(OPERATOR.MUL, "*");
         public static Operator Div = new Operator(OPERATOR.DIV, "/");
         public static Operator Mod = new Operator(OPERATOR.MOD, "%");
-        public static Operator Lt = new Operator(OPERATOR.LT, ">");
-        public static Operator Gt = new Operator(OPERATOR.GT, "<");
+        public static Operator Lt = new Operator(OPERATOR.LT, "<") {IsBoolOp = true};
+        public static Operator Gt = new Operator(OPERATOR.GT, ">") { IsBoolOp = true};
+        public static Operator Le = new Operator(OPERATOR.LE, "<=") { IsBoolOp = true };
+        public static Operator Ge = new Operator(OPERATOR.GE, ">=") { IsBoolOp = true };
+        public static Operator Ne = new Operator(OPERATOR.NE, "!=") { IsBoolOp = true };
+        public static Operator Eq = new Operator(OPERATOR.EQ, "==") { IsBoolOp = true };
+        
     }
 
     public class ASTNode

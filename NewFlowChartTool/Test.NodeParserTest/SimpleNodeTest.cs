@@ -46,6 +46,12 @@ namespace Test.NodeParserTest
             node_10.Add(node_12);
 
             Assert.Equal(Parse("1 * 2 + 3 * 4"), node_10);
+
+
+            var node_00 = new BinOpNode() { Op = Operator.Lt };
+            node_00.Add(new VariableNode() { Text = "s1" });
+            node_00.Add(new NumberNode() { Text = "1" });
+            Assert.Equal(Parse("$s1<1"), node_00);
         }
 
         [Fact]
@@ -193,7 +199,7 @@ namespace Test.NodeParserTest
         [Fact]
         public void TestVariableNode()
         {
-            
+
         }
 
         [Fact]
