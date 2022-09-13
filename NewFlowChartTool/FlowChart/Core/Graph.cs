@@ -239,7 +239,11 @@ namespace FlowChart.Core
 
         public Node? GetNode(string uid)
         {
-            return NodeDict[uid];
+            Node node;
+            if (NodeDict.TryGetValue(uid, out node))
+                return node;
+            Logger.WARN($"invalid uid {uid}");
+            return null;
         }
 
         public void Connect(string uidStart, string uidEnd, Connector.ConnectorType connType)

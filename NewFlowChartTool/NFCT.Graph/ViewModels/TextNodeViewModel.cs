@@ -139,7 +139,14 @@ namespace NFCT.Graph.ViewModels
         public static BaseNodeViewModel? CreateNodeViewModel(Node node, GraphPaneViewModel graphVm)
         {
             if (node is TextNode textNode)
+            {
+                if (ControlNodeViewModel.MaybeControlNodeViewModel(textNode.Text))
+                {
+                    var controlNodeVm = new ControlNodeViewModel(node, graphVm);
+                    return controlNodeVm;
+                }
                 return new TextNodeViewModel(textNode, graphVm);
+            }
             else if(node is StartNode startNode)
                 return new StartNodeViewModel(startNode, graphVm);
             return null;

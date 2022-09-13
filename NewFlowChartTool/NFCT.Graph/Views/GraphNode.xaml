@@ -21,8 +21,12 @@
         <DataTemplate x:Key="TextNodeTemplate">
             <local:TextNode />
         </DataTemplate>
+        <DataTemplate x:Key="ControlNodeTemplate">
+            <local:ControlNode />
+        </DataTemplate>
         <utility:GraphNodesTemplateSelector
             x:Key="GraphNodesTemplateSelector"
+            ControlNodeTemplate="{StaticResource ControlNodeTemplate}"
             StartNodeTemplate="{StaticResource StartNodeTemplate}"
             TextNodeTemplate="{StaticResource TextNodeTemplate}" />
     </UserControl.Resources>
@@ -37,8 +41,8 @@
         utility:SizeObserver.ObservedHeight="{Binding ActualHeight, Mode=OneWayToSource}"
         utility:SizeObserver.ObservedWidth="{Binding ActualWidth, Mode=OneWayToSource}"
         Focusable="True"
-        RequestBringIntoView="Node_OnRequestBringIntoView"
-        MouseDown="NodeGrid_OnMouseDown">
+        MouseDown="NodeGrid_OnMouseDown"
+        RequestBringIntoView="Node_OnRequestBringIntoView">
         <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource GraphNodesTemplateSelector}" />
         <b:Interaction.Triggers>
             <b:EventTrigger EventName="KeyDown">

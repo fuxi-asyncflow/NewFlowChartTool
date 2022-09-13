@@ -74,6 +74,12 @@ namespace NFCT.Graph.ViewModels
             IsFirstLayout = true;
             NeedLayout = true;
 
+            foreach (var nodeVm in Nodes)
+            {
+                if (nodeVm is ControlNodeViewModel controlVm)
+                    controlVm.ParseText(null);
+            }
+
             _graph.GraphPathChangeEvent += OnGraphPathChange;
             _graph.GraphRemoveNodeEvent += OnRemoveNode;
             _graph.ConnectorRemoveEvent += OnRemoveConnector;

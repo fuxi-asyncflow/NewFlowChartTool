@@ -270,7 +270,7 @@ namespace NFCT.Graph.ViewModels
             while (nodeStack.Count > 0)
             {
                 var node = nodeStack.Pop();
-                if(nodeStack.Contains(node))
+                if(nodeSet.Contains(node))
                     continue;
                 nodeSet.Add(node);
                 node.Id = id++;

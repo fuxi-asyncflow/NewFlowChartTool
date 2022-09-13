@@ -17,13 +17,15 @@ namespace NFCT.Graph.Utility
     {
         public DataTemplate? TextNodeTemplate { get; set; }
         public DataTemplate? StartNodeTemplate { get; set; }
+        public DataTemplate? ControlNodeTemplate { get; set; }
         public override DataTemplate? SelectTemplate(object item, DependencyObject container)
         {
             if (item is TextNodeViewModel)
                 return TextNodeTemplate;
             else if (item is StartNodeViewModel)
                 return StartNodeTemplate;
-            return StartNodeTemplate;
+            else if(item is ControlNodeViewModel)
+            return ControlNodeTemplate;
             return base.SelectTemplate(item, container);
         }
     }

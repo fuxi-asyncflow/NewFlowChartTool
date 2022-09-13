@@ -84,8 +84,6 @@ namespace FlowChart.Layout
                 var isCounterClockWise = ellipse.OrientedCounterclockwise() ? 1.0 : -1.0;
                 var sweepAngle = (ellipse.ParEnd - ellipse.ParStart) * isCounterClockWise;
                 c.Parameters.Add(sweepAngle);
-
-                Logger.WARN("Ellipse curve not supported");
                 return c;
             }
 
