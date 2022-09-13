@@ -32,6 +32,7 @@
         }
         public CurveType Type { get; set; }
         public List<Position> Points { get; set; }
+        public List<double>? Parameters { get; set; }
     }
 
     public interface INode

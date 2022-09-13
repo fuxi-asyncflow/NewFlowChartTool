@@ -156,6 +156,26 @@ namespace NFCT.Graph.ViewModels
                     PathFigure figure = new PathFigure(new Point(s.x, s.y), segments, false);
                     geometry.Figures.Add(figure);
                 }
+                else if (curve.Type == Curve.CurveType.Ellipse)
+                {
+                    if (curve.Parameters == null)
+                        continue;
+                    List<double> p = curve.Parameters;
+                    var angle = p[2];
+                    var segments = new List<PathSegment>();
+                    var s = curve.Points[0];
+
+                    var seg = new ArcSegment()
+                    {
+                        Point = new Point(curve.Points[1].x, curve.Points[1].y),
+                        Size = new Size(Math.Abs(p[0]), Math.Abs(p[1])),
+                        IsLargeArc = Math.Abs(angle) >= Math.PI,
+                        SweepDirection = angle < 0 ? SweepDirection.Counterclockwise : SweepDirection.Clockwise
+                    };
+                    segments.Add(seg);
+                    PathFigure figure = new PathFigure(new Point(s.x, s.y), segments, false);
+                    geometry.Figures.Add(figure);
+                }
                 
             }
 

@@ -71,10 +71,20 @@ namespace FlowChart.Layout
             else if (curve is Ellipse ellipse)
             {
                 var c = new Curve() { Type = Curve.CurveType.Ellipse };
-                c.Points.Add(ToPosition(ellipse.Center));
-                c.Points.Add(ToPosition(ellipse.AxisA));
-                c.Points.Add(ToPosition(ellipse.AxisB));
-                c.Points.Add(new Position(ellipse.ParStart, ellipse.ParEnd));
+                c.Points.Add(ToPosition(ellipse.Start));
+                c.Points.Add(ToPosition(ellipse.End));
+                //c.Points.Add(ToPosition(ellipse.Center));
+                //c.Points.Add(ToPosition(ellipse.AxisA));
+                //c.Points.Add(ToPosition(ellipse.AxisB));
+                //c.Points.Add(new Position(ellipse.ParStart, ellipse.ParEnd));
+                c.Parameters = new List<double>();
+                c.Parameters.Add(ellipse.AxisA.X);
+                c.Parameters.Add(ellipse.AxisB.Y);
+                // sweep angle, see EllipseSweepAngle function in msagl source code
+                var isCounterClockWise = ellipse.OrientedCounterclockwise() ? 1.0 : -1.0;
+                var sweepAngle = (ellipse.ParEnd - ellipse.ParStart) * isCounterClockWise;
+                c.Parameters.Add(sweepAngle);
+
                 Logger.WARN("Ellipse curve not supported");
                 return c;
             }
