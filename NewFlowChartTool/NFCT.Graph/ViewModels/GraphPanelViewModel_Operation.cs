@@ -20,9 +20,15 @@ namespace NFCT.Graph.ViewModels
             if (vm == null)
                 return null;
             if (idx < 0)
+            {
+                vm.Id = Nodes.Count;
                 Nodes.Add(vm);
+            }
             else
+            {
+                vm.Id = idx;
                 Nodes.Insert(idx, vm);
+            }
 
             NodeDict.Add(node, vm);
             NeedLayout = true;
@@ -251,6 +257,29 @@ namespace NFCT.Graph.ViewModels
                 groupVm.Nodes = SelectedNodes;
                 Groups.Add(groupVm);
                 groupVm.Resize();
+            }
+        }
+
+        public void ReorderId()
+        {
+            var nodeStack = new Stack<BaseNodeViewModel>();
+            var nodeSet = new HashSet<BaseNodeViewModel>();
+            nodeStack.Push(Nodes[0]);
+            int id = 0;
+
+            while (nodeStack.Count > 0)
+            {
+                var node = nodeStack.Pop();
+                if(nodeStack.Contains(node))
+                    continue;
+                nodeSet.Add(node);
+                node.Id = id++;
+                // left node push last, then pop last
+                //node.ChildLines.Sort((a, b) => a.X.CompareTo(b.X));
+                node.ChildLines.Reverse();
+
+                node.ChildLines.ForEach(connVm => nodeStack.Push(connVm.EndNode));
+                node.ChildLines.Reverse();
             }
         }
     }

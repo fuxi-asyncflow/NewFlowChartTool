@@ -290,6 +290,9 @@ namespace NFCT.Graph.ViewModels
             OwnerGroup?.Resize();
         }
 
+        private int _id;
+        public int Id { get => _id; set => SetProperty(ref _id, value); }
+
         #region MENU COMMAND
         public DelegateCommand BeginConnectCommand { get; set; }
 

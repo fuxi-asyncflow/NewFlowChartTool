@@ -27,7 +27,23 @@
             BorderBrush="{Binding BgType, Converter={StaticResource BorderColorConverter}, Mode=OneWay}"
             BorderThickness="{Binding IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}"
             CornerRadius="3">
-            <StackPanel x:Name="NodeStack" Margin="6">
+            <StackPanel
+                x:Name="NodeStack"
+                Margin="6"
+                Orientation="Horizontal">
+                <Border
+                    x:Name="NodeIdBorder"
+                    MinWidth="20"
+                    Margin="0,0,5,0"
+                    Background="Red"
+                    BorderBrush="Aqua"
+                    BorderThickness="1"
+                    CornerRadius="1">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontSize="16"
+                        Text="{Binding Id}" />
+                </Border>
                 <StackPanel
                     x:Name="NodeTexts"
                     IsVisibleChanged="NodeTexts_OnIsVisibleChanged"

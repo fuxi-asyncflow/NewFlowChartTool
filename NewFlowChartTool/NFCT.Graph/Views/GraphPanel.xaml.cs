@@ -54,6 +54,7 @@ namespace NFCT.Graph.Views
                 if (vm.Relayout())
                 {
                     vm.NeedLayout = false;
+                    vm.ReorderId();
                     if (vm.IsFirstLayout) // move start node to center after first layout
                     {
                         vm.IsFirstLayout = false;
