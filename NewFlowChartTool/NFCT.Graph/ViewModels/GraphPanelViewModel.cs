@@ -240,38 +240,41 @@ namespace NFCT.Graph.ViewModels
 
             if (clearOthers)
             {
-                ClearSelectedItems("all");
+                ClearSelectedItems(nodeVm);
             }
 
             nodeVm.IsSelect = true;
             SelectedNodes.Add(nodeVm);
         }
 
-        public void SelectConnector(GraphConnectorViewModel connectorVm, bool clearOthers = true)
-        {
-            if (connectorVm.IsSelect)
-                return;
-            if (clearOthers)
-            {
-                ClearSelectedItems("all");
-            }
-            connectorVm.IsSelect = true;
-            SelectedConnectors.Add(connectorVm);
-        }
+        //public void SelectConnector(GraphConnectorViewModel connectorVm, bool clearOthers = true)
+        //{
+        //    if (connectorVm.IsSelect)
+        //        return;
+        //    if (clearOthers)
+        //    {
+        //        ClearSelectedItems("all");
+        //    }
+        //    connectorVm.IsSelect = true;
+        //    SelectedConnectors.Add(connectorVm);
+        //}
 
-        public void ClearSelectedItems(string items)
+        public void ClearSelectedItems(object? exclude = null)
         {
-            if (items == "all")
+
+            SelectedNodes.ForEach(node =>
             {
-                foreach (var node in SelectedNodes)
-                {
+                if(node != exclude)
                     node.IsSelect = false;
-                }
-                SelectedNodes.Clear();
+            });
+            SelectedNodes.RemoveAll(node => node != exclude);
 
-                SelectedConnectors.ForEach(conn => conn.IsSelect = false);
-                SelectedConnectors.Clear();
-            }
+            SelectedConnectors.ForEach(conn =>
+            {
+                if(conn != exclude)
+                    conn.IsSelect = false;
+            });
+            SelectedConnectors.RemoveAll(conn => conn != exclude);
         }
 
         public void MoveSelectedItems(double dx, double dy)
@@ -334,7 +337,7 @@ namespace NFCT.Graph.ViewModels
         {
             if (box.Width < 10 && box.Height < 10) return;
             //TODO Ctrl
-            ClearSelectedItems("all");
+            ClearSelectedItems();
 
             double l = box.Left;
             double r = box.Right;

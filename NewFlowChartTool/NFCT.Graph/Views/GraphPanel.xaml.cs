@@ -89,7 +89,8 @@ namespace NFCT.Graph.Views
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                vm.ClearSelectedItems("all");
+                vm.ClearSelectedItems();
+                vm.ClearCurrentItem();
                 if (!_isBoxSelecting)
                 {
                     CanvasState = GraphCanvasState.BOX_SELECT;
