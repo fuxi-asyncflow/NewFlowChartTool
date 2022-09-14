@@ -112,7 +112,7 @@ namespace NFCT.Graph.Views
             }
             else if (e.Key == Key.Down)
             {
-                Logger.WARN($"prompts: {PromptsListBox.SelectedIndex}");
+                Logger.DBG($"prompts: {PromptsListBox.SelectedIndex}");
                 PromptsListBox.SelectedIndex++;
                 PromptsListBox.ScrollIntoView(PromptsListBox.SelectedItem);
             }
@@ -166,6 +166,11 @@ namespace NFCT.Graph.Views
             if (_oldPosition < 0)
             {
                 _oldPosition = 0;   // 保证下面的substring不会出错
+            }
+
+            if (_oldPosition > currentText.Length)
+            {
+                return;
             }
             string leftCmd = currentText.Substring(0, _oldPosition);
             string rightCmd = currentText.Substring(_oldPosition);

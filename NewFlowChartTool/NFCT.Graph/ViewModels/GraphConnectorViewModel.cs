@@ -268,6 +268,10 @@ namespace NFCT.Graph.ViewModels
                     Owner.FindNearestItem(X, Y, args.Key, isCtrlDown);
                     args.Handled = true;
                     break;
+                case Key.Enter:
+                    Owner.InsertNewNodeOperation();
+                    args.Handled = true;
+                    break;
             }
            
         }

@@ -62,6 +62,31 @@ namespace NFCT.Graph.ViewModels
             _tmpNewBaseNodeViewModel = _addNodeViewModel(node, idx);
             NeedLayout = true;
         }
+
+        // invoked when keydown a selected connector, will insert a node in the connector
+        public void InsertNewNodeOperation()
+        {
+            UndoRedoManager.Begin("Insert New Node");
+            // add new node
+            Debug.Assert(CurrentConnector != null);
+            var newNode = Node.DefaultNode.Clone(Graph);
+            Graph.AddNode_atom(newNode);
+
+            var vm = _tmpNewBaseNodeViewModel;
+            _tmpNewBaseNodeViewModel = null;
+            if (vm == null)
+                return;
+            //Connect(CurrentNode.Node, newNode);
+            var conn = CurrentConnector.Connector;
+            Graph.Connect_atom(conn.Start, newNode, conn.ConnType);
+            Graph.Connect_atom(newNode, conn.End, conn.ConnType);
+            Graph.RemoveConnector_atom(conn.Start, conn.End);
+            NeedLayout = true;
+            // set newnode as currentnode
+            SetCurrentNode(vm);
+            Build();
+            UndoRedoManager.End();
+        }
         #endregion
 
         #region remove node
