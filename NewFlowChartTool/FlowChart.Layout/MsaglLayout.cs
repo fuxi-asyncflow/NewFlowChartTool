@@ -164,19 +164,17 @@ namespace FlowChart.Layout
                 var connector = (IEdge)edge.UserData;
                 var curves = new List<Curve>();
 
-                if (edge.Curve is LineSegment)
+                if(edge.Curve is GraphCurve c)
                 {
-                    curves.Add(ToCurve(edge.Curve));
-                }
-                else if(edge.Curve is GraphCurve)
-                {
-                    var c = (GraphCurve)edge.Curve;
                     foreach (var seg in c.Segments)
                     {
                         curves.Add(ToCurve(seg));
                     }
                 }
-
+                else 
+                {
+                    curves.Add(ToCurve(edge.Curve));
+                }
                 curves.ForEach(curv => curv.Points = curv.Points.ConvertAll(p => new Position(transX(p.x), transY(p.y))));
                 connector.Curves = curves;
                

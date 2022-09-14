@@ -102,7 +102,10 @@ namespace NFCT.Graph.ViewModels
         {
             PathGeometry geometry = new PathGeometry();
             if (curves.Count == 0)
+            {
+                Logger.ERR("[canvas] connector path has no curve");
                 return;
+            }
 
             // get left and top of all curve points
             Left = double.MaxValue;
