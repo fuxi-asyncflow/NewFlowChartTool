@@ -160,12 +160,12 @@ namespace NFCT.Graph.ViewModels
             UndoRedoManager.End();
         }
 
-        void OnConnect(Connector conn)
+        void OnConnect(Connector conn, int startIdx, int endIdx)
         {
             Debug.Assert(conn.OwnerGraph == _graph);
             _tmpNewConnectorViewModel = _createConnectorViewModel(conn);
             UndoRedoManager.AddAction(
-                () => { Graph.Connect_atom(conn.Start, conn.End, conn.ConnType); },
+                () => { Graph.Connect_atom(conn.Start, conn.End, conn.ConnType, startIdx, endIdx); },
                 () => {Graph.RemoveConnector_atom(conn.Start, conn.End); });
             NeedLayout = true;
         }
@@ -180,7 +180,7 @@ namespace NFCT.Graph.ViewModels
             UndoRedoManager.End();
         }
 
-        void OnRemoveConnector(Connector conn)
+        void OnRemoveConnector(Connector conn, int startIdx, int endIdx)
         {
             Debug.Assert(conn.OwnerGraph == _graph);
             if (!ConnectorDict.ContainsKey(conn))
@@ -190,35 +190,14 @@ namespace NFCT.Graph.ViewModels
             }
 
             var vm = ConnectorDict[conn];
-
-            var starts = vm.StartNode.ChildLines;
-            var startIdx = starts.IndexOf(vm);
-            starts.Remove(vm);
-
-            var ends = vm.EndNode.ParentLines;
-            var endIdx = ends.IndexOf(vm);
-            ends.Remove(vm);
-
             Logger.DBG($"connector is remove {vm}");
 
             Connectors.Remove(vm);
             ConnectorDict.Remove(conn);
 
             UndoRedoManager.AddAction(
-                () =>
-                {
-                    var start = conn.Start;
-                    var c = start.Children.Find(_c => _c.End == conn.End);
-                    var connVm = ConnectorDict[c];
-                    connVm.StartNode.ChildLines.Remove(connVm);
-                    connVm.EndNode.ChildLines.Remove(connVm);
-                    Connectors.Remove(connVm);
-                    ConnectorDict.Remove(c);
-                },
-                () =>
-                {
-                    _graph.Connect_atom(conn.Start, conn.End, conn.ConnType, startIdx, endIdx);
-                });
+                () => { _graph.RemoveConnector_atom(conn.Start, conn.End); },
+                () => { _graph.Connect_atom(conn.Start, conn.End, conn.ConnType, startIdx, endIdx); });
             NeedLayout = true;
         }
         #endregion
@@ -276,10 +255,9 @@ namespace NFCT.Graph.ViewModels
                 node.Id = id++;
                 // left node push last, then pop last
                 //node.ChildLines.Sort((a, b) => a.X.CompareTo(b.X));
-                node.ChildLines.Reverse();
-
-                node.ChildLines.ForEach(connVm => nodeStack.Push(connVm.EndNode));
-                node.ChildLines.Reverse();
+                var childLines = node.ChildLines;
+                childLines.Reverse();
+                childLines.ForEach(connVm => nodeStack.Push(connVm.EndNode));
             }
         }
     }

@@ -25,16 +25,9 @@ namespace NFCT.Graph.ViewModels
             EventHelper.Sub<NFCT.Common.Events.ThemeSwitchEvent, NFCT.Common.Theme>(OnThemeSwitch);
             
             BackgroundBrushes = new Brush[6];
-            
-
-           
             LineBrushes = new Brush[4];
-
-
             NodeTokenBrushes = new Brush[(int)TextToken.TokenType.End];
-
             OnThemeSwitch(Theme.Dark);
-
         }
         public static double DefaultBorderWidth { get => 0.0; }
         public static double SelectedBorderWidth { get => 3.0; }
@@ -96,14 +89,12 @@ namespace NFCT.Graph.ViewModels
 
             OnKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnKeyDown);
             BeginConnectCommand = new DelegateCommand(() => Owner.BeginConnect());
-            ParentLines = new List<GraphConnectorViewModel>();
-            ChildLines = new List<GraphConnectorViewModel>();
         }
 
         public GraphPaneViewModel Owner { get; set; }
         public GroupBoxViewModel? OwnerGroup { get; set; }
-        public List<GraphConnectorViewModel> ParentLines;
-        public List<GraphConnectorViewModel> ChildLines;
+        public List<GraphConnectorViewModel> ParentLines => Node.Parents.ConvertAll(Owner.GetConnVm);
+        public List<GraphConnectorViewModel> ChildLines => Node.Children.ConvertAll(Owner.GetConnVm);
 
         private double _left;
         public double Left{ get => _left - BorderWidth ; set => SetProperty(ref _left, value, nameof(Left)); }

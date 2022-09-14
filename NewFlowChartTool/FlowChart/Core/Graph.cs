@@ -78,14 +78,14 @@ namespace FlowChart.Core
 #if DEBUG
             GraphAddNodeEvent += node => Logger.DBG($"[event] add node event: {node}");
             GraphRemoveNodeEvent += node => Logger.DBG($"[event] remove node event: {node}");
-            GraphConnectEvent += conn => Logger.DBG($"[event] connect event: {conn.Start} -> {conn.End}");
-            ConnectorRemoveEvent += conn => Logger.DBG($"[event] disconnect event: {conn.Start} -> {conn.End}");
+            GraphConnectEvent += (conn, s, e) => Logger.DBG($"[event] connect event: {conn.Start} -> {conn.End}");
+            ConnectorRemoveEvent += (conn, s, e) => Logger.DBG($"[event] disconnect event: {conn.Start} -> {conn.End}");
 #endif
         }
 
         #region Events
         public delegate void GraphNodeDelegate(Node node);
-        public delegate void GraphConnectorDelegate(Connector conn);
+        public delegate void GraphConnectorDelegate(Connector conn, int startIdx, int endIdx);
         public delegate void GraphPathChangeHandler(Graph graph, string oldPath, string newPath);
         public delegate void GraphAddVariableDelegate(Graph graph, Variable variable);
         public delegate void GraphConnectorTypeChangeDelegate(Connector conn, Connector.ConnectorType oldValue);
@@ -181,9 +181,16 @@ namespace FlowChart.Core
 
         public void RemoveNode(Node node)
         {
+            var idxMap = new Dictionary<Node, int>();
             // remove connectors
             var parents = node.Parents.ConvertAll(conn => conn.Start);
-            parents.ForEach(p => RemoveConnector_atom(p, node));
+
+            parents.ForEach(p =>
+            {
+                int idx = p.Children.FindIndex(conn => conn.End == node);
+                idxMap.Add(p, idx);
+                RemoveConnector_atom(p, node);
+            });
 
             var children = node.Children.ConvertAll(conn => conn.End);
             children.ForEach(c => RemoveConnector_atom(node, c));
@@ -193,13 +200,14 @@ namespace FlowChart.Core
 
             // find a parent node who can connect to start node after node deleted
             var parent = parents.Find(IsNodeConnectToRoot) ?? Root;
+            int idx = idxMap[parent];
 
             // add orphan nodes to parent node
             foreach (var child in children)
             {
                 if (!IsNodeConnectToRoot(child))
                 {
-                    Connect_atom(parent, child, Connector.ConnectorType.DELETE);
+                    Connect_atom(parent, child, Connector.ConnectorType.DELETE, idx);
                 }
             }
         }
@@ -277,7 +285,7 @@ namespace FlowChart.Core
             else
                 conn.End.Parents.Insert(endIdx, conn);
             Logger.DBG($"Connect_atom: {start} -> {end}");
-            GraphConnectEvent?.Invoke(conn);
+            GraphConnectEvent?.Invoke(conn, startIdx, endIdx);
             return conn;
         }
 
@@ -309,10 +317,12 @@ namespace FlowChart.Core
             if (conn == null)
                 return;
             Connectors.Remove(conn);
+            var startIdx = start.Children.IndexOf(conn);
             start.Children.Remove(conn);
+            var endIdx = end.Parents.IndexOf(conn);
             end.Parents.Remove(conn);
             Logger.DBG($"RemoveConnector_atom: {start} -> {end}");
-            ConnectorRemoveEvent?.Invoke(conn);
+            ConnectorRemoveEvent?.Invoke(conn, startIdx, endIdx);
         }
 
         public void ChangeConnectorType_atom(Connector conn, Connector.ConnectorType connType)

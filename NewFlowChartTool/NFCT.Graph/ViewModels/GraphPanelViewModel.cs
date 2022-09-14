@@ -101,6 +101,20 @@ namespace NFCT.Graph.ViewModels
         public ObservableCollection<GroupBoxViewModel> Groups { get; set; }
         public GraphVariablesPanelViewModel VariablesPanel { get; set; }
         public UndoRedoManagerViewModel UndoRedoManager { get; set; }
+
+        public BaseNodeViewModel GetNodeVm(Node node)
+        {
+            Debug.Assert(node.OwnerGraph == _graph);
+            Debug.Assert(NodeDict.ContainsKey(node));
+            return NodeDict[node];
+        }
+
+        public GraphConnectorViewModel GetConnVm(Connector conn)
+        {
+            Debug.Assert(conn.OwnerGraph == _graph);
+            Debug.Assert(ConnectorDict.ContainsKey(conn));
+            return ConnectorDict[conn];
+        }
         
         public bool NeedLayout { get; set; }
         public bool IsFirstLayout { get; set; }

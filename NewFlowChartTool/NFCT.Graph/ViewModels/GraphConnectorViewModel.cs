@@ -37,8 +37,6 @@ namespace NFCT.Graph.ViewModels
             EndNode = end;
             Owner = g;
             _conn = conn;
-            start.ChildLines.Add(this);
-            end.ParentLines.Add(this);
 
             OnMouseUpCommand = new DelegateCommand<MouseEventArgs>(OnMouseUp);
         }
