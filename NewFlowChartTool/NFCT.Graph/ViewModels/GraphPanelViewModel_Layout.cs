@@ -67,5 +67,27 @@ namespace NFCT.Graph.ViewModels
             return true;
         }
 
+        public void ReorderId()
+        {
+            var nodeStack = new Stack<BaseNodeViewModel>();
+            var nodeSet = new HashSet<BaseNodeViewModel>();
+            nodeStack.Push(Nodes[0]);
+            int id = 0;
+
+            while (nodeStack.Count > 0)
+            {
+                var node = nodeStack.Pop();
+                if (nodeSet.Contains(node))
+                    continue;
+                nodeSet.Add(node);
+                node.Id = id++;
+                // left node push last, then pop last
+                //node.ChildLines.Sort((a, b) => a.X.CompareTo(b.X));
+                var childLines = node.ChildLines;
+                childLines.Reverse();
+                childLines.ForEach(connVm => nodeStack.Push(connVm.EndNode));
+            }
+        }
+
     }
 }
