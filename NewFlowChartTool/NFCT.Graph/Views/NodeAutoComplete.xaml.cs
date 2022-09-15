@@ -96,12 +96,9 @@ namespace NFCT.Graph.Views
             Logger.DBG($"node editbox key down: {e.Key}");
             if (e.Key == Key.Enter)
             {
-                if (AutoCompletePopup.IsOpen)
+                if (AutoCompletePopup.IsOpen && PromptsListBox.SelectedItem != null)
                 {
-                    if (PromptsListBox.SelectedItem != null)
-                    {
-                        ReplaceWithPrompt((PromptItemViewModel)(PromptsListBox.SelectedItem));
-                    }
+                    ReplaceWithPrompt((PromptItemViewModel)(PromptsListBox.SelectedItem));
                     AutoCompletePopup.IsOpen = false;
                 }
                 else
