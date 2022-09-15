@@ -2,10 +2,12 @@
     x:Class="NFCT.Graph.Views.NodeAutoComplete"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:NFCT.Common;assembly=NFCT.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:NFCT.Graph.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvvm="http://prismlibrary.com/"
+    xmlns:utility="clr-namespace:NFCT.Graph.Utility"
     xmlns:vm="clr-namespace:NFCT.Graph.ViewModels"
     d:DataContext="{d:DesignInstance vm:NodeAutoCompleteViewModel}"
     d:DesignHeight="450"
@@ -19,6 +21,12 @@
             </Border>
         </ControlTemplate>
 
+
+        <common:EmptyStringVisibilityConverter x:Key="EmptyStringVisibilityConverter" />
+        <utility:PromptIconConverter x:Key="PromptIconConverter" />
+        <utility:PromptColorConverter x:Key="PromptColorConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
     </UserControl.Resources>
     <Grid>
         <TextBox
@@ -31,7 +39,11 @@
             SelectionChanged="EditBox_OnSelectionChanged"
             Text="{Binding Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TextBox.ToolTip>
-                <ToolTip x:Name="FuncInfoToolTip" Placement="Top">
+                <ToolTip
+                    x:Name="FuncInfoToolTip"
+                    Padding="1"
+                    Background="{DynamicResource BackGroundBrush}"
+                    Placement="Top">
                     <TextBlock x:Name="FuncInfoToolTipText" />
                 </ToolTip>
             </TextBox.ToolTip>
@@ -47,11 +59,28 @@
                 ItemsSource="{Binding Prompts}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="Aqua">
+                        <StackPanel Orientation="Vertical">
                             <Grid Background="{Binding BackGround}">
-                                <TextBlock Text="{Binding Text}" />
+                                <StackPanel Orientation="Horizontal">
+                                    <Border
+                                        Margin="3,1"
+                                        Background="{Binding Type, Converter={StaticResource PromptColorConverter}}"
+                                        CornerRadius="3">
+                                        <TextBlock
+                                            MinWidth="16"
+                                            Text="{Binding Type, Converter={StaticResource PromptIconConverter}}"
+                                            TextAlignment="Center" />
+                                    </Border>
+                                    <TextBlock Text="{Binding Text}" />
+                                </StackPanel>
                             </Grid>
-                        </Border>
+                            <Grid Background="{Binding BackGround}" Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBlock
+                                    Margin="22,0,0,0"
+                                    Text="{Binding Description}"
+                                    Visibility="{Binding Description, Converter={StaticResource EmptyStringVisibilityConverter}}" />
+                            </Grid>
+                        </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
                 <ListBox.ItemContainerStyle>

@@ -54,4 +54,27 @@ namespace NFCT.Common
             throw new System.NotImplementedException();
         }
     }
+
+    [ValueConversion(typeof(string), typeof(Visibility))]
+    public class EmptyStringVisibilityConverter : IValueConverter
+    {
+        public double Length { get; set; }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string str)
+            {
+                if (!string.IsNullOrEmpty(str))
+                    return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
+
 }

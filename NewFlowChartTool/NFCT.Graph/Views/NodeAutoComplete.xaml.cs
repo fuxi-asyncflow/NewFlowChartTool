@@ -231,7 +231,7 @@ namespace NFCT.Graph.Views
         {
             var inlines = FuncInfoToolTipText.Inlines;
             inlines.Clear();
-            inlines.Add(new Run(func.Name + "( \n"));
+            inlines.Add(new Run(func.Name + "( \n") {Foreground = Application.Current.FindResource("ForeGroundBrush") as Brush });
             int i = 0;
             foreach (var member in func.Parameters)
             {
