@@ -56,6 +56,13 @@ namespace NFCT.Graph.ViewModels
             UndoRedoManager.End();
         }
 
+        public void AddNodesOperation(Node parent, List<Node> nodes)
+        {
+            UndoRedoManager.Begin("Paste Nodes");
+            Graph.AddNodes(parent, nodes);
+            UndoRedoManager.End();
+        }
+
         public void OnAddNode(Node node)
         {
             var idx = _graph.Nodes.IndexOf(node);

@@ -33,6 +33,8 @@
     <UserControl.ContextMenu>
         <ContextMenu>
             <MenuItem Command="{Binding BeginConnectCommand}" Header="connect" />
+            <MenuItem Command="{Binding CopyNodesCommand}" Header="copy" />
+            <MenuItem Command="{Binding PasteNodesCommand}" Header="paste" />
         </ContextMenu>
     </UserControl.ContextMenu>
     <Grid

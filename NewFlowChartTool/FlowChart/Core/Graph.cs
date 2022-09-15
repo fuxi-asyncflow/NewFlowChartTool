@@ -167,6 +167,64 @@ namespace FlowChart.Core
             GraphAddNodeEvent?.Invoke(node);
         }
 
+        public void AddNodes(Node parent, List<Node> nodes)
+        {
+            if (nodes.Count == 0)
+                return;
+            var startNodes = new List<Node>();
+            nodes.ForEach(node =>
+            {
+                var hasInnerParent = false;
+                var hasOuterParent = false;
+                foreach (var line in node.Parents)
+                {
+                    if (line.Start != node)
+                    {
+                        if (nodes.Contains(line.Start))
+                            hasInnerParent = true;
+                        else
+                            hasOuterParent = true;
+                    }
+                }
+                if (!hasInnerParent || hasOuterParent)
+                    startNodes.Add(node);
+            });
+
+            if(startNodes.Count == 0)
+                startNodes.Add(nodes[0]);
+
+            Dictionary<Node, Node> nodesMap = new Dictionary<Node, Node>();
+
+            
+            Action<Node> addNodeFunc = null;
+            addNodeFunc = node =>
+            {
+                if (nodesMap.ContainsKey(node))
+                    return;
+
+                var newNode = node.Clone(this);
+                AddNode_atom(newNode);
+                nodesMap[node] = newNode;
+
+                node.Children.ForEach(line =>
+                {
+                    if (nodes.Contains(line.End))
+                    {
+                        addNodeFunc(line.End);
+                        Connect_atom(newNode, nodesMap[line.End], line.ConnType);
+                    }
+                });
+                
+            };
+
+            // 递归添加所有节点及线条
+            foreach (var node in startNodes)
+            {
+                addNodeFunc(node);
+                Connect_atom(parent, nodesMap[node], Connector.ConnectorType.ALWAYS);
+            }
+        }
+
         public void RemoveNode_atom(Node? node)
         {
             if (node == null)

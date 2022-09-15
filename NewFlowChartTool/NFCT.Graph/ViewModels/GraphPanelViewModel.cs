@@ -39,6 +39,11 @@ namespace NFCT.Graph.ViewModels
 
         public FlowChart.Core.Graph Graph => _graph;
 
+        static GraphPaneViewModel()
+        {
+            GraphClipboard = new List<BaseNodeViewModel>();
+        }
+
         public GraphPaneViewModel(FlowChart.Core.Graph graph)
         {
             _graph = graph;
@@ -61,8 +66,6 @@ namespace NFCT.Graph.ViewModels
 
             Initialize();
         }
-
-        
 
         public void Initialize()
         {
@@ -452,6 +455,23 @@ namespace NFCT.Graph.ViewModels
             ConnectOperation(ConnectStartNode.Node, CurrentNode.Node);
             ConnectStartNode = null;
             NeedLayout = true;
+        }
+
+        public static List<BaseNodeViewModel> GraphClipboard;
+
+        public void CopySelectedNodes()
+        {
+            if (SelectedNodes.Count == 0)
+                return;
+            GraphClipboard.AddRange(SelectedNodes);
+        }
+
+        public void PasteNodes(BaseNodeViewModel parentVm)
+        {
+            if (GraphClipboard.Count == 0)
+                return;
+            AddNodesOperation(parentVm.Node, GraphClipboard.ConvertAll(nodeVm => nodeVm.Node));
+            Build();
         }
     }
 }
