@@ -29,6 +29,14 @@ namespace FlowChart.AST
         public List<string> Contents;
         public string? ReturnVarName;
     }
+
+    public class ParseException : Exception
+    {
+        public ParseException(string msg) : base(msg)
+        {
+            
+        }
+    }
     public class ParseResult
     {
         public ParseResult()

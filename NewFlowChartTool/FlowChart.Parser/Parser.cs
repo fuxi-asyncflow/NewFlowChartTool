@@ -49,17 +49,8 @@ namespace FlowChart.Parser
 #endif
             }
 
-            try
-            {
-                NodeParserBaseVisitor<ASTNode> visitor = new NodeCommandVisitor();
-                return visitor.Visit(tree);
-            }
-            catch (Exception /*ex*/)
-            {
-
-            }
-
-            return null;
+            NodeParserBaseVisitor<ASTNode> visitor = new NodeCommandVisitor();
+            return visitor.Visit(tree);
         }
 
         public TextToken.TokenType GetTokenType(int symbolType)

@@ -201,11 +201,6 @@ namespace NFCT.Graph.ViewModels
             else
                 BgType = NodeBgType.CONDITION;
 
-            if (pr.IsError)
-            {
-                OutputMessage.Inst?.Output(pr.ErrorMessage, OutputMessageType.Error, node, node.OwnerGraph);
-            }
-
             OnParseEnd(pr);
         }
 
@@ -357,6 +352,7 @@ namespace NFCT.Graph.ViewModels
 
         public override void OnParseEnd(ParseResult pr)
         {
+            Logger.DBG($"[OnParseEnd] Tokens count : {pr.Tokens}");
             if (pr.Tokens != null)
             {
                 Tokens.Clear();

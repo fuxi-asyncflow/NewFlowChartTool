@@ -34,8 +34,9 @@ namespace FlowChart.LuaCodeGen
                     Pr.Type = nodeInfo.Type;
                     return Pr;
                 }
+
                 PrepareCode(nodeInfo);
-                
+
                 if (!string.IsNullOrEmpty(Pr.ErrorMessage))
                     Console.WriteLine(Pr.ErrorMessage);
                 else
@@ -43,7 +44,11 @@ namespace FlowChart.LuaCodeGen
                     Console.WriteLine(nodeInfo.Code);
                 }
             }
-            catch (Exception e)
+            catch (ParseException e)
+            {
+                
+            }
+            catch (Exception)
             {
                 throw;
             }
@@ -87,7 +92,7 @@ namespace FlowChart.LuaCodeGen
         public void Error(string msg)
         {
             Pr.ErrorMessage = msg;
-            throw new Exception(msg);
+            throw new ParseException(msg);
         }
 
         #region CodeGen

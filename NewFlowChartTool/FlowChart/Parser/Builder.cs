@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using FlowChart.AST;
+using FlowChart.AST.Nodes;
 using FlowChart.Core;
 
 namespace FlowChart.Parser
@@ -49,16 +50,27 @@ namespace FlowChart.Parser
 
         public void BuildNode(TextNode node, ICodeGenerator generator, ParserConfig cfg)
         {
+            ASTNode? ast = null;
+            ParseResult pr;
+
+            ast = parser.Parse(node.Text, cfg);
             
-            var ast = parser.Parse(node.Text, cfg);
+            if (ast == null)
+            {
+                pr = new ParseResult();
+                pr.ErrorMessage = "syntax error";
+                pr.Tokens = parser.Tokens;
+                node.OnParse(pr);
+            }
+            
             //var color = Console.ForegroundColor;
             //Console.ForegroundColor = ConsoleColor.Green;
             //Console.WriteLine($"[parse]: {node.Text}");
             //Console.ForegroundColor = color;
             //Console.WriteLine($"ast: {ast}");
-            if (ast != null)
+            else
             {
-                var pr = generator.GenerateCode(ast, cfg);
+                pr = generator.GenerateCode(ast, cfg);
                 pr.Tokens = parser.Tokens;
                 node.OnParse(pr);
             }
