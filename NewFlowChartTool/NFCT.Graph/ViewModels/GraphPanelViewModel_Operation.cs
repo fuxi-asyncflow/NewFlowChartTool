@@ -52,7 +52,7 @@ namespace NFCT.Graph.ViewModels
             NeedLayout = true;
             // set newnode as currentnode
             SetCurrentNode(vm);
-            Build();
+            //Build();
             UndoRedoManager.End();
         }
 
