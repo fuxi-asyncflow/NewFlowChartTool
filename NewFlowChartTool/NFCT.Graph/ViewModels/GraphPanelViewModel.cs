@@ -284,12 +284,13 @@ namespace NFCT.Graph.ViewModels
             if (box.Width < 10 && box.Height < 10) return;
             //TODO Ctrl
             ClearSelectedItems();
+            ClearCurrentItem();
 
             double l = box.Left;
             double r = box.Right;
             double t = box.Top;
             double b = box.Bottom;
-            var selectNodeVms = new List<BaseNodeViewModel>();
+            
 
             foreach (var nodeVm in Nodes)
             {
@@ -309,7 +310,8 @@ namespace NFCT.Graph.ViewModels
 
                 if (ll < rr && tt < bb)
                 {
-                    selectNodeVms.Add(nodeVm);
+                    if (CurrentNode == null)
+                        SetCurrentNode(nodeVm);
                     SelectNode(nodeVm, false);
                 }
             }

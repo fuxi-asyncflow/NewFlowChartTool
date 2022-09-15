@@ -229,7 +229,8 @@ namespace NFCT.Graph.ViewModels
                     args.Handled = true;
                     break;
                 case Key.Delete:
-                    Owner.RemoveNodeOperation(this);
+                    Owner.RemoveNodesOperation(Owner.SelectedNodes);
+                    args.Handled = true;
                     break;
                 case Key.Down:
                 case Key.Up:
@@ -290,6 +291,9 @@ namespace NFCT.Graph.ViewModels
 
         #region MENU COMMAND
         public DelegateCommand BeginConnectCommand { get; set; }
+        public DelegateCommand CopyNodesCommand { get; set; }
+        public DelegateCommand PasteNodesCommand { get; set; }
+        public DelegateCommand CutNodesCommand { get; set; }
 
 
         #endregion

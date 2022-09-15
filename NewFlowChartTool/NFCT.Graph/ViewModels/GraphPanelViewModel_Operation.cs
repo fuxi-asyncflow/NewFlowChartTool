@@ -89,12 +89,22 @@ namespace NFCT.Graph.ViewModels
         }
         #endregion
 
-        #region remove node
-        public void RemoveNodeOperation(BaseNodeViewModel nodeVm)
+        #region remove nodes
+        public void RemoveNodesOperation(List<BaseNodeViewModel> nodeVms)
         {
-            UndoRedoManager.Begin("Remove Node");
-            var node = nodeVm.Node;
-            Graph.RemoveNode(node);
+            if (nodeVms.Count == 0)
+            {
+                Logger.WARN("delete nodes failed, no nodes selected");
+                return;
+            }
+
+            UndoRedoManager.Begin("Remove Nodes");
+            foreach (var nodeVm in nodeVms)
+            {
+                var node = nodeVm.Node;
+                Graph.RemoveNode(node);
+            }
+
             NeedLayout = true;
             UndoRedoManager.End();
         }
@@ -248,6 +258,10 @@ namespace NFCT.Graph.ViewModels
                 () => { Graph.ChangeConnectorType_atom(conn, oldValue); }
             );
         }
+        #endregion
+
+        #region Paste Nodes
+
         #endregion
 
         public void CreateGroupFromSelectedNodes()
