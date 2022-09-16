@@ -56,10 +56,15 @@ namespace NFCT.Graph.ViewModels
             UndoRedoManager.End();
         }
 
-        public void AddNodesOperation(Node parent, List<Node> nodes)
+        public void PasteNodesOperation(Node parent, List<Node> nodes, bool isClip)
         {
             UndoRedoManager.Begin("Paste Nodes");
             Graph.AddNodes(parent, nodes);
+            if (isClip)
+            {
+                nodes.ForEach(Graph.RemoveNode);
+            }
+            NeedLayout = true;
             UndoRedoManager.End();
         }
 
@@ -67,6 +72,15 @@ namespace NFCT.Graph.ViewModels
         {
             var idx = _graph.Nodes.IndexOf(node);
             _tmpNewBaseNodeViewModel = _addNodeViewModel(node, idx);
+            UndoRedoManager.AddAction(
+                () => 
+                {
+                    Graph.AddNode_atom(node, idx);
+                },
+                () =>
+                {
+                    Graph.RemoveNode_atom(node);
+                });
             NeedLayout = true;
         }
 
@@ -129,12 +143,10 @@ namespace NFCT.Graph.ViewModels
             UndoRedoManager.AddAction(
                 () =>
                 {
-                    Logger.DBG("redo");
                     Graph.RemoveNode_atom(node);
                 },
                 () =>
                 {
-                    Logger.DBG("undo");
                     //AddNodeViewModel(node, idx);
                     Graph.AddNode_atom(node, idx);
                 });

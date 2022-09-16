@@ -458,20 +458,31 @@ namespace NFCT.Graph.ViewModels
         }
 
         public static List<BaseNodeViewModel> GraphClipboard;
+        public static bool IsClip;
 
-        public void CopySelectedNodes()
+        public void CopySelectedNodes(bool isClip = false)
         {
             if (SelectedNodes.Count == 0)
                 return;
+            GraphClipboard.Clear();
             GraphClipboard.AddRange(SelectedNodes);
+            IsClip = isClip;
         }
 
         public void PasteNodes(BaseNodeViewModel parentVm)
         {
             if (GraphClipboard.Count == 0)
                 return;
-            AddNodesOperation(parentVm.Node, GraphClipboard.ConvertAll(nodeVm => nodeVm.Node));
+            var originGraphVm = GraphClipboard[0].Owner;
+            bool needClip = IsClip && originGraphVm == this;
+            PasteNodesOperation(parentVm.Node, GraphClipboard.ConvertAll(nodeVm => nodeVm.Node), needClip);
             Build();
+            if (IsClip)
+            {
+                IsClip = false;
+                if (originGraphVm != this)
+                    originGraphVm.RemoveNodesOperation(GraphClipboard);
+            }
         }
     }
 }

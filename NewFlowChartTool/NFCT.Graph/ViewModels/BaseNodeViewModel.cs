@@ -88,6 +88,7 @@ namespace NFCT.Graph.ViewModels
             OnKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnKeyDown);
             BeginConnectCommand = new DelegateCommand(() => Owner.BeginConnect());
             CopyNodesCommand = new DelegateCommand(() => Owner.CopySelectedNodes());
+            CutNodesCommand = new DelegateCommand(() => Owner.CopySelectedNodes(true));
             PasteNodesCommand = new DelegateCommand(() => Owner.PasteNodes(this));
         }
 
