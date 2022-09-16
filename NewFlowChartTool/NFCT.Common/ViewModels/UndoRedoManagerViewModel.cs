@@ -53,6 +53,7 @@ namespace NFCT.Common.ViewModels
             reverts.Reverse();
             reverts.ForEach(action => revertAction += action);
             UndoCommands.Add(new UndoRedoCommand(_cmdName, actions, revertAction));
+            RedoCommands.Clear();
 
             actions = () => { };
             reverts.Clear();
