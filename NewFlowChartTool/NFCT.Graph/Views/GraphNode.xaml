@@ -29,6 +29,7 @@
             ControlNodeTemplate="{StaticResource ControlNodeTemplate}"
             StartNodeTemplate="{StaticResource StartNodeTemplate}"
             TextNodeTemplate="{StaticResource TextNodeTemplate}" />
+        <utility:CutOpacityConverter x:Key="CutOpacityConverter" />
     </UserControl.Resources>
     <UserControl.ContextMenu>
         <ContextMenu>
@@ -45,6 +46,7 @@
         utility:SizeObserver.ObservedWidth="{Binding ActualWidth, Mode=OneWayToSource}"
         Focusable="True"
         MouseDown="NodeGrid_OnMouseDown"
+        Opacity="{Binding IsCut, Converter={StaticResource CutOpacityConverter}}"
         RequestBringIntoView="Node_OnRequestBringIntoView">
         <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource GraphNodesTemplateSelector}" />
         <b:Interaction.Triggers>

@@ -159,6 +159,21 @@ namespace NFCT.Graph.Utility
         }
     }
 
+    [ValueConversion(typeof(bool), typeof(double))]
+    class CutOpacityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool isCut = (bool)value;
+            return isCut ? 0.5 : 1.0;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 
     #endregion
 

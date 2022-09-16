@@ -193,6 +193,9 @@ namespace NFCT.Graph.ViewModels
             RaisePropertyChanged(nameof(BgType));
         }
 
+        private bool _isCut = false;
+        public bool IsCut { get => _isCut; set => SetProperty(ref _isCut, value); }
+
         #endregion
 
         public void OnParse(Node node, ParseResult pr)

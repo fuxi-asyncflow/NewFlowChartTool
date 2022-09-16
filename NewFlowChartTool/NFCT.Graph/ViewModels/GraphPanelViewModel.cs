@@ -466,6 +466,7 @@ namespace NFCT.Graph.ViewModels
                 return;
             GraphClipboard.Clear();
             GraphClipboard.AddRange(SelectedNodes);
+            SelectedNodes.ForEach(nodeVm => nodeVm.IsCut = true);
             IsClip = isClip;
         }
 
@@ -474,6 +475,7 @@ namespace NFCT.Graph.ViewModels
             if (GraphClipboard.Count == 0)
                 return;
             var originGraphVm = GraphClipboard[0].Owner;
+            GraphClipboard.ForEach(nodeVm => nodeVm.IsCut = false);
             bool needClip = IsClip && originGraphVm == this;
             PasteNodesOperation(parentVm.Node, GraphClipboard.ConvertAll(nodeVm => nodeVm.Node), needClip);
             Build();
