@@ -248,6 +248,19 @@ namespace NFCT.Graph.ViewModels
                         args.Handled = true;
                     }
                     break;
+                //------------------------------------------------------
+                case Key.C:
+                    if(isCtrlDown)
+                        CopyNodesCommand.Execute();
+                    break;
+                case Key.X:
+                    if (isCtrlDown)
+                        CutNodesCommand.Execute();
+                    break;
+                case Key.V:
+                    if (isCtrlDown)
+                        PasteNodesCommand.Execute();
+                    break;
             }
 
         }
