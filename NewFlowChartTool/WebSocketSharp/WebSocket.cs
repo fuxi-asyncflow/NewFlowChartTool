@@ -2094,26 +2094,22 @@ namespace WebSocketSharp
 
     private void sendAsync (Opcode opcode, Stream stream, Action<bool> completed)
     {
-      Func<Opcode, Stream, bool> sender = send;
-      sender.BeginInvoke (
-        opcode,
-        stream,
-        ar => {
-          try {
-            var sent = sender.EndInvoke (ar);
-            if (completed != null)
-              completed (sent);
-          }
-          catch (Exception ex) {
-            _logger.Error (ex.ToString ());
-            error (
-              "An error has occurred during the callback for an async send.",
-              ex
-            );
-          }
-        },
-        null
-      );
+        Task.Run(() =>
+        {
+            try
+            {
+                var sent = send(opcode, stream);
+                completed?.Invoke(sent);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.ToString());
+                error(
+                    "An error has occurred during the callback for an async send.",
+                    ex
+                );
+            }
+        });
     }
 
     private bool sendBytes (byte[] bytes)
@@ -3488,14 +3484,11 @@ namespace WebSocketSharp
         throw new InvalidOperationException (msg);
       }
 
-      Func<bool> connector = connect;
-      connector.BeginInvoke (
-        ar => {
-          if (connector.EndInvoke (ar))
-            open ();
-        },
-        null
-      );
+      Task.Run(() =>
+      {
+          if (connect())
+              open();
+      });
     }
 
     /// <summary>
