@@ -1,7 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System;
-using NLog;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using FlowChart.Parser.NodeParser;
@@ -9,9 +8,12 @@ using FlowChart.Parser.ASTGenerator;
 using FlowChart.AST;
 using FlowChart.AST.Nodes;
 using FlowChart.Core;
+using FlowChart.Debug.WebSocket;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
 using ProjectFactory;
+using WebSocketSharp;
+using LogLevel = NLog.LogLevel;
 
 namespace FlowChartTest // Note: actual namespace depends on the project name.
 {
@@ -52,10 +54,11 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
         static void Main(string[] args)
         {
             Logger.MyLogger.Info("hello");
-            ConvertProject(@"F:\asyncflow\asyncflow_new\test\flowchart");
+            //ConvertProject(@"F:\asyncflow\asyncflow_new\test\flowchart");
             //OpenProjectTest();
             //ParserTest();            
             //CodeGenTest();
+            DebugTest();
         }
 
         static void OpenProjectTest()
@@ -153,6 +156,16 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             var project = new Project(new TestProjectFactory()) { Path = path };
             project.Load();
             project.Save();
+        }
+
+        static void DebugTest()
+        {
+            var manager = new FlowChart.Debug.WebSocket.Manager();
+            manager.BroadCast("127.0.0.1", 9000, 9003, new GetChartListMessage(){ChartName = "", ObjectName = ""});
+            while (true)
+            {
+                Thread.Sleep(10);
+            }
         }
     }
 }
