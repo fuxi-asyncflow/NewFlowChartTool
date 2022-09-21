@@ -100,5 +100,15 @@ namespace FlowChart.Debug.WebSocket
                 _clients.Remove(key);
             }
         }
+
+        public void HandleMessage(INetClient client, string msg)
+        {
+            var data = _protocal.Deserialize(msg);
+            if (data is List<GraphInfo> graphInfos)
+            {
+                foreach (var graphInfo in graphInfos)
+                    Logger.DBG($"[ws] graph: {graphInfo.GraphName}");
+            }
+        }
     }
 }

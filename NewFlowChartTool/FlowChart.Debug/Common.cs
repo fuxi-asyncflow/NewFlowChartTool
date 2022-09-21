@@ -9,6 +9,7 @@
     public interface IDebugProtocal<T>
     {
         public T Serialize(IDebugMessage msg);
+        public object? Deserialize(T msg);
     }
 
     public interface INetClient
@@ -23,6 +24,7 @@
         public Task<INetClient?> Connect(string host, int port);
         public void BroadCast(string host, int startPort, int endPort, IDebugMessage msg);
         public void Send(string host, int port, IDebugMessage msg);
+        public void HandleMessage(INetClient client, string msg);
 
     }
 }

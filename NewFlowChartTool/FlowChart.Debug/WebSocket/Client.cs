@@ -76,6 +76,7 @@ namespace FlowChart.Debug.WebSocket
             if (args.IsBinary)
                 return;
             Logger.DBG(args.Data);
+            _manager.HandleMessage(this, args.Data);
         }
 
         public void OnError(object? sender, EventArgs args)
