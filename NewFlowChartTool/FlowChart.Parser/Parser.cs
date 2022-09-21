@@ -35,6 +35,7 @@ namespace FlowChart.Parser
                 tree = parser.stat();
             }
             // System.Console.WriteLine(tree.ToStringTree(parser));
+            Tokens = null;
             if (cfg.GetTokens)
             {
                 Tokens = new List<TextToken>();
