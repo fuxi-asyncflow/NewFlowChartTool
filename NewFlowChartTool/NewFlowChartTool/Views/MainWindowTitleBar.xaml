@@ -57,6 +57,9 @@
                 <MenuItem Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_BuildKey}}">
                     <MenuItem Command="{Binding BuildAllCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_BuildAllKey}}" />
                 </MenuItem>
+                <MenuItem Header="Debug">
+                    <MenuItem Command="{Binding ShowDebugDialogCommand}" Header="调试" />
+                </MenuItem>
                 <MenuItem Header="Theme">
                     <MenuItem Command="{Binding SwitchThemeCommand}" Header="switch theme" />
                     <MenuItem Command="{Binding SwitchLangCommand}" Header="switch lang" />

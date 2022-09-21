@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using FlowChartCommon;
+using NewFlowChartTool.ViewModels;
+using NewFlowChartTool.Views;
 using NFCT.Common.Views;
 using NFCT.Common.ViewModels;
 using NFCT.Graph.ViewModels;
@@ -57,6 +59,8 @@ namespace NewFlowChartTool
             
             containerRegistry.RegisterSingleton<SimpleEditBoxViewModel>();
             containerRegistry.RegisterSingleton<SimpleEditBox>();
+
+            containerRegistry.RegisterDialog<DebugDialog, DebugDialogViewModel>(DebugDialogViewModel.NAME);
 
 
             //throw new NotImplementedException();

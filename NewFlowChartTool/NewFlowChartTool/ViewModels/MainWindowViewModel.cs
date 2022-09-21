@@ -17,7 +17,7 @@ using NewFlowChartTool.Event;
 using NFCT.Common;
 using NFCT.Common.Events;
 using NFCT.Graph.ViewModels;
-
+using Prism.Services.Dialogs;
 using ProjectFactory.DefaultProjectFactory;
 
 namespace NewFlowChartTool.ViewModels
@@ -33,10 +33,11 @@ namespace NewFlowChartTool.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         
-        public MainWindowViewModel(IEventAggregator ea)
+        public MainWindowViewModel(IEventAggregator ea, IDialogService dialogService)
         {
             _testText = "Hello world";
             _ea = ea;
+            _dialogService = dialogService;
             _openedGraphs = new ObservableCollection<GraphPaneViewModel>();
             CurrentProject = null;
 
@@ -47,6 +48,7 @@ namespace NewFlowChartTool.ViewModels
             BuildAllCommand = new DelegateCommand(BuildAll, () => CurrentProject != null);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
             SwitchLangCommand = new DelegateCommand(SwitchLang, () => true);
+            ShowDebugDialogCommand = new DelegateCommand(ShowDebugDialog);
 
             SelectedLang = Lang.Chinese;
             SelectedTheme = Theme.Dark;
@@ -79,6 +81,7 @@ namespace NewFlowChartTool.ViewModels
         }
 
         readonly IEventAggregator _ea;
+        readonly IDialogService _dialogService;
 
         public string _testText;
         public string TestText { get => _testText; set { SetProperty<string>(ref _testText, value); } }
@@ -106,6 +109,8 @@ namespace NewFlowChartTool.ViewModels
 
         public DelegateCommand UndoCommand { get; private set; }
         public DelegateCommand RedoCommand { get; private set; }
+
+        public DelegateCommand ShowDebugDialogCommand { get; private set; }
         
         public void TestOpenProject()
         {
@@ -232,6 +237,11 @@ namespace NewFlowChartTool.ViewModels
             if(CurrentProject == null) return;
             CurrentProject.Build();
             CurrentProject.Save();
+        }
+
+        public void ShowDebugDialog()
+        {
+            _dialogService.ShowDialog(DebugDialogViewModel.NAME);
         }
 
         public void OnOpenGraph(Graph graph)

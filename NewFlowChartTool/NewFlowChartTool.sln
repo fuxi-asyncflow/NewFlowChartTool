@@ -33,7 +33,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChart.LuaCodeGen", "Flo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XLua", "XLua\XLua.csproj", "{AF4B11B5-8893-42FE-91FF-7D0F7272A68C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFCT.Common", "NFCT.Common\NFCT.Common.csproj", "{B79522D0-75B0-4442-9013-9B26CCF919C5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFCT.Common", "NFCT.Common\NFCT.Common.csproj", "{B79522D0-75B0-4442-9013-9B26CCF919C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChart.Debug", "FlowChart.Debug\FlowChart.Debug.csproj", "{1D13FCFC-F55F-43C0-A86F-47C6A0F5BCA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketSharp", "WebSocketSharp\WebSocketSharp.csproj", "{8E8592B0-310A-4D9A-AED8-23E97A0FD6B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -128,6 +132,18 @@ Global
 		{B79522D0-75B0-4442-9013-9B26CCF919C5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B79522D0-75B0-4442-9013-9B26CCF919C5}.Release-NoGUI|Any CPU.ActiveCfg = Release|Any CPU
 		{B79522D0-75B0-4442-9013-9B26CCF919C5}.Release-NoGUI|Any CPU.Build.0 = Release|Any CPU
+		{1D13FCFC-F55F-43C0-A86F-47C6A0F5BCA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D13FCFC-F55F-43C0-A86F-47C6A0F5BCA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D13FCFC-F55F-43C0-A86F-47C6A0F5BCA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D13FCFC-F55F-43C0-A86F-47C6A0F5BCA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D13FCFC-F55F-43C0-A86F-47C6A0F5BCA5}.Release-NoGUI|Any CPU.ActiveCfg = Release|Any CPU
+		{1D13FCFC-F55F-43C0-A86F-47C6A0F5BCA5}.Release-NoGUI|Any CPU.Build.0 = Release|Any CPU
+		{8E8592B0-310A-4D9A-AED8-23E97A0FD6B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E8592B0-310A-4D9A-AED8-23E97A0FD6B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E8592B0-310A-4D9A-AED8-23E97A0FD6B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E8592B0-310A-4D9A-AED8-23E97A0FD6B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E8592B0-310A-4D9A-AED8-23E97A0FD6B6}.Release-NoGUI|Any CPU.ActiveCfg = Release|Any CPU
+		{8E8592B0-310A-4D9A-AED8-23E97A0FD6B6}.Release-NoGUI|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
