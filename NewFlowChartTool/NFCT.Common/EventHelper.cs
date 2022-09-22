@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Core;
+using FlowChart.Debug.WebSocket;
 using Prism.Events;
 using Prism.Ioc;
 
@@ -50,4 +51,6 @@ namespace NFCT.Common.Events
     public class ThemeSwitchEvent : PubSubEvent<NFCT.Common.Theme> { }
 
     public class LangSwitchEvent : PubSubEvent<NFCT.Common.Lang> { }
+
+    public class RecvGraphListEvent : PubSubEvent<List<GraphInfo>> { }
 }

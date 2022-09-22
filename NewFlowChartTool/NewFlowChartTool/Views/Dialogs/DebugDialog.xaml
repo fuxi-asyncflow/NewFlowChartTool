@@ -18,6 +18,12 @@
             <Setter Property="WindowStyle" Value="None" />
         </Style>
     </prism:Dialog.WindowStyle>
+    <UserControl.Resources>
+        <Style x:Key="DataGridTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </UserControl.Resources>
     <StackPanel>
         <DockPanel LastChildFill="True">
             <Button
@@ -33,5 +39,41 @@
             <Grid />
         </DockPanel>
         <TextBlock Background="Red" Text="{Binding Test}" />
+        <DataGrid
+            x:Name="SearchDataGrid"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            ColumnWidth="*"
+            GridLinesVisibility="None"
+            ItemsSource="{Binding GraphList}"
+            SelectedItem="{Binding SelectedGraphInfo}">
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <!--<EventSetter Event="MouseDoubleClick" Handler="OnRowDoubleClicked" />-->
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="4*"
+                    Binding="{Binding RowId, Mode=OneWay}"
+                    ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                    Header="编号" />
+                <DataGridTextColumn
+                    Width="20*"
+                    Binding="{Binding GraphPath, Mode=OneWay}"
+                    ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                    Header="流程图名称" />
+                <DataGridTextColumn
+                    Width="20*"
+                    Binding="{Binding ObjectName, Mode=OneWay}"
+                    ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                    Header="对象名称" />
+                <DataGridTextColumn
+                    Width="10*"
+                    Binding="{Binding OwnerGraphPath, Mode=OneWay}"
+                    ElementStyle="{StaticResource DataGridTextBlockStyle}"
+                    Header="父流程图" />
+            </DataGrid.Columns>
+        </DataGrid>
     </StackPanel>
 </UserControl>

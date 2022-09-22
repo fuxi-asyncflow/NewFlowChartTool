@@ -1,4 +1,6 @@
-﻿namespace FlowChart.Debug
+﻿using FlowChart.Debug.WebSocket;
+
+namespace FlowChart.Debug
 {
     public interface IDebugMessage
     {
@@ -14,6 +16,8 @@
 
     public interface INetClient
     {
+        public string Host { get;}
+        public int Port { get; }
         public void Send(string message);
         public void Send(byte[] data);
     }
@@ -25,6 +29,16 @@
         public void BroadCast(string host, int startPort, int endPort, IDebugMessage msg);
         public void Send(string host, int port, IDebugMessage msg);
         public void HandleMessage(INetClient client, string msg);
+
+        #region events
+
+        public delegate void RecvGraphListDelegate(string host, int port, List<GraphInfo> graphs);
+
+        public event RecvGraphListDelegate? RecvGraphListEvent;
+
+
+        #endregion
+
 
     }
 }

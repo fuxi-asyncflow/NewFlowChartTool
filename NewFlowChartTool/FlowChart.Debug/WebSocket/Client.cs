@@ -27,6 +27,9 @@ namespace FlowChart.Debug.WebSocket
             _ws.OnClose += OnClose;
         }
 
+        public string Host => _host;
+        public int Port => _port;
+
         #region props
         WebSocketSharp.WebSocket _ws;
         private INetManager _manager;

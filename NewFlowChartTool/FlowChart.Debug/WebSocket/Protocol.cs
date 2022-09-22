@@ -31,6 +31,12 @@ namespace FlowChart.Debug.WebSocket
         public string ObjectName { get; set; }
         public string GraphName { get; set; }
         public string OwnerGraphName { get; set; }
+
+        #region client info
+        public string Host { get; set; }
+        public int Port { get; set; }
+
+        #endregion
     }
 
     public class JsonProtocol : IDebugProtocal<string>
@@ -94,6 +100,7 @@ namespace FlowChart.Debug.WebSocket
                 gi.OwnerNodeAddr = jObj.GetProperty("owner_node_addr").GetUInt64();
                 gi.OwnerNodeId = jObj.GetProperty("owner_node_id").GetInt32();
                 gi.OwnerNodeUid = jObj.GetProperty("owner_node_uid").GetString();
+                gi.ObjectName = jObj.GetProperty("object_name").GetString();
                 gi.GraphName = jObj.GetProperty("chart_name").GetString();
                 gi.OwnerGraphName = jObj.GetProperty("owner_chart_name").GetString();
                 list.Add(gi);

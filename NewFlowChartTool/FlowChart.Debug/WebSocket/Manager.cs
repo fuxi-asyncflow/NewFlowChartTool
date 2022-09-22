@@ -107,8 +107,21 @@ namespace FlowChart.Debug.WebSocket
             if (data is List<GraphInfo> graphInfos)
             {
                 foreach (var graphInfo in graphInfos)
+                {
+                    graphInfo.Host = client.Host;
+                    graphInfo.Port = client.Port;
                     Logger.DBG($"[ws] graph: {graphInfo.GraphName}");
+                }
+
+                RecvGraphListEvent?.Invoke(client.Host, client.Port, graphInfos);
+                
             }
         }
+
+        #region events
+        public event INetManager.RecvGraphListDelegate? RecvGraphListEvent;
+        #endregion
+
+
     }
 }
