@@ -8,7 +8,7 @@ using FlowChart.Parser.ASTGenerator;
 using FlowChart.AST;
 using FlowChart.AST.Nodes;
 using FlowChart.Core;
-using FlowChart.Debug.WebSocket;
+using FlowChart.Debug;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
 using ProjectFactory;

@@ -8,36 +8,8 @@ using System.Threading.Tasks;
 
 namespace FlowChart.Debug.WebSocket
 {
-    public class GetChartListMessage : IDebugMessage
-    {
-        public string Name => "get_chart_list";
-        public string ChartName { get; set; }
-        public string ObjectName { get; set; }
-        public Dictionary<string, string> GetParams()
-        {
-            var dict = new Dictionary<string, string>();
-            dict.Add("chart_name", ChartName);
-            dict.Add("obj_name", ObjectName);
-            return dict;
-        }
-    }
-
-    public class GraphInfo
-    {
-        public int AgentId { get; set; }
-        public ulong OwnerNodeAddr { get; set; }
-        public int OwnerNodeId { get; set; }
-        public string OwnerNodeUid { get; set; }
-        public string ObjectName { get; set; }
-        public string GraphName { get; set; }
-        public string OwnerGraphName { get; set; }
-
-        #region client info
-        public string Host { get; set; }
-        public int Port { get; set; }
-
-        #endregion
-    }
+    
+    
 
     public class JsonProtocol : IDebugProtocal<string>
     {
@@ -73,11 +45,23 @@ namespace FlowChart.Debug.WebSocket
                 var root = JsonDocument.Parse(msg, new JsonDocumentOptions()).RootElement;
 
                 var methodObj = root.GetProperty("method");
-                var resultObj = root.GetProperty("result");
-                if (methodObj.GetString() == "get_chart_list")
+                JsonElement tmpObj;
+                if (root.TryGetProperty("result", out tmpObj))
                 {
-                    return DeserializeGraphList(resultObj);
+                    if (methodObj.GetString() == "get_chart_list")
+                    {
+                        return DeserializeGraphList(tmpObj);
+                    }
                 }
+                else if (root.TryGetProperty("params", out tmpObj))
+                {
+                    if (methodObj.GetString() == "debug_chart")
+                    {
+                        return DeserializeDebugData(tmpObj);
+                    }
+                }
+                
+                
 
                 return null;
 
@@ -89,7 +73,7 @@ namespace FlowChart.Debug.WebSocket
             }
         }
 
-        public object DeserializeGraphList(JsonElement result)
+        object DeserializeGraphList(JsonElement result)
         {
             var chartInfo = result.GetProperty("chart_info");
             var list = new List<GraphInfo>();
@@ -107,6 +91,41 @@ namespace FlowChart.Debug.WebSocket
             }
 
             return list;
+        }
+
+        object DeserializeDebugData(JsonElement result)
+        {
+            var ret = new GraphDebugData()
+            {
+                ChartName = result.GetProperty("chart_name").GetString(),
+                ChartUid = Guid.Parse(result.GetProperty("chart_uid").GetString()),
+                DebugDataList = new List<DebugData>()
+            };
+            
+            //var chartUidObj = result.GetProperty("chart_uid");
+            //var chartUid = chartUidObj.GetString();
+            var dataArrayObj = result.GetProperty("running_data");
+            foreach (var dataObj in dataArrayObj.EnumerateArray())
+            {
+                var typeStr = dataObj.GetProperty("type").GetString();
+                if (typeStr == "node_status")
+                {
+                    var nsd = new NodeStatusData()
+                    {
+                        Id = dataObj.GetProperty("id").GetInt32(),
+                        NodeId = dataObj.GetProperty("node_id").GetInt32(),
+                        NodeUid = Guid.Parse(dataObj.GetProperty("node_uid").GetString()),
+                        OldStatus = dataObj.GetProperty("old_status").GetInt32(),
+                        NewStatus = dataObj.GetProperty("new_status").GetInt32(),
+                    };
+                    if (nsd.NewStatus == 2)
+                    {
+                        nsd.result = dataObj.GetProperty("result").GetBoolean();
+                    }
+                    ret.DebugDataList.Add(nsd);
+                }
+            }
+            return ret;
         }
     }
 }

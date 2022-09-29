@@ -25,6 +25,7 @@ namespace FlowChart.Debug.WebSocket
 
         private Dictionary<string, Client> _clients;
         private IDebugProtocal<string> _protocal;
+        private Dictionary<Guid, DebugAgent> _agents;
         public INetClient? GetClient(string host, int port)
         {
             Client? client = null;
@@ -114,12 +115,27 @@ namespace FlowChart.Debug.WebSocket
                 }
 
                 RecvGraphListEvent?.Invoke(client.Host, client.Port, graphInfos);
-                
+            }
+
+            if (data is GraphDebugData graphDebugData)
+            {
+                if (!_agents.TryGetValue(graphDebugData.ChartUid, out var agent))
+                {
+                    agent = new DebugAgent()
+                    {
+                        GraphGuid = graphDebugData.ChartUid, 
+                        GraphName = graphDebugData.ChartName
+                    };
+                    _agents.Add(graphDebugData.ChartUid, agent);
+                    NewDebugAgentEvent?.Invoke(agent);
+                }
+                agent.Accept(graphDebugData.DebugDataList);
             }
         }
 
         #region events
         public event INetManager.RecvGraphListDelegate? RecvGraphListEvent;
+        public event INetManager.NewDebugAgentDelegate? NewDebugAgentEvent;
         #endregion
 
 

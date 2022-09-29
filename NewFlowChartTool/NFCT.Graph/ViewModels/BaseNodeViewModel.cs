@@ -171,7 +171,17 @@ namespace NFCT.Graph.ViewModels
             }
         }
 
-
+        public bool IsDebugMode => Owner.IsDebugMode;
+        public void ChangeDebugMode() {RaisePropertyChanged(nameof(IsDebugMode));}
+        public int SuccessCount { get; set; }
+        public int FailureCount { get; set; }
+        public void ChangeDebugCount(int successCount, int failCount)
+        {
+            SuccessCount = successCount;
+            FailureCount = failCount;
+            RaisePropertyChanged(nameof(SuccessCount));
+            RaisePropertyChanged(nameof(FailureCount));
+        }
         #region BACKGROUND COLOR
 
         public enum NodeBgType

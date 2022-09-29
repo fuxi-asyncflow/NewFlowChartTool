@@ -30,6 +30,7 @@
             StartNodeTemplate="{StaticResource StartNodeTemplate}"
             TextNodeTemplate="{StaticResource TextNodeTemplate}" />
         <utility:CutOpacityConverter x:Key="CutOpacityConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <UserControl.ContextMenu>
         <ContextMenu>
@@ -48,7 +49,14 @@
         MouseDown="NodeGrid_OnMouseDown"
         Opacity="{Binding IsCut, Converter={StaticResource CutOpacityConverter}}"
         RequestBringIntoView="Node_OnRequestBringIntoView">
-        <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource GraphNodesTemplateSelector}" />
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Visibility="{Binding IsDebugMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="{Binding SuccessCount}" />
+                <TextBlock Text="{Binding FailureCount}" />
+            </StackPanel>
+            <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource GraphNodesTemplateSelector}" />
+        </StackPanel>
+
         <b:Interaction.Triggers>
             <b:EventTrigger EventName="KeyDown">
                 <prism:InvokeCommandAction Command="{Binding OnKeyDownCommand}" />

@@ -10,6 +10,7 @@ using FlowChart.Core;
 using System.Windows;
 using System.Collections.ObjectModel;
 using FlowChart.AST;
+using FlowChart.Debug;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
 using FlowChartCommon;
@@ -58,6 +59,8 @@ namespace NewFlowChartTool.ViewModels
 
             _ea.GetEvent<GraphOpenEvent>().Subscribe(OnOpenGraph);
             EventHelper.Sub<GraphCloseEvent, Graph>(OnCloseGraph);
+            EventHelper.Sub<NewDebugAgentEvent, DebugAgent>(OnNewDebugAgentEvent, ThreadOption.UIThread);
+            EventHelper.Sub<StartDebugGraphEvent, GraphInfo>(OnStartDebugGraphEvent, ThreadOption.UIThread);
 #if DEBUG
             //TestOpenProject();
 #endif
@@ -284,18 +287,45 @@ namespace NewFlowChartTool.ViewModels
             return true;
         }
 
-        public void Redo()
+        void Redo()
         {
             if(ActiveGraph == null) return;
             ActiveGraph.UndoRedoManager.Redo();
             ActiveGraph.Graph.Build(new ParserConfig() { GetTokens = true });
         }
 
-        public void Undo()
+        void Undo()
         {
             if (ActiveGraph == null) return;
             ActiveGraph.UndoRedoManager.Undo();
             ActiveGraph.Graph.Build(new ParserConfig() {GetTokens = true});
+        }
+
+        void OnNewDebugAgentEvent(DebugAgent agent)
+        {
+            foreach (var graphVm in OpenedGraphs)
+            {
+                if(graphVm.IsDebugMode && graphVm.FullPath == agent.GraphName)
+                    graphVm.UpdateAgents(DebugDialogViewModel.Inst.GetAgents(agent.GraphName));
+            }
+        }
+
+        void OnStartDebugGraphEvent(GraphInfo graphInfo)
+        {
+            if (CurrentProject == null) return;
+            if (CurrentProject.GraphDict.TryGetValue(graphInfo.GraphName, out var graph))
+            {
+                OnOpenGraph(graph);
+            }
+
+            foreach (var graphVm in OpenedGraphs)
+            {
+                if (graphVm.Graph == graph)
+                {
+                    graphVm.EnterDebugMode();
+                    graphVm.UpdateAgents(DebugDialogViewModel.Inst.GetAgents(graphInfo.GraphName));
+                }
+            }
         }
     }
 }

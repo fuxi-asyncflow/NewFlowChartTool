@@ -49,7 +49,7 @@
             SelectedItem="{Binding SelectedGraphInfo}">
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}">
-                    <!--<EventSetter Event="MouseDoubleClick" Handler="OnRowDoubleClicked" />-->
+                    <EventSetter Event="MouseDoubleClick" Handler="OnDebugChartGridRowDoubleClicked" />
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>

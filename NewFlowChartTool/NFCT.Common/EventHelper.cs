@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Core;
+using FlowChart.Debug;
 using FlowChart.Debug.WebSocket;
 using Prism.Events;
 using Prism.Ioc;
@@ -52,5 +53,13 @@ namespace NFCT.Common.Events
 
     public class LangSwitchEvent : PubSubEvent<NFCT.Common.Lang> { }
 
+    #region Debug Event
     public class RecvGraphListEvent : PubSubEvent<List<GraphInfo>> { }
+
+    public class NewDebugAgentEvent : PubSubEvent<DebugAgent> { }
+
+    public class StartDebugGraphEvent : PubSubEvent<GraphInfo> { }
+
+    #endregion
+
 }

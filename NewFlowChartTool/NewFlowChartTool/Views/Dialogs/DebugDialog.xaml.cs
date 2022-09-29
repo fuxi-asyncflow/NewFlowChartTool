@@ -12,6 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FlowChart.Debug;
+using NewFlowChartTool.ViewModels;
+using NFCT.Common;
+using NFCT.Common.Events;
 
 namespace NewFlowChartTool.Views
 {
@@ -23,6 +27,15 @@ namespace NewFlowChartTool.Views
         public DebugDialog()
         {
             InitializeComponent();
+        }
+
+        private void OnDebugChartGridRowDoubleClicked(object sender, MouseButtonEventArgs e)
+        {
+            var vm = WPFHelper.GetDataContext<DebugDialogViewModel>(this);
+            if (vm == null) return;
+            if (vm.SelectedGraphInfo == null) return;
+            EventHelper.Pub<StartDebugGraphEvent, GraphInfo>(vm.SelectedGraphInfo.GraphInfo);
+            //vm.OpenUnitInDebugMode(vm.SelectedChart.ChartName);
         }
     }
 }

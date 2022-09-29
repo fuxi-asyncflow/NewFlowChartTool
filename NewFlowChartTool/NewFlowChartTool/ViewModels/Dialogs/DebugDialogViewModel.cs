@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Debug;
 using FlowChart.Debug.WebSocket;
+using FlowChartCommon;
 using NFCT.Common;
 using NFCT.Common.Events;
 using Prism.Commands;
@@ -41,6 +43,12 @@ namespace NewFlowChartTool.ViewModels
     {
         public DebugDialogViewModel(IDialogService dialogService)
         {
+            if (Inst != null)
+            {
+                Logger.ERR("DebugDialogViewModel should be singleton");
+            }
+
+            Inst = this;
             Test = "Hello world";
             GraphList = new ObservableCollection<GraphInfoViewModel>();
             _dialogService = dialogService;
@@ -48,14 +56,23 @@ namespace NewFlowChartTool.ViewModels
             GetGraphListCommand = new DelegateCommand(GetGraphList);
 
             _netManager = new FlowChart.Debug.WebSocket.Manager();
+            _agents = new Dictionary<string, List<DebugAgent>>();
+
             _netManager.RecvGraphListEvent += (host, ip, graphList) =>
             {
                 EventHelper.Pub<RecvGraphListEvent, List<GraphInfo>>(graphList);
             };
             EventHelper.Sub<RecvGraphListEvent, List<GraphInfo>>(OnRecvGraphListEvent, ThreadOption.UIThread);
+
+            _netManager.NewDebugAgentEvent += (agent) =>
+            {
+                EventHelper.Pub<NewDebugAgentEvent, DebugAgent>(agent);
+            };
+            EventHelper.Sub<NewDebugAgentEvent, DebugAgent>(OnNewDebugAgentEvent, ThreadOption.UIThread);
         }
 
         private IDialogService _dialogService;
+        public static DebugDialogViewModel? Inst { get; set; }
 
         public const string NAME = "DebugDialog";
         public string Test { get; set; }
@@ -76,8 +93,8 @@ namespace NewFlowChartTool.ViewModels
 
         public string Title => "Debug Dialog";
         public ObservableCollection<GraphInfoViewModel> GraphList { get; set; }
-        private GraphInfoViewModel _selectedGraphInfo;
-        public GraphInfoViewModel SelectedGraphInfo
+        private GraphInfoViewModel? _selectedGraphInfo;
+        public GraphInfoViewModel? SelectedGraphInfo
         {
             get => _selectedGraphInfo;
             set => SetProperty(ref _selectedGraphInfo, value);
@@ -87,7 +104,9 @@ namespace NewFlowChartTool.ViewModels
 
         public DelegateCommand CloseCommand { get; set;}
         public DelegateCommand GetGraphListCommand { get; set; }
+        
         private INetManager _netManager;
+        private Dictionary<string, List<DebugAgent>> _agents;
 
         public void GetGraphList()
         {
@@ -102,6 +121,24 @@ namespace NewFlowChartTool.ViewModels
         private void OnRecvGraphListEvent(List<GraphInfo> graphs)
         {
             graphs.ForEach(gi => GraphList.Add(new GraphInfoViewModel(gi) {RowId = GraphList.Count + 1}));
+        }
+
+        public List<DebugAgent>? GetAgents(string graphName)
+        {
+            if (!_agents.ContainsKey(graphName))
+                return null;
+            return _agents[graphName];
+        }
+
+        private void OnNewDebugAgentEvent(DebugAgent agent)
+        {
+            if (!_agents.ContainsKey(agent.GraphName))
+            {
+                _agents.Add(agent.GraphName, new List<DebugAgent>());
+            }
+            var list = _agents[agent.GraphName];
+            Debug.Assert(list.Find(a => a.GraphGuid == agent.GraphGuid) == null);
+            list.Add(agent);
         }
     }
 }
