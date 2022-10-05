@@ -10,71 +10,122 @@
     d:DataContext="{d:DesignInstance vm:DebugDialogViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    Background="{DynamicResource BackGroundBrush}"
     mc:Ignorable="d">
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
             <Setter Property="ShowInTaskbar" Value="False" />
             <Setter Property="WindowStyle" Value="None" />
+            <Setter Property="WindowChrome.WindowChrome">
+                <Setter.Value>
+                    <WindowChrome CaptionHeight="0" ResizeBorderThickness="5" />
+                </Setter.Value>
+            </Setter>
         </Style>
     </prism:Dialog.WindowStyle>
     <UserControl.Resources>
-        <Style x:Key="DataGridTextBlockStyle" TargetType="TextBlock">
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{DynamicResource HightlightBackGroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource HightlightBorderBrush}" />
         </Style>
     </UserControl.Resources>
     <StackPanel>
-        <DockPanel LastChildFill="True">
+        <DockPanel
+            Height="32"
+            Background="{DynamicResource BackGroundBrush}"
+            LastChildFill="True"
+            MouseDown="TitleBlank_OnMouseDown">
             <Button
-                MinWidth="20"
+                MinWidth="48"
+                Background="Transparent"
+                BorderThickness="0"
                 Command="{Binding CloseCommand}"
-                Content="X"
+                Content="{StaticResource Icon_Close}"
                 DockPanel.Dock="Right" />
-            <Button
-                MinWidth="20"
-                Command="{Binding GetGraphListCommand}"
-                Content="刷新"
-                DockPanel.Dock="Left" />
-            <Grid
-                x:Name="TitleBlank"
-                Background="Blue"
-                MouseDown="TitleBlank_OnMouseDown" />
+            <TextBlock DockPanel.Dock="Left" Text="调试流程图" />
+
+            <Grid x:Name="TitleBlank" />
         </DockPanel>
-        <TextBlock Background="Red" Text="{Binding Test}" />
+        <StackPanel Orientation="Horizontal">
+            <Button
+                MinWidth="48"
+                Margin="8,4"
+                Background="Transparent"
+                Command="{Binding GetGraphListCommand}"
+                Content="刷新" />
+
+            <StackPanel Margin="0,4" Orientation="Vertical">
+                <StackPanel Margin="0,4" Orientation="Horizontal">
+                    <TextBlock Text="对象名称" />
+                    <TextBox MinWidth="100" Margin="8,0" />
+                    <TextBlock Text="流程图名称" />
+                    <TextBox MinWidth="100" Margin="8,0" />
+                </StackPanel>
+                <StackPanel Margin="0,4" Orientation="Horizontal">
+                    <TextBlock Text="服务器" />
+                    <TextBox MinWidth="100" Margin="8,0" />
+                    <TextBlock Text="端口" />
+                    <TextBox MinWidth="100" Margin="8,0" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
         <DataGrid
             x:Name="SearchDataGrid"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
             ColumnWidth="*"
             GridLinesVisibility="None"
+            HorizontalGridLinesBrush="{DynamicResource BorderBrush}"
             ItemsSource="{Binding GraphList}"
-            SelectedItem="{Binding SelectedGraphInfo}">
+            SelectedItem="{Binding SelectedGraphInfo}"
+            VerticalGridLinesBrush="{DynamicResource BorderBrush}">
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}">
                     <EventSetter Event="MouseDoubleClick" Handler="OnDebugChartGridRowDoubleClicked" />
                 </Style>
             </DataGrid.RowStyle>
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                </Style>
+                <Style TargetType="DataGridRowHeader">
+                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                </Style>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
+                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                    <Setter Property="BorderThickness" Value="0" />
+                </Style>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                </Style>
+                <!--<Style TargetType="TextBlock">
+                    <Setter Property="Foreground" Value="Red" />
+                    <Setter Property="Background" Value="Transparent" />
+                </Style>-->
+            </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn
                     Width="4*"
                     Binding="{Binding RowId, Mode=OneWay}"
-                    ElementStyle="{StaticResource DataGridTextBlockStyle}"
                     Header="编号" />
                 <DataGridTextColumn
                     Width="20*"
                     Binding="{Binding GraphPath, Mode=OneWay}"
-                    ElementStyle="{StaticResource DataGridTextBlockStyle}"
                     Header="流程图名称" />
                 <DataGridTextColumn
                     Width="20*"
                     Binding="{Binding ObjectName, Mode=OneWay}"
-                    ElementStyle="{StaticResource DataGridTextBlockStyle}"
                     Header="对象名称" />
                 <DataGridTextColumn
                     Width="10*"
                     Binding="{Binding OwnerGraphPath, Mode=OneWay}"
-                    ElementStyle="{StaticResource DataGridTextBlockStyle}"
                     Header="父流程图" />
             </DataGrid.Columns>
         </DataGrid>
