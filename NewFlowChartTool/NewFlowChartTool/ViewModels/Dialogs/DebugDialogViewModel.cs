@@ -140,5 +140,10 @@ namespace NewFlowChartTool.ViewModels
             Debug.Assert(list.Find(a => a.GraphGuid == agent.GraphGuid) == null);
             list.Add(agent);
         }
+
+        public void StartDebugGraph(GraphInfo graphInfo)
+        {
+            _netManager.Send(graphInfo.Host, graphInfo.Port, new StartDebugChartMessage(graphInfo));
+        }
     }
 }

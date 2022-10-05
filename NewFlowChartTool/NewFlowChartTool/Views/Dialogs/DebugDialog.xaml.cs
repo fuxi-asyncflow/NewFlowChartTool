@@ -36,6 +36,7 @@ namespace NewFlowChartTool.Views
             if (vm.SelectedGraphInfo == null) return;
             EventHelper.Pub<StartDebugGraphEvent, GraphInfo>(vm.SelectedGraphInfo.GraphInfo);
             //vm.OpenUnitInDebugMode(vm.SelectedChart.ChartName);
+            vm.StartDebugGraph(vm.SelectedGraphInfo.GraphInfo);
         }
     }
 }

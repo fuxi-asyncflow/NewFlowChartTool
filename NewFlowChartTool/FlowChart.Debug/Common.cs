@@ -57,6 +57,11 @@ namespace FlowChart.Debug
 
     public class StartDebugChartMessage : IDebugMessage
     {
+        public StartDebugChartMessage(GraphInfo graphInfo)
+        {
+            GraphInfo = graphInfo;
+        }
+
         public string Name => "debug_chart";
         public GraphInfo GraphInfo { get; set; }
         public Dictionary<string, object> GetParams()

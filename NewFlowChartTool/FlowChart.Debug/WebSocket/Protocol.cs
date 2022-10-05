@@ -17,6 +17,9 @@ namespace FlowChart.Debug.WebSocket
         {
             if (obj is string s)
                 return $"\"{s}\"";
+            else
+                return obj.ToString();
+
             throw new NotImplementedException();
         }
 

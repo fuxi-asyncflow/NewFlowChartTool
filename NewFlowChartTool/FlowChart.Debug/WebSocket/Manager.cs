@@ -16,6 +16,7 @@ namespace FlowChart.Debug.WebSocket
         {
             _protocal = new JsonProtocol();
             _clients = new Dictionary<string, Client>();
+            _agents = new Dictionary<Guid, DebugAgent>();
         }
 
         public static string MakeAddr(string host, int port)
