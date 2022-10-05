@@ -36,7 +36,10 @@
                 Command="{Binding GetGraphListCommand}"
                 Content="刷新"
                 DockPanel.Dock="Left" />
-            <Grid />
+            <Grid
+                x:Name="TitleBlank"
+                Background="Blue"
+                MouseDown="TitleBlank_OnMouseDown" />
         </DockPanel>
         <TextBlock Background="Red" Text="{Binding Test}" />
         <DataGrid

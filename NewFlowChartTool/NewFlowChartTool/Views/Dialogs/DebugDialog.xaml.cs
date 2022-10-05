@@ -38,5 +38,12 @@ namespace NewFlowChartTool.Views
             //vm.OpenUnitInDebugMode(vm.SelectedChart.ChartName);
             vm.StartDebugGraph(vm.SelectedGraphInfo.GraphInfo);
         }
+
+        private void TitleBlank_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var move = sender as UIElement;
+            var win = Window.GetWindow(move);
+            win.DragMove();
+        }
     }
 }
