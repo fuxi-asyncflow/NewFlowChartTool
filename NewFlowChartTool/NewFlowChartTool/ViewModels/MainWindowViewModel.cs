@@ -271,6 +271,7 @@ namespace NewFlowChartTool.ViewModels
 
             OpenedGraphs.Add(new GraphPaneViewModel(graph));
             ActiveGraph = OpenedGraphs.Last();
+            ActiveGraph.Build();
         }
 
         public void OnCloseGraph(Graph graph)
@@ -303,14 +304,14 @@ namespace NewFlowChartTool.ViewModels
         {
             if(ActiveGraph == null) return;
             ActiveGraph.UndoRedoManager.Redo();
-            ActiveGraph.Graph.Build(new ParserConfig() { GetTokens = true });
+            ActiveGraph.Build();
         }
 
         void Undo()
         {
             if (ActiveGraph == null) return;
             ActiveGraph.UndoRedoManager.Undo();
-            ActiveGraph.Graph.Build(new ParserConfig() {GetTokens = true});
+            ActiveGraph.Build();
         }
 
         void OnNewDebugAgentEvent(DebugAgent agent)
