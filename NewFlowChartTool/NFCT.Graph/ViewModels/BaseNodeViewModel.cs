@@ -171,17 +171,38 @@ namespace NFCT.Graph.ViewModels
             }
         }
 
+        #region DEBUG STATUS
         public bool IsDebugMode => Owner.IsDebugMode;
-        public void ChangeDebugMode() {RaisePropertyChanged(nameof(IsDebugMode));}
+        public void ChangeDebugMode() { RaisePropertyChanged(nameof(IsDebugMode)); }
         public int SuccessCount { get; set; }
         public int FailureCount { get; set; }
-        public void ChangeDebugCount(int successCount, int failCount)
+
+        public void ChangeDebugStatus(DebugNodeStatus status)
         {
-            SuccessCount = successCount;
-            FailureCount = failCount;
-            RaisePropertyChanged(nameof(SuccessCount));
-            RaisePropertyChanged(nameof(FailureCount));
+            switch (status)
+            {
+                case DebugNodeStatus.IDLE:
+                    break;
+                case DebugNodeStatus.RUNNING:
+                    break;
+                case DebugNodeStatus.SUCCESS:
+                    SuccessCount++;
+                    RaisePropertyChanged(nameof(SuccessCount));
+                    break;
+                case DebugNodeStatus.FAILURE:
+                    FailureCount++;
+                    RaisePropertyChanged(nameof(FailureCount));
+                    break;
+                case DebugNodeStatus.ERROR:
+                    break;
+            }
+            DebugStatusChangeEvent?.Invoke(status);
         }
+
+        public delegate void NodeDebugStatusChange(DebugNodeStatus status);
+        public event NodeDebugStatusChange? DebugStatusChangeEvent;
+        #endregion
+
         #region BACKGROUND COLOR
 
         public enum NodeBgType

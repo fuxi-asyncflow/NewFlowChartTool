@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -27,11 +28,17 @@ namespace NFCT.Graph.Views
         public TextNode()
         {
             InitializeComponent();
+            DataContextChanged += OnDataContextChanged;
+
+           
         }
 
-
-
-
+        private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var nodeVm = DataContext as TextNodeViewModel;
+            if (nodeVm == null) return;
+            nodeVm.DebugStatusChangeEvent += OnNodeDebugStatusChange;
+        }
 
         private void NodeGrid_OnMouseMove(object sender, MouseEventArgs e)
         {
@@ -70,6 +77,30 @@ namespace NFCT.Graph.Views
                 ac.SetFocus();
                 ac.SetCursor(-1);
             }
+        }
+
+        private void OnNodeDebugStatusChange(DebugNodeStatus status)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                ColorAnimation anim;
+                switch (status)
+                {
+                    case DebugNodeStatus.SUCCESS:
+                        NodeBorder.Background = new SolidColorBrush(Colors.GreenYellow);
+                        anim = new ColorAnimation(Colors.Transparent, new Duration(TimeSpan.FromMilliseconds(200)));
+                        NodeBorder.Background.BeginAnimation(SolidColorBrush.ColorProperty, anim);
+                        break;
+                    case DebugNodeStatus.FAILURE:
+                        NodeBorder.Background = new SolidColorBrush(Colors.Red);
+                        anim = new ColorAnimation(Colors.Transparent, new Duration(TimeSpan.FromMilliseconds(200)));
+                        NodeBorder.Background.BeginAnimation(SolidColorBrush.ColorProperty, anim);
+                        break;
+                    case DebugNodeStatus.RUNNING:
+                        NodeBorder.Background = new SolidColorBrush(Colors.Blue);
+                        break;
+                }
+            });
         }
     }
 }

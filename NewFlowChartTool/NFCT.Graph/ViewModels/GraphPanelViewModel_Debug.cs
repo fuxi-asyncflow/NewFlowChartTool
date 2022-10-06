@@ -8,6 +8,14 @@ using FlowChart.Debug;
 
 namespace NFCT.Graph.ViewModels
 {
+    public enum DebugNodeStatus
+    {
+        IDLE = 0,
+        RUNNING = 1,
+        SUCCESS = 2,
+        FAILURE = 3,
+        ERROR = 4
+    }
     public partial class GraphPaneViewModel
     {
         private bool _isDebugMode;
@@ -66,13 +74,16 @@ namespace NFCT.Graph.ViewModels
             var nodeVm = _getDebugNodeViewModel(nsd.NodeUid);
             if (nodeVm == null)
                 return;
-            if (nsd.NewStatus == 2)
+            if (nsd.NewStatus == 2) // 2 is endrun
             {
-                if(nsd.result)
-                    nodeVm.ChangeDebugCount(nodeVm.SuccessCount + 1, nodeVm.FailureCount);
-                else
-                    nodeVm.ChangeDebugCount(nodeVm.SuccessCount, nodeVm.FailureCount + 1);
+                nodeVm.ChangeDebugStatus(nsd.result ? DebugNodeStatus.SUCCESS : DebugNodeStatus.FAILURE);
             }
+            else if (nsd.NewStatus == 1)
+            {
+                nodeVm.ChangeDebugStatus(DebugNodeStatus.RUNNING);
+            }
+            else if(nsd.NewStatus == 0)
+                nodeVm.ChangeDebugStatus(DebugNodeStatus.IDLE);
         }
     }
 }

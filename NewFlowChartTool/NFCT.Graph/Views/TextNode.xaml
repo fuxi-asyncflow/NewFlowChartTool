@@ -23,6 +23,7 @@
     </UserControl.Resources>
     <Grid>
         <Border
+            x:Name="NodeBorder"
             Background="{Binding BgType, Converter={StaticResource BgColorConverter}, Mode=OneWay}"
             BorderBrush="{Binding BgType, Converter={StaticResource BorderColorConverter}, Mode=OneWay}"
             BorderThickness="{Binding IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}"
