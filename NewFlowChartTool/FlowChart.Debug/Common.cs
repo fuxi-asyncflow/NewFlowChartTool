@@ -95,6 +95,8 @@ namespace FlowChart.Debug
     {
         public string ChartName { get; set; }
         public Guid ChartUid { get; set; }
+        public Int64 Frame { get; set; }
+        public Int64 Time { get; set; }
         public List<DebugData> DebugDataList { get; set; }
     }
 

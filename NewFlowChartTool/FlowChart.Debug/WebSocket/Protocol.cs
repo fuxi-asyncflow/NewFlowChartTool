@@ -102,6 +102,8 @@ namespace FlowChart.Debug.WebSocket
             {
                 ChartName = result.GetProperty("chart_name").GetString(),
                 ChartUid = Guid.Parse(result.GetProperty("chart_uid").GetString()),
+                Frame = result.GetProperty("frame").GetInt64(),
+                Time = result.GetProperty("time").GetInt64(),
                 DebugDataList = new List<DebugData>()
             };
             
