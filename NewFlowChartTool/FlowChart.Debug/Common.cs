@@ -20,6 +20,7 @@ namespace FlowChart.Debug
         public int Port { get; }
         public void Send(string message);
         public void Send(byte[] data);
+        public void Stop();
     }
     public interface INetManager
     {
@@ -29,6 +30,7 @@ namespace FlowChart.Debug
         public void BroadCast(string host, int startPort, int endPort, IDebugMessage msg);
         public void Send(string host, int port, IDebugMessage msg);
         public void HandleMessage(INetClient client, string msg);
+        public void Stop();
 
         #region events
         public delegate void RecvGraphListDelegate(string host, int port, List<GraphInfo> graphs);

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Debug;
+using FlowChartCommon;
 
 namespace NFCT.Graph.ViewModels
 {
@@ -25,6 +26,7 @@ namespace NFCT.Graph.ViewModels
         {
             if (IsDebugMode)
                 return;
+            Logger.LOG($"[debug] {FullPath} enter debug mode");
             IsDebugMode = true;
             foreach (var baseNodeViewModel in Nodes)
             {
@@ -37,9 +39,13 @@ namespace NFCT.Graph.ViewModels
             if (!IsDebugMode)
                 return;
             IsDebugMode = false;
+            Logger.LOG($"[debug] {FullPath} exit debug mode");
+            _currentDebugAgent = null;
+            _agents = null;
             foreach (var baseNodeViewModel in Nodes)
             {
                 baseNodeViewModel.ChangeDebugMode();
+                baseNodeViewModel.ExitDebugMode();
             }
         }
 
@@ -49,10 +55,13 @@ namespace NFCT.Graph.ViewModels
 
         public void UpdateAgents(List<DebugAgent>? agents)
         {
-            _agents ??= agents;
+            _agents ??= new List<DebugAgent>();
+            if(agents != null)
+            _agents.AddRange(agents);
             if (_currentDebugAgent == null && _agents != null && _agents.Count > 0)
             {
                 _currentDebugAgent = _agents.First();
+                Logger.LOG($"[debug] {FullPath} bind to a debug agent");
                 _currentDebugAgent.NodeStatusChange += OnNodeStatusChange;
             }
         }

@@ -50,6 +50,7 @@ namespace NewFlowChartTool.ViewModels
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
             SwitchLangCommand = new DelegateCommand(SwitchLang, () => true);
             ShowDebugDialogCommand = new DelegateCommand(ShowDebugDialog);
+            StopDebugCommand = new DelegateCommand(StopDebug);
 
             SelectedLang = Lang.Chinese;
             SelectedTheme = Theme.Dark;
@@ -114,6 +115,7 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand RedoCommand { get; private set; }
 
         public DelegateCommand ShowDebugDialogCommand { get; private set; }
+        public DelegateCommand StopDebugCommand { get; private set; }
         
         public void TestOpenProject()
         {
@@ -247,6 +249,15 @@ namespace NewFlowChartTool.ViewModels
             _dialogService.ShowDialog(DebugDialogViewModel.NAME);
         }
 
+        public void StopDebug()
+        {
+            DebugDialogViewModel.Inst?.StopDebug();
+            foreach (var graphVm in OpenedGraphs)
+            {
+                graphVm.ExitDebugMode();
+            }
+        }
+
         public void OnOpenGraph(Graph graph)
         {
             foreach (var gvm in OpenedGraphs)
@@ -275,6 +286,7 @@ namespace NewFlowChartTool.ViewModels
 
             if (vm != null)
             {
+                vm.ExitDebugMode();
                 OpenedGraphs.Remove(vm);
             }
 

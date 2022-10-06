@@ -60,6 +60,7 @@ namespace NewFlowChartTool
             containerRegistry.RegisterSingleton<SimpleEditBoxViewModel>();
             containerRegistry.RegisterSingleton<SimpleEditBox>();
 
+            containerRegistry.RegisterSingleton<DebugDialogViewModel>();
             containerRegistry.RegisterDialog<DebugDialog, DebugDialogViewModel>(DebugDialogViewModel.NAME);
 
 

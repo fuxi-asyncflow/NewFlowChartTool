@@ -145,5 +145,11 @@ namespace NewFlowChartTool.ViewModels
         {
             _netManager.Send(graphInfo.Host, graphInfo.Port, new StartDebugChartMessage(graphInfo));
         }
+
+        public void StopDebug()
+        {
+            _netManager.Stop();
+            _agents.Clear();
+        }
     }
 }

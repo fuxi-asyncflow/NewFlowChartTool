@@ -65,6 +65,12 @@ namespace FlowChart.Debug.WebSocket
             return _connectFuture.Task;
         }
 
+        public void Stop()
+        {
+            _ws.Close();
+            _isOpen = false;
+        }
+
         #region websocket callbacks
 
         public void OnOpen(object? sender, EventArgs args)
@@ -78,7 +84,7 @@ namespace FlowChart.Debug.WebSocket
         {
             if (args.IsBinary)
                 return;
-            Logger.DBG(args.Data);
+            // Logger.DBG(args.Data);
             _manager.HandleMessage(this, args.Data);
         }
 

@@ -166,6 +166,18 @@
                     <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_RedoKey}}" />
                 </StackPanel>
             </Button>
+            <Button Command="{Binding ShowDebugDialogCommand}">
+                <StackPanel>
+                    <Viewbox />
+                    <TextBlock Height="16" Text="调试" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding StopDebugCommand}">
+                <StackPanel>
+                    <Viewbox />
+                    <TextBlock Height="16" Text="停止调试" />
+                </StackPanel>
+            </Button>
         </StackPanel>
 
 

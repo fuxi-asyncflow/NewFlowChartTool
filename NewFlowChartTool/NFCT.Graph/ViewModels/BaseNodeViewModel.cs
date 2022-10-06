@@ -177,6 +177,15 @@ namespace NFCT.Graph.ViewModels
         public int SuccessCount { get; set; }
         public int FailureCount { get; set; }
 
+        public void ExitDebugMode()
+        {
+            SuccessCount = 0;
+            FailureCount = 0;
+            RaisePropertyChanged(nameof(SuccessCount));
+            RaisePropertyChanged(nameof(FailureCount));
+            RaisePropertyChanged(nameof(BgType));
+        }
+
         public void ChangeDebugStatus(DebugNodeStatus status)
         {
             switch (status)

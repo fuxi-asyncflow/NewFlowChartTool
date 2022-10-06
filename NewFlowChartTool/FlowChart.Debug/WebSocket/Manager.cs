@@ -134,6 +134,15 @@ namespace FlowChart.Debug.WebSocket
             }
         }
 
+        public void Stop()
+        {
+            foreach (var kv in _clients)
+            {
+                kv.Value.Stop();
+            }
+            _agents.Clear();
+        }
+
         #region events
         public event INetManager.RecvGraphListDelegate? RecvGraphListEvent;
         public event INetManager.NewDebugAgentDelegate? NewDebugAgentEvent;
