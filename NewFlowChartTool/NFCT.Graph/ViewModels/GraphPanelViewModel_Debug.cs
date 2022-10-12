@@ -57,7 +57,7 @@ namespace NFCT.Graph.ViewModels
         {
             _agents ??= new List<DebugAgent>();
             if(agents != null)
-            _agents.AddRange(agents);
+                _agents.AddRange(agents);
             if (_currentDebugAgent == null && _agents != null && _agents.Count > 0)
             {
                 _currentDebugAgent = _agents.First();
