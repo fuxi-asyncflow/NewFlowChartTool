@@ -246,7 +246,9 @@ namespace NewFlowChartTool.ViewModels
 
         public void ShowDebugDialog()
         {
-            _dialogService.Show(DebugDialogViewModel.NAME);
+            var vm = DebugDialogViewModel.Inst;
+            if(vm == null || !vm.IsOpened)
+                _dialogService.Show(DebugDialogViewModel.NAME);
         }
 
         public void StopDebug()

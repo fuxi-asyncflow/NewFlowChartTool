@@ -83,12 +83,12 @@ namespace NewFlowChartTool.ViewModels
 
         public void OnDialogClosed()
         {
-            
+            IsOpened = false;
         }
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            
+            IsOpened = true;
         }
 
         public string Title => "Debug Dialog";
@@ -107,6 +107,7 @@ namespace NewFlowChartTool.ViewModels
         
         private INetManager _netManager;
         private Dictionary<string, List<DebugAgent>> _agents;
+        public bool IsOpened { get; set; }
 
         public void GetGraphList()
         {
