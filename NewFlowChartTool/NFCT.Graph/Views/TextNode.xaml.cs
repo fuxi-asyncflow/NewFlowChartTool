@@ -29,8 +29,6 @@ namespace NFCT.Graph.Views
         {
             InitializeComponent();
             DataContextChanged += OnDataContextChanged;
-
-           
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -38,6 +36,10 @@ namespace NFCT.Graph.Views
             var nodeVm = DataContext as TextNodeViewModel;
             if (nodeVm == null) return;
             nodeVm.DebugStatusChangeEvent += OnNodeDebugStatusChange;
+            nodeVm.StopDebugEvent += OnStopDebug;
+            _bgColorConverter = FindResource("BgColorConverter") as IValueConverter;
+
+
         }
 
         private void NodeGrid_OnMouseMove(object sender, MouseEventArgs e)
@@ -100,6 +102,16 @@ namespace NFCT.Graph.Views
                         NodeBorder.Background = new SolidColorBrush(Colors.Blue);
                         break;
                 }
+            });
+        }
+
+        private IValueConverter _bgColorConverter;
+
+        private void OnStopDebug()
+        {
+            Dispatcher.Invoke(delegate
+            {
+                NodeBorder.SetBinding(Border.BackgroundProperty, new Binding("BgType") { Source = DataContext, Converter = _bgColorConverter });
             });
         }
     }

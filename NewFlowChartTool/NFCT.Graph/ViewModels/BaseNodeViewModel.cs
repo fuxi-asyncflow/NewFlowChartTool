@@ -183,7 +183,8 @@ namespace NFCT.Graph.ViewModels
             FailureCount = 0;
             RaisePropertyChanged(nameof(SuccessCount));
             RaisePropertyChanged(nameof(FailureCount));
-            RaisePropertyChanged(nameof(BgType));
+            StopDebugEvent?.Invoke();
+            //RaisePropertyChanged(nameof(BgType));
         }
 
         public void ChangeDebugStatus(DebugNodeStatus status)
@@ -210,6 +211,8 @@ namespace NFCT.Graph.ViewModels
 
         public delegate void NodeDebugStatusChange(DebugNodeStatus status);
         public event NodeDebugStatusChange? DebugStatusChangeEvent;
+
+        public event Action? StopDebugEvent;
         #endregion
 
         #region BACKGROUND COLOR
