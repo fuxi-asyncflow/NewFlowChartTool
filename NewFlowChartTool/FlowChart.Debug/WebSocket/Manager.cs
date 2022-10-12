@@ -71,20 +71,20 @@ namespace FlowChart.Debug.WebSocket
 
         public void Send(string host, int port, IDebugMessage msg)
         {
+            Task.Factory.StartNew(delegate { _sendAsync(host, port, msg); });
+        }
+
+        private async void _sendAsync(string host, int port, IDebugMessage msg)
+        {
             var data = _protocal.Serialize(msg);
             var client = GetClient(host, port);
-            if(client != null)
+            if (client != null)
                 client.Send(data);
             else
             {
-                var task = Connect(host, port).ContinueWith(task =>
-                {
-                    var newClient = task.Result;
-                    if (newClient == null)
-                        return;
-                    newClient.Send(data);
-                });
-                task.Start();
+                var c = await Connect(host, port);
+                if(c != null)
+                    c.Send(data);
             }
         }
 
