@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FlowChart.Core;
 using FlowChart.Debug;
-using FlowChart.Debug.WebSocket;
 using FlowChartCommon;
 using NFCT.Common;
 using NFCT.Common.Events;
+using NFCT.Common.Services;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -39,7 +37,7 @@ namespace NewFlowChartTool.ViewModels
             : $"{GraphInfo.OwnerGraphName}[{GraphInfo.OwnerNodeId}]";
     }
 
-    class DebugDialogViewModel : BindableBase, IDialogAware
+    class DebugDialogViewModel : BindableBase, IDialogAware, IDebugService
     {
         public DebugDialogViewModel(IDialogService dialogService)
         {
@@ -54,6 +52,9 @@ namespace NewFlowChartTool.ViewModels
             _dialogService = dialogService;
             CloseCommand = new DelegateCommand(() => { RequestClose.Invoke(new DialogResult(ButtonResult.OK)); });
             GetGraphListCommand = new DelegateCommand(GetGraphList);
+            StartPort = 9000;
+            EndPort = 9003;
+            Host = "127.0.0.1";
 
             _netManager = new FlowChart.Debug.WebSocket.Manager();
             _agents = new Dictionary<string, List<DebugAgent>>();
@@ -108,15 +109,18 @@ namespace NewFlowChartTool.ViewModels
         private INetManager _netManager;
         private Dictionary<string, List<DebugAgent>> _agents;
         public bool IsOpened { get; set; }
+        private string _host;
+        public string Host { get => _host; set => SetProperty(ref _host, value); }
+        private int _startPort;
+        public int StartPort { get => _startPort; set => SetProperty(ref _startPort, value); }
+        private int _endPort;
+        public int EndPort { get => _endPort; set => SetProperty(ref _endPort, value); }
 
         public void GetGraphList()
         {
             GraphList.Clear();
-            var host = "127.0.0.1";
-            int start = 9000;
-            int end = 9003;
-
-            _netManager.BroadCast(host, start, end, new GetChartListMessage(){ChartName = "", ObjectName = ""});
+          
+            _netManager.BroadCast(Host, StartPort, EndPort, new GetChartListMessage(){ChartName = "", ObjectName = ""});
         }
 
         private void OnRecvGraphListEvent(List<GraphInfo> graphs)
@@ -145,6 +149,19 @@ namespace NewFlowChartTool.ViewModels
         public void StartDebugGraph(GraphInfo graphInfo)
         {
             _netManager.Send(graphInfo.Host, graphInfo.Port, new StartDebugChartMessage(graphInfo));
+        }
+
+        public void SetBreakPoint(Node node, bool isBreakPoint)
+        {
+            _netManager.BroadCast(Host, StartPort, EndPort, new SetBreakPointMessage()
+            {
+                ChartName = node.OwnerGraph.Path, NodeUid = node.Uid, Command = isBreakPoint
+            });
+        }
+
+        public void ContinueBreakPoint(GraphInfo graphInfo)
+        {
+            _netManager.Send(graphInfo.Host, graphInfo.Port, new ContinueBreakPointMessage(graphInfo));
         }
 
         public void StopDebug()

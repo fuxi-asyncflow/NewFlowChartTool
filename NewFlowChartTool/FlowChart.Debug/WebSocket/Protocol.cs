@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using FlowChartCommon;
 
 namespace FlowChart.Debug.WebSocket
 {
@@ -48,17 +49,23 @@ namespace FlowChart.Debug.WebSocket
                 var root = JsonDocument.Parse(msg, new JsonDocumentOptions()).RootElement;
 
                 var methodObj = root.GetProperty("method");
+                var methodStr = methodObj.GetString();
                 JsonElement tmpObj;
                 if (root.TryGetProperty("result", out tmpObj))
                 {
-                    if (methodObj.GetString() == "get_chart_list")
+                    if (methodStr == "get_chart_list")
                     {
                         return DeserializeGraphList(tmpObj);
+                    }
+
+                    if (methodStr == "break_point")
+                    {
+                        Logger.DBG($"[debug] recv {msg}");
                     }
                 }
                 else if (root.TryGetProperty("params", out tmpObj))
                 {
-                    if (methodObj.GetString() == "debug_chart")
+                    if (methodStr == "debug_chart")
                     {
                         return DeserializeDebugData(tmpObj);
                     }

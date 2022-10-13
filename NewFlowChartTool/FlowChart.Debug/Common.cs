@@ -76,6 +76,43 @@ namespace FlowChart.Debug
         }
     }
 
+    public class SetBreakPointMessage : IDebugMessage
+    {
+        public string Name => "break_point";
+        public string ChartName { get; set; }
+        public string NodeUid { get; set; }
+        public bool Command { get; set; }
+
+        public Dictionary<string, object> GetParams()
+        {
+            var dict = new Dictionary<string, object>();
+            dict.Add("chart_name", ChartName);
+            dict.Add("node_uid", NodeUid);
+            dict.Add("command", Command ? "set" : "delete");
+            return dict;
+        }
+    }
+
+    public class ContinueBreakPointMessage : IDebugMessage
+    {
+        public string Name => "continue";
+        public ContinueBreakPointMessage(GraphInfo graphInfo)
+        {
+            GraphInfo = graphInfo;
+        }
+
+        public GraphInfo GraphInfo { get; set; }
+
+        public Dictionary<string, object> GetParams()
+        {
+            var dict = new Dictionary<string, object>();
+            dict.Add("chart_name", GraphInfo.GraphName);
+            dict.Add("agent_id", GraphInfo.AgentId);
+            dict.Add("owner_node_addr", GraphInfo.OwnerNodeAddr);
+            return dict;
+        }
+    }
+
     public class GraphInfo
     {
         public int AgentId { get; set; }

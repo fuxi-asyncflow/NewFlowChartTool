@@ -11,7 +11,9 @@ using FlowChart.Core;
 using FlowChart.Layout;
 using FlowChartCommon;
 using NFCT.Common;
+using NFCT.Common.Services;
 using Prism.Commands;
+using Prism.Ioc;
 using Prism.Mvvm;
 
 namespace NFCT.Graph.ViewModels
@@ -90,6 +92,12 @@ namespace NFCT.Graph.ViewModels
             CopyNodesCommand = new DelegateCommand(() => Owner.CopySelectedNodes());
             CutNodesCommand = new DelegateCommand(() => Owner.CopySelectedNodes(true));
             PasteNodesCommand = new DelegateCommand(() => Owner.PasteNodes(this));
+            BreakPointCommand = new DelegateCommand(delegate
+            {
+                IsBreakPoint = !IsBreakPoint; 
+                ContainerLocator.Current.Resolve<IDebugService>().SetBreakPoint(Node, IsBreakPoint);
+            });
+            ContinueBreakPointCommand = new DelegateCommand(delegate { Owner.ContinueBreakPoint(); });
         }
 
         public GraphPaneViewModel Owner { get; set; }
@@ -208,6 +216,9 @@ namespace NFCT.Graph.ViewModels
             }
             DebugStatusChangeEvent?.Invoke(status);
         }
+
+        private bool _isBreakPoint;
+        public bool IsBreakPoint { get => _isBreakPoint; set => SetProperty(ref _isBreakPoint, value); }
 
         public delegate void NodeDebugStatusChange(DebugNodeStatus status);
         public event NodeDebugStatusChange? DebugStatusChangeEvent;
@@ -357,6 +368,8 @@ namespace NFCT.Graph.ViewModels
         public DelegateCommand PasteNodesCommand { get; set; }
         public DelegateCommand CutNodesCommand { get; set; }
 
+        public DelegateCommand BreakPointCommand { get; set; }
+        public DelegateCommand ContinueBreakPointCommand { get; set; }
 
         #endregion
     }

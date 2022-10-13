@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Debug;
 using FlowChartCommon;
+using NFCT.Common.Services;
+using Prism.Ioc;
 
 namespace NFCT.Graph.ViewModels
 {
@@ -22,10 +24,11 @@ namespace NFCT.Graph.ViewModels
         private bool _isDebugMode;
         public bool IsDebugMode { get => _isDebugMode; set => SetProperty(ref _isDebugMode, value); }
 
-        public void EnterDebugMode()
+        public void EnterDebugMode(GraphInfo graphInfo)
         {
             if (IsDebugMode)
                 return;
+            _graphInfo = graphInfo;
             Logger.LOG($"[debug] {FullPath} enter debug mode");
             IsDebugMode = true;
             foreach (var baseNodeViewModel in Nodes)
@@ -52,6 +55,7 @@ namespace NFCT.Graph.ViewModels
         private DebugAgent? _currentDebugAgent { get; set; }
         private List<DebugAgent>? _agents;
         private Dictionary<Guid, BaseNodeViewModel> _debugNodesCacheDict = new Dictionary<Guid, BaseNodeViewModel>();
+        private GraphInfo _graphInfo;
 
         public void UpdateAgents(List<DebugAgent>? agents)
         {
@@ -93,6 +97,11 @@ namespace NFCT.Graph.ViewModels
             }
             else if(nsd.NewStatus == 0)
                 nodeVm.ChangeDebugStatus(DebugNodeStatus.IDLE);
+        }
+
+        public void ContinueBreakPoint()
+        {
+            ContainerLocator.Current.Resolve<IDebugService>().ContinueBreakPoint(_graphInfo);
         }
     }
 }

@@ -337,7 +337,7 @@ namespace NewFlowChartTool.ViewModels
             {
                 if (graphVm.Graph == graph)
                 {
-                    graphVm.EnterDebugMode();
+                    graphVm.EnterDebugMode(graphInfo);
                     graphVm.UpdateAgents(DebugDialogViewModel.Inst.GetAgents(graphInfo.GraphName));
                 }
             }

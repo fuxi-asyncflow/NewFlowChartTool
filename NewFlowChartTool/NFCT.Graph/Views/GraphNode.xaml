@@ -38,6 +38,9 @@
             <MenuItem Command="{Binding CutNodesCommand}" Header="cut" />
             <MenuItem Command="{Binding CopyNodesCommand}" Header="copy" />
             <MenuItem Command="{Binding PasteNodesCommand}" Header="paste" />
+            <Separator />
+            <MenuItem Command="{Binding BreakPointCommand}" Header="breakpoint" />
+            <MenuItem Command="{Binding ContinueBreakPointCommand}" Header="continue" />
         </ContextMenu>
     </UserControl.ContextMenu>
     <Grid
@@ -56,6 +59,11 @@
             </StackPanel>
             <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource GraphNodesTemplateSelector}" />
         </StackPanel>
+        <Polygon
+            Fill="Red"
+            FlowDirection="RightToLeft"
+            Points="0,0 15,0 0,15 0,0"
+            Visibility="{Binding IsBreakPoint, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
         <b:Interaction.Triggers>
             <b:EventTrigger EventName="KeyDown">
