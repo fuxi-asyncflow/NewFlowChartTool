@@ -31,6 +31,12 @@ namespace NFCT.Common.Localization
         public static readonly ComponentResourceKey ToolBar_UndoKey = KEY("ToolBar_Undo");
         public static readonly ComponentResourceKey ToolBar_RedoKey = KEY("ToolBar_Redo");
 
+        //debug
+        public static readonly ComponentResourceKey ToolBar_QuickDebug = KEY("ToolBar_QuickDebug");
+        public static readonly ComponentResourceKey ToolBar_DebugDialog = KEY("ToolBar_DebugDialog");
+        public static readonly ComponentResourceKey ToolBar_ContinueDebug = KEY("ToolBar_ContinueDebug");
+        public static readonly ComponentResourceKey ToolBar_StopDebug = KEY("ToolBar_StopDebug");
+        public static readonly ComponentResourceKey ToolBar_HotReload = KEY("ToolBar_HotReload");
         #endregion
 
         #region PaneName

@@ -17,6 +17,12 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_UndoKey}">撤销</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_RedoKey}">重做</system:String>
 
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_QuickDebug}">快速调试</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_DebugDialog}">调试</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_ContinueDebug}">继续</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_StopDebug}">停止调试</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_HotReload}">热更新</system:String>
+
     <!--  Pane Name  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Pane_ProjectKey}">项目</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Pane_TypeKey}">类型</system:String>

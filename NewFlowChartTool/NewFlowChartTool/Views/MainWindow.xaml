@@ -171,31 +171,31 @@
             <Button Command="{Binding QuickDebugCommand}">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Event}" />
-                    <TextBlock Height="16" Text="快速调试" />
+                    <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_QuickDebug}}" />
                 </StackPanel>
             </Button>
             <Button Command="{Binding ShowDebugDialogCommand}">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_DebugDialog}" />
-                    <TextBlock Height="16" Text="调试" />
+                    <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_DebugDialog}}" />
                 </StackPanel>
             </Button>
             <Button>
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Play}" />
-                    <TextBlock Height="16" Text="继续" />
+                    <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_ContinueDebug}}" />
                 </StackPanel>
             </Button>
             <Button Command="{Binding StopDebugCommand}">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Stop}" />
-                    <TextBlock Height="16" Text="停止调试" />
+                    <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_StopDebug}}" />
                 </StackPanel>
             </Button>
             <Button Command="{Binding HotfixCommand}">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_HotReload}" />
-                    <TextBlock Height="16" Text="热更新" />
+                    <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_HotReload}}" />
                 </StackPanel>
             </Button>
         </StackPanel>

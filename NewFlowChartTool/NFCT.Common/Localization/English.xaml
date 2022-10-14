@@ -17,6 +17,12 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_UndoKey}">Redo</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_RedoKey}">Undo</system:String>
 
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_QuickDebug}">Quick Debug</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_DebugDialog}">Debug</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_ContinueDebug}">Continue</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_StopDebug}">Stop</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_HotReload}">HotReload</system:String>
+
     <!--  Pane Name  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Pane_ProjectKey}">Project</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Pane_TypeKey}">Type</system:String>
