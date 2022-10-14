@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Debug;
 using FlowChartCommon;
+using NFCT.Common;
+using NFCT.Common.Events;
 using NFCT.Common.Services;
 using Prism.Ioc;
 
@@ -24,10 +26,17 @@ namespace NFCT.Graph.ViewModels
         private bool _isDebugMode;
         public bool IsDebugMode { get => _isDebugMode; set => SetProperty(ref _isDebugMode, value); }
 
-        public void EnterDebugMode(GraphInfo graphInfo)
+        public void EnterDebugMode(GraphInfo? graphInfo = null)
         {
             if (IsDebugMode)
+            {
+                // quick debug, graph will enterdebugmode with null for the first time,
+                // when graph start running, enterdebugmode with graphinfo again 
+                if (_graphInfo == null && graphInfo != null) 
+                    _graphInfo = graphInfo;
                 return;
+            }
+
             _graphInfo = graphInfo;
             Logger.LOG($"[debug] {FullPath} enter debug mode");
             IsDebugMode = true;
@@ -42,6 +51,7 @@ namespace NFCT.Graph.ViewModels
             if (!IsDebugMode)
                 return;
             IsDebugMode = false;
+            _graphInfo = null;
             Logger.LOG($"[debug] {FullPath} exit debug mode");
             _currentDebugAgent = null;
             _agents = null;
@@ -55,7 +65,7 @@ namespace NFCT.Graph.ViewModels
         private DebugAgent? _currentDebugAgent { get; set; }
         private List<DebugAgent>? _agents;
         private Dictionary<Guid, BaseNodeViewModel> _debugNodesCacheDict = new Dictionary<Guid, BaseNodeViewModel>();
-        private GraphInfo _graphInfo;
+        private GraphInfo? _graphInfo;
 
         public void UpdateAgents(List<DebugAgent>? agents)
         {
@@ -101,6 +111,11 @@ namespace NFCT.Graph.ViewModels
 
         public void ContinueBreakPoint()
         {
+            if (_graphInfo == null)
+            {
+                Logger.WARN("[debug] cannot continue breakpoint because graph is not connecting to a running graph");
+                return;
+            }
             ContainerLocator.Current.Resolve<IDebugService>().ContinueBreakPoint(_graphInfo);
         }
     }

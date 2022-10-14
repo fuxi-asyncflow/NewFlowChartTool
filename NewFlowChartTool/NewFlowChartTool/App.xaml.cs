@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using FlowChart.Misc;
 using FlowChartCommon;
 using NewFlowChartTool.ViewModels;
 using NewFlowChartTool.Views;
@@ -63,6 +64,8 @@ namespace NewFlowChartTool
 
             containerRegistry.RegisterSingleton<IDebugService, DebugDialogViewModel>();
             containerRegistry.RegisterDialog<DebugDialog, DebugDialogViewModel>(DebugDialogViewModel.NAME);
+
+            containerRegistry.RegisterSingleton<IOutputMessage, OutputPanelViewModel>();
 
             //throw new NotImplementedException();
         }

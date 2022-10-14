@@ -116,6 +116,7 @@ namespace FlowChart.Debug.WebSocket
                 }
 
                 RecvGraphListEvent?.Invoke(client.Host, client.Port, graphInfos);
+                return;
             }
 
             if (data is GraphDebugData graphDebugData)
@@ -131,6 +132,13 @@ namespace FlowChart.Debug.WebSocket
                     NewDebugAgentEvent?.Invoke(agent);
                 }
                 agent.Accept(graphDebugData.DebugDataList);
+                return;
+            }
+
+            if (data is GraphInfo gi) // quick debug start info
+            {
+                // set graphinfo to graphviewmodel
+                NewDebugGraphEvent?.Invoke(gi);
             }
         }
 
@@ -146,6 +154,7 @@ namespace FlowChart.Debug.WebSocket
         #region events
         public event INetManager.RecvGraphListDelegate? RecvGraphListEvent;
         public event INetManager.NewDebugAgentDelegate? NewDebugAgentEvent;
+        public event INetManager.NewDebugGraphDelegate? NewDebugGraphEvent;
         #endregion
 
 

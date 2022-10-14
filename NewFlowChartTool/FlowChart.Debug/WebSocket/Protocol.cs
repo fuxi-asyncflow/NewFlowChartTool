@@ -69,6 +69,19 @@ namespace FlowChart.Debug.WebSocket
                     {
                         return DeserializeDebugData(tmpObj);
                     }
+
+                    if (methodStr == "quick_debug")
+                    {
+                        var gi = new GraphInfo();
+                        gi.AgentId = tmpObj.GetProperty("agent_id").GetInt32();
+                        gi.OwnerNodeAddr = tmpObj.GetProperty("owner_node_addr").GetUInt64();
+                        //gi.OwnerNodeId = jObj.GetProperty("owner_node_id").GetInt32();
+                        //gi.OwnerNodeUid = jObj.GetProperty("owner_node_uid").GetString();
+                        //gi.ObjectName = jObj.GetProperty("object_name").GetString();
+                        gi.GraphName = tmpObj.GetProperty("chart_name").GetString();
+                        //gi.OwnerGraphName = jObj.GetProperty("owner_chart_name").GetString();
+                        return gi;
+                    }
                 }
                 
                 

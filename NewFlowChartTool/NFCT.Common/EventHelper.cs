@@ -58,7 +58,7 @@ namespace NFCT.Common.Events
 
     public class NewDebugAgentEvent : PubSubEvent<DebugAgent> { }
 
-    public class StartDebugGraphEvent : PubSubEvent<GraphInfo> { }
+    public class StartDebugGraphEvent : PubSubEvent<GraphInfo?> { }
 
     #endregion
 

@@ -39,6 +39,8 @@ namespace FlowChart.Debug
         public delegate void NewDebugAgentDelegate(DebugAgent agent);
         public event NewDebugAgentDelegate? NewDebugAgentEvent;
 
+        public delegate void NewDebugGraphDelegate(GraphInfo graphInfo);
+        public event NewDebugGraphDelegate? NewDebugGraphEvent;
 
         #endregion
     }
@@ -109,6 +111,19 @@ namespace FlowChart.Debug
             dict.Add("chart_name", GraphInfo.GraphName);
             dict.Add("agent_id", GraphInfo.AgentId);
             dict.Add("owner_node_addr", GraphInfo.OwnerNodeAddr);
+            return dict;
+        }
+    }
+
+    public class QuickDebugMessage : IDebugMessage
+    {
+        public string Name => "quick_debug";
+        public string ChartName { get; set; }
+
+        public Dictionary<string, object> GetParams()
+        {
+            var dict = new Dictionary<string, object>();
+            dict.Add("chart_name", ChartName);
             return dict;
         }
     }

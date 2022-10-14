@@ -12,5 +12,6 @@ namespace NFCT.Common.Services
     {
         void SetBreakPoint(Node node, bool isBreakPoint);
         void ContinueBreakPoint(GraphInfo graphInfo);
+        void QuickDebug(Graph graph);
     }
 }
