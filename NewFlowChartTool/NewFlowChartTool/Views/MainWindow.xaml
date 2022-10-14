@@ -154,6 +154,7 @@
                     <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.Menu_BuildAllKey}}" />
                 </StackPanel>
             </Button>
+            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
             <Button Command="{Binding UndoCommand}">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Undo}" />
@@ -166,6 +167,7 @@
                     <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_RedoKey}}" />
                 </StackPanel>
             </Button>
+            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
             <Button Command="{Binding QuickDebugCommand}">
                 <StackPanel>
                     <Viewbox Child="{StaticResource Icon_Event}" />
