@@ -168,25 +168,31 @@
             </Button>
             <Button Command="{Binding QuickDebugCommand}">
                 <StackPanel>
-                    <Viewbox />
+                    <Viewbox Child="{StaticResource Icon_Event}" />
                     <TextBlock Height="16" Text="快速调试" />
                 </StackPanel>
             </Button>
             <Button Command="{Binding ShowDebugDialogCommand}">
                 <StackPanel>
-                    <Viewbox />
+                    <Viewbox Child="{StaticResource Icon_DebugDialog}" />
                     <TextBlock Height="16" Text="调试" />
+                </StackPanel>
+            </Button>
+            <Button>
+                <StackPanel>
+                    <Viewbox Child="{StaticResource Icon_Play}" />
+                    <TextBlock Height="16" Text="继续" />
                 </StackPanel>
             </Button>
             <Button Command="{Binding StopDebugCommand}">
                 <StackPanel>
-                    <Viewbox />
+                    <Viewbox Child="{StaticResource Icon_Stop}" />
                     <TextBlock Height="16" Text="停止调试" />
                 </StackPanel>
             </Button>
             <Button Command="{Binding HotfixCommand}">
                 <StackPanel>
-                    <Viewbox />
+                    <Viewbox Child="{StaticResource Icon_HotReload}" />
                     <TextBlock Height="16" Text="热更新" />
                 </StackPanel>
             </Button>

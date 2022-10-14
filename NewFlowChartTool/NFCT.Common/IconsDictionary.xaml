@@ -18,6 +18,14 @@
         <ResourceDictionary Source="Icons/Method.xaml" />
         <ResourceDictionary Source="Icons/Field.xaml" />
 
+        <ResourceDictionary Source="Icons/Event.xaml" />
+        <ResourceDictionary Source="Icons/DebugInteractiveWindow.xaml" />
+        <ResourceDictionary Source="Icons/Play.xaml" />
+        <ResourceDictionary Source="Icons/Stop.xaml" />
+        <ResourceDictionary Source="Icons/HotReload.xaml" />
+
+
+
     </ResourceDictionary.MergedDictionaries>
 
     <!--  Frame  x:Key="Icon_Undo" Source="Icons/Undo.xaml" /  -->
