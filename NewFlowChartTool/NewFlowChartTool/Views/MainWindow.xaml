@@ -166,6 +166,12 @@
                     <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_RedoKey}}" />
                 </StackPanel>
             </Button>
+            <Button Command="{Binding QuickDebugCommand}">
+                <StackPanel>
+                    <Viewbox />
+                    <TextBlock Height="16" Text="快速调试" />
+                </StackPanel>
+            </Button>
             <Button Command="{Binding ShowDebugDialogCommand}">
                 <StackPanel>
                     <Viewbox />
@@ -176,6 +182,12 @@
                 <StackPanel>
                     <Viewbox />
                     <TextBlock Height="16" Text="停止调试" />
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding HotfixCommand}">
+                <StackPanel>
+                    <Viewbox />
+                    <TextBlock Height="16" Text="热更新" />
                 </StackPanel>
             </Button>
         </StackPanel>

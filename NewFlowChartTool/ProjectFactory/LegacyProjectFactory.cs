@@ -31,6 +31,11 @@ namespace ProjectFactory
             OpenLegacyProject(@"F:\nshm\dev\tools\designdata_tools\AsyncFlow\nshm.xml");
         }
 
+        public void Save(Graph graph, List<string> outputs)
+        {
+
+        }
+
         public bool OpenLegacyProject(string xmlPath)
         {
             var fi = new FileInfo(xmlPath);

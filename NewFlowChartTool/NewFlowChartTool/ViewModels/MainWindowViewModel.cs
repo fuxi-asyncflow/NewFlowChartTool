@@ -17,7 +17,9 @@ using FlowChartCommon;
 using NewFlowChartTool.Event;
 using NFCT.Common;
 using NFCT.Common.Events;
+using NFCT.Common.Services;
 using NFCT.Graph.ViewModels;
+using Prism.Ioc;
 using Prism.Services.Dialogs;
 using ProjectFactory.DefaultProjectFactory;
 
@@ -49,8 +51,11 @@ namespace NewFlowChartTool.ViewModels
             BuildAllCommand = new DelegateCommand(BuildAll, () => CurrentProject != null);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
             SwitchLangCommand = new DelegateCommand(SwitchLang, () => true);
+
+            QuickDebugCommand = new DelegateCommand(QuickDebug);
             ShowDebugDialogCommand = new DelegateCommand(ShowDebugDialog);
             StopDebugCommand = new DelegateCommand(StopDebug);
+            HotfixCommand = new DelegateCommand(Hotfix);
 
             SelectedLang = Lang.Chinese;
             SelectedTheme = Theme.Dark;
@@ -61,7 +66,7 @@ namespace NewFlowChartTool.ViewModels
             _ea.GetEvent<GraphOpenEvent>().Subscribe(OnOpenGraph);
             EventHelper.Sub<GraphCloseEvent, Graph>(OnCloseGraph);
             EventHelper.Sub<NewDebugAgentEvent, DebugAgent>(OnNewDebugAgentEvent, ThreadOption.UIThread);
-            EventHelper.Sub<StartDebugGraphEvent, GraphInfo>(OnStartDebugGraphEvent, ThreadOption.UIThread);
+            EventHelper.Sub<StartDebugGraphEvent, GraphInfo?>(OnStartDebugGraphEvent, ThreadOption.UIThread);
 #if DEBUG
             //TestOpenProject();
 #endif
@@ -114,8 +119,10 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand UndoCommand { get; private set; }
         public DelegateCommand RedoCommand { get; private set; }
 
+        public DelegateCommand QuickDebugCommand { get; private set; }
         public DelegateCommand ShowDebugDialogCommand { get; private set; }
         public DelegateCommand StopDebugCommand { get; private set; }
+        public DelegateCommand HotfixCommand { get; private set; }
         
         public void TestOpenProject()
         {
@@ -244,6 +251,13 @@ namespace NewFlowChartTool.ViewModels
             CurrentProject.Save();
         }
 
+        void QuickDebug()
+        {
+            if (ActiveGraph == null)
+                return;
+            ContainerLocator.Current.Resolve<IDebugService>().QuickDebug(ActiveGraph.Graph);
+        }
+
         public void ShowDebugDialog()
         {
             var vm = DebugDialogViewModel.Inst;
@@ -258,6 +272,16 @@ namespace NewFlowChartTool.ViewModels
             {
                 graphVm.ExitDebugMode();
             }
+        }
+
+        void Hotfix()
+        {
+            if (ActiveGraph == null)
+                return;
+            var lines = new List<string>();
+            CurrentProject?.SaveGraph(ActiveGraph.Graph, lines);
+            ContainerLocator.Current.Resolve<IDebugService>().Hotfix(lines);
+
         }
 
         public void OnOpenGraph(Graph graph)
@@ -325,9 +349,14 @@ namespace NewFlowChartTool.ViewModels
             }
         }
 
-        void OnStartDebugGraphEvent(GraphInfo graphInfo)
+        void OnStartDebugGraphEvent(GraphInfo? graphInfo)
         {
             if (CurrentProject == null) return;
+            if (graphInfo == null && ActiveGraph != null) // quick debug
+            {
+                ActiveGraph.EnterDebugMode(graphInfo);
+                return;
+            }
             if (CurrentProject.GraphDict.TryGetValue(graphInfo.GraphName, out var graph))
             {
                 OnOpenGraph(graph);

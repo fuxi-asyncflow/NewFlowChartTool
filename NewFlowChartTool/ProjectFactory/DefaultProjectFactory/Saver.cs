@@ -41,6 +41,11 @@ namespace ProjectFactory.DefaultProjectFactory
             saver.SaveProject(project);
         }
 
+        public void Save(Graph graph, List<string> outputs)
+        {
+            saver.SaveGraph(graph, outputs);
+        }
+
         public static Project CreateNewProject(string path)
         {
             var p = new Project(new DefaultProjectFactory()) {Path = path};

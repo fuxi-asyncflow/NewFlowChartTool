@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using FlowChart.Core;
 using FlowChart.Debug;
+using FlowChart.Misc;
 using FlowChartCommon;
 using NFCT.Common;
 using NFCT.Common.Events;
@@ -39,7 +42,7 @@ namespace NewFlowChartTool.ViewModels
 
     class DebugDialogViewModel : BindableBase, IDialogAware, IDebugService
     {
-        public DebugDialogViewModel(IDialogService dialogService)
+        public DebugDialogViewModel(IDialogService dialogService, IOutputMessage outputService)
         {
             if (Inst != null)
             {
@@ -50,6 +53,7 @@ namespace NewFlowChartTool.ViewModels
             Test = "Hello world";
             GraphList = new ObservableCollection<GraphInfoViewModel>();
             _dialogService = dialogService;
+            _outputService = outputService;
             CloseCommand = new DelegateCommand(() => { RequestClose.Invoke(new DialogResult(ButtonResult.OK)); });
             GetGraphListCommand = new DelegateCommand(GetGraphList);
             StartPort = 9000;
@@ -70,9 +74,15 @@ namespace NewFlowChartTool.ViewModels
                 EventHelper.Pub<NewDebugAgentEvent, DebugAgent>(agent);
             };
             EventHelper.Sub<NewDebugAgentEvent, DebugAgent>(OnNewDebugAgentEvent, ThreadOption.UIThread);
+
+            _netManager.NewDebugGraphEvent += (graphInfo) =>
+            {
+                EventHelper.Pub<StartDebugGraphEvent, GraphInfo?>(graphInfo);
+            };
         }
 
         private IDialogService _dialogService;
+        private IOutputMessage _outputService;
         public static DebugDialogViewModel? Inst { get; set; }
 
         public const string NAME = "DebugDialog";
@@ -148,6 +158,7 @@ namespace NewFlowChartTool.ViewModels
 
         public void StartDebugGraph(GraphInfo graphInfo)
         {
+            EventHelper.Pub<StartDebugGraphEvent, GraphInfo?>(graphInfo);
             _netManager.Send(graphInfo.Host, graphInfo.Port, new StartDebugChartMessage(graphInfo));
         }
 
@@ -168,6 +179,39 @@ namespace NewFlowChartTool.ViewModels
         {
             _netManager.Stop();
             _agents.Clear();
+        }
+
+        public void QuickDebug(Graph graph)
+        {
+            Task.Factory.StartNew(delegate { _quickDebug(graph); });
+        }
+
+        private async void _quickDebug(Graph graph)
+        {
+            // first try to find running graph
+            _netManager.BroadCast(Host, StartPort, EndPort, new GetChartListMessage() { ChartName = graph.Path, ObjectName = "" });
+            await Task.Delay(1000); // wait 1000ms for graph list
+
+            if (GraphList.Count > 0)
+            {
+                StartDebugGraph(GraphList.First().GraphInfo);
+                return;
+            }
+
+            // if no running graph, then wait for running graph
+            _outputService.Output("quick debug recv no running graph, waiting graph start running");
+            _netManager.BroadCast(Host, StartPort, EndPort, new QuickDebugMessage() { ChartName = graph.Path });
+            EventHelper.Pub<StartDebugGraphEvent, GraphInfo?>(null);
+        }
+
+        public void Hotfix(List<string> lines)
+        {
+            lines.Insert(0, "---");
+            lines.Add("...");
+            var chartData = string.Join('\n', lines);
+            var chartDataBytes = System.Text.Encoding.UTF8.GetBytes(chartData);
+            chartData = System.Convert.ToBase64String(chartDataBytes);
+            _netManager.BroadCast(Host, StartPort, EndPort, new HotfixMessage() {ChartsData = chartData, ChartsFunc = string.Empty});
         }
     }
 }

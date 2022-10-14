@@ -128,6 +128,21 @@ namespace FlowChart.Debug
         }
     }
 
+    public class HotfixMessage : IDebugMessage
+    {
+        public string Name => "hotfix";
+        public string ChartsFunc { get; set; }
+        public string ChartsData { get; set; }
+
+        public Dictionary<string, object> GetParams()
+        {
+            var dict = new Dictionary<string, object>();
+            dict.Add("charts_func", ChartsFunc);
+            dict.Add("charts_data", ChartsData);
+            return dict;
+        }
+    }
+
     public class GraphInfo
     {
         public int AgentId { get; set; }

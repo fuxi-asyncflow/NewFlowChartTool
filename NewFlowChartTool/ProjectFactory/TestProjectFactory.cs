@@ -228,6 +228,11 @@ namespace ProjectFactory
             //throw new NotImplementedException();
         }
 
+        public void Save(Graph graph, List<string> outputs)
+        {
+
+        }
+
         public FileStream GetFileStream(string fileName)
         {
             if (FileDict.ContainsKey(fileName))

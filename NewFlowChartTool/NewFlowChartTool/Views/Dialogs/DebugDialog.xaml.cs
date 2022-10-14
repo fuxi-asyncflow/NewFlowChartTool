@@ -34,7 +34,7 @@ namespace NewFlowChartTool.Views
             var vm = WPFHelper.GetDataContext<DebugDialogViewModel>(this);
             if (vm == null) return;
             if (vm.SelectedGraphInfo == null) return;
-            EventHelper.Pub<StartDebugGraphEvent, GraphInfo>(vm.SelectedGraphInfo.GraphInfo);
+            
             //vm.OpenUnitInDebugMode(vm.SelectedChart.ChartName);
             vm.StartDebugGraph(vm.SelectedGraphInfo.GraphInfo);
         }

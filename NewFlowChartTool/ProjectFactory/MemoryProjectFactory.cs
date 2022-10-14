@@ -94,5 +94,10 @@ namespace ProjectFactory
             //var saver = new Saver();
             //saver.SaveProject(project);
         }
+
+        public void Save(Graph graph, List<string> outputs)
+        {
+
+        }
     }
 }
