@@ -28,7 +28,7 @@ namespace NewFlowChartTool.Views
             
         }
 
-        private void ButtonMaximize_OnClick(object sender, RoutedEventArgs e)
+        private void MaximizeOrRestore()
         {
             if (MainWindow.WindowState == WindowState.Normal)
             {
@@ -42,6 +42,20 @@ namespace NewFlowChartTool.Views
 
                 MainWindow.BorderThickness = new Thickness(5);
             }
+            else
+            {
+                MainWindow.WindowState = WindowState.Normal;
+
+                RestoreButton.Visibility = Visibility.Collapsed;
+                MaximizeButton.Visibility = Visibility.Visible;
+
+                MainWindow.BorderThickness = new Thickness(1);
+            }
+        }
+
+        private void ButtonMaximize_OnClick(object sender, RoutedEventArgs e)
+        {
+            MaximizeOrRestore();
         }
 
         private void ButtonClose_OnClick(object sender, RoutedEventArgs e)
@@ -51,17 +65,17 @@ namespace NewFlowChartTool.Views
 
         private void UIElement_OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (e.ClickCount == 2 && e.ChangedButton == MouseButton.Left)
+            {
+                MaximizeOrRestore();
+                return;
+            }
             MainWindow.DragMove();
         }
 
         private void ButtonRestore_OnClick(object sender, RoutedEventArgs e)
         {
-            MainWindow.WindowState = WindowState.Normal;
-
-            RestoreButton.Visibility = Visibility.Collapsed;
-            MaximizeButton.Visibility = Visibility.Visible;
-
-            MainWindow.BorderThickness = new Thickness(1);
+            MaximizeOrRestore();
         }
 
         private void ButtonMinimize_OnClick(object sender, RoutedEventArgs e)
