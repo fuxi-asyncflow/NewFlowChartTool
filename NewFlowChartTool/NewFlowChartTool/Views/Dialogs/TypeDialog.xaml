@@ -5,8 +5,22 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:NewFlowChartTool.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
+    Width="800"
+    Height="450"
+    d:DataContext="{d:DesignInstance vm:TypeDialogViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid />
+    <StackPanel>
+        <StackPanel Height="32" Orientation="Horizontal">
+            <ComboBox MinWidth="100" ItemsSource="{Binding Types}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Foreground="Black" Text="{Binding Name}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
+    </StackPanel>
 </UserControl>

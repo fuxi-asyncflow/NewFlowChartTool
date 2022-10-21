@@ -256,7 +256,9 @@ namespace NewFlowChartTool.ViewModels
         public void ShowTypeDialog()
         {
             if(CurrentProject == null) return;
-            _dialogService.Show(TypeDialogViewModel.NAME);
+            var dialogParameters = new DialogParameters();
+            dialogParameters.Add(nameof(CurrentProject), CurrentProject);
+            _dialogService.Show(TypeDialogViewModel.NAME, dialogParameters, result => { });
         }
 
         void QuickDebug()
