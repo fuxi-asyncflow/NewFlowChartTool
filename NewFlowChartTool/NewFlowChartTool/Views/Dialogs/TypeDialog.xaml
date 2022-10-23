@@ -14,6 +14,15 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
+        </Style>
+    </UserControl.Resources>
     <StackPanel>
         <StackPanel Height="32" Orientation="Horizontal">
             <ComboBox
@@ -32,14 +41,17 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
+            <Button Command="{Binding AddNewTypeCommand}" Content="New Type" />
+
         </StackPanel>
         <DataGrid
+            MinHeight="120"
             AutoGenerateColumns="False"
             ItemsSource="{Binding Members}"
             ScrollViewer.CanContentScroll="True"
             ScrollViewer.HorizontalScrollBarVisibility="Auto"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
-            SelectedItem="{Binding SelectedMember}">
+            SelectedItem="{Binding SelectedMember, Mode=TwoWay}">
             <DataGrid.Resources>
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
@@ -62,11 +74,98 @@
                     <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
                 </Style>
             </DataGrid.Resources>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <prism:InvokeCommandAction Command="{Binding SelectedMemberChangeCommand}" CommandParameter="{Binding SelectedMember}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="name" />
-                <DataGridTextColumn Binding="{Binding Type, Mode=OneWay}" Header="type" />
-                <DataGridTextColumn Binding="{Binding Parameters, Mode=OneWay}" Header="value" />
+                <DataGridTextColumn
+                    MinWidth="64"
+                    Binding="{Binding Name, Mode=OneWay}"
+                    Header="name" />
+                <DataGridTextColumn
+                    MinWidth="64"
+                    Binding="{Binding Type, Mode=OneWay}"
+                    Header="type" />
+                <DataGridTextColumn Binding="{Binding Parameters, Mode=OneWay}" Header="parameters" />
             </DataGrid.Columns>
         </DataGrid>
+        <Separator />
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="Name" />
+            <TextBox MinWidth="80" Text="{Binding MemberName}" />
+            <TextBlock Text="Type" />
+            <TextBox MinWidth="80" Text="{Binding MemberType}" />
+            <RadioButton
+                x:Name="PropRadio"
+                Width="69"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Property"
+                GroupName="MemberKind" />
+            <RadioButton
+                x:Name="MethodRadio"
+                Width="81"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Content="Method"
+                GroupName="MemberKind" />
+        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="200" />
+            </Grid.ColumnDefinitions>
+
+            <DataGrid
+                MinHeight="120"
+                AutoGenerateColumns="False"
+                ItemsSource="{Binding Parameters}"
+                ScrollViewer.CanContentScroll="True"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                SelectedItem="{Binding SelectedMember}">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                    </Style>
+                    <Style TargetType="DataGridRowHeader">
+                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                    </Style>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
+                        <Style.Triggers>
+                            <!--<DataTrigger Binding="{Binding IsActive}" Value="{x:Null}">
+                                    <Setter Property="Foreground" Value="Green" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                    <Setter Property="Foreground" Value="Red" />
+                                </DataTrigger>-->
+                        </Style.Triggers>
+                    </Style>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        MinWidth="64"
+                        Binding="{Binding Name, Mode=OneWay}"
+                        Header="name" />
+                    <DataGridTextColumn
+                        MinWidth="64"
+                        Binding="{Binding Type, Mode=OneWay}"
+                        Header="type" />
+                    <DataGridTextColumn
+                        MinWidth="64"
+                        Binding="{Binding DefaultValue, Mode=OneWay}"
+                        Header="value" />
+                    <DataGridTextColumn Binding="{Binding Description, Mode=OneWay}" Header="description" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+        </Grid>
+        <Button Command="{Binding SaveCommand}" Content="Save" />
     </StackPanel>
 </UserControl>
