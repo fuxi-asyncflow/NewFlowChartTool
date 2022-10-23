@@ -68,6 +68,7 @@ namespace NewFlowChartTool
             //containerRegistry.RegisterSingleton<IDebugService, DebugDialogViewModel>();
             containerRegistry.RegisterDialog<TypeDialog, TypeDialogViewModel>(TypeDialogViewModel.NAME);
 
+            containerRegistry.RegisterSingleton<OutputPanelViewModel>();
             containerRegistry.RegisterSingleton<IOutputMessage, OutputPanelViewModel>();
 
             //throw new NotImplementedException();
