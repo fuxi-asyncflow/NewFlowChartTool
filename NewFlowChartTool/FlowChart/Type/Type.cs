@@ -112,6 +112,20 @@ namespace FlowChart.Type
             return member;
         }
 
+        public bool RenameMember(string oldName, string newName)
+        {
+            var member = FindMember(newName);
+            if (member != null)
+                return false;
+            member = FindMember(oldName);
+            if (member == null)
+                return false;
+            member.Name = newName;
+            MemberDict.Remove(oldName);
+            MemberDict.Add(member.Name, member);
+            return true;
+        }
+
         public delegate bool AcceptDelegate (Type type);
 
         public AcceptDelegate? AcceptFunc;

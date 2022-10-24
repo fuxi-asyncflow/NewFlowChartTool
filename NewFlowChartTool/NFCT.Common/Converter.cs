@@ -76,5 +76,25 @@ namespace NFCT.Common
         }
     }
 
+    public class RadioBoolToIntConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int integer = (int)value;
+            if (integer == int.Parse(parameter.ToString()))
+                return true;
+            else
+                return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var b = (bool)value;
+            if(b)
+                return parameter;
+            return Binding.DoNothing;
+        }
+    }
+
 
 }

@@ -10,7 +10,7 @@ namespace FlowChart.Type
     {
         public Property(string name) : base(name)
         {
-
+            Type = BuiltinTypes.AnyType;
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,21 +22,60 @@ namespace NewFlowChartTool.ViewModels
 {
     class ParameterViewModel : BindableBase
     {
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public string? Description { get; set; }
-        public string? DefaultValue { get; set; }
+        public ParameterViewModel(Parameter param)
+        {
+            Model = param;
+            Name = param.Name;
+            Type = param.Type.Name;
+            DefaultValue = param.Default;
+        }
+        public Parameter Model { get; set; }
+        private string _name;
+        public string Name { get => _name; set => SetProperty(ref _name, value); }
+        private string _type;
+        public string Type { get => _type; set => SetProperty(ref _type, value); }
+        private string? _description;
+        public string? Description { get => _description; set => SetProperty(ref _description, value); }
+        private string _defaultValue;
+        public string DefaultValue { get => _defaultValue; set => SetProperty(ref _defaultValue, value); }
+        public void UpdateToModel(Project p)
+        {
+            if(Model.Name != Name)
+                Model.Name = Name;
+            if(Model.Description != Description)
+                Model.Description = Description;
+            if (Model.Default != DefaultValue)
+                Model.Default = DefaultValue;
+            if (Model.Type.Name != Type)
+            {
+                var tp = p.GetType(Type);
+                if (tp == null)
+                {
+
+                }
+                else
+                {
+                    Model.Type = tp;
+                }
+            }
+        }
     }
     class TypeMemberViewModel : BindableBase
     {
         public TypeMemberViewModel(Member member)
         {
             Model = member;
+            _name = member.Name;
+            _type = member.Type.Name;
+            Description = member.Description;
         }
         public Member Model { get; set; }
-        public string Name => Model.Name;
-        public string Type => Model.Type.Name;
-        public string? Description => Model.Description;
+        private string _name;
+        public string Name { get => _name; set => SetProperty(ref _name, value); }
+        private string _type;
+        public string Type { get => _type; set => SetProperty(ref _type, value); }
+        private string? _description;
+        public string? Description { get => _description; set => SetProperty(ref _description, value); }
         public bool IsVariadic;
 
         public string? Parameters
@@ -46,6 +87,31 @@ namespace NewFlowChartTool.ViewModels
                 return null;
             }
         }
+
+        public void OnParameterUpdate() { RaisePropertyChanged(nameof(Parameters));}
+
+        public void UpdateToModel(Project p, Type type)
+        {
+            if (Model.Name != Name)
+            {
+                type.RenameMember(Model.Name, Name);
+            }
+
+            if (Model.Description != Description)
+                Model.Description = Description;
+            if (Model.Type.Name != Type)
+            {
+                var tp = p.GetType(Type);
+                if (tp == null)
+                {
+
+                }
+                else
+                {
+                    Model.Type = tp;
+                }
+            }
+        }
     }
 
     class TypeViewModel : BindableBase
@@ -53,26 +119,13 @@ namespace NewFlowChartTool.ViewModels
         public TypeViewModel(FlowChart.Type.Type type)
         {
             Model = type;
-            Members = new ObservableCollection<TypeViewModel>();
         }
-
         public FlowChart.Type.Type Model { get; set; }
 
-        public ObservableCollection<TypeViewModel> Members { get; set; }
         public string Name => Model.Name;
         public string? Description => Model.Description;
 
-        public void OnAddMember(Member member)
-        {
-            if (member is Method method)
-            {
 
-            }
-            else if (member is Property property)
-            {
-
-            }
-        }
     }
     internal class TypeDialogViewModel : BindableBase, IDialogAware
     {
@@ -84,12 +137,19 @@ namespace NewFlowChartTool.ViewModels
             Types = new ObservableCollection<TypeViewModel>();
             Members = new ObservableCollection<TypeMemberViewModel>();
             Parameters = new ObservableCollection<ParameterViewModel>();
+
+            _memberName = string.Empty;
+            _memberType = string.Empty;
+
             _outputService = outputService;
             EventHelper.Sub<ProjectCloseEvent, Project>(OnCloseProject, ThreadOption.UIThread);
 
             SelectedTypeChangeCommand = new DelegateCommand(OnSelectedTypeChange);
             SelectedMemberChangeCommand = new DelegateCommand(OnSelectedMemberChange);
+            SelectedParamChangeCommand = new DelegateCommand(OnSelectedParamChange);
             AddNewTypeCommand = new DelegateCommand(AddNewType);
+            AddNewPropertyCommand = new DelegateCommand(AddNewProperty);
+            AddNewMethodCommand = new DelegateCommand(AddNewMethod);
             SaveCommand = new DelegateCommand(Save);
         }
 
@@ -139,11 +199,17 @@ namespace NewFlowChartTool.ViewModels
         private TypeViewModel? _selectedType;
         public TypeViewModel? SelectedType { get => _selectedType; set => SetProperty(ref _selectedType, value); }
         public ObservableCollection<TypeViewModel> Types { get; set; }
-        public TypeMemberViewModel? SelectedMember { get; set; }
+        private TypeMemberViewModel? _selectedMember;
+        public TypeMemberViewModel? SelectedMember { get => _selectedMember; set => SetProperty(ref _selectedMember, value); }
+        private ParameterViewModel? _selectedParameter;
+        public ParameterViewModel? SelectedParameter { get => _selectedParameter; set => SetProperty(ref _selectedParameter, value); }
         public ObservableCollection<TypeMemberViewModel> Members { get; set; }
         public DelegateCommand SelectedTypeChangeCommand { get; set; }
         public DelegateCommand SelectedMemberChangeCommand { get; set; }
+        public DelegateCommand SelectedParamChangeCommand { get; set; }
         public DelegateCommand AddNewTypeCommand { get; set; }
+        public DelegateCommand AddNewPropertyCommand { get; set; }
+        public DelegateCommand AddNewMethodCommand { get; set; }
         public DelegateCommand SaveCommand { get; set; }
 
         void OnCloseProject(Project project)
@@ -174,8 +240,18 @@ namespace NewFlowChartTool.ViewModels
         public string? MemberDescription { get => _memberDescription; set => SetProperty(ref _memberDescription, value); }
         private string _memberType;
         public string MemberType { get => _memberType; set => SetProperty(ref _memberType, value); }
+        private int _memberKind;
+        public int MemberKind { get => _memberKind; set => SetProperty(ref _memberKind, value); }
 
         public ObservableCollection<ParameterViewModel> Parameters { get; set; }
+        private string _paraName;
+        public string ParaName { get => _paraName; set => SetProperty(ref _paraName, value); }
+        private string? _paraDescription;
+        public string? ParaDescription { get => _paraDescription; set => SetProperty(ref _paraDescription, value); }
+        private string _paraType;
+        public string ParaType { get => _paraType; set => SetProperty(ref _paraType, value); }
+        private string? _paraValue;
+        public string? ParaValue { get => _paraValue; set => SetProperty(ref _paraValue, value); }
 
         #endregion
 
@@ -187,6 +263,7 @@ namespace NewFlowChartTool.ViewModels
                 MemberDescription = null;
                 MemberType = string.Empty;
                 Parameters.Clear();
+                MemberKind = -1;
                 return;
             }
 
@@ -197,18 +274,38 @@ namespace NewFlowChartTool.ViewModels
             Parameters.Clear();
             if (m.Model is Method method)
             {
+                MemberKind = 2;
                 method.Parameters.ForEach(p =>
                 {
-                    var pvm = new ParameterViewModel
+                    var pvm = new ParameterViewModel(p)
                     {
-                        Name = p.Name,
-                        Type = p.Type.Name,
                         Description = p.Description,
                         DefaultValue = p.Default
                     };
                     Parameters.Add(pvm);
                 });
             }
+            else
+            {
+                MemberKind = 1;
+            }
+        }
+
+        void OnSelectedParamChange()
+        {
+            if (SelectedParameter == null)
+            {
+                ParaName = string.Empty;
+                ParaDescription = null;
+                ParaValue = null;
+                ParaType = string.Empty;
+                return;
+            }
+
+            ParaName = SelectedParameter.Name;
+            ParaDescription = SelectedParameter.Description;
+            ParaType = SelectedParameter.Type;
+            ParaValue = SelectedParameter.DefaultValue;
         }
 
         string? GetNewTypeName()
@@ -240,10 +337,78 @@ namespace NewFlowChartTool.ViewModels
             OnSelectedTypeChange();
         }
 
+        string? GetNewMemberName(string defaultNewName)
+        {
+            if (SelectedType == null)
+                return null;
+            
+            var name = defaultNewName;
+            if (Members.All(m => m.Name != name))
+                return name;
+            for (int i = 0; i < 100; i++)
+            {
+                name = $"{defaultNewName}_{i}";
+                if (Members.All(m => m.Name != name))
+                    return name;
+            }
+            return null;
+        }
+
+        void AddNewProperty()
+        {
+            if (SelectedType == null)
+                return;
+            var name = GetNewMemberName("NewProperty");
+            if (name == null)
+                return;
+            var prop = new Property(name);
+            var memberVm = new TypeMemberViewModel(prop);
+            Debug.Assert(SelectedType.Model.AddMember(prop));
+            Members.Add(memberVm);
+            SelectedMember = memberVm;
+        }
+
+        void AddNewMethod()
+        {
+            if (SelectedType == null)
+                return;
+            var name = GetNewMemberName("NewMethod");
+            if (name == null)
+                return;
+            var method = new Method(name);
+            var memberVm = new TypeMemberViewModel(method);
+            Debug.Assert(SelectedType.Model.AddMember(method));
+            Members.Add(memberVm);
+            SelectedMember = memberVm;
+        }
+
         void Save()
         {
             if (CurrentProject == null)
                 return;
+
+            // save param
+            if (SelectedParameter != null)
+            {
+                SelectedParameter.Name = ParaName;
+                SelectedParameter.Description = ParaDescription;
+                SelectedParameter.DefaultValue = ParaValue;
+                SelectedParameter.Type = ParaType;
+                SelectedParameter.UpdateToModel(CurrentProject);
+                SelectedMember?.OnParameterUpdate();
+            }
+
+            // save member
+            if (SelectedMember != null)
+            {
+                SelectedMember.Name = MemberName;
+                SelectedMember.Description = MemberDescription;
+                SelectedMember.Type = MemberType;
+                if(SelectedType != null)
+                    SelectedMember.UpdateToModel(CurrentProject, SelectedType.Model);
+            }
+
+            // save type
             foreach (var typeVm in Types)
             {
                 if(CurrentProject.GetType(typeVm.Name) != null)
