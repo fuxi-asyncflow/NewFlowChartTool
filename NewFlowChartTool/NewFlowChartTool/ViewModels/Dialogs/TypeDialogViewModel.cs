@@ -201,8 +201,9 @@ namespace NewFlowChartTool.ViewModels
                 {
                     var pvm = new ParameterViewModel
                     {
-                        Name = m.Name,
-                        Description = m.Description,
+                        Name = p.Name,
+                        Type = p.Type.Name,
+                        Description = p.Description,
                         DefaultValue = p.Default
                     };
                     Parameters.Add(pvm);
