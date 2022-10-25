@@ -43,7 +43,8 @@
                     x:Name="FuncInfoToolTip"
                     Padding="1"
                     Background="{DynamicResource BackGroundBrush}"
-                    Placement="Top">
+                    Placement="Top"
+                    VerticalOffset="-20">
                     <TextBlock x:Name="FuncInfoToolTipText" />
                 </ToolTip>
             </TextBox.ToolTip>
