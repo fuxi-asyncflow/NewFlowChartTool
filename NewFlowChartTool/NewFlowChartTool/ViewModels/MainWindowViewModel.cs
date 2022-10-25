@@ -48,7 +48,7 @@ namespace NewFlowChartTool.ViewModels
             SaveProjectCommand = new DelegateCommand(SaveProject, () => CurrentProject != null);
             NewProjectCommand = new DelegateCommand(NewProject, () => CurrentProject == null);
             CloseProjectCommand = new DelegateCommand(CloseProject, () => CurrentProject != null);
-            TypeDialogCommand = new DelegateCommand(ShowTypeDialog);
+            TypeDialogCommand = new DelegateCommand(ShowTypeDialog, () => CurrentProject != null);
             BuildAllCommand = new DelegateCommand(BuildAll, () => CurrentProject != null);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
             SwitchLangCommand = new DelegateCommand(SwitchLang, () => true);
@@ -87,6 +87,7 @@ namespace NewFlowChartTool.ViewModels
                 NewProjectCommand.RaiseCanExecuteChanged();
                 CloseProjectCommand.RaiseCanExecuteChanged();
                 BuildAllCommand.RaiseCanExecuteChanged();
+                TypeDialogCommand.RaiseCanExecuteChanged();
             }
         }
 

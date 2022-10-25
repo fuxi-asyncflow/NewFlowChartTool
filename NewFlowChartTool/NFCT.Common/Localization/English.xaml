@@ -9,6 +9,7 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_SaveProjectKey}">Save Project</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewProjectKey}">New Project</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_CloseProjectKey}">Close Project</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_TypeManagerKey}">Type Manager...</system:String>
 
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BuildKey}">Build</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BuildAllKey}">Build All</system:String>
