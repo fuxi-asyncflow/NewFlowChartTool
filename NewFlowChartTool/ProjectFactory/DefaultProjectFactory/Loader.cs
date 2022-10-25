@@ -391,6 +391,11 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
             }
 
+            if (graph.Nodes.Count == 0)
+            {
+                graph.AddNode(new StartNode());
+            }
+
             if (graphNode.Children.TryGetValue(YAML_CONNECTORS, out node))
             {
                 foreach (var tmpNode in ((YamlSequenceNode)node))

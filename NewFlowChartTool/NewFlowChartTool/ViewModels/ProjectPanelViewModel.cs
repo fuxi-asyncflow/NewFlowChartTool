@@ -53,6 +53,7 @@ namespace NewFlowChartTool.ViewModels
             item.NameChangeEvent += OnRename;
         }
         protected readonly TreeItem _item;
+        public TreeItem Item => _item;
         public string Name { get => _item.Name; }
         public string Description { get => _item.Description; }
         public ProjectTreeFolderViewModel? Folder { get; set; }
@@ -131,6 +132,14 @@ namespace NewFlowChartTool.ViewModels
             graph.Rename(newName);
         }
 
+        public virtual void Remove()
+        {
+            var graph = _item as Graph;
+            if (graph == null)
+                return;
+            graph.Project.Remove(graph);
+        }
+
         public void OnRename(TreeItem item, string newName)
         {
             Debug.Assert(item == _item);
@@ -200,6 +209,12 @@ namespace NewFlowChartTool.ViewModels
             }
         }
 
+        [MenuItem(NFCT.Common.Localization.ResourceKeys.Menu_RemoveGraphKey)]
+        public static void MenuRemoveGraph(ProjectTreeItemViewModel item)
+        {
+            item.Remove();
+        }
+
         public static void OnLangSwitch(Lang lang)
         {
             MenuItems.Clear();
@@ -237,6 +252,18 @@ namespace NewFlowChartTool.ViewModels
             Children.Add(child);
         }
 
+        public void Remove(Graph graph)
+        {
+            foreach (var child in Children)
+            {
+                if (child.Item == graph)
+                {
+                    Children.Remove(child);
+                    return;
+                }
+            }
+        }
+
         public ProjectTreeItemViewModel? GetChild(string name)
         {
             foreach (var item in Children)
@@ -252,6 +279,13 @@ namespace NewFlowChartTool.ViewModels
             var folder = _item as Folder;
             if(folder == null) return;
             folder.Rename(newName);
+        }
+
+        public override void Remove()
+        {
+            var folder = _item as Folder;
+            if (folder == null) return;
+            folder.Project.Remove(folder);
         }
 
         public void AddNewGraph()
@@ -323,6 +357,7 @@ namespace NewFlowChartTool.ViewModels
         {
             Project = project;
             Project.AddGraphEvent += OnAddGraph;
+            Project.RemoveGraphEvent += OnRemoveGraph;
             ProjectTreeItemViewModel? CreateTreeItemViewModel(TreeItem item)
             {                
                 if (item is Graph) return new ProjectTreeItemViewModel(item);
@@ -356,6 +391,15 @@ namespace NewFlowChartTool.ViewModels
                 var treeItem = new ProjectTreeItemViewModel(graph);
                 folderVm.AddChild(treeItem);
                 AddGraphEvent?.Invoke(treeItem);
+            }
+        }
+
+        public void OnRemoveGraph(Graph graph)
+        {
+            var folderVm = GetTreeItemViewModel(graph.Parent) as ProjectTreeFolderViewModel;
+            if (folderVm != null)
+            {
+                folderVm.Remove(graph);
             }
         }
 

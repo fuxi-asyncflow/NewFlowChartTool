@@ -49,8 +49,9 @@ namespace NFCT.Common.Localization
         #region ProjectTreeItemMenu
 
         public const string Menu_RenameKey = "Menu_Rename";
-        public const string  Menu_NewGraphKey = "Menu_NewGraph";
+        public const string Menu_NewGraphKey = "Menu_NewGraph";
         public const string Menu_NewFolderKey = "Menu_NewFolder";
+        public const string Menu_RemoveGraphKey = "Menu_Remove";
 
         #endregion
 

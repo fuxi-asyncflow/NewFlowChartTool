@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Runtime.CompilerServices;
 using FlowChart.AST;
 using FlowChart.Parser;
 using FlowChart.Type;
@@ -58,6 +59,7 @@ namespace FlowChart.Core
 
         public delegate void GraphEventDelegate(Graph graph);
         public event GraphEventDelegate? AddGraphEvent;
+        public event GraphEventDelegate? RemoveGraphEvent;
 
         #endregion
 
@@ -182,6 +184,31 @@ namespace FlowChart.Core
             graph.Project = this;
 
             AddGraphEvent?.Invoke(graph);
+        }
+
+        public void Remove(Graph graph)
+        {
+            if (!GraphDict.ContainsKey(graph.Path))
+            {
+                return;
+            }
+
+            GraphDict.Remove(graph.Path);
+            RemoveGraphEvent?.Invoke(graph);
+        }
+
+        public void Remove(Folder folder)
+        {
+            folder.Children.ForEach(item =>
+            {
+                if(item is Graph graph)
+                    Remove(graph);
+                else if (item is Folder f)
+                {
+                    Remove(f);
+                }
+            });
+            //TODO trigger event
         }
 
         #region PARSER and BUILDER
