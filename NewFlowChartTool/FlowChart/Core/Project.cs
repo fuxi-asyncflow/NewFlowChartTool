@@ -82,6 +82,23 @@ namespace FlowChart.Core
             TypeDict.Add(type.Name, type);
         }
 
+        public bool RenameType(string oldName, string newName)
+        {
+            var type = GetType(newName);
+            if (type != null)
+                return false;
+            type = GetType(oldName);
+            if (type == null)
+                return false;
+
+            if (type.IsBuiltinType)
+                return false;
+            type.Name = newName;
+            TypeDict.Remove(oldName);
+            AddType(type);
+            return true;
+        }
+
         public Type.Type? GetType(string typeName)
         {
             Type.Type? type = null;

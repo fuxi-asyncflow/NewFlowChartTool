@@ -94,19 +94,21 @@ namespace FlowChart.Type
             return true;
         }
 
-        public Member? FindMember(string name)
+        public Member? FindMember(string name, bool findInBaseType = true)
         {
-            Member? member = null;
-            if(MemberDict.TryGetValue(name, out member))
+            if(MemberDict.TryGetValue(name, out var member))
             {
                 return member;
             }
 
-            foreach (var baseType in BaseTypes)
+            if (findInBaseType)
             {
-                member = baseType.FindMember(name);
-                if (member != null)
-                    return member;
+                foreach (var baseType in BaseTypes)
+                {
+                    member = baseType.FindMember(name);
+                    if (member != null)
+                        return member;
+                }
             }
 
             return member;
@@ -114,15 +116,24 @@ namespace FlowChart.Type
 
         public bool RenameMember(string oldName, string newName)
         {
-            var member = FindMember(newName);
+            var member = FindMember(newName, false);
             if (member != null)
                 return false;
-            member = FindMember(oldName);
+            member = FindMember(oldName, false);
             if (member == null)
                 return false;
             member.Name = newName;
             MemberDict.Remove(oldName);
             MemberDict.Add(member.Name, member);
+            return true;
+        }
+
+        public bool RemoveMember(string name)
+        {
+            var member = FindMember(name, false);
+            if (member == null)
+                return false;
+            MemberDict.Remove(name);
             return true;
         }
 

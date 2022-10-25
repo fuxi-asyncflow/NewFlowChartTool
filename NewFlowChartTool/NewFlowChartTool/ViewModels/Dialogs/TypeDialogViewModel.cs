@@ -125,6 +125,11 @@ namespace NewFlowChartTool.ViewModels
         public string Name => Model.Name;
         public string? Description => Model.Description;
 
+        public void OnNameChange()
+        {
+            RaisePropertyChanged(nameof(Name));
+        }
+
 
     }
     internal class TypeDialogViewModel : BindableBase, IDialogAware
@@ -149,7 +154,14 @@ namespace NewFlowChartTool.ViewModels
             SelectedParamChangeCommand = new DelegateCommand(OnSelectedParamChange);
             AddNewTypeCommand = new DelegateCommand(AddNewType);
             AddNewPropertyCommand = new DelegateCommand(AddNewProperty);
+            RemoveMemberCommand = new DelegateCommand(RemoveMember);
             AddNewMethodCommand = new DelegateCommand(AddNewMethod);
+
+            AddNewParamCommand = new DelegateCommand(AddParameter);
+            RemoveParamCommand = new DelegateCommand(RemoveParameter);
+            ParamUpCommand = new DelegateCommand(UpParameter);
+            ParamDownCommand = new DelegateCommand(DownParameter);
+
             SaveCommand = new DelegateCommand(Save);
         }
 
@@ -210,6 +222,12 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand AddNewTypeCommand { get; set; }
         public DelegateCommand AddNewPropertyCommand { get; set; }
         public DelegateCommand AddNewMethodCommand { get; set; }
+        public DelegateCommand RemoveMemberCommand { get; set; }
+        public DelegateCommand AddNewParamCommand { get; set; }
+        public DelegateCommand RemoveParamCommand { get; set; }
+        public DelegateCommand ParamUpCommand { get; set; }
+        public DelegateCommand ParamDownCommand { get; set; }
+
         public DelegateCommand SaveCommand { get; set; }
 
         void OnCloseProject(Project project)
@@ -229,8 +247,18 @@ namespace NewFlowChartTool.ViewModels
             {
                 Members.Add(new TypeMemberViewModel(kv.Value));
             }
-            
+
+            TypeName = SelectedType.Name;
+
         }
+
+        #region Type Editor
+
+        private string? _typeName;
+        public string? TypeName { get => _typeName; set => SetProperty(ref _typeName, value); }
+
+
+        #endregion
 
         #region Member Editor
 
@@ -382,6 +410,45 @@ namespace NewFlowChartTool.ViewModels
             SelectedMember = memberVm;
         }
 
+        void RemoveMember()
+        {
+            if (SelectedType == null)
+                return;
+            if (SelectedMember == null)
+                return;
+            if (SelectedType.Model.RemoveMember(SelectedMember.Name))
+            {
+                Members.Remove(SelectedMember);
+                SelectedMember = null;
+            }
+        }
+
+        void AddParameter()
+        {
+            if (SelectedMember is not { Model: Method method })
+                return;
+            var p = new Parameter("NewArg") { Type = BuiltinTypes.AnyType };
+            method.Parameters.Add(p);
+            var paraVm = new ParameterViewModel(p);
+            Parameters.Add(paraVm);
+            SelectedParameter = paraVm;
+        }
+
+        void RemoveParameter()
+        {
+
+        }
+
+        void UpParameter()
+        {
+
+        }
+
+        void DownParameter()
+        {
+
+        }
+
         void Save()
         {
             if (CurrentProject == null)
@@ -406,6 +473,16 @@ namespace NewFlowChartTool.ViewModels
                 SelectedMember.Type = MemberType;
                 if(SelectedType != null)
                     SelectedMember.UpdateToModel(CurrentProject, SelectedType.Model);
+            }
+
+            // type rename
+            if (SelectedType != null && !string.IsNullOrEmpty(TypeName))
+            {
+                if (SelectedType.Name != TypeName)
+                {
+                    CurrentProject.RenameType(SelectedType.Name, TypeName);
+                    SelectedType.OnNameChange();
+                }
             }
 
             // save type
