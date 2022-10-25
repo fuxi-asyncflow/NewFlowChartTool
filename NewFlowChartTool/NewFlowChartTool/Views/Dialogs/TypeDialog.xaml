@@ -9,27 +9,21 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
-    Width="800"
-    Height="450"
     d:DataContext="{d:DesignInstance vm:TypeDialogViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    prism:Dialog.WindowStyle="{DynamicResource CustomWindowStyle}"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-        </Style>
-        <Style TargetType="TextBlock">
-            <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-            <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
-        </Style>
         <common:RadioBoolToIntConverter x:Key="RadioBoolToIntConverter" />
     </UserControl.Resources>
+
     <StackPanel>
         <StackPanel Height="32" Orientation="Horizontal">
             <ComboBox
                 x:Name="TypeCombo"
                 MinWidth="100"
+                BorderBrush="{DynamicResource HightlightBorderBrush}"
                 ItemsSource="{Binding Types}"
                 SelectedItem="{Binding SelectedType}">
                 <i:Interaction.Triggers>
@@ -39,7 +33,7 @@
                 </i:Interaction.Triggers>
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Foreground="Black" Text="{Binding Name}" />
+                        <TextBlock Text="{Binding Name}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
@@ -49,13 +43,14 @@
         <DataGrid
             MinHeight="120"
             AutoGenerateColumns="False"
+            Background="Green"
+            CanUserAddRows="False"
             ItemsSource="{Binding Members}"
             ScrollViewer.CanContentScroll="True"
             ScrollViewer.HorizontalScrollBarVisibility="Auto"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             SelectedItem="{Binding SelectedMember, Mode=TwoWay}">
             <DataGrid.Resources>
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="Red" />
 
                 <Style TargetType="DataGridRow">
                     <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
@@ -67,6 +62,9 @@
                     <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
                 </Style>
                 <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                </Style>
+                <Style TargetType="Border">
                     <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
                 </Style>
             </DataGrid.Resources>
@@ -126,6 +124,7 @@
             <DataGrid
                 MinHeight="120"
                 AutoGenerateColumns="False"
+                Background="{DynamicResource HightlightBackGroundBrush}"
                 ItemsSource="{Binding Parameters}"
                 ScrollViewer.CanContentScroll="True"
                 ScrollViewer.HorizontalScrollBarVisibility="Auto"

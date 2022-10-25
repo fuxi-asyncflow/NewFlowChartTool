@@ -14,14 +14,15 @@
                 <ResourceDictionary Source="/NFCT.Themes;component/Generic.xaml" />
                 <ResourceDictionary Source="/NFCT.Common;component/IconsDictionary.xaml" />
                 <ResourceDictionary Source="/NFCT.Common;component/Localization/Chinese.xaml" />
+                <ResourceDictionary Source="/NFCT.Themes;component/WPFDarkTheme/DarkTheme.xaml" />
 
                 <ResourceDictionary Source="/NFCT.Common;component/Styles/TreeViewItemStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <common:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            <Style BasedOn="{StaticResource MenuStyle}" TargetType="{x:Type Menu}" />
+            <!--<Style BasedOn="{StaticResource MenuStyle}" TargetType="{x:Type Menu}" />
             <Style BasedOn="{StaticResource ContextMenuStyle}" TargetType="{x:Type ContextMenu}" />
-            <Style BasedOn="{StaticResource TextBlockStyle}" TargetType="{x:Type TextBlock}" />
+            <Style BasedOn="{StaticResource TextBlockStyle}" TargetType="{x:Type TextBlock}" />-->
             <Style TargetType="Border">
                 <Setter Property="SnapsToDevicePixels" Value="True" />
             </Style>

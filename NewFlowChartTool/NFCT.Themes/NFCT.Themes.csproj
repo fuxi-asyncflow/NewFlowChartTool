@@ -11,4 +11,8 @@
     <PackageReference Include="Dirkster.AvalonDock.Themes.VS2013" Version="4.70.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="WPFDarkTheme\" />
+  </ItemGroup>
+
 </Project>
