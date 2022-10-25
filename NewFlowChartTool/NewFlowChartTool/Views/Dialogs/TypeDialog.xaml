@@ -43,7 +43,6 @@
         <DataGrid
             MinHeight="120"
             AutoGenerateColumns="False"
-            Background="Green"
             CanUserAddRows="False"
             ItemsSource="{Binding Members}"
             ScrollViewer.CanContentScroll="True"

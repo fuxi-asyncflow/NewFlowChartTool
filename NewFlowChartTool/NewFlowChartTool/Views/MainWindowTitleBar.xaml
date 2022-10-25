@@ -49,10 +49,10 @@
                 <MenuItem Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_FileKey}}">
                     <MenuItem Command="{Binding OpenProjectCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_OpenProjectKey}}" />
                     <MenuItem Command="{Binding SaveProjectCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_SaveProjectKey}}" />
-                    <Separator />
+                    <Separator Style="{DynamicResource MenuItemSeparator}" />
                     <MenuItem Command="{Binding NewProjectCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_NewProjectKey}}" />
                     <MenuItem Command="{Binding CloseProjectCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_CloseProjectKey}}" />
-                    <Separator />
+                    <Separator Style="{DynamicResource MenuItemSeparator}" />
                     <MenuItem Command="{Binding TypeDialogCommand}" Header="type dialog" />
                 </MenuItem>
                 <MenuItem Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_BuildKey}}">
