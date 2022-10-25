@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.AST;
+using FlowChart.Type;
 using FlowChartCommon;
 
 namespace FlowChart.Core
@@ -132,6 +133,52 @@ namespace FlowChart.Core
 
         public bool IsSubGraph { get; set; }
         public FlowChart.Type.Type? ReturnType { get; set; }
+
+        public bool SetSubGraph(bool b)
+        {
+            if (IsSubGraph == b)
+                return false;
+            IsSubGraph = b;
+            if (IsSubGraph)
+            {
+                ToMethod();
+            }
+            else
+            {
+                var method = Type.FindMember(Name, false);
+                if (method != null)
+                {
+                    Type.RemoveMember(Name);
+                }
+            }
+            return true;
+        }
+
+        public Method ToMethod()
+        {
+            var method = new Method(Name)
+            {
+                Type = ReturnType ?? BuiltinTypes.VoidType,
+                SaveToFile = false
+            };
+            foreach (var v in Variables)
+            {
+                if (v.IsParameter)
+                    method.Parameters.Add(new Parameter(v.Name)
+                    {
+                        Type = v.Type
+                    });
+            }
+
+            //TODO when subgraph path changes, template should update
+            method.IsAsync = true;
+            if (method.Parameters.Count == 0)
+                method.Template = $"asyncflow.call_sub(\"{Path}\", $caller)";
+            else
+                method.Template = $"asyncflow.call_sub(\"{Path}\", $caller, $params)";
+            Type.AddMember(method);
+            return method;
+        }
 
         #endregion
 

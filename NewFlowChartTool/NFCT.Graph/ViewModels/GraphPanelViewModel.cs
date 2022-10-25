@@ -60,6 +60,7 @@ namespace NFCT.Graph.ViewModels
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             CreateGroupCommand = new DelegateCommand(CreateGroupFromSelectedNodes);
             OnCloseCommand = new DelegateCommand(OnClose);
+            SubgraphCommand = new DelegateCommand(delegate { _graph.SetSubGraph(!_graph.IsSubGraph); });
             OnPreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnPreviewKeyDown);
 
             EventHelper.Sub<ThemeSwitchEvent, Theme>(OnThemeSwitch);
@@ -92,9 +93,20 @@ namespace NFCT.Graph.ViewModels
 
         public string Name => _graph.Name;
         public string FullPath => _graph.Path;
-        
-
         public string Description => _graph.Description;
+        public bool IsSubGraph
+        {
+            get => _graph.IsSubGraph;
+            set
+            {
+                if (value == _graph.IsSubGraph)
+                    return;
+                if (_graph.SetSubGraph(value))
+                {
+                    RaisePropertyChanged(nameof(IsSubGraph));
+                }
+            }
+        }
 
         public ObservableCollection<BaseNodeViewModel> Nodes { get; set; }
         public Dictionary<Node, BaseNodeViewModel> NodeDict { get; set; }
@@ -123,6 +135,8 @@ namespace NFCT.Graph.ViewModels
         public DelegateCommand ChangeLayoutCommand { get; set; }
         public DelegateCommand CreateGroupCommand { get; set; }
         public DelegateCommand OnCloseCommand { get; set; }
+
+        public DelegateCommand SubgraphCommand { get; set; }
 
         
         public void Build()
