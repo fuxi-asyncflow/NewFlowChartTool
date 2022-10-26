@@ -92,6 +92,11 @@ namespace NewFlowChartTool.ViewModels
 
         public void UpdateToModel(Project p, Type type)
         {
+            if (type.Name == "Event")
+            {
+                p.RenameEvent(Model.Name, Name);
+                return;
+            }
             if (Model.Name != Name)
             {
                 type.RenameMember(Model.Name, Name);
@@ -189,9 +194,12 @@ namespace NewFlowChartTool.ViewModels
             }
 
             var typeDict = new Dictionary<Type, TypeViewModel>();
+            TypeViewModel? dummyEventTypeVm = null;
             foreach (var typeViewModel in Types)
             {
                 typeDict.Add(typeViewModel.Model, typeViewModel);
+                if(typeViewModel.Name == "Event")
+                    dummyEventTypeVm = typeViewModel;
             }
 
             foreach (var kv in CurrentProject.TypeDict)
@@ -202,6 +210,13 @@ namespace NewFlowChartTool.ViewModels
                 if(!type.IsBuiltinType && !typeDict.ContainsKey(type))
                     Types.Add(new TypeViewModel(type));
             }
+
+            // add all event as a Type
+            if (dummyEventTypeVm == null)
+            {
+                dummyEventTypeVm = new TypeViewModel(new Type("Event") { IsBuiltinType = true });
+                Types.Add(dummyEventTypeVm);
+            }
         }
 
         public string Title => "Type Manager";
@@ -209,12 +224,27 @@ namespace NewFlowChartTool.ViewModels
         #endregion
 
         private TypeViewModel? _selectedType;
-        public TypeViewModel? SelectedType { get => _selectedType; set => SetProperty(ref _selectedType, value); }
+        public TypeViewModel? SelectedType
+        {
+            get => _selectedType;
+            set { Update(); SetProperty(ref _selectedType, value); }
+        }
+
         public ObservableCollection<TypeViewModel> Types { get; set; }
         private TypeMemberViewModel? _selectedMember;
-        public TypeMemberViewModel? SelectedMember { get => _selectedMember; set => SetProperty(ref _selectedMember, value); }
+        public TypeMemberViewModel? SelectedMember
+        {
+            get => _selectedMember;
+            set { Update(); SetProperty(ref _selectedMember, value); }
+        }
+
         private ParameterViewModel? _selectedParameter;
-        public ParameterViewModel? SelectedParameter { get => _selectedParameter; set => SetProperty(ref _selectedParameter, value); }
+        public ParameterViewModel? SelectedParameter
+        {
+            get => _selectedParameter;
+            set { Update(); SetProperty(ref _selectedParameter, value); }
+        }
+
         public ObservableCollection<TypeMemberViewModel> Members { get; set; }
         public DelegateCommand SelectedTypeChangeCommand { get; set; }
         public DelegateCommand SelectedMemberChangeCommand { get; set; }
@@ -243,13 +273,35 @@ namespace NewFlowChartTool.ViewModels
             Output($"type change to {SelectedType.Name}");
             Members.Clear();
             SelectedMember = null;
-            foreach (var kv in SelectedType.Model.MemberDict)
+            if (SelectedType.Name == "Event")
             {
-                Members.Add(new TypeMemberViewModel(kv.Value));
+                ShowEvents();
+            }
+            else
+            {
+                foreach (var kv in SelectedType.Model.MemberDict)
+                {
+                    Members.Add(new TypeMemberViewModel(kv.Value));
+                }
             }
 
             TypeName = SelectedType.Name;
+        }
 
+        void ShowEvents()
+        {
+            if (CurrentProject == null)
+                return;
+            Members.Clear();
+            var events = CurrentProject.EventDict.Values.ToList();
+            events.Sort((a, b) => a.EventId.CompareTo(b.EventId));
+            events.RemoveAt(0);
+            events.ForEach(ev =>
+            {
+                var method = new Method(ev.Name);
+                method.Parameters = ev.Parameters;
+                Members.Add(new TypeMemberViewModel(method));
+            });
         }
 
         #region Type Editor
@@ -400,12 +452,42 @@ namespace NewFlowChartTool.ViewModels
         {
             if (SelectedType == null)
                 return;
+            if (SelectedType.Name == "Event")
+            {
+                AddNewEvent();
+                return;
+            }
             var name = GetNewMemberName("NewMethod");
             if (name == null)
                 return;
             var method = new Method(name);
             var memberVm = new TypeMemberViewModel(method);
             Debug.Assert(SelectedType.Model.AddMember(method));
+            Members.Add(memberVm);
+            SelectedMember = memberVm;
+        }
+
+        void AddNewEvent()
+        {
+            if (CurrentProject == null)
+                return;
+            var newEventName = "NewEvent";
+            if (CurrentProject.GetEvent(newEventName) != null)
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    newEventName = $"NewEvent_{i}";
+                    if (CurrentProject.GetEvent(newEventName) == null)
+                        break;
+                }
+            }
+
+            var ev = new EventType(newEventName) { EventId = -1 };
+            CurrentProject.AddEvent(ev);
+
+            var method = new Method(ev.Name);
+            method.Parameters = ev.Parameters;
+            var memberVm = new TypeMemberViewModel(method);
             Members.Add(memberVm);
             SelectedMember = memberVm;
         }
@@ -449,7 +531,7 @@ namespace NewFlowChartTool.ViewModels
 
         }
 
-        void Save()
+        void Update()
         {
             if (CurrentProject == null)
                 return;
@@ -478,7 +560,11 @@ namespace NewFlowChartTool.ViewModels
             // type rename
             if (SelectedType != null && !string.IsNullOrEmpty(TypeName))
             {
-                if (SelectedType.Name != TypeName)
+                if (SelectedType.Name == "Global" || SelectedType.Name == "Event")
+                {
+                    // output message
+                }
+                else if (SelectedType.Name != TypeName)
                 {
                     CurrentProject.RenameType(SelectedType.Name, TypeName);
                     SelectedType.OnNameChange();
@@ -493,7 +579,14 @@ namespace NewFlowChartTool.ViewModels
                 CurrentProject.AddType(typeVm.Model);
                 Output($"type {typeVm.Name} successfully added");
             }
-            CurrentProject.Save();
+        }
+
+        void Save()
+        {
+            Update();
+            CurrentProject?.Save();
         }
     }
+
+
 }

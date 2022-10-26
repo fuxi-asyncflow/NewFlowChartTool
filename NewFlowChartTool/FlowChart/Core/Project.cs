@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Runtime.CompilerServices;
 using FlowChart.AST;
+using FlowChart.Misc;
 using FlowChart.Parser;
 using FlowChart.Type;
 using XLua;
@@ -140,7 +141,17 @@ namespace FlowChart.Core
                 Console.WriteLine("event duplicated");
                 return false;
             }
-            EventDict.Add(ev.Name, ev);
+
+            if (ev.EventId < 0)
+                ev.EventId = EventDict.Count;
+
+            if (ev.EventId == EventDict.Count)
+                EventDict.Add(ev.Name, ev);
+            else 
+            {
+                OutputMessage.Inst?.Output($"add event {ev.Name} failed: event id mismatch order");
+                return false;
+            }
             return true;
         }
 
@@ -148,6 +159,20 @@ namespace FlowChart.Core
         {
             EventDict.TryGetValue(evName, out var ev);
             return ev;
+        }
+
+        public bool RenameEvent(string oldName, string newName)
+        {
+            var ev = GetEvent(newName);
+            if (ev != null)
+                return false;
+            ev = GetEvent(oldName);
+            if (ev == null)
+                return false;
+            ev.Name = newName;
+            TypeDict.Remove(oldName);
+            TypeDict.Add(newName, ev);
+            return true;
         }
 
         public void AddGraph(Graph graph)
