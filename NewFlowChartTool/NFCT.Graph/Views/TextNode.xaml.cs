@@ -61,24 +61,30 @@ namespace NFCT.Graph.Views
             if (nodeVm == null) return;
 
             bool visible = (bool)e.NewValue;
-            var ac = ContainerLocator.Current.Resolve<NodeAutoComplete>();
-            if (visible)
+            // visible change for stackpanel will be applied to its children
+            // the insert of actb will change stackpanel's children and crash
+            // so delay the insert operation
+            Dispatcher.InvokeAsync(delegate
             {
-                ac.RemoveFromPanel();
-            }
-            else
-            {
-                ac.AddToPanel(NodeStack);
-                // show autocomplete
-                if (ac.DataContext is NodeAutoCompleteViewModel acVm)
+                var ac = ContainerLocator.Current.Resolve<NodeAutoComplete>();
+                if (visible)
                 {
-                    acVm.Node = nodeVm;
-                    acVm.Text = nodeVm.Text;
+                    ac.RemoveFromPanel();
                 }
+                else
+                {
+                    ac.AddToPanel(NodeStack);
+                    // show autocomplete
+                    if (ac.DataContext is NodeAutoCompleteViewModel acVm)
+                    {
+                        acVm.Node = nodeVm;
+                        acVm.Text = nodeVm.Text;
+                    }
 
-                ac.SetFocus();
-                ac.SetCursor(-1);
-            }
+                    ac.SetFocus();
+                    ac.SetCursor(-1);
+                }
+            });
         }
 
         private void OnNodeDebugStatusChange(DebugNodeStatus status)
