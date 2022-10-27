@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using FlowChart.AST;
 using FlowChart.Core;
 using FlowChart.Type;
+using FlowChartCommon;
 
 namespace ProjectFactory.DefaultProjectFactory
 {
@@ -123,7 +124,7 @@ namespace ProjectFactory.DefaultProjectFactory
                     SaveGraph(graph, lines);
                 }
                 lines.Add("...");
-                System.IO.File.WriteAllLines(filePath, lines);
+                FileHelper.Save(filePath, lines);
             }
         }
 
@@ -235,13 +236,13 @@ namespace ProjectFactory.DefaultProjectFactory
                 filePath = System.IO.Path.Combine(typeFolder.FullName, filePath);
                 var lines = new List<string>();
                 SaveType(tp, lines);
-                System.IO.File.WriteAllLines(filePath, lines);
+                FileHelper.Save(filePath, lines);
             }
 
             var evFilePath = System.IO.Path.Combine(typeFolder.FullName, DefaultProjectFactory.EventFileName);
             var evlines = new List<string>();
             SaveEvents(evlines);
-            System.IO.File.WriteAllLines(evFilePath, evlines);
+            FileHelper.Save(evFilePath, evlines);
         }
 
         public void SaveType(FlowChart.Type.Type type, List<string> lines)

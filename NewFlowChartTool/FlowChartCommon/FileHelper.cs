@@ -65,5 +65,21 @@ namespace FlowChartCommon
         {
             return System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
         }
+
+        public static void Save(string path, string content)
+        {
+            if (System.IO.File.Exists(path))
+            {
+                var oldContent = File.ReadAllText(path);
+                if (oldContent == content)
+                    return;
+            }
+            System.IO.File.WriteAllText(path, content);
+        }
+
+        public static void Save(string path, List<string> lines)
+        {
+            Save(path, string.Join("\r\n", lines));
+        }
     }
 }
