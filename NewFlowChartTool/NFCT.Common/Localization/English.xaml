@@ -3,6 +3,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:reskeys="clr-namespace:NFCT.Common.Localization"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!--  Common  -->
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Id}">Id</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Name}">Name</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Type}">Type</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Description}">Description</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Value}">Value</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Default}">Default</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Add}">Add</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Delete}">Delete</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Modify}">Modify</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Confirm}">Confirm</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Cancel}">Cancel</system:String>
+
     <!--  Menu  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_FileKey}">File</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_OpenProjectKey}">Open Project</system:String>

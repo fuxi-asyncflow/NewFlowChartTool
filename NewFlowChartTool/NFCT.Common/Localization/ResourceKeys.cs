@@ -14,6 +14,21 @@ namespace NFCT.Common.Localization
             return new ComponentResourceKey(typeof(ResourceKeys), key);
         }
 
+        #region Common
+        public static readonly ComponentResourceKey Common_Id = KEY(nameof(Common_Id));
+        public static readonly ComponentResourceKey Common_Name = KEY(nameof(Common_Name));
+        public static readonly ComponentResourceKey Common_Type = KEY(nameof(Common_Type));
+        public static readonly ComponentResourceKey Common_Description = KEY(nameof(Common_Description));
+        public static readonly ComponentResourceKey Common_Value = KEY(nameof(Common_Value));
+        public static readonly ComponentResourceKey Common_Default = KEY(nameof(Common_Default));
+        public static readonly ComponentResourceKey Common_Add = KEY(nameof(Common_Add));
+        public static readonly ComponentResourceKey Common_Delete = KEY(nameof(Common_Delete));
+        public static readonly ComponentResourceKey Common_Modify = KEY(nameof(Common_Modify));
+        public static readonly ComponentResourceKey Common_Confirm = KEY(nameof(Common_Confirm));
+        public static readonly ComponentResourceKey Common_Cancel = KEY(nameof(Common_Cancel));
+
+        #endregion
+
         #region MainMenu
         public static readonly ComponentResourceKey Menu_FileKey = KEY("MainMenu_File");
         public static readonly ComponentResourceKey Menu_OpenProjectKey = KEY("MainMenu_OpenProject");

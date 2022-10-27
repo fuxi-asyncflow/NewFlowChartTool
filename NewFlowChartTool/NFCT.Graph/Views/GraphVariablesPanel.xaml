@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:NFCT.Graph.Views"
+    xmlns:localreskeys="clr-namespace:NFCT.Common.Localization;assembly=NFCT.Common"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:NFCT.Graph.ViewModels"
     d:DataContext="{d:DesignInstance vm:GraphVariablesPanelViewModel}"
@@ -12,16 +13,11 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <Style TargetType="TextBlock">
+        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
             <Style.Setters>
-                <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
-                <Setter Property="Background" Value="Transparent" />
-            </Style.Setters>
-        </Style>
-        <Style TargetType="Button">
-            <Style.Setters>
-                <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
-                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="MinWidth" Value="48" />
+                <Setter Property="Height" Value="24" />
+                <Setter Property="Margin" Value="4,2" />
             </Style.Setters>
         </Style>
     </UserControl.Resources>
@@ -33,8 +29,9 @@
 
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button Command="{Binding AddVariableCommand}" Content="add" />
-                    <Button Command="{Binding ModifyVariableCommand}" Content="modify" />
+                    <Button Command="{Binding AddVariableCommand}" Content="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Add}}" />
+                    <Button Command="{Binding AddVariableCommand}" Content="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Delete}}" />
+                    <Button Command="{Binding ModifyVariableCommand}" Content="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Modify}}" />
                 </StackPanel>
                 <!--  add varialbes  -->
                 <StackPanel Visibility="{Binding IsEditing, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -50,17 +47,26 @@
                                 <RowDefinition />
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0">name</TextBlock>
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Text="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Name}}" />
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Text="{Binding TmpName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Grid.Row="1" Grid.Column="0">type</TextBlock>
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Text="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Type}}" />
                             <TextBox
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Text="{Binding TmpTypeName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Grid.Row="2" Grid.Column="0">default</TextBlock>
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Text="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Default}}" />
                             <TextBox Grid.Row="2" Grid.Column="1" />
                             <TextBlock Grid.Row="3" Grid.Column="0">variadic</TextBlock>
                             <CheckBox
@@ -70,8 +76,8 @@
                         </Grid>
                     </Border>
                     <StackPanel Orientation="Horizontal">
-                        <Button Command="{Binding ConfirmCommand}" Content="OK" />
-                        <Button Command="{Binding CancelCommand}" Content="Cancel" />
+                        <Button Command="{Binding ConfirmCommand}" Content="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Confirm}}" />
+                        <Button Command="{Binding CancelCommand}" Content="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Cancel}}" />
                     </StackPanel>
 
                 </StackPanel>
@@ -106,11 +112,23 @@
                         </Style>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Id, Mode=OneWay}" Header="Id" />
-                        <DataGridTextColumn Binding="{Binding Name, Mode=OneWay}" Header="name" />
-                        <DataGridTextColumn Binding="{Binding Type, Mode=OneWay}" Header="type" />
-                        <DataGridTextColumn Binding="{Binding Value, Mode=OneWay}" Header="value" />
-                        <DataGridTextColumn Binding="{Binding Description, Mode=OneWay}" Header="description" />
+                        <DataGridTextColumn
+                            MinWidth="32"
+                            Binding="{Binding Id, Mode=OneWay}"
+                            Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Id}}" />
+                        <DataGridTextColumn
+                            MinWidth="48"
+                            Binding="{Binding Name, Mode=OneWay}"
+                            Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Name}}" />
+                        <DataGridTextColumn
+                            MinWidth="48"
+                            Binding="{Binding Type, Mode=OneWay}"
+                            Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Type}}" />
+                        <DataGridTextColumn
+                            MinWidth="32"
+                            Binding="{Binding Value, Mode=OneWay}"
+                            Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Value}}" />
+                        <DataGridTextColumn Binding="{Binding Description, Mode=OneWay}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Description}}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>

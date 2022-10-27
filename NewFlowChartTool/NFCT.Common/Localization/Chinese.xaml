@@ -3,6 +3,19 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:reskeys="clr-namespace:NFCT.Common.Localization"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
+    <!--  Common  -->
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Id}">序号</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Name}">名称</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Type}">类型</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Description}">描述</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Value}">值</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Default}">默认值</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Add}">添加</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Delete}">删除</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Modify}">修改</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Confirm}">确认</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Cancel}">取消</system:String>
+
     <!--  Menu  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_FileKey}">文件</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_OpenProjectKey}">打开项目</system:String>

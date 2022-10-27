@@ -29,7 +29,7 @@
         <DockPanel DockPanel.Dock="Top">
             <local:GraphPanelHeaderBar DataContext="{Binding}" />
         </DockPanel>
-        <Grid Background="PowderBlue" LayoutUpdated="Graph_LayoutUpdated">
+        <Grid Background="Transparent" LayoutUpdated="Graph_LayoutUpdated">
             <b:Interaction.Triggers>
                 <b:EventTrigger EventName="PreviewKeyDown">
                     <interactivity:InvokeCommandAction Command="{Binding OnPreviewKeyDownCommand}" />

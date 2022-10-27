@@ -91,7 +91,7 @@
 
     <SolidColorBrush x:Key="LineRedColor" Color="Red" />
     <SolidColorBrush x:Key="LineGreenColor" Color="Green" />
-    <SolidColorBrush x:Key="LineBlueColor" Color="Blue" />
+    <SolidColorBrush x:Key="LineBlueColor" Color="#5F9EFF" />
     <SolidColorBrush x:Key="LineGrayColor" Color="#808080" />
 
 
