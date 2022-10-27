@@ -238,6 +238,11 @@ namespace NewFlowChartTool.ViewModels
                 return;
             Logger.LOG($"save project");
             CurrentProject.Save();
+            foreach (var graphVm in OpenedGraphs)
+            {
+                if (graphVm.IsDirty)
+                    graphVm.IsDirty = false;
+            }
 
         }
 

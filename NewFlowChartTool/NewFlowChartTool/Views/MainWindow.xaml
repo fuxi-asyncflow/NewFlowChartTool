@@ -221,7 +221,7 @@
                 <pane:PanesStyleSelector>
                     <pane:PanesStyleSelector.GraphPaneStyle>
                         <Style TargetType="{x:Type LayoutItem}">
-                            <Setter Property="Title" Value="{Binding Model.Name}" />
+                            <Setter Property="Title" Value="{Binding Model.TabHeaderName}" />
                             <Setter Property="CloseCommand" Value="{Binding Model.OnCloseCommand}" />
                         </Style>
                     </pane:PanesStyleSelector.GraphPaneStyle>

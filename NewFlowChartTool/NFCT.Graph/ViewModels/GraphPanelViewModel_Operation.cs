@@ -32,6 +32,7 @@ namespace NFCT.Graph.ViewModels
 
             NodeDict.Add(node, vm);
             NeedLayout = true;
+            IsDirty = true;
             return vm;
         }
 
@@ -50,6 +51,7 @@ namespace NFCT.Graph.ViewModels
             //Connect(CurrentNode.Node, newNode);
             Graph.Connect_atom(CurrentNode.Node, newNode, Connector.ConnectorType.ALWAYS);
             NeedLayout = true;
+            IsDirty = true;
             // set newnode as currentnode
             SetCurrentNode(vm);
             //Build();
@@ -65,6 +67,7 @@ namespace NFCT.Graph.ViewModels
                 nodes.ForEach(Graph.RemoveNode);
             }
             NeedLayout = true;
+            IsDirty = true;
             UndoRedoManager.End();
         }
 
@@ -82,6 +85,7 @@ namespace NFCT.Graph.ViewModels
                     Graph.RemoveNode_atom(node);
                 });
             NeedLayout = true;
+            IsDirty = true;
         }
 
         // invoked when keydown a selected connector, will insert a node in the connector
@@ -151,6 +155,7 @@ namespace NFCT.Graph.ViewModels
                     Graph.AddNode_atom(node, idx);
                 });
             NeedLayout = true;
+            IsDirty = true;
         }
 
         private int _removeNodeViewModel(Node node)
@@ -222,6 +227,7 @@ namespace NFCT.Graph.ViewModels
                 () => { Graph.Connect_atom(conn.Start, conn.End, conn.ConnType, startIdx, endIdx); },
                 () => {Graph.RemoveConnector_atom(conn.Start, conn.End); });
             NeedLayout = true;
+            IsDirty = true;
         }
         #endregion
 
@@ -253,6 +259,7 @@ namespace NFCT.Graph.ViewModels
                 () => { _graph.RemoveConnector_atom(conn.Start, conn.End); },
                 () => { _graph.Connect_atom(conn.Start, conn.End, conn.ConnType, startIdx, endIdx); });
             NeedLayout = true;
+            IsDirty = true;
         }
         #endregion
 

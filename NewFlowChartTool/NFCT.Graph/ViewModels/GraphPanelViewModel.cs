@@ -89,11 +89,25 @@ namespace NFCT.Graph.ViewModels
             _graph.GraphConnectEvent += OnConnect;
             _graph.GraphAddNodeEvent += OnAddNode;
             _graph.ConnectorTypeChangeEvent += OnConnectorTypeChange;
+            IsDirty = false;
         }
 
         public string Name => _graph.Name;
         public string FullPath => _graph.Path;
         public string Description => _graph.Description;
+
+        public string TabHeaderName => IsDirty ? _graph.Name + "*" : _graph.Name;
+        private bool _isDirty;
+        public bool IsDirty
+        {
+            get => _isDirty;
+            set
+            {
+                SetProperty(ref _isDirty, value); 
+                RaisePropertyChanged(nameof(TabHeaderName));
+            }
+        }
+
         public bool IsSubGraph
         {
             get => _graph.IsSubGraph;
@@ -336,6 +350,12 @@ namespace NFCT.Graph.ViewModels
 
         void OnClose()
         {
+            if (IsDirty)
+            {
+                var result = MessageBox.Show($"graph {FullPath} has unsaved changes.\nclose it will discard them", "Warning", MessageBoxButton.OKCancel);
+                if (result == MessageBoxResult.Cancel)
+                    return;
+            }
             EventHelper.Pub<GraphCloseEvent, FlowChart.Core.Graph>(Graph);
         }
         #endregion
