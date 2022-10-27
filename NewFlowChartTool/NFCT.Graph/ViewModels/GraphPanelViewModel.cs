@@ -350,7 +350,7 @@ namespace NFCT.Graph.ViewModels
 
         void OnThemeSwitch(Theme theme)
         {
-            Logger.DBG("graph theme switch");
+            Logger.DBG($"graph theme switch fo {FullPath}");
             foreach (var nodeVm in Nodes)
             {
                 nodeVm.OnThemeSwitch();

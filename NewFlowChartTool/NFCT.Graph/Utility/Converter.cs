@@ -52,7 +52,6 @@ namespace NFCT.Graph.Utility
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var bgType = (int)value;
             return CanvasNodeResource.SelectedNodeBorderBrush;
             //return CanvasNodeResource.BorderBrushes[bgType];
         }

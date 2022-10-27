@@ -36,13 +36,13 @@
                     x:Name="NodeIdBorder"
                     MinWidth="20"
                     Margin="0,0,5,0"
-                    Background="Red"
-                    BorderBrush="Aqua"
+                    Background="DarkGoldenrod"
+                    BorderBrush="DarkGray"
                     BorderThickness="1"
                     CornerRadius="1">
                     <TextBlock
                         HorizontalAlignment="Center"
-                        FontSize="16"
+                        FontSize="14"
                         Text="{Binding Id}" />
                 </Border>
                 <StackPanel

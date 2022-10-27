@@ -11,9 +11,14 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <utility:NodeBorderConverter x:Key="BorderConverter" />
+        <utility:NodeBorderColorConverter x:Key="BorderColorConverter" />
+    </UserControl.Resources>
 
-    <Grid Background="LawnGreen">
-        <Label Content="Start" />
+    <Grid Background="DarkGray">
+        <Border BorderBrush="{Binding Id, Converter={StaticResource BorderColorConverter}}" BorderThickness="{Binding IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}">
+            <Label Content="Start" />
+        </Border>
     </Grid>
-
 </UserControl>

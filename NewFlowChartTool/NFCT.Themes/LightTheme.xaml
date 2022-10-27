@@ -71,7 +71,7 @@
     <SolidColorBrush x:Key="WindowInactiveBorderBrush" Color="#CBCDDA" />
 
     <!--  canvas colors  -->
-    <SolidColorBrush x:Key="GraphBackGround" Color="LightYellow" />
+    <SolidColorBrush x:Key="GraphBackGround" Color="White" />
     <SolidColorBrush x:Key="NodeBackGround" Color="Beige" />
     <SolidColorBrush x:Key="NodeActionBackGround" Color="#C2E4C6" />
     <SolidColorBrush x:Key="NodeConditionBackGround" Color="#B6D8EC" />
