@@ -38,13 +38,15 @@ namespace NewFlowChartTool.ViewModels
         
         public MainWindowViewModel(IEventAggregator ea, IDialogService dialogService)
         {
+            if (Inst == null)
+                Inst = this;
             _testText = "Hello world";
             _ea = ea;
             _dialogService = dialogService;
             _openedGraphs = new ObservableCollection<GraphPaneViewModel>();
             CurrentProject = null;
 
-            OpenProjectCommand = new DelegateCommand(OpenProject, () => CurrentProject == null);
+            OpenProjectCommand = new DelegateCommand(ChooseProjectPath, () => CurrentProject == null);
             SaveProjectCommand = new DelegateCommand(SaveProject, () => CurrentProject != null);
             NewProjectCommand = new DelegateCommand(NewProject, () => CurrentProject == null);
             CloseProjectCommand = new DelegateCommand(CloseProject, () => CurrentProject != null);
@@ -72,6 +74,8 @@ namespace NewFlowChartTool.ViewModels
             //TestOpenProject();
 #endif
         }
+
+        public static MainWindowViewModel? Inst;
 
         private Project? _currentProject;
         public Project? CurrentProject
@@ -142,7 +146,7 @@ namespace NewFlowChartTool.ViewModels
         }
         #endregion
 
-        public void OpenProject()
+        void ChooseProjectPath()
         {
             if (CurrentProject != null)
             {
@@ -153,9 +157,13 @@ namespace NewFlowChartTool.ViewModels
             var folderPath = Dialogs.ChooseFolder();
             if (folderPath == null)
                 return;
+            OpenProject(folderPath);
+        }
 
+        public void OpenProject(string projectPath)
+        {
             var p = new Project(new DefaultProjectFactory());
-            p.Path = folderPath;
+            p.Path = projectPath;
 #if DEBUG
             p.Load();
 #else
@@ -171,6 +179,7 @@ namespace NewFlowChartTool.ViewModels
             CurrentProject = p;
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
             _ea.GetEvent<ProjectOpenEvent>().Publish(p);
+
         }
 
         public void NewProject()
@@ -304,6 +313,16 @@ namespace NewFlowChartTool.ViewModels
 
         }
 
+        public void OpenGraph(string path)
+        {
+            if (CurrentProject == null)
+                return;
+            var graph = CurrentProject.GetGraph(path);
+            if (graph == null)
+                return;
+            OnOpenGraph(graph);
+        }
+
         public void OnOpenGraph(Graph graph)
         {
             foreach (var gvm in OpenedGraphs)
@@ -343,6 +362,8 @@ namespace NewFlowChartTool.ViewModels
 
         public bool CloseWindow()
         {
+            if(CurrentProject != null)
+                CloseProject();
             return true;
         }
 

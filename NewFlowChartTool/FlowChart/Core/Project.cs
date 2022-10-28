@@ -212,6 +212,12 @@ namespace FlowChart.Core
             AddGraphEvent?.Invoke(graph);
         }
 
+        public Graph? GetGraph(string path)
+        {
+            GraphDict.TryGetValue(path, out var graph);
+            return graph;
+        }
+
         public void Remove(Graph graph)
         {
             if (!GraphDict.ContainsKey(graph.Path))
