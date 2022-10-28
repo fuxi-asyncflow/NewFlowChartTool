@@ -246,7 +246,11 @@
                     </LayoutPanel>
                     <LayoutPanel x:Name="MiddleContent" Orientation="Vertical">
                         <LayoutDocumentPaneGroup>
-                            <LayoutDocumentPane />
+                            <LayoutDocumentPane>
+                                <LayoutDocument Title="Start Page">
+                                    <views:StartPage />
+                                </LayoutDocument>
+                            </LayoutDocumentPane>
                         </LayoutDocumentPaneGroup>
                         <LayoutAnchorablePane DockHeight="200">
                             <LayoutAnchorable Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_OutputKey}}">

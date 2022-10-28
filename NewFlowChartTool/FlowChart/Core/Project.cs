@@ -10,6 +10,7 @@ using FlowChart.AST;
 using FlowChart.Misc;
 using FlowChart.Parser;
 using FlowChart.Type;
+using FlowChartCommon;
 using XLua;
 
 namespace FlowChart.Core
@@ -180,8 +181,8 @@ namespace FlowChart.Core
             if (GraphDict.ContainsKey(graph.Path))
             {
                 var originPath = graph.Path;
-                graph.Path = originPath + "_dup";
-                Console.WriteLine($"exist same path when add graph: {originPath} rename to {graph.Path}");
+                graph.Path = originPath + "_dup" + graph.GetHashCode() % 10000;
+                Logger.WARN($"exist same path when add graph: {originPath} rename to {graph.Path}");
             }
             var paths = graph.Path.Split(".");
             graph.Name = paths.Last();
