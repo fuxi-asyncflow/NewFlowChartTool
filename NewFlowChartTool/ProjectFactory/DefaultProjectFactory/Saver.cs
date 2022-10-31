@@ -164,7 +164,8 @@ namespace ProjectFactory.DefaultProjectFactory
                 lines.Add($"  uid: {node.Uid}");
                 if (node is TextNode textNode)
                 {
-                    lines.Add($"  text: {textNode.Text}");
+                    var text = textNode.Text.Replace("\\", "\\\\").Replace("\"", "\\\"");
+                    lines.Add($"  text: \"{text}\"");
                     if (SaveCode && node.Content != null)
                     {
                         lines.Add($"  code: ");
