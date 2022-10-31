@@ -10,6 +10,7 @@ using Type = System.Type;
 using System.Text.Json;
 using FlowChart.Lua;
 using FlowChartCommon;
+using ProjectFactory.DefaultProjectFactory;
 using XLua;
 
 namespace ProjectFactory
@@ -19,6 +20,7 @@ namespace ProjectFactory
         private Project Current { get; set; }
         private DirectoryInfo ProjectDir { get; set; }
         private DirectoryInfo CurrentJsonDir { get; set; }
+        public string XmlPath { get; set; }
 
         private string GetFullPath(string relPath)
         {
@@ -28,7 +30,7 @@ namespace ProjectFactory
         public void Create(Project project)
         {
             Current = project;
-            OpenLegacyProject(@"F:\nshm\dev\tools\designdata_tools\AsyncFlow\nshm.xml");
+            OpenLegacyProject(XmlPath);
         }
 
         public void Save(Graph graph, List<string> outputs)
@@ -40,7 +42,7 @@ namespace ProjectFactory
         {
             var fi = new FileInfo(xmlPath);
             ProjectDir = fi.Directory;
-            Current.Path = ProjectDir + "\\";
+            
             XmlDocument xmlDoc = new XmlDocument();
             try
             {
@@ -54,7 +56,7 @@ namespace ProjectFactory
 
             var rootNode = xmlDoc.DocumentElement;
 
-            AddLuaInfomation(rootNode);
+            //AddLuaInfomation(rootNode);
 
             var inputPath = rootNode["Define"].GetAttribute("path");
             inputPath = GetFullPath(inputPath);
@@ -186,10 +188,12 @@ namespace ProjectFactory
                     foreach (var jpara in j.EnumerateArray())
                     {
                         var param = new Parameter(jpara.GetProperty("name").GetString());
+                        if (param.Name.Contains('#'))
+                            param.Name = param.Name.Replace('#', '_');
                         if (jpara.TryGetProperty("type", out jtmp))
                         {
                             var paramType = Current.GetType(jtmp.GetString());
-                            param.Type = paramType;
+                            param.Type = paramType ?? BuiltinTypes.AnyType;
                         }
                         else
                         {
@@ -211,6 +215,11 @@ namespace ProjectFactory
 
         void LoadClass(string filePath)
         {
+            if (Current.GetType("Table") == null)
+            {
+                Current.AddType("Table", BuiltinTypes.ArrayType);
+                Current.AddType("NodeRef", BuiltinTypes.NumberType);
+            }
             var jsonFilePath = string.Format("{0}{2}{1}.json", filePath, "class", System.IO.Path.DirectorySeparatorChar);
             var jsonStr = File.ReadAllText(jsonFilePath);
             //var root = JArray.Parse(jsonStr);
@@ -551,7 +560,8 @@ namespace ProjectFactory
 
         public void Save(Project project)
         {
-            Console.WriteLine("nothing to do when save memory project");
+            var saver = new Saver();
+            saver.SaveProject(project);
         }
     }
 
