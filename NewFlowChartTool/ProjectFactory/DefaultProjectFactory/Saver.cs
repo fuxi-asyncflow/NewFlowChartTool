@@ -290,6 +290,8 @@ namespace ProjectFactory.DefaultProjectFactory
                     lines.Add($"  template: {method.Template}");
                 if (method.IsCustomGen)
                     lines.Add($"  custom_gen: true");
+                if (method.IsVariadic)
+                    lines.Add($"  variadic: true");
 
                 if (method.Parameters.Count > 0)
                 {
@@ -299,8 +301,6 @@ namespace ProjectFactory.DefaultProjectFactory
                         var tmp = $"name: {para.Name}, type: {para.Type.Name}";
                         if (!string.IsNullOrEmpty(para.Description))
                             tmp += $", description: {para.Description}";
-                        if (para.IsVariadic)
-                            tmp += ", variadic: true";
                         lines.Add($"  - {{{tmp}}}");
                     }
                 }

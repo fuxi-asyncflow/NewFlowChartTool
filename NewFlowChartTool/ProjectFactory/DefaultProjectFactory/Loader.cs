@@ -229,6 +229,9 @@ namespace ProjectFactory.DefaultProjectFactory
             if (root.Children.ContainsKey(YAML_CUSTOMGEN) && root.Children[YAML_CUSTOMGEN] is YamlScalarNode customGenNode)
                 method.IsCustomGen = customGenNode.Value == "true";
 
+            if (root.Children.ContainsKey(YAML_VARIADIC) && root.Children[YAML_VARIADIC] is YamlScalarNode variadicNode)
+                method.IsVariadic = variadicNode.Value == "true";
+
             if (root.Children.TryGetValue(YAML_PARAMETERS, out node))
             {
                 var parasNode = node as YamlSequenceNode;
@@ -245,8 +248,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
                     if(paraNode.Children.ContainsKey(YAML_DESCRIPTION) && paraNode.Children[YAML_DESCRIPTION] is YamlScalarNode paraDescripNode)
                         para.Description = paraDescripNode.Value;
-                    if (paraNode.Children.ContainsKey(YAML_VARIADIC) && paraNode.Children[YAML_VARIADIC] is YamlScalarNode variadicNode)
-                        para.IsVariadic = variadicNode.Value == "true";
+                    
                 }
             }
             return method;

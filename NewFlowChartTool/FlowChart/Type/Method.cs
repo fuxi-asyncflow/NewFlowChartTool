@@ -18,5 +18,6 @@ namespace FlowChart.Type
         public bool IsAction => Type == BuiltinTypes.VoidType;
         public bool IsCustomGen { get; set; } // generation code for this method is customized
         public bool IsAsync { get; set; }
+        public bool IsVariadic { get; set; }
     }
 }

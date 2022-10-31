@@ -23,7 +23,7 @@ namespace ProjectFactory
 
         public Parameter ToParameter()
         {
-            return new Parameter(Name) { Type = TypeJson.GetType(Type), IsVariadic = Count == -1};
+            return new Parameter(Name) { Type = TypeJson.GetType(Type)};
         }
     }
 
@@ -55,16 +55,19 @@ namespace ProjectFactory
             {                
                 if (MemberType == 2)
                 {
-                    member = new Method(Name)
+                    var method = new Method(Name)
                     {
                         Parameters = Parameters.ConvertAll(p => p == null ? new Parameter("__error") {Type = BuiltinTypes.UndefinedType} : p.ToParameter()),
                         Type = TypeJson.GetType(Type),
                         Description = Description,
                         Template = Source
                     };
+                    member = method;
+                    if (Parameters.Count > 0 && Parameters.Last().Count != 0)
+                        method.IsVariadic = true;
                     if (SpecialFuncs.Contains(Name))
                     {
-                        ((Method)member).IsCustomGen = true;
+                        method.IsCustomGen = true;
                     }
                 }
                 else if (MemberType == 1)
