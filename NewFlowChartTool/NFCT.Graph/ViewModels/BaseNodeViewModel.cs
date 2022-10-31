@@ -128,8 +128,10 @@ namespace NFCT.Graph.ViewModels
         }
         public List<INode> Children => ChildLines.ConvertAll(line => line.End);
 
-        public double ActualHeight { get; set; }
-        public double ActualWidth { get; set; }
+        private double _actualHeight;
+        public double ActualHeight { get => _actualHeight; set => SetProperty(ref _actualHeight, value); }
+        private double _actualWidth;
+        public double ActualWidth { get => _actualWidth; set => SetProperty(ref _actualWidth, value); }
 
         public double OriginalX;
         public double OriginalY;

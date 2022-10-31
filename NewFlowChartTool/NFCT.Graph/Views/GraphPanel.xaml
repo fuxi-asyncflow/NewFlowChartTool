@@ -145,6 +145,13 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 DataContext="{Binding VariablesPanel}" />
+            <local:GraphThumbnail
+                Width="180"
+                Height="150"
+                Margin="0,0,17,17"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Background="AliceBlue" />
         </Grid>
     </DockPanel>
 </UserControl>
