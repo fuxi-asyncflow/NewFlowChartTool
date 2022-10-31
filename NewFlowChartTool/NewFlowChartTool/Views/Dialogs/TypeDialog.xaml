@@ -56,55 +56,56 @@
                 </StackPanel>
                 <GroupBox Header="Type Member List">
                     <StackPanel>
-                        <DataGrid
-                            MinHeight="240"
-                            AutoGenerateColumns="False"
-                            CanUserAddRows="False"
-                            ItemsSource="{Binding Members}"
-                            ScrollViewer.CanContentScroll="True"
-                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            SelectedItem="{Binding SelectedMember, Mode=TwoWay}">
-                            <DataGrid.Resources>
+                        <Grid Height="240">
+                            <DataGrid
+                                AutoGenerateColumns="False"
+                                CanUserAddRows="False"
+                                ItemsSource="{Binding Members}"
+                                ScrollViewer.CanContentScroll="True"
+                                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                SelectedItem="{Binding SelectedMember, Mode=TwoWay}">
+                                <DataGrid.Resources>
 
-                                <Style TargetType="DataGridRow">
-                                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                </Style>
-                                <Style TargetType="DataGridRowHeader">
-                                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                </Style>
-                                <Style TargetType="DataGridCell">
-                                    <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
-                                </Style>
-                                <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                </Style>
-                                <Style TargetType="Border">
-                                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                </Style>
-                            </DataGrid.Resources>
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="SelectionChanged">
-                                    <prism:InvokeCommandAction Command="{Binding SelectedMemberChangeCommand}" CommandParameter="{Binding SelectedMember}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn
-                                    Width="*"
-                                    MinWidth="64"
-                                    Binding="{Binding Name, Mode=OneWay}"
-                                    Header="name" />
-                                <DataGridTextColumn
-                                    Width="*"
-                                    MinWidth="64"
-                                    Binding="{Binding Type, Mode=OneWay}"
-                                    Header="type" />
-                                <DataGridTextColumn
-                                    Width="4*"
-                                    Binding="{Binding Parameters, Mode=OneWay}"
-                                    Header="parameters" />
-                            </DataGrid.Columns>
-                        </DataGrid>
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                                    </Style>
+                                    <Style TargetType="DataGridRowHeader">
+                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                                    </Style>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
+                                    </Style>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                                    </Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                                    </Style>
+                                </DataGrid.Resources>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <prism:InvokeCommandAction Command="{Binding SelectedMemberChangeCommand}" CommandParameter="{Binding SelectedMember}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        MinWidth="64"
+                                        Binding="{Binding Name, Mode=OneWay}"
+                                        Header="name" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        MinWidth="64"
+                                        Binding="{Binding Type, Mode=OneWay}"
+                                        Header="type" />
+                                    <DataGridTextColumn
+                                        Width="4*"
+                                        Binding="{Binding Parameters, Mode=OneWay}"
+                                        Header="parameters" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Grid>
                         <StackPanel Height="40" Orientation="Horizontal">
                             <Button
                                 Margin="4"
