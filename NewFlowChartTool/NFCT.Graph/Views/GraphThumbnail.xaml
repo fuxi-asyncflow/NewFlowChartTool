@@ -14,11 +14,20 @@
     <UserControl.Resources>
         <utility:NodeBgColorConverter x:Key="BgColorConverter" />
     </UserControl.Resources>
-    <Border>
+    <Border
+        Background="Transparent"
+        MouseDown="Thumbnail_MouseDown"
+        MouseLeave="Thumbnail_MouseLeave"
+        MouseMove="Thumbnail_MouseMove"
+        MouseUp="Thumbnail_MouseUp">
         <Grid>
             <Viewbox>
                 <Grid>
-                    <Canvas Width="{Binding Width}" Height="{Binding Height}">
+                    <Canvas
+                        Width="{Binding Width}"
+                        Height="{Binding Height}"
+                        Background="LightBlue">
+
                         <ItemsControl ItemsSource="{Binding Nodes}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -40,7 +49,21 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
+                        <Border x:Name="ViewAreaBorder" />
                     </Canvas>
+
+                    <Border
+                        Width="{Binding ScrollViewerWidth}"
+                        Height="{Binding ScrollViewerHeight}"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Background="#8000FF00"
+                        BorderBrush="Red"
+                        BorderThickness="6">
+                        <Border.RenderTransform>
+                            <TranslateTransform X="{Binding ScrollX}" Y="{Binding ScrollY}" />
+                        </Border.RenderTransform>
+                    </Border>
                 </Grid>
             </Viewbox>
         </Grid>

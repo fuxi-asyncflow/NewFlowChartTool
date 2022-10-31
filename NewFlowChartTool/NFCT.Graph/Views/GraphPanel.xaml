@@ -151,7 +151,8 @@
                 Margin="0,0,17,17"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
-                Background="AliceBlue" />
+                Background="Transparent"
+                Opacity="0.5" />
         </Grid>
     </DockPanel>
 </UserControl>
