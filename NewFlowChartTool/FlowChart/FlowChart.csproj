@@ -14,7 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FlowChart.AST\FlowChart.AST.csproj" />
     <ProjectReference Include="..\FlowChart.Parser\FlowChart.Parser.csproj" />
-    <ProjectReference Include="..\FlowChartCommon\FlowChartCommon.csproj" />
+    <ProjectReference Include="..\FlowChartCommon\FlowChart.Common.csproj" />
     <ProjectReference Include="..\XLua\XLua.csproj" />
   </ItemGroup>
 

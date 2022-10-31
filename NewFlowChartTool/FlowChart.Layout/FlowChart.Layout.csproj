@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FlowChartCommon\FlowChartCommon.csproj" />
+    <ProjectReference Include="..\FlowChartCommon\FlowChart.Common.csproj" />
   </ItemGroup>
 
 </Project>

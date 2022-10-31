@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FlowChartCommon\FlowChartCommon.csproj" />
+    <ProjectReference Include="..\FlowChartCommon\FlowChart.Common.csproj" />
     <ProjectReference Include="..\WebSocketSharp\WebSocketSharp.csproj" />
   </ItemGroup>
 

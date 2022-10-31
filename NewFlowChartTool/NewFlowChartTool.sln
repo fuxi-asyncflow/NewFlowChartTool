@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectFactory", "ProjectFa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChartTest", "FlowChartTest\FlowChartTest.csproj", "{028531A0-D9C9-45E2-A4E5-BB8413FB1F07}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChartCommon", "FlowChartCommon\FlowChartCommon.csproj", "{D791ED7D-0138-40BB-9376-0A71A597C709}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChart.Common", "FlowChartCommon\FlowChart.Common.csproj", "{D791ED7D-0138-40BB-9376-0A71A597C709}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFCT.Themes", "NFCT.Themes\NFCT.Themes.csproj", "{2A48FC64-2647-4CD2-B652-C874B7F01897}"
 EndProject
@@ -35,9 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XLua", "XLua\XLua.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NFCT.Common", "NFCT.Common\NFCT.Common.csproj", "{B79522D0-75B0-4442-9013-9B26CCF919C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowChart.Debug", "FlowChart.Debug\FlowChart.Debug.csproj", "{1D13FCFC-F55F-43C0-A86F-47C6A0F5BCA5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowChart.Debug", "FlowChart.Debug\FlowChart.Debug.csproj", "{1D13FCFC-F55F-43C0-A86F-47C6A0F5BCA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSocketSharp", "WebSocketSharp\WebSocketSharp.csproj", "{8E8592B0-310A-4D9A-AED8-23E97A0FD6B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebSocketSharp", "WebSocketSharp\WebSocketSharp.csproj", "{8E8592B0-310A-4D9A-AED8-23E97A0FD6B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
