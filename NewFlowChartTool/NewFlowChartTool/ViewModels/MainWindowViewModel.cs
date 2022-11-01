@@ -10,6 +10,7 @@ using FlowChart.Core;
 using System.Windows;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using FlowChart.AST;
 using FlowChart.Debug;
 using FlowChart.LuaCodeGen;
@@ -189,11 +190,13 @@ namespace NewFlowChartTool.ViewModels
             {
                 int count = 0;
                 _statusBarService.BeginProgress(p.GraphDict.Count, "loading graphs ...");
+                var sw = Stopwatch.StartNew();
                 foreach (var graph in p.GraphDict.Values)
                 {
                     await Task.Run(graph.LazyLoadFunc);
                     _statusBarService.UpdateProgress(count++);
                 }
+                Logger.LOG($"lazy load graph : {sw.ElapsedMilliseconds}");
                 //var loadAllGraphTask = Task.WhenAll(p.GraphDict.Values.ToList().ConvertAll(graph => Task.Run(graph.LazyLoadFunc)));
                 //await loadAllGraphTask;
                 _statusBarService.EndProgress();
