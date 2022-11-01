@@ -476,10 +476,7 @@ namespace ProjectFactory
             // nodes
 
             // start
-            var startNode = new StartNode()
-            {
-                Uid = "0",
-            };
+            var startNode = new StartNode();
             if (chart.Variables.Count > 0)
             {
                 //startNode.Text = "start("
