@@ -11,6 +11,7 @@ using FlowChart.Type;
 using FlowChartCommon;
 using NLog.LayoutRenderers.Wrappers;
 using YamlDotNet.Core;
+using YamlDotNet.Core.Tokens;
 using YamlDotNet.RepresentationModel;
 using Type = FlowChart.Type.Type;
 
@@ -318,8 +319,198 @@ namespace ProjectFactory.DefaultProjectFactory
             var graphFolder = ProjectFolder.CreateSubdirectory(DefaultProjectFactory.GraphFolderName);
             foreach (var file in graphFolder.EnumerateFiles())
             {
-                var yamlText = File.ReadAllText(file.FullName);
-                LoadGraphFile(yamlText);
+                //var yamlText = File.ReadAllText(file.FullName);
+                //LoadGraphFile(yamlText);
+                CustomLoadGraphFile(File.ReadAllLines(file.FullName).ToList());
+            }
+        }
+
+        public Graph? CustomCreateGraph(List<string> lines)
+        {
+            if(lines.Count == 0) return null;
+            var firstLine = lines[0];
+            if (!firstLine.StartsWith("path: "))
+                return null;
+            var path = firstLine.Substring(6).Trim();
+            var name = path.Split('.').Last();
+            var graph =  new Graph(name) { Path = path};
+            graph.LazyLoadFunc = delegate { CustomLoadGraph(graph, lines); };
+            //graph.LazyLoadFunc = delegate {  };
+            return graph;
+        }
+
+        public void CustomLoadGraphFile(List<string> yamlLines)
+        {
+            List<string> graphLines = new List<string>();
+            foreach (var line in yamlLines)
+            {
+                //if (line.Length == 4 && line.StartsWith("---") || line.StartsWith("..."))
+                if(line.Length == 4 && (
+                       (line[0] == '-' && line[1] == '-' && line[2] == '-') 
+                       || (line[0] == '.' && line[1] == '.' && line[2] == '.')
+                       ))
+                {
+                    var graph = CustomCreateGraph(graphLines);
+                    if(graph != null)
+                        Project.AddGraph(graph);
+                    graphLines = new List<string>();
+                }
+                else
+                {
+                    graphLines.Add(line);
+                }
+            }
+        }
+
+        public void CustomLoadGraph(Graph graph, List<string> lines)
+        {
+            int pos = 1;
+            while (pos < lines.Count)
+            {
+                var line = lines[pos++];
+                int colonPos = line.IndexOf(':');
+                var key = line.Substring(0, colonPos).Trim();
+                var value = line.Substring(colonPos + 1).Trim();
+                //if (value.Length > 0 && value[0] == '"')
+                //    value = value.Trim();
+                if (key == "variables")
+                {
+                    CustomLoadVariables(graph, lines, ref pos);
+                }
+                else if (key == "nodes")
+                {
+                    CustomLoadNodes(graph, lines, ref pos);
+                }
+                else if (key == "connectors")
+                {
+                    CustomLoadConnectors(graph, lines, ref pos);
+                }
+                else if (key == "type")
+                {
+                    graph.Type = Project.GetType(value);
+                }
+                else if (key == "description")
+                {
+                    graph.Description = value;
+                }
+                else if (key == "is_subgraph")
+                {
+                    graph.IsSubGraph = value == "true";
+                    graph.ReturnType = BuiltinTypes.VoidType;
+                }
+                else if (key == "return_type")
+                {
+                    graph.ReturnType = Project.GetType(value);
+                }
+            }
+        }
+
+        public void CustomLoadVariables(Graph graph, List<string> lines, ref int pos)
+        {
+            while (pos < lines.Count)
+            {
+                var line = lines[pos++];
+                var c = line.First();
+                if (c == '-')
+                {
+
+                }
+                else if (c == ' ')
+                {
+
+                }
+                else
+                {
+                    pos--;
+                    break;
+                }
+            }
+        }
+
+        public void CustomLoadNodes(Graph graph, List<string> lines, ref int pos)
+        {
+            Node? node = null;
+            while (pos < lines.Count)
+            {
+                var line = lines[pos++];
+                var c = line.First();
+                if (c == '-')
+                {
+                    var uidLine = lines[pos++];
+                    int colonPos = uidLine.IndexOf(':');
+                    var key = uidLine.Substring(0, colonPos).Trim();
+                    var value = uidLine.Substring(colonPos + 1).Trim();
+                    if (graph.Nodes.Count == 0)
+                    {
+                        node = new StartNode(){Uid = value};
+                    }
+                    else
+                    {
+                        node = new TextNode(){Uid = value};
+                    }
+                    graph.AddNode(node);
+
+                }
+                else if (c == ' ')
+                {
+                    int colonPos = line.IndexOf(':');
+                    var key = line.Substring(0, colonPos).Trim();
+                    var value = line.Substring(colonPos + 1).Trim();
+                    if (key == "uid")
+                    {
+                        node.Uid = value;
+                    }
+                    else if (key == "text")
+                    {
+                        if (node is TextNode textNode)
+                        {
+                            textNode.Text = value;
+                        }
+                    }
+                }
+                else
+                {
+                    pos--;
+                    break;
+                }
+            }
+            
+        }
+
+        public void CustomLoadConnectors(Graph graph, List<string> lines, ref int pos)
+        {
+            Connector? conn = null;
+            string? start = null;
+            string? end = null;
+            while (pos < lines.Count)
+            {
+                var line = lines[pos++];
+                var c = line.First();
+                if (c == '-')
+                {
+                    start = null;
+                    end = null;
+                }
+                else if (c == ' ')
+                {
+                    int colonPos = line.IndexOf(':');
+                    var key = line.Substring(0, colonPos).Trim();
+                    var value = line.Substring(colonPos + 1).Trim();
+                    if (key == "start")
+                        start = value;
+                    else if (key == "end")
+                        end = value;
+                    else if (key == "type")
+                    {
+                        int type = int.Parse(value);
+                        graph.Connect(start, end, (Connector.ConnectorType)(type));
+                    }
+                }
+                else
+                {
+                    pos--;
+                    break;
+                }
             }
         }
 
