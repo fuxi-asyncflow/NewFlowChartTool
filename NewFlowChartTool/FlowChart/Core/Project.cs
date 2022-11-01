@@ -53,6 +53,7 @@ namespace FlowChart.Core
         public Dictionary<string, Type.Type> TypeDict { get; set; }
         public Dictionary<string, Type.EventType> EventDict { get; set; }
         IProjectFactory Factory { get; set; }
+        public bool IsAsyncLoad { get; set; }
         public Dictionary<string, Graph> GraphDict { get; set; }
         public Builder Builder { get; set; }
         #endregion

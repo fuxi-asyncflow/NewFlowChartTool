@@ -81,8 +81,12 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             Project = project;
             ProjectFolder = new DirectoryInfo(Project.Path);
+            var sw = Stopwatch.StartNew();
             LoadTypes();
+            Logger.LOG($"load types time: {sw.ElapsedMilliseconds}");
+            sw.Restart();
             LoadGraphs();
+            Logger.LOG($"load graphs time: {sw.ElapsedMilliseconds}");
         }
 
         public void LoadTypes()
@@ -324,36 +328,45 @@ namespace ProjectFactory.DefaultProjectFactory
             var input = new StringReader(yamlText);
             var yaml = new YamlStream();
             yaml.Load(input);
-
+            
             foreach (var doc in yaml.Documents)
             {
                 var root = doc.RootNode as YamlMappingNode;
-                YamlNode? node;
-                if (root.Children.TryGetValue(YAML_PATH, out node))
-                {
-                    var path = ((YamlScalarNode)node).Value;
-                    var graph = new Graph("newgraph");
-                    if (LoadGraph(graph, root))
-                    {
-                        Project.AddGraph(graph);
-                    }
-                }
+                var graph = LoadGraph(root, Project.IsAsyncLoad);
+                if(graph != null)
+                    Project.AddGraph(graph);
                 else
-                {
                     Logger.ERR("open graph file error: graph has no `path`");
-                }
             }
         }
 
-        public bool LoadGraph(Graph graph, YamlMappingNode graphNode)
+        public Graph? LoadGraph(YamlMappingNode? graphNode, bool isAsync = false)
+        {
+            if (graphNode == null)
+                return null;
+            if (!graphNode.Children.TryGetValue(YAML_PATH, out var node))
+                return null;
+
+            var path = ((YamlScalarNode)node).Value;
+            if (path == null)
+                return null;
+
+            var name = path.Split('.').Last();
+            var graph = new Graph(name) {Path = path};
+            if (isAsync)
+            {
+                graph.LazyLoadFunc = delegate { LoadGraph(graph, graphNode); };
+            }
+            else
+            {
+                LoadGraph(graph, graphNode);
+            }
+            return graph;
+        }
+
+        public void LoadGraph(Graph graph, YamlMappingNode graphNode)
         {
             YamlNode? node;
-
-            if (graphNode.Children.TryGetValue(YAML_PATH, out node))
-            {
-                graph.Path = ((YamlScalarNode)node).Value;
-                graph.Name = graph.Path.Split('.').Last();
-            }
 
             if (graphNode.Children.TryGetValue(YAML_TYPE, out node))
             {
@@ -415,8 +428,6 @@ namespace ProjectFactory.DefaultProjectFactory
             {
                 graph.ToMethod();
             }
-
-            return true;
         }
 
         public Node? LoadGraphNode(YamlMappingNode root)

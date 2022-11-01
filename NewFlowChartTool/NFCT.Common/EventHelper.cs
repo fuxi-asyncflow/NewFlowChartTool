@@ -61,5 +61,7 @@ namespace NFCT.Common.Events
     public class StartDebugGraphEvent : PubSubEvent<GraphInfo?> { }
 
     #endregion
+    public class StatusBarProgressEnableEvent : PubSubEvent<Tuple<int, string>> { }
+    public class StatusBarProgressUpdateEvent : PubSubEvent<int> { }
 
 }

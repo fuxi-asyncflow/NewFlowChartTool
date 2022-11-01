@@ -71,6 +71,9 @@ namespace NewFlowChartTool
             containerRegistry.RegisterSingleton<OutputPanelViewModel>();
             containerRegistry.RegisterSingleton<IOutputMessage, OutputPanelViewModel>();
 
+            containerRegistry.RegisterSingleton<MainWindowStatusBarViewModel>();
+            containerRegistry.RegisterSingleton<IStatusBarService, MainWindowStatusBarViewModel>();
+
             //throw new NotImplementedException();
         }
 

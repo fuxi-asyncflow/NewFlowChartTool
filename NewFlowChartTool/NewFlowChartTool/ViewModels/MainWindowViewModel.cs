@@ -9,6 +9,7 @@ using Prism.Events;
 using FlowChart.Core;
 using System.Windows;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using FlowChart.AST;
 using FlowChart.Debug;
 using FlowChart.LuaCodeGen;
@@ -36,13 +37,14 @@ namespace NewFlowChartTool.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         
-        public MainWindowViewModel(IEventAggregator ea, IDialogService dialogService)
+        public MainWindowViewModel(IEventAggregator ea, IDialogService dialogService, IStatusBarService statusBarService)
         {
             if (Inst == null)
                 Inst = this;
             _testText = "Hello world";
             _ea = ea;
             _dialogService = dialogService;
+            _statusBarService = statusBarService;
             _openedGraphs = new ObservableCollection<GraphPaneViewModel>();
             CurrentProject = null;
 
@@ -70,6 +72,7 @@ namespace NewFlowChartTool.ViewModels
             EventHelper.Sub<GraphCloseEvent, Graph>(OnCloseGraph);
             EventHelper.Sub<NewDebugAgentEvent, DebugAgent>(OnNewDebugAgentEvent, ThreadOption.UIThread);
             EventHelper.Sub<StartDebugGraphEvent, GraphInfo?>(OnStartDebugGraphEvent, ThreadOption.UIThread);
+
 #if DEBUG
             //TestOpenProject();
 #endif
@@ -97,6 +100,7 @@ namespace NewFlowChartTool.ViewModels
 
         readonly IEventAggregator _ea;
         readonly IDialogService _dialogService;
+        readonly IStatusBarService _statusBarService;
 
         public string _testText;
         public string TestText { get => _testText; set { SetProperty<string>(ref _testText, value); } }
@@ -130,7 +134,7 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand ShowDebugDialogCommand { get; private set; }
         public DelegateCommand StopDebugCommand { get; private set; }
         public DelegateCommand HotfixCommand { get; private set; }
-        
+
         public void TestOpenProject()
         {
             //var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
@@ -146,7 +150,7 @@ namespace NewFlowChartTool.ViewModels
         }
         #endregion
 
-        void ChooseProjectPath()
+        async void ChooseProjectPath()
         {
             if (CurrentProject != null)
             {
@@ -160,10 +164,11 @@ namespace NewFlowChartTool.ViewModels
             OpenProject(folderPath);
         }
 
-        public void OpenProject(string projectPath)
+        public async void OpenProject(string projectPath)
         {
             var p = new Project(new DefaultProjectFactory());
             p.Path = projectPath;
+            p.IsAsyncLoad = true;
 #if DEBUG
             p.Load();
 #else
@@ -180,6 +185,19 @@ namespace NewFlowChartTool.ViewModels
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
             _ea.GetEvent<ProjectOpenEvent>().Publish(p);
 
+            if (p.IsAsyncLoad)
+            {
+                int count = 0;
+                _statusBarService.BeginProgress(p.GraphDict.Count, "loading graphs ...");
+                foreach (var graph in p.GraphDict.Values)
+                {
+                    await Task.Run(graph.LazyLoadFunc);
+                    _statusBarService.UpdateProgress(count++);
+                }
+                //var loadAllGraphTask = Task.WhenAll(p.GraphDict.Values.ToList().ConvertAll(graph => Task.Run(graph.LazyLoadFunc)));
+                //await loadAllGraphTask;
+                _statusBarService.EndProgress();
+            }
         }
 
         public void NewProject()

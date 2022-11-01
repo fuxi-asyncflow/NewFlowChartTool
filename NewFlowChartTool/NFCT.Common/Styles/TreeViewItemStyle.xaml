@@ -6,7 +6,6 @@
 
         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-        <Setter Property="ContextMenu" Value="{DynamicResource ProjectTreeItemContext2}" />
 
         <Setter Property="Template">
             <Setter.Value>

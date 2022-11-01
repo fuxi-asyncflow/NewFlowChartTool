@@ -62,11 +62,9 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <views:MainWindowTitleBar x:Name="TitleBar" DataContext="{Binding}" />
-
-
-
         <StackPanel
             Grid.Row="1"
             Background="{DynamicResource BackGroundBrush}"
@@ -199,9 +197,6 @@
                 </StackPanel>
             </Button>
         </StackPanel>
-
-
-
         <DockingManager
             Grid.Row="2"
             ActiveContent="{Binding ActiveGraph, Mode=TwoWay, Converter={StaticResource ActiveGraphConverter}}"
@@ -261,5 +256,7 @@
                 </LayoutPanel>
             </LayoutRoot>
         </DockingManager>
+        <views:MainWindowStatusBar Grid.Row="3" />
+
     </Grid>
 </Window>

@@ -134,6 +134,9 @@ namespace FlowChart.Core
         public bool IsSubGraph { get; set; }
         public FlowChart.Type.Type? ReturnType { get; set; }
 
+        public bool IsLoaded { get; set; }
+        public Action LazyLoadFunc { get; set; }
+
         public bool SetSubGraph(bool b)
         {
             if (IsSubGraph == b)
