@@ -85,6 +85,7 @@ namespace NFCT.Graph.ViewModels
                     });
                 });
             }
+            Owner.NeedLayout = true;
         }
     }
 
