@@ -78,10 +78,10 @@ namespace FlowChart.Core
             IsLoaded = true;
 
 #if DEBUG
-            GraphAddNodeEvent += node => Logger.DBG($"[event] add node event: {node}");
-            GraphRemoveNodeEvent += node => Logger.DBG($"[event] remove node event: {node}");
-            GraphConnectEvent += (conn, s, e) => Logger.DBG($"[event] connect event: {conn.Start} -> {conn.End}");
-            ConnectorRemoveEvent += (conn, s, e) => Logger.DBG($"[event] disconnect event: {conn.Start} -> {conn.End}");
+            //GraphAddNodeEvent += node => Logger.DBG($"[event] add node event: {node}");
+            //GraphRemoveNodeEvent += node => Logger.DBG($"[event] remove node event: {node}");
+            //GraphConnectEvent += (conn, s, e) => Logger.DBG($"[event] connect event: {conn.Start} -> {conn.End}");
+            //ConnectorRemoveEvent += (conn, s, e) => Logger.DBG($"[event] disconnect event: {conn.Start} -> {conn.End}");
 #endif
         }
 
@@ -424,7 +424,7 @@ namespace FlowChart.Core
                 conn.End.Parents.Add(conn);
             else
                 conn.End.Parents.Insert(endIdx, conn);
-            Logger.DBG($"Connect_atom: {start} -> {end}");
+            // Logger.DBG($"Connect_atom: {start} -> {end}");
             GraphConnectEvent?.Invoke(conn, startIdx, endIdx);
             return conn;
         }
