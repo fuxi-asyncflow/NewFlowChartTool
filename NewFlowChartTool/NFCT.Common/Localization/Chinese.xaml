@@ -37,6 +37,8 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_StopDebug}">停止调试</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_HotReload}">热更新</system:String>
 
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_ScreenShot}">截图</system:String>
+
     <!--  Pane Name  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Pane_ProjectKey}">项目</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Pane_TypeKey}">类型</system:String>

@@ -520,5 +520,16 @@ namespace NFCT.Graph.ViewModels
                     originGraphVm.RemoveNodesOperation(GraphClipboard);
             }
         }
+
+        #region View Methods
+
+        public void ScreenShot()
+        {
+            ScreenShotEvent?.Invoke();
+        }
+
+        public event Action ScreenShotEvent;
+
+        #endregion
     }
 }

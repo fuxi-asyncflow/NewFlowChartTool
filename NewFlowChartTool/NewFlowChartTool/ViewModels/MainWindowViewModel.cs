@@ -63,6 +63,8 @@ namespace NewFlowChartTool.ViewModels
             StopDebugCommand = new DelegateCommand(StopDebug);
             HotfixCommand = new DelegateCommand(Hotfix);
 
+            ScreenShotCommand = new DelegateCommand(ScreenShot);
+
             SelectedLang = Lang.Chinese;
             SelectedTheme = Theme.Dark;
 
@@ -135,6 +137,8 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand ShowDebugDialogCommand { get; private set; }
         public DelegateCommand StopDebugCommand { get; private set; }
         public DelegateCommand HotfixCommand { get; private set; }
+
+        public DelegateCommand ScreenShotCommand { get; set; }
 
         public void TestOpenProject()
         {
@@ -332,6 +336,13 @@ namespace NewFlowChartTool.ViewModels
             CurrentProject?.SaveGraph(ActiveGraph.Graph, lines);
             ContainerLocator.Current.Resolve<IDebugService>().Hotfix(lines);
 
+        }
+
+        void ScreenShot()
+        {
+            if (ActiveGraph == null)
+                return;
+            ActiveGraph.ScreenShot();
         }
 
         public async void OpenGraph(string path)

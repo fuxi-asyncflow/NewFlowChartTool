@@ -37,6 +37,8 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_StopDebug}">Stop</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_HotReload}">HotReload</system:String>
 
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_ScreenShot}">ScreenShot</system:String>
+
     <!--  Pane Name  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Pane_ProjectKey}">Project</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Pane_TypeKey}">Type</system:String>

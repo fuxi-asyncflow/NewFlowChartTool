@@ -203,5 +203,35 @@ namespace NFCT.Graph.Views
         #endregion
 
 
+        private void GraphPanel_OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var vm = e.NewValue as GraphPaneViewModel;
+            if (vm == null) return;
+            vm.ScreenShotEvent += OnScreenShot;
+        }
+
+        private void OnScreenShot()
+        {
+            var vm = DataContext as GraphPaneViewModel;
+            if (vm == null)
+                return;
+            try
+            {
+                var canvas = GraphCanvas;
+                var width = (int)vm.Width;
+                var height = (int)vm.Height;
+                RenderTargetBitmap rtb = new RenderTargetBitmap(width, height, 96d, 96d,
+                    System.Windows.Media.PixelFormats.Default);
+                canvas.Measure(new Size(width, height));
+                canvas.Arrange(new Rect(0, 0, width, height));
+                rtb.Render(canvas);
+                Clipboard.SetImage(rtb);
+                MessageBox.Show("图片已保存到剪贴板");
+            }
+            catch (OutOfMemoryException)
+            {
+                MessageBox.Show("图片太大，内存不足，无法截图");
+            }
+        }
     }
 }

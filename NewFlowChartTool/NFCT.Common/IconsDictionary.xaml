@@ -24,6 +24,8 @@
         <ResourceDictionary Source="Icons/Stop.xaml" />
         <ResourceDictionary Source="Icons/HotReload.xaml" />
 
+        <ResourceDictionary Source="Icons/WindowScreenshot.xaml" />
+
 
 
     </ResourceDictionary.MergedDictionaries>

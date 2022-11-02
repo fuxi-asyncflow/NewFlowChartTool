@@ -196,6 +196,13 @@
                     <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_HotReload}}" />
                 </StackPanel>
             </Button>
+            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+            <Button Command="{Binding ScreenShotCommand}">
+                <StackPanel>
+                    <Viewbox Child="{StaticResource Icon_WindowScreenshot}" />
+                    <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_ScreenShot}}" />
+                </StackPanel>
+            </Button>
         </StackPanel>
         <DockingManager
             Grid.Row="2"

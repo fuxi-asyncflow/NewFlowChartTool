@@ -53,6 +53,9 @@ namespace NFCT.Common.Localization
         public static readonly ComponentResourceKey ToolBar_ContinueDebug = KEY("ToolBar_ContinueDebug");
         public static readonly ComponentResourceKey ToolBar_StopDebug = KEY("ToolBar_StopDebug");
         public static readonly ComponentResourceKey ToolBar_HotReload = KEY("ToolBar_HotReload");
+
+        // misc
+        public static readonly ComponentResourceKey ToolBar_ScreenShot = KEY("ToolBar_ScreenShot");
         #endregion
 
         #region PaneName
