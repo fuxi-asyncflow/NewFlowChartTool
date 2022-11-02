@@ -75,6 +75,7 @@ namespace FlowChart.Core
             Variables = new List<Variable>();
             Groups = new List<Group>();
             AutoLayout = true;
+            IsLoaded = true;
 
 #if DEBUG
             GraphAddNodeEvent += node => Logger.DBG($"[event] add node event: {node}");
@@ -134,8 +135,39 @@ namespace FlowChart.Core
         public bool IsSubGraph { get; set; }
         public FlowChart.Type.Type? ReturnType { get; set; }
 
+        #region lazy load
         public bool IsLoaded { get; set; }
-        public Action LazyLoadFunc { get; set; }
+        public void LazyLoad()
+        {
+            if (LazyLoadFunc == null)
+                return;
+            lock (LazyLoadFunc)
+            {
+                if (IsLoaded)
+                    return;
+                LazyLoadFunc.Invoke();
+                IsLoaded = true;
+                LazyLoadCompletionSource?.SetResult();
+            }
+        }
+
+        private Action? _lazyLoadFunc;
+        public Action? LazyLoadFunc
+        {
+            get => _lazyLoadFunc;
+            set
+            {
+                _lazyLoadFunc = value;
+                if (_lazyLoadFunc != null)
+                {
+                    IsLoaded = false;
+                    LazyLoadCompletionSource = new TaskCompletionSource();
+                }
+            }
+        }
+        public TaskCompletionSource? LazyLoadCompletionSource;
+        #endregion
+
 
         public bool SetSubGraph(bool b)
         {

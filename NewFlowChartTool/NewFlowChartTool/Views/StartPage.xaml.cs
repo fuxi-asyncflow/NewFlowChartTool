@@ -36,7 +36,7 @@ namespace NewFlowChartTool.Views
             MainWindowViewModel.Inst?.OpenProject(vm.ProjectPath);
         }
 
-        private void GraphPath_OnMouseUp(object sender, MouseButtonEventArgs e)
+        private async void GraphPath_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
             var mainWindowVm = MainWindowViewModel.Inst;
             if (mainWindowVm == null)

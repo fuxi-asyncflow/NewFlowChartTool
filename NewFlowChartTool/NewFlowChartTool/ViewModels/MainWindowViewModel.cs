@@ -193,7 +193,7 @@ namespace NewFlowChartTool.ViewModels
                 var sw = Stopwatch.StartNew();
                 foreach (var graph in p.GraphDict.Values)
                 {
-                    await Task.Run(graph.LazyLoadFunc);
+                    await Task.Run(graph.LazyLoad);
                     _statusBarService.UpdateProgress(count++);
                 }
                 Logger.LOG($"lazy load graph : {sw.ElapsedMilliseconds}");
@@ -334,7 +334,7 @@ namespace NewFlowChartTool.ViewModels
 
         }
 
-        public void OpenGraph(string path)
+        public async void OpenGraph(string path)
         {
             if (CurrentProject == null)
                 return;
@@ -344,7 +344,7 @@ namespace NewFlowChartTool.ViewModels
             OnOpenGraph(graph);
         }
 
-        public void OnOpenGraph(Graph graph)
+        public async void OnOpenGraph(Graph graph)
         {
             foreach (var gvm in OpenedGraphs)
             {
@@ -354,6 +354,9 @@ namespace NewFlowChartTool.ViewModels
                     return;
                 }
             }
+
+            if (!graph.IsLoaded && graph.LazyLoadCompletionSource != null)
+                await graph.LazyLoadCompletionSource.Task;
 
             OpenedGraphs.Add(new GraphPaneViewModel(graph));
             ActiveGraph = OpenedGraphs.Last();
