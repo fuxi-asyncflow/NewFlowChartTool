@@ -57,7 +57,8 @@
             <ListBox
                 x:Name="PromptsListBox"
                 MaxHeight="400"
-                ItemsSource="{Binding Prompts}">
+                ItemsSource="{Binding Prompts}"
+                VirtualizingPanel.IsVirtualizing="true">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">
