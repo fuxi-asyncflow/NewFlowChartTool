@@ -324,7 +324,16 @@ namespace NFCT.Graph.ViewModels
         #endregion
 
         public bool _isEditing;
-        public bool IsEditing { get => _isEditing; set => SetProperty(ref _isEditing, value, nameof(IsEditing)); }
+        public bool IsEditing
+        {
+            get => _isEditing;
+            set
+            {
+                if (value == _isEditing) return;
+                SetProperty(ref _isEditing, value, nameof(IsEditing));
+                EditingModeChangeEvent?.Invoke(value);
+            }
+        }
 
         public virtual void EnterEditingMode()
         {
@@ -337,6 +346,8 @@ namespace NFCT.Graph.ViewModels
         {
 
         }
+
+        public event Action<bool> EditingModeChangeEvent;
 
         public void Move(double dx, double dy)
         {

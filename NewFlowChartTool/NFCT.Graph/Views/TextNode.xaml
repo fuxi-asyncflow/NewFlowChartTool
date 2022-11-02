@@ -45,10 +45,7 @@
                         FontSize="14"
                         Text="{Binding Id}" />
                 </Border>
-                <StackPanel
-                    x:Name="NodeTexts"
-                    IsVisibleChanged="NodeTexts_OnIsVisibleChanged"
-                    Visibility="{Binding IsEditing, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
+                <StackPanel x:Name="NodeTexts" Visibility="{Binding IsEditing, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
                     <ItemsControl ItemsSource="{Binding Tokens}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>

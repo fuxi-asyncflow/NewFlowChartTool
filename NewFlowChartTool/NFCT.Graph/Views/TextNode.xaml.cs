@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,7 @@ namespace NFCT.Graph.Views
             if (nodeVm == null) return;
             nodeVm.DebugStatusChangeEvent += OnNodeDebugStatusChange;
             nodeVm.StopDebugEvent += OnStopDebug;
+            nodeVm.EditingModeChangeEvent += OnEditingModeChange;
             _bgColorConverter = FindResource("BgColorConverter") as IValueConverter;
 
 
@@ -55,12 +57,13 @@ namespace NFCT.Graph.Views
             //}
         }
 
-        private void NodeTexts_OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        // private void NodeTexts_OnIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void OnEditingModeChange(bool v)
         {
             var nodeVm = WPFHelper.GetDataContext<TextNodeViewModel>(this);
             if (nodeVm == null) return;
 
-            bool visible = (bool)e.NewValue;
+            bool visible = !v;
             // visible change for stackpanel will be applied to its children
             // the insert of actb will change stackpanel's children and crash
             // so delay the insert operation
