@@ -464,7 +464,7 @@ namespace ProjectFactory.DefaultProjectFactory
                     {
                         if (node is TextNode textNode)
                         {
-                            textNode.Text = value;
+                            textNode.Text = value.Trim('"').Replace("\\\"", "\"").Replace("\\\\", "\\"); ;
                         }
                     }
                 }
