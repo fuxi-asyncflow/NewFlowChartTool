@@ -99,7 +99,7 @@ namespace NFCT.Graph.ViewModels
             });
             ContinueBreakPointCommand = new DelegateCommand(delegate { Owner.ContinueBreakPoint(); });
         }
-
+        public string? Description => Node.Description;
         public GraphPaneViewModel Owner { get; set; }
         public GroupBoxViewModel? OwnerGroup { get; set; }
         public List<GraphConnectorViewModel> ParentLines => Node.Parents.ConvertAll(Owner.GetConnVm);

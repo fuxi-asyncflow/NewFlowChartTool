@@ -9,15 +9,34 @@ using FlowChart.Parser.NodeParser;
 
 namespace FlowChart.Parser
 {
+    class ParserErrorListener : BaseErrorListener
+    {
+        public ParserErrorListener()
+        {
+            Error = null;
+        }
+
+        public ParserError? Error;
+        public override void SyntaxError(TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine,
+            string msg, RecognitionException e)
+        {
+            Error = new ParserError() { Line = line, Position = charPositionInLine, Message = msg };
+        }
+
+        public bool HasError => Error != null;
+    }
     public class Parser : IParser
     {
         public List<TextToken>? Tokens { get; set; }
+        public ParserError? Error { get; set; }
         public ASTNode? Parse(string text, ParserConfig cfg)
         {
             AntlrInputStream input = new AntlrInputStream(text);
             NodeParserLexer lexer = new NodeParserLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             var parser = new NodeParserParser(tokens);
+            var errorListener = new ParserErrorListener();
+            parser.AddErrorListener(errorListener);
             parser.Interpreter.PredictionMode = PredictionMode.SLL;
 
             // 使用二次解析，提高解析速度
@@ -41,6 +60,10 @@ namespace FlowChart.Parser
                 Tokens = new List<TextToken>();
                 int pos = -1;
                 GetTokens(text, tree, ref pos);
+                if (pos < text.Length - 1)
+                {
+                    Tokens.Add(new TextToken() { Start = pos + 1, End = text.Length, Type = TextToken.TokenType.Default });
+                }
 #if DEBUG
                 Console.WriteLine($"----- {text}");
                 Tokens.ForEach(token =>
@@ -48,6 +71,12 @@ namespace FlowChart.Parser
                     Console.WriteLine($"token: {text.Substring(token.Start, token.End - token.Start)}");
                 });
 #endif
+            }
+
+            if (errorListener.HasError)
+            {
+                Error = errorListener.Error;
+                return null;
             }
 
             NodeParserBaseVisitor<ASTNode> visitor = new NodeCommandVisitor();

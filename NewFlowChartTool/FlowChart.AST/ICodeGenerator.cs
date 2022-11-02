@@ -87,10 +87,18 @@ namespace FlowChart.AST
         public bool OnlyGetType;
     }
 
+    public class ParserError
+    {
+        public string Message;
+        public int Position;
+        public int Line;
+    }
+
     public interface IParser
     {
         public ASTNode? Parse(string text, ParserConfig cfg);
         public List<TextToken>? Tokens { get; }
+        public ParserError? Error { get; }
     }
 
     public interface IASTNodeVisitor<T>
