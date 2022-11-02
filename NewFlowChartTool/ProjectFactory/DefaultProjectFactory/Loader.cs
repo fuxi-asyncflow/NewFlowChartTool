@@ -407,17 +407,37 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public void CustomLoadVariables(Graph graph, List<string> lines, ref int pos)
         {
+            Variable? v = null;
             while (pos < lines.Count)
             {
                 var line = lines[pos++];
                 var c = line.First();
                 if (c == '-')
                 {
-
+                    line = lines[pos++];
+                    int colonPos = line.IndexOf(':');
+                    //var key = line.Substring(0, colonPos).Trim();
+                    var value = line.Substring(colonPos + 1).Trim();
+                    v = new Variable(value);
+                    graph.AddVariable(v);
                 }
                 else if (c == ' ')
                 {
-
+                    int colonPos = line.IndexOf(':');
+                    var key = line.Substring(0, colonPos).Trim();
+                    var value = line.Substring(colonPos + 1).Trim();
+                    if (key == "type")
+                    {
+                        v.Type = Project.GetType(value) ?? BuiltinTypes.UndefinedType;
+                    }
+                    else if (key == "description")
+                    {
+                        v.Description = value;
+                    }
+                    else if (key == "is_param")
+                    {
+                        v.IsParameter = true;
+                    }
                 }
                 else
                 {
@@ -464,7 +484,11 @@ namespace ProjectFactory.DefaultProjectFactory
                     {
                         if (node is TextNode textNode)
                         {
-                            textNode.Text = value.Trim('"').Replace("\\\"", "\"").Replace("\\\\", "\\"); ;
+                            if (value.Length > 0 && value[0] == '"')
+                                textNode.Text = value.Trim('"').Replace("\\\"", "\"").Replace("\\\\", "\\");
+                            else
+                                textNode.Text = value;
+
                         }
                     }
                     else if (key == "code")
