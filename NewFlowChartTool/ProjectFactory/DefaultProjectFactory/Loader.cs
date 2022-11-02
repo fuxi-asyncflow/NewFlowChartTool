@@ -467,6 +467,15 @@ namespace ProjectFactory.DefaultProjectFactory
                             textNode.Text = value.Trim('"').Replace("\\\"", "\"").Replace("\\\\", "\\"); ;
                         }
                     }
+                    else if (key == "code")
+                    {
+                        // ignore generate code
+                        do
+                        {
+                            line = lines[pos++];
+                        } while (line.Length > 2 && line[1] == ' ' && line[1] == ' ' && line[2] == ' ');
+                        pos--;
+                    }
                 }
                 else
                 {
