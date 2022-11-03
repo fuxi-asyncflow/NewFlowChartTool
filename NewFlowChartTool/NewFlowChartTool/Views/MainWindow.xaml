@@ -236,12 +236,12 @@
                         DockWidth="245"
                         Orientation="Vertical">
                         <LayoutAnchorablePane DockHeight="2*">
-                            <LayoutAnchorable Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_ProjectKey}}">
+                            <LayoutAnchorable x:Name="LayoutProject" Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_ProjectKey}}">
                                 <views:ProjectPanel x:Name="ProjectPanelView" />
                             </LayoutAnchorable>
                         </LayoutAnchorablePane>
                         <LayoutAnchorablePane DockHeight="*">
-                            <LayoutAnchorable Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_TypeKey}}">
+                            <LayoutAnchorable x:Name="LayoutType" Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_TypeKey}}">
                                 <views:TypePanel x:Name="TypePanelView" />
                             </LayoutAnchorable>
                         </LayoutAnchorablePane>
@@ -255,7 +255,7 @@
                             </LayoutDocumentPane>
                         </LayoutDocumentPaneGroup>
                         <LayoutAnchorablePane DockHeight="200">
-                            <LayoutAnchorable Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_OutputKey}}">
+                            <LayoutAnchorable x:Name="LayoutOutput" Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_OutputKey}}">
                                 <views:OutputPanel x:Name="OutputPanelView" />
                             </LayoutAnchorable>
                         </LayoutAnchorablePane>

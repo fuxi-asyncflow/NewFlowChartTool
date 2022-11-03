@@ -15,6 +15,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NewFlowChartTool.ViewModels;
 using NFCT.Common;
+using NFCT.Common.Events;
+using NFCT.Common.Localization;
 
 namespace NewFlowChartTool.Views
 {
@@ -27,6 +29,8 @@ namespace NewFlowChartTool.Views
         {
             InitializeComponent();
             TitleBar.MainWindow = this;
+
+            EventHelper.Sub<LangSwitchEvent, Lang>(OnLangSwitch);
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -38,6 +42,13 @@ namespace NewFlowChartTool.Views
                 e.Cancel = true;
             else
                 base.OnClosing(e);
+        }
+
+        void OnLangSwitch(Lang lang)
+        {
+            LayoutProject.Title = Application.Current.FindResource(ResourceKeys.Pane_ProjectKey) as string;
+            LayoutType.Title = Application.Current.FindResource(ResourceKeys.Pane_TypeKey) as string;
+            LayoutOutput.Title = Application.Current.FindResource(ResourceKeys.Pane_OutputKey) as string;
         }
     }
 }
