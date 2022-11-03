@@ -19,6 +19,7 @@
         <utility:NodeBorderColorConverter x:Key="BorderColorConverter" />
         <utility:NodeBorderConverter x:Key="BorderConverter" />
         <common:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
+        <common:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
@@ -28,6 +29,7 @@
             BorderBrush="{Binding BgType, Converter={StaticResource BorderColorConverter}, Mode=OneWay}"
             BorderThickness="{Binding IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}"
             CornerRadius="3">
+
             <StackPanel
                 x:Name="NodeStack"
                 Margin="6"
@@ -74,6 +76,17 @@
             </StackPanel>
 
         </Border>
+        <StackPanel
+            Height="26"
+            Margin="8,-22,0,0"
+            VerticalAlignment="Top"
+            Orientation="Horizontal">
+            <TextBlock
+                Foreground="Red"
+                Text="{Binding ErrorMessage}"
+                Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
+            <TextBlock Text="{Binding Description}" Visibility="{Binding Description, Converter={StaticResource NullToVisibilityConverter}}" />
+        </StackPanel>
     </Grid>
 
 </UserControl>

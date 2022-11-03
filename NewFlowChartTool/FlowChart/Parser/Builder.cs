@@ -58,7 +58,7 @@ namespace FlowChart.Parser
             if (ast == null)
             {
                 pr = new ParseResult();
-                pr.ErrorMessage = $"syntax error @{parser.Error?.Line}";
+                pr.ErrorMessage = $"syntax error @{parser.Error?.Position}";
                 pr.Tokens = parser.Tokens;
                 node.OnParse(pr);
             }

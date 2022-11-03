@@ -100,6 +100,8 @@ namespace NFCT.Graph.ViewModels
             ContinueBreakPointCommand = new DelegateCommand(delegate { Owner.ContinueBreakPoint(); });
         }
         public string? Description => Node.Description;
+        private string? _errorMessage;
+        public string? ErrorMessage { get => _errorMessage; set => SetProperty(ref _errorMessage, value); }
         public GraphPaneViewModel Owner { get; set; }
         public GroupBoxViewModel? OwnerGroup { get; set; }
         public List<GraphConnectorViewModel> ParentLines => Node.Parents.ConvertAll(Owner.GetConnVm);

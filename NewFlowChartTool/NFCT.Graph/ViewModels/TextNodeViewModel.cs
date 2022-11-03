@@ -85,6 +85,8 @@ namespace NFCT.Graph.ViewModels
                     });
                 });
             }
+
+            ErrorMessage = pr.IsError ? pr.ErrorMessage : null;
             Owner.NeedLayout = true;
         }
     }
