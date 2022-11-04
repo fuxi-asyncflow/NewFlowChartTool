@@ -23,6 +23,11 @@ namespace FlowChart.Parser
             Error = new ParserError() { Line = line, Position = charPositionInLine, Message = msg };
         }
 
+        public void Reset()
+        {
+            Error = null;
+        }
+
         public bool HasError => Error != null;
     }
     public class Parser : IParser
@@ -50,6 +55,7 @@ namespace FlowChart.Parser
             {
                 tokens.Reset();
                 parser.Reset();
+                errorListener.Reset();
                 parser.Interpreter.PredictionMode = PredictionMode.LL;
                 tree = parser.stat();
             }

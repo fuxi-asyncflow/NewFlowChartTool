@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using FlowChart.Layout;
+using FlowChart.Layout.MyLayout;
 using FlowChartCommon;
 
 namespace NFCT.Graph.ViewModels
@@ -49,7 +50,8 @@ namespace NFCT.Graph.ViewModels
             var graph = new GraphLayoutAdapter(this);
             if (NodeDict.Count <= 0.0 || NodeDict.First().Value.Width <= 0.0)
                 return false;
-            MsaglLayout layout = new MsaglLayout();
+            var layout = new MsaglLayout();
+            //var layout = new MyLayout();
             try
             {
                 layout.Layout(graph);
