@@ -60,7 +60,8 @@ namespace FlowChart.Layout.MyLayout
             CalcY();
             CalcGraphWidthHeight();
 
-            CalcEdges();
+            //CalcEdges();
+            CalcCubicBezierEdge();
         }
 
         void InitLayout()
@@ -211,7 +212,7 @@ namespace FlowChart.Layout.MyLayout
                 {
                     node.Y += offsetY;
                 }
-                _graph.Height = height;
+                _graph.Height = Setting.MinHeight;
             }
             else
                 _graph.Height = height;

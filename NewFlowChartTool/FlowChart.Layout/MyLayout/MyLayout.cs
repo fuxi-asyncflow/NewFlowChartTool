@@ -91,7 +91,38 @@ namespace FlowChart.Layout.MyLayout
             curve.Points.Add(new Position(Start.X + Start.Width * 0.5, Start.Y + Start.Height));
             curve.Points.Add(new Position(End.X + End.Width * 0.5, End.Y));
             _edge.Curves = new List<Curve>() {curve};
+        }
 
+        public void CubicBezier()
+        {
+            const double L = 80.0;
+            var startX = Start.X + Start.Width * 0.5;
+            var endX = End.X + End.Width * 0.5;
+
+            var curve = new Curve() { Type = Curve.CurveType.SPLINE };
+
+            if (Math.Abs(startX - endX) < 20.0 && (End.Rank - Start.Rank) != 1)
+            {
+                var delatHeight = End.Y - Start.Y - Start.Height;
+                var d = delatHeight * 0.25;
+                if (d < L)
+                    d = L;
+                curve.Points = new List<Position>();
+                curve.Points.Add(new Position(startX + d, Start.Y + Start.Height));
+                curve.Points.Add(new Position(startX + d, Start.Y + Start.Height + L));
+                curve.Points.Add(new Position(endX + d, End.Y - L));
+                curve.Points.Add(new Position(endX + d, End.Y));
+                _edge.Curves = new List<Curve>() { curve };
+                return;
+            }
+            
+
+            curve.Points = new List<Position>();
+            curve.Points.Add(new Position(startX, Start.Y + Start.Height));
+            curve.Points.Add(new Position(startX, Start.Y + Start.Height + L));
+            curve.Points.Add(new Position(endX, End.Y - L));
+            curve.Points.Add(new Position(endX, End.Y));
+            _edge.Curves = new List<Curve>() { curve };
         }
     }
 
@@ -305,6 +336,16 @@ namespace FlowChart.Layout.MyLayout
             {
                 if (edge.Start.Rank < edge.End.Rank)
                     edge.Line();
+            }
+        }
+
+        public void CalcCubicBezierEdge()
+        {
+            const double L = 40.0;
+            //TODO self-connected edge
+            foreach (var edge in EdgeDict.Values)
+            {
+                edge.CubicBezier();
             }
         }
     }
