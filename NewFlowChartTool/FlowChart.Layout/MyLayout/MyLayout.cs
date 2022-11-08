@@ -22,8 +22,27 @@ namespace FlowChart.Layout.MyLayout
         public double Width;
         public double Height;
 
-        public double X { set => _node.X = value; }
-        public double Y { set => _node.Y = value; }
+        private double _x;
+        public double X
+        {
+            get => _x;
+            set
+            {
+                _x = value;
+                _node.X = value;
+            }
+        }
+
+        private double _y;
+        public double Y
+        {
+            get => _y;
+            set
+            {
+                _y = value;
+                _node.Y = value;
+            }
+        }
 
         public LayoutNode? TreeParent;
         public int Rank;
@@ -38,6 +57,7 @@ namespace FlowChart.Layout.MyLayout
         // Node position in its Rect
         public double NodeTop;
         public double NodeLeft;
+        public double LeftDistance;
 
         public void Print()
         {
@@ -62,6 +82,17 @@ namespace FlowChart.Layout.MyLayout
         public LayoutNode Start;
         public LayoutNode End;
         public bool IsTreeEdge;
+
+        public void Line()
+        {
+            var curve = new Curve() {Type = Curve.CurveType.Line};
+            
+            curve.Points = new List<Position>();
+            curve.Points.Add(new Position(Start.X + Start.Width * 0.5, Start.Y + Start.Height));
+            curve.Points.Add(new Position(End.X + End.Width * 0.5, End.Y));
+            _edge.Curves = new List<Curve>() {curve};
+
+        }
     }
 
     public class LayoutGraphSetting
@@ -87,7 +118,7 @@ namespace FlowChart.Layout.MyLayout
             Init(graph);
         }
 
-        private IGraph _graph;
+        protected IGraph _graph;
         public LayoutGraphSetting Setting;
 
         public List<LayoutNode> Roots;
@@ -96,6 +127,7 @@ namespace FlowChart.Layout.MyLayout
         public List<LayoutEdge> NonTreeEdges;
 
         public Stack<LayoutNode> BackOrderNodes;
+        public int MaxRank;
 
         void Init(IGraph graph)
         {
@@ -114,7 +146,7 @@ namespace FlowChart.Layout.MyLayout
             Roots.Add(NodeDict[graph.Nodes.First()]);
         }
 
-        public void Layout()
+        public virtual void Layout()
         {
             Acyclic_BFS();
             CalcSubTreeRect();
@@ -123,10 +155,12 @@ namespace FlowChart.Layout.MyLayout
             //    kv.Value.Print();
             //}
             CalcPosition();
+            CalcEdges();
         }
 
-        private void Acyclic_BFS()
+        protected void Acyclic_BFS()
         {
+            MaxRank = -1;
             foreach (var node in NodeDict.Values)
             {
                 node.Rank = -1;
@@ -144,8 +178,13 @@ namespace FlowChart.Layout.MyLayout
                 BackOrderNodes.Push(node);
                 if(node.Rank > 0)
                     continue;
-                if(node.TreeParent != null)
+                if (node.TreeParent != null)
+                {
                     node.Rank = node.TreeParent.Rank + 1;
+                    if(node.Rank > MaxRank)
+                        MaxRank = node.Rank;
+                }
+
                 node.OutputEdges.ForEach(edge =>
                 {
                     var child = edge.End;
@@ -256,6 +295,15 @@ namespace FlowChart.Layout.MyLayout
             node.X = node.RectLeft + node.NodeLeft;
             node.Y = node.RectTop + node.NodeTop;
             node.OutputEdges.ForEach(edge => _calcPositionForNode(edge.End));
+        }
+
+        public void CalcEdges()
+        {
+            foreach (var edge in EdgeDict.Values)
+            {
+                if (edge.Start.Rank < edge.End.Rank)
+                    edge.Line();
+            }
         }
     }
 
