@@ -13,8 +13,8 @@
     d:DataContext="{d:DesignInstance vm:GraphPaneViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    mc:Ignorable="d"
-    DataContextChanged="GraphPanel_OnDataContextChanged">
+    DataContextChanged="GraphPanel_OnDataContextChanged"
+    mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -58,25 +58,6 @@
                         Height="{Binding Height}"
                         Fill="{DynamicResource GraphBackGround}"
                         MouseDown="CanvasBackground_OnMouseDown" />
-                    <!--  Nodes  -->
-                    <ItemsControl ItemsSource="{Binding Nodes}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <Canvas />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemContainerStyle>
-                            <Style TargetType="ContentPresenter">
-                                <Setter Property="Canvas.Left" Value="{Binding Left}" />
-                                <Setter Property="Canvas.Top" Value="{Binding Top}" />
-                            </Style>
-                        </ItemsControl.ItemContainerStyle>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <local:GraphNode />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
 
                     <!--  Paths  -->
                     <ItemsControl ItemsSource="{Binding Connectors}">
@@ -100,6 +81,28 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+
+                    <!--  Nodes  -->
+                    <ItemsControl ItemsSource="{Binding Nodes}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Left" Value="{Binding Left}" />
+                                <Setter Property="Canvas.Top" Value="{Binding Top}" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <local:GraphNode />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+
 
                     <!--  Groups  -->
                     <ItemsControl ItemsSource="{Binding Groups}">
