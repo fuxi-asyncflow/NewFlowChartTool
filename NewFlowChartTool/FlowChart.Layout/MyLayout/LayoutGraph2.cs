@@ -195,10 +195,31 @@ namespace FlowChart.Layout.MyLayout
                 if(height < node.Y + node.Height)
                     height = node.Y + node.Height;
             }
-            _graph.Width = width;
-            _graph.Height = height;
-        }
 
-        
+            if (width < Setting.MinWidth)
+            {
+                var offsetX = (Setting.MinWidth - width) / 2;
+                foreach (var node in NodeDict.Values)
+                {
+                    node.X += offsetX;
+                }
+
+                _graph.Width = Setting.MinWidth;
+            }
+            else
+                _graph.Width = width;
+
+            if (height < Setting.MinHeight)
+            {
+                var offsetY = (Setting.MinHeight - height) / 2;
+                foreach (var node in NodeDict.Values)
+                {
+                    node.Y += offsetY;
+                }
+                _graph.Height = height;
+            }
+            else
+                _graph.Height = height;
+        }
     }
 }

@@ -99,6 +99,8 @@ namespace FlowChart.Layout.MyLayout
     {
         public double NodeSpace = 40.0;
         public double RankSpace = 40.0;
+        public double MinWidth = 1920.0;
+        public double MinHeight = 1080.0;
     }
 
     public class LayoutGraph
