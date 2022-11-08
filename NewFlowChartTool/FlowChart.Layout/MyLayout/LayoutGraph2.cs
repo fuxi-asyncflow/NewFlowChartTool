@@ -129,18 +129,13 @@ namespace FlowChart.Layout.MyLayout
         {
             if (node.IsLeaf)
             {
-                if(node.Rank == MaxRank)
-                    return;
-                else
+                if(node.Rank != MaxRank)
                 {
                     var nextNode = leftEdge[node.Rank].GetRightNode(node);
                     if (nextNode != null)
-                    {
                         UpdateDown(nextNode, delta);
-                    }
-
-                    return;
                 }
+                return;
             }
 
             var child = node.OutputEdges[0].End;
