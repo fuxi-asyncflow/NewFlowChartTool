@@ -34,6 +34,14 @@ namespace FlowChart.Layout.MyLayout
             }
             return -1.0f;
         }
+
+        public LayoutNode? GetRightNode(LayoutNode node)
+        {
+            var idx = Nodes.IndexOf(node);
+            if(idx == -1 || idx == Nodes.Count -1)
+                return null;
+            return Nodes[idx+1];
+        }
     }
     public class LayoutGraph2 : LayoutGraph
     {
@@ -117,18 +125,24 @@ namespace FlowChart.Layout.MyLayout
             }
         }
 
-        void UpdateUp(LayoutNode node, double delta)
-        {
-            var parent = node.TreeParent;
-            if (parent == null) // node is rootNode, do Nothing
-                return;
-            Expand(node);
-        }
-
         void UpdateDown(LayoutNode node, double delta)
         {
             if (node.IsLeaf)
-                return;
+            {
+                if(node.Rank == MaxRank)
+                    return;
+                else
+                {
+                    var nextNode = leftEdge[node.Rank].GetRightNode(node);
+                    if (nextNode != null)
+                    {
+                        UpdateDown(nextNode, delta);
+                    }
+
+                    return;
+                }
+            }
+
             var child = node.OutputEdges[0].End;
             child.LeftDistance += delta;
             UpdateDown(child, delta);
