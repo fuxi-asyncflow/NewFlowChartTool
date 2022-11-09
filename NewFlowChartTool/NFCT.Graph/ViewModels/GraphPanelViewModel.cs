@@ -500,7 +500,7 @@ namespace NFCT.Graph.ViewModels
                 return;
             GraphClipboard.Clear();
             GraphClipboard.AddRange(SelectedNodes);
-            SelectedNodes.ForEach(nodeVm => nodeVm.IsCut = true);
+            SelectedNodes.ForEach(nodeVm => nodeVm.IsCut = isClip);
             IsClip = isClip;
         }
 
