@@ -136,7 +136,7 @@
                     <Line
                         x:Name="ConnectingLine"
                         IsHitTestVisible="False"
-                        Stroke="Black"
+                        Stroke="{DynamicResource LineBlueColor}"
                         StrokeThickness="10"
                         Visibility="{Binding IsConnecting, Converter={StaticResource BooleanToVisibilityConverter}}"
                         X1="{Binding ConnectStartNode.X}"
