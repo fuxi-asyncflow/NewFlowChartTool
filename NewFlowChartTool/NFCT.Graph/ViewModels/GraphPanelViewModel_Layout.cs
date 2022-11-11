@@ -50,8 +50,9 @@ namespace NFCT.Graph.ViewModels
             var graph = new GraphLayoutAdapter(this);
             if (NodeDict.Count <= 0.0 || NodeDict.First().Value.Width <= 0.0)
                 return false;
-            var layout = new MsaglLayout();
+            //var layout = new MsaglLayout();
             //var layout = new MyLayout();
+            var layout = new MyLayout2();
             try
             {
                 layout.Layout(graph);

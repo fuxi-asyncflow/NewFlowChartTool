@@ -53,7 +53,8 @@ namespace FlowChart.Layout.MyLayout
 
         public override void Layout()
         {
-            Acyclic_BFS();
+            //Acyclic_BFS();
+            Acyclic_BFS_Max();
             InitLayout();
             CalcLeftDistance();
             CalcX();

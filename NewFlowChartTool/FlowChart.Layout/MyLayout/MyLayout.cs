@@ -66,6 +66,18 @@ namespace FlowChart.Layout.MyLayout
             Console.WriteLine($"{(int)RectTop} {(int)RectLeft} == {(int)NodeTop} {(int)NodeLeft}");
             Console.WriteLine("");
         }
+
+        public bool IsAncestor(LayoutNode descendantNode)
+        {
+            var node = descendantNode;
+            while (node != null)
+            {
+                if (node == this)
+                    return true;
+                node = node.TreeParent;
+            }
+            return false;
+        }
     }
 
     public class LayoutEdge
@@ -227,6 +239,77 @@ namespace FlowChart.Layout.MyLayout
                         queue.Enqueue(child);
                     }
                 });
+            }
+
+            foreach (var edge in EdgeDict.Values)
+            {
+                edge.IsTreeEdge = edge.End.TreeParent == edge.Start;
+                if (!edge.IsTreeEdge)
+                {
+                    edge.Start.OutputEdges.Remove(edge);
+                    NonTreeEdges.Add(edge);
+                }
+            }
+        }
+
+        protected void Acyclic_BFS_Max()
+        {
+            MaxRank = -1;
+            foreach (var node in NodeDict.Values)
+            {
+                node.Rank = -1;
+            }
+
+            var startNode = Roots[0];
+            startNode.Rank = 0;
+            startNode.TreeParent = null;
+            var queue = new Queue<LayoutNode>();
+            queue.Enqueue(startNode);
+
+            Action<LayoutNode, int>? updateSubtreeRank = null;
+            updateSubtreeRank = (node, r) =>
+            {
+                node.Rank = r;
+                node.OutputEdges.ForEach(edge =>
+                {
+                    if (edge.End.TreeParent == node)
+                    {
+                        updateSubtreeRank?.Invoke(edge.End, r + 1);
+                    }
+                });
+            };
+
+            while (queue.Count > 0)
+            {
+                var node = queue.Dequeue();
+
+                node.OutputEdges.ForEach(edge =>
+                {
+                    var rank = node.Rank + 1;
+                    var child = edge.End;
+                    if (child.TreeParent == null)
+                    {
+                        child.TreeParent = node;
+                        child.Rank = rank;
+                        queue.Enqueue(child);
+                    }
+                    else
+                    {
+                        var originRank = child.Rank;
+                        if (rank > originRank && !child.IsAncestor(node))
+                        {
+                            child.TreeParent = node;
+                            updateSubtreeRank(child, rank);
+                        }
+                    }
+                });
+            }
+
+            MaxRank = -1;
+            foreach (var node in NodeDict.Values)
+            {
+                if (node.Rank > MaxRank)
+                    MaxRank = node.Rank;
             }
 
             foreach (var edge in EdgeDict.Values)

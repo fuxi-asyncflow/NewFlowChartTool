@@ -171,7 +171,6 @@ namespace NFCT.Graph.Views
                 if (vm.IsConnecting)
                 {
                     var pos = e.GetPosition((UIElement)sender);
-                    Console.WriteLine($"connecting line {pos}");
                     ConnectingLine.X2 = pos.X;
                     ConnectingLine.Y2 = pos.Y;
                 }
