@@ -120,10 +120,10 @@ namespace FlowChart.Layout.MyLayout
                 if (d < L)
                     d = L;
                 curve.Points = new List<Position>();
-                curve.Points.Add(new Position(startX + d, Start.Y + Start.Height));
+                curve.Points.Add(new Position(startX, Start.Y + Start.Height));
                 curve.Points.Add(new Position(startX + d, Start.Y + Start.Height + L));
                 curve.Points.Add(new Position(endX + d, End.Y - L));
-                curve.Points.Add(new Position(endX + d, End.Y));
+                curve.Points.Add(new Position(endX, End.Y));
                 _edge.Curves = new List<Curve>() { curve };
                 return;
             }
