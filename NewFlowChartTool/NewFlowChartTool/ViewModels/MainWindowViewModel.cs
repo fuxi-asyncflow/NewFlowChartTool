@@ -284,7 +284,11 @@ namespace NewFlowChartTool.ViewModels
         {
             if (CurrentProject == null) return;
             ActiveGraph = null;
-            OpenedGraphs.Clear();
+            //OpenedGraphs.Clear();
+            while (OpenedGraphs.Count > 0)
+            {
+                OpenedGraphs.RemoveAt(0);
+            }
             EventHelper.Pub<ProjectCloseEvent, Project>(CurrentProject);
             CurrentProject = null;
             CloseProjectCommand.RaiseCanExecuteChanged();
