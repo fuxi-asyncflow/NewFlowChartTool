@@ -65,6 +65,8 @@ namespace NFCT.Graph.ViewModels
 
             EventHelper.Sub<ThemeSwitchEvent, Theme>(OnThemeSwitch);
 
+            GraphPaneViewModel_Layout_Init();
+
             Initialize();
         }
 

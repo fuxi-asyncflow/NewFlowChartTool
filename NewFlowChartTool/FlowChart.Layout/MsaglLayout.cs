@@ -106,15 +106,15 @@ namespace FlowChart.Layout
                 NodeSeparation = 30
             };
 
-            foreach (var graphNode in _graph.Nodes)
-            {
-                var childNodes = graphNode.Children;
-                if (childNodes.Count > 1)
-                {
-                    for (int i = 1; i < childNodes.Count; i++)
-                        settings.AddLeftRightConstraint(_nodeDict[childNodes[i - 1]], _nodeDict[childNodes[i]]);
-                }
-            }
+            //foreach (var graphNode in _graph.Nodes)
+            //{
+            //    var childNodes = graphNode.Children;
+            //    if (childNodes.Count > 1)
+            //    {
+            //        for (int i = 1; i < childNodes.Count; i++)
+            //            settings.AddLeftRightConstraint(_nodeDict[childNodes[i - 1]], _nodeDict[childNodes[i]]);
+            //    }
+            //}
 
             // 计算布局
             var layout = new LayeredLayout(graph, settings);

@@ -12,6 +12,10 @@ namespace NFCT.Graph.ViewModels
 {
     public partial class GraphPaneViewModel
     {
+        void GraphPaneViewModel_Layout_Init()
+        {
+            _layout = new MsaglLayout();
+        }
         public bool NeedLayout { get; set; }
         public bool IsFirstLayout { get; set; }
         private double _width;
@@ -19,6 +23,7 @@ namespace NFCT.Graph.ViewModels
 
         public double _height;
         public double Height { get => _height; set => SetProperty(ref _height, value); }
+        private ILayout _layout;
 
         public bool AutoLayout
         {
@@ -44,6 +49,12 @@ namespace NFCT.Graph.ViewModels
             }
         }
 
+        public void ChangeLayout(ILayout layout)
+        {
+            _layout = layout;
+            Relayout();
+        }
+
         public bool Relayout()
         {
             Logger.DBG($"Relayout for graph {Name}");
@@ -52,10 +63,10 @@ namespace NFCT.Graph.ViewModels
                 return false;
             //var layout = new MsaglLayout();
             //var layout = new MyLayout();
-            var layout = new MyLayout2();
+            //var layout = new MyLayout2();
             try
             {
-                layout.Layout(graph);
+                _layout.Layout(graph);
                 if (Height < 0.001 || Width < 0.001)
                 {
                     return false;

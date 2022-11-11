@@ -15,6 +15,16 @@ namespace FlowChart.Layout.MyLayout
             g.Layout();
         }
     }
+
+    public class MyLayout3 : ILayout
+    {
+        public void Layout(IGraph graph)
+        {
+            var g = new LayoutGraph2(graph);
+            g.Layout0();
+        }
+    }
+
     class DummyNode
     {
         public DummyNode()
@@ -49,6 +59,17 @@ namespace FlowChart.Layout.MyLayout
         public LayoutGraph2(IGraph graph) : base(graph)
         {
             leftEdge = new List<DummyNode>();
+        }
+
+        public void Layout0()
+        {
+            Acyclic_BFS();
+            InitLayout();
+            CalcLeftDistance();
+            CalcX();
+            CalcY();
+            CalcGraphWidthHeight();
+            CalcCubicBezierEdge();
         }
 
         public override void Layout()
