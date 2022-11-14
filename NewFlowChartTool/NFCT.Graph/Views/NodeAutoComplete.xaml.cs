@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -93,7 +94,7 @@ namespace NFCT.Graph.Views
 
         private void EditBox_OnKeyDown(object sender, KeyEventArgs e)
         {
-            Logger.DBG($"node editbox key down: {e.Key}");
+            //Logger.DBG($"node editbox key down: {e.Key}");
             if (e.Key == Key.Enter)
             {
                 if (AutoCompletePopup.IsOpen && PromptsListBox.SelectedItem != null)
@@ -109,7 +110,7 @@ namespace NFCT.Graph.Views
             }
             else if (e.Key == Key.Down)
             {
-                Logger.DBG($"prompts: {PromptsListBox.SelectedIndex}");
+                //Logger.DBG($"prompts: {PromptsListBox.SelectedIndex}");
                 PromptsListBox.SelectedIndex++;
                 PromptsListBox.ScrollIntoView(PromptsListBox.SelectedItem);
             }
@@ -158,7 +159,7 @@ namespace NFCT.Graph.Views
             //    Logger.ERR(string.Format("node is not in editing when actb is shown: {0} {1}->{2}", vm.Command,
             //        _oldPosition, newPosition));
             //}
-            Logger.DBG("cur pos " + newPosition);
+            //Logger.DBG("cur pos " + newPosition);
             string currentText = vm.Text;
             if (_oldPosition < 0)
             {
@@ -171,7 +172,9 @@ namespace NFCT.Graph.Views
             }
             string leftCmd = currentText.Substring(0, _oldPosition);
             string rightCmd = currentText.Substring(_oldPosition);
+            var sw = Stopwatch.StartNew();
             vm.PreparePromptList(leftCmd, rightCmd);
+            Logger.DBG($"auto complete time : {sw.ElapsedMilliseconds}");
 
             if (!AutoCompletePopup.IsOpen)
             {

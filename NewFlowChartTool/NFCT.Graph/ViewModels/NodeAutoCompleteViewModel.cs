@@ -137,7 +137,7 @@ abc + test(a,b).ob+xyz
                     {
                         string ownerString = GetOwnerString(leftCmd.Substring(0, i));
                         _ownerType = GetOwnerType(ownerString);
-                        Logger.DBG(string.Format("owner type is {0} {1}, left {2}", ownerString, _ownerType, leftCmd));
+                        //Logger.DBG(string.Format("owner type is {0} {1}, left {2}", ownerString, _ownerType, leftCmd));
                     }
                     else
                     {
@@ -155,8 +155,8 @@ abc + test(a,b).ob+xyz
                 _ownerType = BuiltinTypes.GlobalType;
             }
             _posthold = rightCmd;
-            Logger.DBG(string.Format("l&r {0} | {1}", leftCmd, rightCmd));
-            Logger.DBG(string.Format("p&r {0} | {1}", _prehold, _replace));
+            //Logger.DBG(string.Format("l&r {0} | {1}", leftCmd, rightCmd));
+            //Logger.DBG(string.Format("p&r {0} | {1}", _prehold, _replace));
         }
 
         private string GetOwnerString(string leftCmd)
@@ -619,7 +619,7 @@ abc + test(a,b).ob+xyz
             //     Prompts[0].IsDashed = true;
             //     //Prompts[0].IsSelected = true;
             // }
-            Logger.DBG("prompt count " + Prompts.Count);
+            //Logger.DBG("prompt count " + Prompts.Count);
         }
 
         public string ApplyPrompt(PromptItemViewModel prompt, ref int cursorPos)
