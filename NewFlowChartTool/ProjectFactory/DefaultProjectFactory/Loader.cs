@@ -52,6 +52,7 @@ namespace ProjectFactory.DefaultProjectFactory
     {
         public Project Project;
         public DirectoryInfo ProjectFolder;
+        public Dictionary<string, Group> GroupDict;
 
         public static YamlScalarNode YAML_NAME = new YamlScalarNode("name");
         public static YamlScalarNode YAML_DESCRIPTION = new YamlScalarNode("description");
@@ -82,6 +83,7 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             Project = project;
             ProjectFolder = new DirectoryInfo(Project.Path);
+            GroupDict = new Dictionary<string, Group>();
             var sw = Stopwatch.StartNew();
             LoadTypes();
             Logger.LOG($"load types time: {sw.ElapsedMilliseconds}");
@@ -364,6 +366,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public void CustomLoadGraph(Graph graph, List<string> lines)
         {
+            GroupDict.Clear();
             int pos = 1;
             while (pos < lines.Count)
             {
@@ -380,6 +383,10 @@ namespace ProjectFactory.DefaultProjectFactory
                 else if (key == "nodes")
                 {
                     CustomLoadNodes(graph, lines, ref pos);
+                }
+                else if (key == "groups")
+                {
+                    CustomLoadGroups(graph, lines, ref pos);
                 }
                 else if (key == "connectors")
                 {
@@ -402,6 +409,11 @@ namespace ProjectFactory.DefaultProjectFactory
                 {
                     graph.ReturnType = Project.GetType(value);
                 }
+            }
+
+            foreach (var group in GroupDict.Values)
+            {
+                graph.Groups.Add(group);
             }
         }
 
@@ -488,8 +500,17 @@ namespace ProjectFactory.DefaultProjectFactory
                                 textNode.Text = value.Trim('"').Replace("\\\"", "\"").Replace("\\\\", "\\");
                             else
                                 textNode.Text = value;
-
                         }
+                    }
+                    else if (key == "group")
+                    {
+                        Group? group = null;
+                        if (!GroupDict.TryGetValue(value, out group))
+                        {
+                            group = new Group("NewGroup", value);
+                            GroupDict.Add(value, group);
+                        }
+                        group.Nodes.Add(node);
                     }
                     else if (key == "code")
                     {
@@ -547,6 +568,39 @@ namespace ProjectFactory.DefaultProjectFactory
             }
         }
 
+        void CustomLoadGroups(Graph graph, List<string> lines, ref int pos)
+        {
+            Group? group = null;
+            while (pos < lines.Count)
+            {
+                var line = lines[pos++];
+                var c = line.First();
+                if (c == '-')
+                {
+                    
+                }
+                else if (c == ' ')
+                {
+                    int colonPos = line.IndexOf(':');
+                    var key = line.Substring(0, colonPos).Trim();
+                    var value = line.Substring(colonPos + 1).Trim();
+                    if (key == "uid")
+                    {
+                        if (!GroupDict.ContainsKey(value))
+                        {
+                            group = new Group("NewGroup", value);
+                            GroupDict.Add(value, group);
+                        }
+                    }
+                }
+                else
+                {
+                    pos--;
+                    break;
+                }
+            }
+        }
+
         public void LoadGraphFile(string yamlText)
         {
             var input = new StringReader(yamlText);
@@ -590,6 +644,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public void LoadGraph(Graph graph, YamlMappingNode graphNode)
         {
+            GroupDict.Clear();
             YamlNode? node;
 
             if (graphNode.Children.TryGetValue(YAML_TYPE, out node))

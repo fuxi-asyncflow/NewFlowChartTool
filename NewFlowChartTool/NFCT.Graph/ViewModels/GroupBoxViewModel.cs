@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Core;
+using FlowChart.Layout;
 using Prism.Mvvm;
 
 namespace NFCT.Graph.ViewModels
 {
-    public class GroupBoxViewModel : BindableBase
+    public class GroupBoxViewModel : BindableBase, IGroup
     {
         public GroupBoxViewModel(Group group, GraphPaneViewModel graph)
         {
@@ -20,6 +21,10 @@ namespace NFCT.Graph.ViewModels
         public Group Group { get; set; }
         public GraphPaneViewModel Owner { get; set; }
         public List<BaseNodeViewModel> Nodes { get; set; }
+        public List<INode> InsideNodes
+        {
+            get => Nodes.ConvertAll(node => (INode)node);
+        }
 
         public double Top { get; set; }
         public double Left { get; set; }

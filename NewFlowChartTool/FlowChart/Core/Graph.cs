@@ -504,6 +504,8 @@ namespace FlowChart.Core
         {
             var group = new Group("--");
             group.Nodes.AddRange(nodes);
+            Groups.Add(group);
+            nodes.ForEach(node => node.OwnerGroup = group);
             return group;
         }
 

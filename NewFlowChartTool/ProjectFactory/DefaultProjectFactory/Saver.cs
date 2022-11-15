@@ -166,6 +166,8 @@ namespace ProjectFactory.DefaultProjectFactory
                 {
                     var text = textNode.Text.Replace("\\", "\\\\").Replace("\"", "\\\"");
                     lines.Add($"  text: \"{text}\"");
+                    if(node.OwnerGroup != null)
+                        lines.Add($"  group: {node.OwnerGroup.Uid}");
                     if (SaveCode && node.Content != null)
                     {
                         lines.Add($"  code: ");
@@ -206,6 +208,16 @@ namespace ProjectFactory.DefaultProjectFactory
                             }
                         }
                     }
+                }
+            }
+
+            if (graph.Groups.Count > 0)
+            {
+                lines.Add("groups: ");
+                foreach (var group in graph.Groups)
+                {
+                    lines.Add("- ");
+                    lines.Add($"  uid: {group.Uid}");
                 }
             }
 

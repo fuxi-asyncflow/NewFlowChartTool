@@ -78,6 +78,11 @@ namespace NFCT.Graph.ViewModels
                 return false;
             }
 
+            foreach (var groupVm in Groups)
+            {
+                groupVm.Resize();
+            }
+
             return true;
         }
 

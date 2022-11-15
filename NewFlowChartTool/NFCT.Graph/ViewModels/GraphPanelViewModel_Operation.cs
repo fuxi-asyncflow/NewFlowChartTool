@@ -304,6 +304,11 @@ namespace NFCT.Graph.ViewModels
             }
         }
 
-        
+        void _addGroupViewModel(Group group)
+        {
+            var groupVm = new GroupBoxViewModel(group, this);
+            groupVm.Nodes.AddRange(group.Nodes.ConvertAll(GetNodeVm));
+            Groups.Add(groupVm);
+        }
     }
 }

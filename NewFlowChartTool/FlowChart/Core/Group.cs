@@ -11,7 +11,16 @@ namespace FlowChart.Core
         public Group(string name) : base(name)
         {
             Nodes = new List<Node>();
+            Uid = Project.GenUUID().ToString();
         }
+
+        public Group(string name, string uid) : base(name)
+        {
+            Nodes = new List<Node>();
+            Uid = uid;
+        }
+
+        public string Uid { get; set; }
 
         public List<Node> Nodes { get; set; }
     }

@@ -28,6 +28,8 @@ namespace NFCT.Graph.ViewModels
 
         public IEnumerable<IEdge> Edges => _g.Connectors;
 
+        public IEnumerable<IGroup> Groups => _g.Groups;
+
         public double Width { set => _g.Width = value; }
         public double Height { set => _g.Height = value; }
     }
@@ -76,6 +78,7 @@ namespace NFCT.Graph.ViewModels
             NodeDict.Clear();
             _graph.Nodes.ForEach(node => _addNodeViewModel(node));
             _graph.Connectors.ForEach(conn => _createConnectorViewModel(conn));
+            _graph.Groups.ForEach(group => _addGroupViewModel(group));
             IsFirstLayout = true;
             NeedLayout = true;
 
