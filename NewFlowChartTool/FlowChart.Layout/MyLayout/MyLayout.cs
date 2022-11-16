@@ -131,8 +131,8 @@ namespace FlowChart.Layout.MyLayout
 
         public void Connect()
         {
-            StartNode.OutEdges.Remove(this);
-            EndNode.InEdges.Remove(this);
+            StartNode.OutEdges.Add(this);
+            EndNode.InEdges.Add(this);
         }
 
         public void Disconnect()
