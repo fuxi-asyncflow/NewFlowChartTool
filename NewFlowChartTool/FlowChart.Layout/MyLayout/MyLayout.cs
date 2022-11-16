@@ -302,49 +302,51 @@ namespace FlowChart.Layout.MyLayout
                 node.Rank = -1;
             }
 
-            var startNode = Roots[0];
-            startNode.Rank = 0;
-            startNode.TreeParent = null;
-            var queue = new Queue<LayoutNode>();
-            queue.Enqueue(startNode);
-
-            Action<LayoutNode, int>? updateSubtreeRank = null;
-            updateSubtreeRank = (node, r) =>
+            foreach (var startNode in Roots)
             {
-                node.Rank = r;
-                node.OutEdges.ForEach(edge =>
-                {
-                    if (edge.EndNode.TreeParent == node)
-                    {
-                        updateSubtreeRank?.Invoke(edge.EndNode, r + 1);
-                    }
-                });
-            };
+                startNode.Rank = 0;
+                startNode.TreeParent = null;
+                var queue = new Queue<LayoutNode>();
+                queue.Enqueue(startNode);
 
-            while (queue.Count > 0)
-            {
-                var node = queue.Dequeue();
-
-                node.OutEdges.ForEach(edge =>
+                Action<LayoutNode, int>? updateSubtreeRank = null;
+                updateSubtreeRank = (node, r) =>
                 {
-                    var rank = node.Rank + 1;
-                    var child = edge.EndNode;
-                    if (child.TreeParent == null)
+                    node.Rank = r;
+                    node.OutEdges.ForEach(edge =>
                     {
-                        child.TreeParent = node;
-                        child.Rank = rank;
-                        queue.Enqueue(child);
-                    }
-                    else
+                        if (edge.EndNode.TreeParent == node)
+                        {
+                            updateSubtreeRank?.Invoke(edge.EndNode, r + 1);
+                        }
+                    });
+                };
+
+                while (queue.Count > 0)
+                {
+                    var node = queue.Dequeue();
+
+                    node.OutEdges.ForEach(edge =>
                     {
-                        var originRank = child.Rank;
-                        if (rank > originRank && !child.IsAncestor(node))
+                        var rank = node.Rank + 1;
+                        var child = edge.EndNode;
+                        if (child.TreeParent == null)
                         {
                             child.TreeParent = node;
-                            updateSubtreeRank(child, rank);
+                            child.Rank = rank;
+                            queue.Enqueue(child);
                         }
-                    }
-                });
+                        else
+                        {
+                            var originRank = child.Rank;
+                            if (rank > originRank && !child.IsAncestor(node))
+                            {
+                                child.TreeParent = node;
+                                updateSubtreeRank(child, rank);
+                            }
+                        }
+                    });
+                }
             }
 
             MaxRank = -1;
