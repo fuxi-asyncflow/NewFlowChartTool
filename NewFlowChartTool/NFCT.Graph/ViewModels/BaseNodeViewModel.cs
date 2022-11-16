@@ -100,6 +100,8 @@ namespace NFCT.Graph.ViewModels
             ContinueBreakPointCommand = new DelegateCommand(delegate { Owner.ContinueBreakPoint(); });
         }
         public string? Description => Node.Description;
+        public string? _toolTip;
+        public string? ToolTip { get => _toolTip; set => SetProperty(ref _toolTip, value); }
         private string? _errorMessage;
         public string? ErrorMessage { get => _errorMessage; set => SetProperty(ref _errorMessage, value); }
         public GraphPaneViewModel Owner { get; set; }
@@ -128,7 +130,6 @@ namespace NFCT.Graph.ViewModels
             set { Top = value; }
             get => _top + 0.5 * ActualHeight;
         }
-        public List<INode> Children => ChildLines.ConvertAll(line => line.End);
 
         private double _actualHeight;
         public double ActualHeight { get => _actualHeight; set => SetProperty(ref _actualHeight, value); }

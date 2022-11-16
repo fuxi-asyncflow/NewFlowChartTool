@@ -12,6 +12,7 @@ namespace FlowChart.Layout.MyLayout
         public void Layout(IGraph graph)
         {
             var g = new LayoutGraph2(graph);
+            g.Init();
             g.Layout();
         }
     }
@@ -21,6 +22,7 @@ namespace FlowChart.Layout.MyLayout
         public void Layout(IGraph graph)
         {
             var g = new LayoutGraph2(graph);
+            g.Init();
             g.Layout0();
         }
     }
@@ -86,7 +88,7 @@ namespace FlowChart.Layout.MyLayout
             CalcCubicBezierEdge();
         }
 
-        void InitLayout()
+        protected void InitLayout()
         {
             leftEdge.Clear();
             for (int i = 0; i <= MaxRank; i++)
@@ -102,10 +104,10 @@ namespace FlowChart.Layout.MyLayout
             // bfs
             leftEdge[root.Rank].Nodes.Add(root);
             root.LeftDistance = Setting.NodeSpace;
-            root.OutputEdges.ForEach(edge => _initLayout(edge.End));
+            root.OutEdges.ForEach(edge => _initLayout(edge.EndNode));
         }
 
-        void CalcLeftDistance()
+        protected void CalcLeftDistance()
         {
             for (int rank = MaxRank; rank >= 0; rank--)
             {
@@ -122,14 +124,14 @@ namespace FlowChart.Layout.MyLayout
             if (root.IsLeaf)
                 return;
             var rootMid = leftEdge[root.Rank].GetLeftPos(root) + root.Width * 0.5f;
-            var firstChild = root.OutputEdges[0].End;
+            var firstChild = root.OutEdges[0].EndNode;
             var childLeft = leftEdge[firstChild.Rank].GetLeftPos(firstChild);
             
 
             var childRight = childLeft - firstChild.LeftDistance;
-            root.OutputEdges.ForEach(edge =>
+            root.OutEdges.ForEach(edge =>
             {
-                var node = edge.End;
+                var node = edge.EndNode;
                 childRight += (node.LeftDistance + node.Width);
             });
 
@@ -161,12 +163,12 @@ namespace FlowChart.Layout.MyLayout
                 return;
             }
 
-            var child = node.OutputEdges[0].End;
+            var child = node.OutEdges[0].EndNode;
             child.LeftDistance += delta;
             UpdateDown(child, delta);
         }
 
-        void CalcX()
+        protected void CalcX()
         {
             foreach (var dummyNode in leftEdge)
             {
@@ -180,7 +182,7 @@ namespace FlowChart.Layout.MyLayout
             }
         }
 
-        void CalcY()
+        protected void CalcY()
         {
             Roots.ForEach(node => _calcY(node, 0.0));
         }
@@ -189,13 +191,13 @@ namespace FlowChart.Layout.MyLayout
         {
             node.Y = nodeY;
             var y = nodeY + node.Height + Setting.RankSpace;
-            node.OutputEdges.ForEach(edge =>
+            node.OutEdges.ForEach(edge =>
             {
-                _calcY(edge.End, y);
+                _calcY(edge.EndNode, y);
             });
         }
 
-        void CalcGraphWidthHeight()
+        protected void CalcGraphWidthHeight()
         {
             double width = 0.0;
             foreach (var dummyNode in leftEdge)

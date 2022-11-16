@@ -51,7 +51,8 @@
         Focusable="True"
         MouseDown="NodeGrid_OnMouseDown"
         Opacity="{Binding IsCut, Converter={StaticResource CutOpacityConverter}}"
-        RequestBringIntoView="Node_OnRequestBringIntoView">
+        RequestBringIntoView="Node_OnRequestBringIntoView"
+        ToolTip="{Binding ToolTip}">
         <StackPanel Orientation="Horizontal">
             <StackPanel Visibility="{Binding IsDebugMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <TextBlock Text="{Binding SuccessCount}" />

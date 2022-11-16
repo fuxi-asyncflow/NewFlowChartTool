@@ -71,10 +71,19 @@ namespace NFCT.Graph.ViewModels
                 {
                     return false;
                 }
+#if DEBUG
+                foreach (var nodeVm in Nodes)
+                {
+                    nodeVm.ToolTip = $"t:{nodeVm.Top:F2} l:{nodeVm.Left:F2} w:{nodeVm.ActualWidth:F2} x:{nodeVm.X:F2}";
+                }
+#endif
             }
             catch (Exception e)
             {
                 Logger.ERR($"[error] layout failed {e.Message}");
+#if DEBUG
+                throw;
+#endif
                 return false;
             }
 

@@ -41,10 +41,7 @@
         public double Height { get; }
         public double X { set; }
         public double Y { set; }
-        public List<INode> Children { get; }
     }
-
-    
 
     public interface IEdge
     {
@@ -52,10 +49,17 @@
         public INode End { get; }
         public List<Curve> Curves { set; }
     }
+
+    public interface IGroup
+    {
+        public List<INode> InsideNodes { get; }
+    }
+
     public interface IGraph
     {
         public IEnumerable<INode> Nodes { get; }
         public IEnumerable<IEdge> Edges { get; }
+        public IEnumerable<IGroup> Groups { get; }
         double Width { set; }
         double Height { set; }
     }

@@ -19,6 +19,7 @@ namespace FlowChart.Layout
             LayoutDict.Add("msagl", () => new MsaglLayout());
             LayoutDict.Add("min_depth", () => new MyLayout3());
             LayoutDict.Add("max_depth", () => new MyLayout2());
+            LayoutDict.Add("layout_group", () => new MyLayoutGroup());
         }
 
         public static LayoutManager Instance { get; private set; }

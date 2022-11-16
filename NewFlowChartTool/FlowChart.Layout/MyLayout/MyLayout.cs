@@ -8,19 +8,28 @@ using Microsoft.Msagl.Core.DataStructures;
 
 namespace FlowChart.Layout.MyLayout
 {
-    public class LayoutNode
+    public class LayoutNode : INode
     {
         public LayoutNode(INode node)
         {
             _node = node;
-            OutputEdges = new List<LayoutEdge>();
+            InEdges = new List<LayoutEdge>();
+            OutEdges = new List<LayoutEdge>();
             Width = _node.Width;
             Height = _node.Height;
-            Console.WriteLine($"node size {Width} {Height}");
         }
+
+        public LayoutNode()
+        {
+            _node = this;
+            InEdges = new List<LayoutEdge>();
+            OutEdges = new List<LayoutEdge>();
+        }
+
         private INode _node;
-        public double Width;
-        public double Height;
+        public INode Node => _node;
+        public double Width { get; set; }
+        public double Height { get; set; }
 
         private double _x;
         public double X
@@ -28,8 +37,11 @@ namespace FlowChart.Layout.MyLayout
             get => _x;
             set
             {
-                _x = value;
-                _node.X = value;
+                if (_x != value)
+                {
+                    _x = value;
+                    _node.X = value;
+                }
             }
         }
 
@@ -39,15 +51,19 @@ namespace FlowChart.Layout.MyLayout
             get => _y;
             set
             {
-                _y = value;
-                _node.Y = value;
+                if (_y != value)
+                {
+                    _y = value;
+                    _node.Y = value;
+                }
             }
         }
 
         public LayoutNode? TreeParent;
         public int Rank;
-        public List<LayoutEdge> OutputEdges;
-        public bool IsLeaf => OutputEdges.Count == 0;
+        public List<LayoutEdge> InEdges;
+        public List<LayoutEdge> OutEdges;
+        public bool IsLeaf => OutEdges.Count == 0;
         // Rect is the smallest rect contains node and all descendent nods
         public double RectWidth;
         public double RectHeight;
@@ -80,60 +96,85 @@ namespace FlowChart.Layout.MyLayout
         }
     }
 
-    public class LayoutEdge
+    public class LayoutEdge : IEdge
     {
-        public LayoutEdge(IEdge edge, LayoutNode start, LayoutNode end)
+        public LayoutEdge(IEdge edge, LayoutNode startNode, LayoutNode endNode)
         {
             _edge = edge;
-            Start = start;
-            End = end;
+            StartNode = startNode;
+            EndNode = endNode;
 
-            Start.OutputEdges.Add(this);
+            StartNode.OutEdges.Add(this);
+            EndNode.InEdges.Add(this);
         }
+
+        public LayoutEdge(LayoutNode startNode, LayoutNode endNode)
+        {
+            _edge = this;
+            StartNode = startNode;
+            EndNode = endNode;
+            StartNode.OutEdges.Add(this);
+            EndNode.InEdges.Add(this);
+        }
+
         private IEdge _edge;
-        public LayoutNode Start;
-        public LayoutNode End;
+        public IEdge Edge => _edge;
+        public LayoutNode StartNode;
+        public LayoutNode EndNode;
         public bool IsTreeEdge;
+
+        public INode Start => StartNode;
+        public INode End => EndNode;
+        public List<Curve> Curves
+        {
+            set { _edge.Curves = value; }
+        }
+
+        public void Disconnect()
+        {
+            StartNode.OutEdges.Remove(this);
+            EndNode.InEdges.Remove(this);
+        }
 
         public void Line()
         {
             var curve = new Curve() {Type = Curve.CurveType.Line};
             
             curve.Points = new List<Position>();
-            curve.Points.Add(new Position(Start.X + Start.Width * 0.5, Start.Y + Start.Height));
-            curve.Points.Add(new Position(End.X + End.Width * 0.5, End.Y));
+            curve.Points.Add(new Position(StartNode.X + StartNode.Width * 0.5, StartNode.Y + StartNode.Height));
+            curve.Points.Add(new Position(EndNode.X + EndNode.Width * 0.5, EndNode.Y));
             _edge.Curves = new List<Curve>() {curve};
         }
 
         public void CubicBezier()
         {
             const double L = 80.0;
-            var startX = Start.X + Start.Width * 0.5;
-            var endX = End.X + End.Width * 0.5;
+            var startX = StartNode.X + StartNode.Width * 0.5;
+            var endX = EndNode.X + EndNode.Width * 0.5;
 
             var curve = new Curve() { Type = Curve.CurveType.SPLINE };
 
-            if (Math.Abs(startX - endX) < 20.0 && (End.Rank - Start.Rank) != 1)
+            if (Math.Abs(startX - endX) < 20.0 && (EndNode.Rank - StartNode.Rank) != 1)
             {
-                var delatHeight = End.Y - Start.Y - Start.Height;
+                var delatHeight = EndNode.Y - StartNode.Y - StartNode.Height;
                 var d = delatHeight * 0.25;
                 if (d < L)
                     d = L;
                 curve.Points = new List<Position>();
-                curve.Points.Add(new Position(startX, Start.Y + Start.Height));
-                curve.Points.Add(new Position(startX + d, Start.Y + Start.Height + L));
-                curve.Points.Add(new Position(endX + d, End.Y - L));
-                curve.Points.Add(new Position(endX, End.Y));
+                curve.Points.Add(new Position(startX, StartNode.Y + StartNode.Height));
+                curve.Points.Add(new Position(startX + d, StartNode.Y + StartNode.Height + L));
+                curve.Points.Add(new Position(endX + d, EndNode.Y - L));
+                curve.Points.Add(new Position(endX, EndNode.Y));
                 _edge.Curves = new List<Curve>() { curve };
                 return;
             }
             
 
             curve.Points = new List<Position>();
-            curve.Points.Add(new Position(startX, Start.Y + Start.Height));
-            curve.Points.Add(new Position(startX, Start.Y + Start.Height + L));
-            curve.Points.Add(new Position(endX, End.Y - L));
-            curve.Points.Add(new Position(endX, End.Y));
+            curve.Points.Add(new Position(startX, StartNode.Y + StartNode.Height));
+            curve.Points.Add(new Position(startX, StartNode.Y + StartNode.Height + L));
+            curve.Points.Add(new Position(endX, EndNode.Y - L));
+            curve.Points.Add(new Position(endX, EndNode.Y));
             _edge.Curves = new List<Curve>() { curve };
         }
     }
@@ -160,7 +201,7 @@ namespace FlowChart.Layout.MyLayout
 
             Setting = new LayoutGraphSetting();
 
-            Init(graph);
+            //Init(graph);
         }
 
         protected IGraph _graph;
@@ -174,8 +215,9 @@ namespace FlowChart.Layout.MyLayout
         public Stack<LayoutNode> BackOrderNodes;
         public int MaxRank;
 
-        void Init(IGraph graph)
+        public void Init()
         {
+            var graph = _graph;
             foreach (var graphNode in graph.Nodes)
             {
                 var node = new LayoutNode(graphNode);
@@ -230,9 +272,9 @@ namespace FlowChart.Layout.MyLayout
                         MaxRank = node.Rank;
                 }
 
-                node.OutputEdges.ForEach(edge =>
+                node.OutEdges.ForEach(edge =>
                 {
-                    var child = edge.End;
+                    var child = edge.EndNode;
                     if (child.TreeParent == null)
                     {
                         child.TreeParent = node;
@@ -243,10 +285,10 @@ namespace FlowChart.Layout.MyLayout
 
             foreach (var edge in EdgeDict.Values)
             {
-                edge.IsTreeEdge = edge.End.TreeParent == edge.Start;
+                edge.IsTreeEdge = edge.EndNode.TreeParent == edge.StartNode;
                 if (!edge.IsTreeEdge)
                 {
-                    edge.Start.OutputEdges.Remove(edge);
+                    edge.StartNode.OutEdges.Remove(edge);
                     NonTreeEdges.Add(edge);
                 }
             }
@@ -270,11 +312,11 @@ namespace FlowChart.Layout.MyLayout
             updateSubtreeRank = (node, r) =>
             {
                 node.Rank = r;
-                node.OutputEdges.ForEach(edge =>
+                node.OutEdges.ForEach(edge =>
                 {
-                    if (edge.End.TreeParent == node)
+                    if (edge.EndNode.TreeParent == node)
                     {
-                        updateSubtreeRank?.Invoke(edge.End, r + 1);
+                        updateSubtreeRank?.Invoke(edge.EndNode, r + 1);
                     }
                 });
             };
@@ -283,10 +325,10 @@ namespace FlowChart.Layout.MyLayout
             {
                 var node = queue.Dequeue();
 
-                node.OutputEdges.ForEach(edge =>
+                node.OutEdges.ForEach(edge =>
                 {
                     var rank = node.Rank + 1;
-                    var child = edge.End;
+                    var child = edge.EndNode;
                     if (child.TreeParent == null)
                     {
                         child.TreeParent = node;
@@ -314,10 +356,10 @@ namespace FlowChart.Layout.MyLayout
 
             foreach (var edge in EdgeDict.Values)
             {
-                edge.IsTreeEdge = edge.End.TreeParent == edge.Start;
+                edge.IsTreeEdge = edge.EndNode.TreeParent == edge.StartNode;
                 if (!edge.IsTreeEdge)
                 {
-                    edge.Start.OutputEdges.Remove(edge);
+                    edge.StartNode.OutEdges.Remove(edge);
                     NonTreeEdges.Add(edge);
                 }
             }
@@ -330,7 +372,7 @@ namespace FlowChart.Layout.MyLayout
             while (BackOrderNodes.Count > 0)
             {
                 var node = BackOrderNodes.Pop();
-                var childCount = node.OutputEdges.Count;
+                var childCount = node.OutEdges.Count;
                 if (childCount == 0)
                 {
                     node.RectWidth = node.Width;
@@ -340,7 +382,7 @@ namespace FlowChart.Layout.MyLayout
                 }
                 else if (childCount == 1)
                 {
-                    var child = node.OutputEdges[0].End;
+                    var child = node.OutEdges[0].EndNode;
                     node.RectWidth = Math.Max(node.Width, child.RectWidth);
                     node.RectHeight = node.Height + rankSpace + child.RectHeight;
                     node.NodeLeft = (node.RectWidth - node.Width) / 2;
@@ -352,9 +394,9 @@ namespace FlowChart.Layout.MyLayout
                 {
                     double w = 0.0;
                     double h = 0.0;
-                    foreach (var edge in node.OutputEdges)
+                    foreach (var edge in node.OutEdges)
                     {
-                        var child = edge.End;
+                        var child = edge.EndNode;
                         if(child.RectHeight > h)
                             h = child.RectHeight;
                         w += (child.RectWidth + nodeSpace);
@@ -377,9 +419,9 @@ namespace FlowChart.Layout.MyLayout
                         node.RectWidth = w;
                     }
 
-                    foreach (var edge in node.OutputEdges)
+                    foreach (var edge in node.OutEdges)
                     {
-                        var child = edge.End;
+                        var child = edge.EndNode;
                         child.RectLeft = left;
                         child.RectTop = node.Height + rankSpace;
                         left += (child.RectWidth + nodeSpace);
@@ -410,14 +452,14 @@ namespace FlowChart.Layout.MyLayout
             }
             node.X = node.RectLeft + node.NodeLeft;
             node.Y = node.RectTop + node.NodeTop;
-            node.OutputEdges.ForEach(edge => _calcPositionForNode(edge.End));
+            node.OutEdges.ForEach(edge => _calcPositionForNode(edge.EndNode));
         }
 
         public void CalcEdges()
         {
             foreach (var edge in EdgeDict.Values)
             {
-                if (edge.Start.Rank < edge.End.Rank)
+                if (edge.StartNode.Rank < edge.EndNode.Rank)
                     edge.Line();
             }
         }
@@ -438,6 +480,7 @@ namespace FlowChart.Layout.MyLayout
         public void Layout(IGraph graph)
         {
             var g = new LayoutGraph(graph);
+            g.Init();
             g.Layout();
         }
     }
