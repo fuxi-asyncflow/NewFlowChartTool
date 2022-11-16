@@ -101,7 +101,6 @@ namespace FlowChart.Layout.MyLayout
 
         void _initLayout(LayoutNode root)
         {
-            // bfs
             leftEdge[root.Rank].Nodes.Add(root);
             root.LeftDistance = Setting.NodeSpace;
             root.OutEdges.ForEach(edge => _initLayout(edge.EndNode));

@@ -113,8 +113,7 @@ namespace FlowChart.Layout.MyLayout
             _edge = this;
             StartNode = startNode;
             EndNode = endNode;
-            StartNode.OutEdges.Add(this);
-            EndNode.InEdges.Add(this);
+            Connect();
         }
 
         private IEdge _edge;
@@ -128,6 +127,12 @@ namespace FlowChart.Layout.MyLayout
         public List<Curve> Curves
         {
             set { _edge.Curves = value; }
+        }
+
+        public void Connect()
+        {
+            StartNode.OutEdges.Remove(this);
+            EndNode.InEdges.Remove(this);
         }
 
         public void Disconnect()

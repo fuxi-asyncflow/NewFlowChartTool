@@ -15,7 +15,7 @@ namespace FlowChart.Layout.MyLayout
             GroupNodes = new List<LayoutNode>();
             GroupEdges = new List<LayoutEdge>();
             CrossEdges = new List<LayoutEdge>();
-            RootNodes = new List<LayoutNode>();
+            RootNodes = new Dictionary<LayoutNode, LayoutNode>();
             NodeDict = new Dictionary<INode, LayoutNode>();
             EdgeDict = new Dictionary<IEdge, LayoutEdge>();
             VirtualNodes = new List<LayoutNode>();
@@ -42,7 +42,7 @@ namespace FlowChart.Layout.MyLayout
         public List<LayoutNode> GroupNodes { get; set; }
         public List<LayoutEdge> GroupEdges { get; set; }
         public List<LayoutEdge> CrossEdges { get; set; }
-        public List<LayoutNode> RootNodes { get; set; }
+        public Dictionary<LayoutNode, LayoutNode> RootNodes { get; set; } // <Root, Parent>
         public Set<LayoutNode> _nodeSet;
         public Dictionary<INode, LayoutNode> NodeDict { get; set; }
         public Dictionary<IEdge, LayoutEdge> EdgeDict { get; set; }
@@ -100,6 +100,8 @@ namespace FlowChart.Layout.MyLayout
                     }
                 });
             });
+
+            // disconnect cross edges should called after GetRoots, because find root's inEdge need it
         }
 
         void GetRoots()
@@ -112,7 +114,12 @@ namespace FlowChart.Layout.MyLayout
                     return;
                 set.Remove(edge.EndNode);
             });
-            RootNodes.AddRange(set);
+            foreach (var node in set)
+            {
+                RootNodes.Add(node, node.InEdges[0].StartNode);
+            }
+
+            CrossEdges.ForEach(edge => edge.Disconnect());
         }
 
         void Layout()
@@ -122,7 +129,7 @@ namespace FlowChart.Layout.MyLayout
                 NodeDict = NodeDict,
                 EdgeDict = EdgeDict,
                 Setting = Graph.Setting,
-                Roots = RootNodes
+                Roots = RootNodes.Keys.ToList()
             };
             layoutGraph.Setting.MinWidth = 0.0;
             layoutGraph.Setting.MinHeight = 0.0;
@@ -160,7 +167,7 @@ namespace FlowChart.Layout.MyLayout
             }
 
             // add edge between virtual nodes and outside nodes
-            AddVirtualEdge(new LayoutEdge(RootNodes[0].InEdges[0].StartNode, VirtualNodes[0]));
+            AddVirtualEdge(new LayoutEdge(RootNodes.First().Value, VirtualNodes[0]));
 
             // find children nodes : nodes don't belong group, but all its parent nodes are in group
             var handledNodes = new Set<LayoutNode>();
@@ -196,7 +203,11 @@ namespace FlowChart.Layout.MyLayout
             // restore 
             GroupNodes.ForEach(node => Graph.NodeDict.Add(node.Node, node));
             GroupEdges.ForEach(edge => Graph.EdgeDict.Add(edge.Edge, edge));
-            CrossEdges.ForEach(edge => Graph.EdgeDict.Add(edge.Edge, edge));
+            CrossEdges.ForEach(edge =>
+            {
+                Graph.EdgeDict.Add(edge.Edge, edge);
+                edge.Connect();
+            });
         }
 
         void CalcNodesXY()
@@ -235,7 +246,7 @@ namespace FlowChart.Layout.MyLayout
         public void LayoutWithGroup()
         {
             PreCalcGroups();
-            Acyclic_BFS();
+            Acyclic_BFS_Max();
             InitLayout();
             CalcLeftDistance();
             CalcX();
