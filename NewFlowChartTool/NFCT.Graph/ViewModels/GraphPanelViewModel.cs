@@ -287,7 +287,10 @@ namespace NFCT.Graph.ViewModels
                 return;
 
             // clear focus on CurrentNode
+            var currentNode = CurrentNode;
             ClearCurrentItem();
+            if(!clearOthers && currentNode != null)
+                SelectNode(currentNode, false);
 
             CurrentNode = nodeVm;
             if (CurrentNode != null)
