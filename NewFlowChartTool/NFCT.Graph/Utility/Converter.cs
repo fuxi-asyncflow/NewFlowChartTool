@@ -173,6 +173,33 @@ namespace NFCT.Graph.Utility
         }
     }
 
+    [ValueConversion(typeof(double), typeof(string))]
+    class PercentageConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double d = (double)value;
+            int i = (int)(d * 100);
+            return $"{i}%";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string s = (string)value;
+            s = s.Trim('%').Trim();
+            if (Int32.TryParse(s, out var i))
+            {
+                if (parameter is double)
+                {
+                    var minValue = (double)value;
+                    return Math.Max(i / 100.0, minValue);
+                }
+                return i / 100.0;
+            }
+
+            return Binding.DoNothing;
+        }
+    }
 
     #endregion
 

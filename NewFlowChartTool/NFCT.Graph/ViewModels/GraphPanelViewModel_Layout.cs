@@ -15,15 +15,48 @@ namespace NFCT.Graph.ViewModels
         void GraphPaneViewModel_Layout_Init()
         {
             _layout = new MsaglLayout();
+            Scale = 1.0f;
         }
         public bool NeedLayout { get; set; }
         public bool IsFirstLayout { get; set; }
         private double _width;
-        public double Width { get => _width; set => SetProperty(ref _width, value); }
+        public double Width
+        {
+            get => _width;
+            set
+            {
+                SetProperty(ref _width, value); 
+                RaisePropertyChanged(nameof(ScaledWidth));
+            }
+        }
 
         public double _height;
-        public double Height { get => _height; set => SetProperty(ref _height, value); }
+        public double Height
+        {
+            get => _height;
+            set
+            {
+                SetProperty(ref _height, value);
+                RaisePropertyChanged(nameof(ScaledHeight));
+            }
+        }
+
+        public double ScaledWidth => Width * Scale;
+        public double ScaledHeight => Height * Scale;
         private ILayout _layout;
+        public static double ScaleMax => 2.0;
+        public static double ScaleMin => 0.05;
+        private double _scale;
+        public double Scale
+        {
+            get => _scale;
+            set
+            {
+                SetProperty(ref _scale, value);
+                RaisePropertyChanged(nameof(ScaledWidth));
+                RaisePropertyChanged(nameof(ScaledHeight));
+            }
+        }
 
         public bool AutoLayout
         {

@@ -232,5 +232,31 @@ namespace NFCT.Graph.Views
                 MessageBox.Show("图片太大，内存不足，无法截图");
             }
         }
+
+        private void GraphCanvas_OnMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var vm = DataContext as GraphPaneViewModel;
+            if (vm == null)
+                return;
+
+            bool ctrlDown = (Keyboard.Modifiers & ModifierKeys.Control) > 0;
+            if (!ctrlDown)
+                return;
+            double oldScale = vm.Scale;
+            double newScale = e.Delta > 0 ? Math.Min(oldScale + 0.1, GraphPaneViewModel.ScaleMax) : Math.Max(oldScale - 0.1, GraphPaneViewModel.ScaleMin);
+
+            // 不动点在未缩放的图中的坐标为 (X, Y)
+            // MouseX + OffsetX = X * Scale
+            double X = Mouse.GetPosition((UIElement)sender).X;
+            double Y = Mouse.GetPosition((UIElement)sender).Y;
+
+            double offsetX = vm.ScrollX;
+            double offsetY = vm.ScrollY;
+            double mouseX = X * oldScale - offsetX;
+            double mouseY = Y * oldScale - offsetY;
+            vm.ScrollX = X * newScale - mouseX;
+            vm.ScrollY = Y * newScale - mouseY;
+            vm.Scale = newScale;
+        }
     }
 }

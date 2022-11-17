@@ -25,6 +25,17 @@ namespace NFCT.Graph.Views
         public GraphThumbnail()
         {
             InitializeComponent();
+            InitScaleComboBox();
+        }
+
+        private void InitScaleComboBox()
+        {
+            ScaleComboBox.Items.Add("200%");
+            ScaleComboBox.Items.Add("150%");
+            ScaleComboBox.Items.Add("100%");
+            ScaleComboBox.Items.Add("70%");
+            ScaleComboBox.Items.Add("50%");
+            ScaleComboBox.Items.Add("20%");
         }
 
         private Point _thumbnailPoint;

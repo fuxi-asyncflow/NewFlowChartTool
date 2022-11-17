@@ -13,6 +13,7 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <utility:NodeBgColorConverter x:Key="BgColorConverter" />
+        <utility:PercentageConverter x:Key="PercentageConverter" />
     </UserControl.Resources>
     <Border
         Background="Transparent"
@@ -20,13 +21,19 @@
         MouseLeave="Thumbnail_MouseLeave"
         MouseMove="Thumbnail_MouseMove"
         MouseUp="Thumbnail_MouseUp">
-        <Grid>
+        <Grid Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <Viewbox>
-                <Grid>
-                    <Canvas
-                        Width="{Binding Width}"
-                        Height="{Binding Height}"
-                        Background="LightBlue">
+                <Grid Background="LightBlue">
+                    <Canvas Width="{Binding ScaledWidth}" Height="{Binding ScaledHeight}">
+                        <Canvas.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+                            </TransformGroup>
+                        </Canvas.RenderTransform>
 
                         <ItemsControl ItemsSource="{Binding Nodes}">
                             <ItemsControl.ItemsPanel>
@@ -66,6 +73,22 @@
                     </Border>
                 </Grid>
             </Viewbox>
+            <DockPanel
+                Grid.Row="1"
+                VerticalAlignment="Bottom"
+                LastChildFill="True">
+                <ComboBox
+                    x:Name="ScaleComboBox"
+                    Width="64"
+                    DockPanel.Dock="Right"
+                    IsEditable="true"
+                    Text="{Binding Scale, Converter={StaticResource PercentageConverter}, ConverterParameter=0.05}" />
+                <Slider
+                    Maximum="{Binding ScaleMax}"
+                    Minimum="{Binding ScaleMin}"
+                    Value="{Binding Scale}" />
+            </DockPanel>
+
         </Grid>
     </Border>
 </UserControl>

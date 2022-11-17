@@ -47,11 +47,17 @@
                 VerticalScrollBarVisibility="Auto">
                 <Canvas
                     Name="GraphCanvas"
-                    Width="{Binding Width}"
-                    Height="{Binding Height}"
+                    Width="{Binding ScaledWidth}"
+                    Height="{Binding ScaledHeight}"
                     MouseDown="GraphCanvas_OnMouseDown"
                     MouseMove="GraphCanvas_OnMouseMove"
-                    MouseUp="GraphCanvas_OnMouseUp">
+                    MouseUp="GraphCanvas_OnMouseUp"
+                    MouseWheel="GraphCanvas_OnMouseWheel">
+                    <Canvas.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="{Binding Scale}" ScaleY="{Binding Scale}" />
+                        </TransformGroup>
+                    </Canvas.RenderTransform>
                     <Rectangle
                         x:Name="CanvasBackground"
                         Width="{Binding Width}"
