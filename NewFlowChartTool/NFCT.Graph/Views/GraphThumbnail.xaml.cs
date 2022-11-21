@@ -69,10 +69,17 @@ namespace NFCT.Graph.Views
                 var xRatio = vm.Width / 180.0;
                 var yRatio = vm.Height / 150.0;
                 var ratio = xRatio > yRatio ? xRatio : yRatio;
-                var scrollX = _thumbnailStartOffset.X + ratio * delta.X;
-                vm.ScrollX = Math.Clamp(scrollX, 0, vm.Width - vm.ScrollViewerWidth);
-                var scrollY = _thumbnailStartOffset.Y + ratio * delta.Y;
-                vm.ScrollY = Math.Clamp(scrollY, 0, vm.Height - vm.ScrollViewerHeight);
+                if (vm.Width > vm.ScrollViewerWidth)
+                {
+                    var scrollX = _thumbnailStartOffset.X + ratio * delta.X;
+                    vm.ScrollX = Math.Clamp(scrollX, 0, vm.Width - vm.ScrollViewerWidth);
+                }
+
+                if (vm.Height > vm.ScrollViewerHeight)
+                {
+                    var scrollY = _thumbnailStartOffset.Y + ratio * delta.Y;
+                    vm.ScrollY = Math.Clamp(scrollY, 0, vm.Height - vm.ScrollViewerHeight);
+                }
             }
         }
 
