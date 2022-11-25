@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using FlowChart.Common;
 using FlowChart.Misc;
 using FlowChartCommon;
 using NewFlowChartTool.ViewModels;
@@ -45,6 +48,8 @@ namespace NewFlowChartTool
                 (KeyboardFocusChangedEventHandler)OnPreviewGotKeyboardFocus);
 
 #endif
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyExceptionHandler);
             Logger.FCLogger.Info("application startup");
 
             //var test = Application.Current.TryFindResource(SystemColors.WindowBrushKey);
@@ -81,6 +86,17 @@ namespace NewFlowChartTool
             KeyboardFocusChangedEventArgs e)
         {
             //Console.WriteLine($"keyboard focus changed : {sender} {e}");
+        }
+
+        static void MyExceptionHandler(object sender, UnhandledExceptionEventArgs args)
+        {
+            var e = args.ExceptionObject as Exception;
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var fileVersion = FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion ?? "unkown version";
+
+            string dumpMsg = $"dump for version {fileVersion} \n";
+            dumpMsg += CrashDump.GetExceptionString(e, false);
+            File.WriteAllText("crash.txt", dumpMsg);
         }
 
         //private void Application_Startup(object sender, StartupEventArgs e)
