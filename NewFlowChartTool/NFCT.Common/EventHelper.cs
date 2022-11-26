@@ -15,7 +15,15 @@ namespace NFCT.Common
     {
         static EventHelper()
         {
-            ea = ContainerLocator.Current.Resolve<IEventAggregator>();
+            // In xaml designer, invoke Resolve may throw exception
+            try
+            {
+                ea = ContainerLocator.Current.Resolve<IEventAggregator>();
+            }
+            catch (Exception)
+            {
+                ea = new EventAggregator();
+            }
         }
 
         public static void Pub<TEvent, TArg>(TArg eventArg) where TEvent : PubSubEvent<TArg>, new()
@@ -25,7 +33,7 @@ namespace NFCT.Common
 
         public static void Sub<TEvent, TArg>(Action<TArg> cb) where TEvent : PubSubEvent<TArg>, new()
         {
-            ea.GetEvent<TEvent>().Subscribe(cb);
+            ea.GetEvent<TEvent>()?.Subscribe(cb);
         }
 
         public static void Sub<TEvent, TArg>(Action<TArg> cb, ThreadOption to) where TEvent : PubSubEvent<TArg>, new()
@@ -53,14 +61,14 @@ namespace NFCT.Common.Events
 
     public class LangSwitchEvent : PubSubEvent<NFCT.Common.Lang> { }
 
-    #region Debug Event
+#region Debug Event
     public class RecvGraphListEvent : PubSubEvent<List<GraphInfo>> { }
 
     public class NewDebugAgentEvent : PubSubEvent<DebugAgent> { }
 
     public class StartDebugGraphEvent : PubSubEvent<GraphInfo?> { }
 
-    #endregion
+#endregion
     public class StatusBarProgressEnableEvent : PubSubEvent<Tuple<int, string>> { }
     public class StatusBarProgressUpdateEvent : PubSubEvent<int> { }
 
