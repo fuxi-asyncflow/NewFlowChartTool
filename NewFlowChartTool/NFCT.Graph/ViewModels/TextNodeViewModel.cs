@@ -9,15 +9,20 @@ using FlowChart.AST;
 using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChartCommon;
+using Prism.Regions;
 
 
 namespace NFCT.Graph.ViewModels
 {
     public class TextTokenViewModel : BindableBase
     {
+        public TextTokenViewModel(string text)
+        {
+            Text = text;
+        }
         public string Text { get; set; }
         public TextToken.TokenType Type { get; set; }
-        public string  TipText { get; set; }
+        public string? TipText { get; set; }
         public Brush Color => CanvasNodeResource.NodeTokenBrushes[(int)Type];
 
         public void OnThemeSwitch()
@@ -28,6 +33,24 @@ namespace NFCT.Graph.ViewModels
 
     public class TextNodeViewModel : BaseNodeViewModel
     {
+#if DEBUG
+        public TextNodeViewModel()
+        {
+            var graph = new FlowChart.Core.Graph("design");
+            graph.AddNode(new StartNode());
+            Node = new TextNode() { Text = "hello" };
+            Owner = new GraphPaneViewModel(graph);
+            Tokens = new ObservableCollection<TextTokenViewModel>();
+            Tokens.Add(new TextTokenViewModel("$a") { Type = TextToken.TokenType.Variable });
+            Tokens.Add(new TextTokenViewModel(" = ") { Type = TextToken.TokenType.Default });
+            Tokens.Add(new TextTokenViewModel("Func") { Type = TextToken.TokenType.Member });
+            Tokens.Add(new TextTokenViewModel("(") { Type = TextToken.TokenType.Default });
+            Tokens.Add(new TextTokenViewModel("123") { Type = TextToken.TokenType.Number });
+            Tokens.Add(new TextTokenViewModel(", ") { Type = TextToken.TokenType.Default });
+            Tokens.Add(new TextTokenViewModel("\"hello\"") { Type = TextToken.TokenType.String });
+            Tokens.Add(new TextTokenViewModel(")") { Type = TextToken.TokenType.Default });
+        }
+#endif
         public new TextNode Node { get; set; }
         public string Text { get => Node.Text; }
         public ObservableCollection<TextTokenViewModel> Tokens { get; set; }
@@ -78,9 +101,8 @@ namespace NFCT.Graph.ViewModels
                 Tokens.Clear();
                 pr.Tokens.ForEach(token =>
                 {
-                    Tokens.Add(new TextTokenViewModel()
+                    Tokens.Add(new TextTokenViewModel(Text.Substring(token.Start, token.End - token.Start))
                     {
-                        Text = Text.Substring(token.Start, token.End - token.Start),
                         Type = token.Type
                     });
                 });

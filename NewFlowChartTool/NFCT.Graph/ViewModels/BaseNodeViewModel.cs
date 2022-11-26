@@ -28,6 +28,8 @@ namespace NFCT.Graph.ViewModels
             LineBrushes = new Brush[4];
             NodeTokenBrushes = new Brush[(int)TextToken.TokenType.End];
             OnThemeSwitch(Theme.Dark);
+            ErrorBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 255));
+            SelectedNodeBorderBrush = ErrorBrush;
         }
         public static double DefaultBorderWidth { get => 0.0; }
         public static double SelectedBorderWidth { get => 3.0; }
@@ -37,20 +39,22 @@ namespace NFCT.Graph.ViewModels
         public static Brush[] LineBrushes;
         public static Brush[] NodeTokenBrushes;
         public static Brush SelectedNodeBorderBrush;
+        public static Brush ErrorBrush;
 
         public static void OnThemeSwitch(NFCT.Common.Theme theme)
         {
-            BackgroundBrushes[0] = Application.Current.FindResource("NodeBackGround") as SolidColorBrush;
-            BackgroundBrushes[1] = Application.Current.FindResource("NodeBackGround") as SolidColorBrush;
-            BackgroundBrushes[2] = Application.Current.FindResource("NodeErrorBackGround") as SolidColorBrush;
-            BackgroundBrushes[3] = Application.Current.FindResource("NodeConditionBackGround") as SolidColorBrush;
-            BackgroundBrushes[4] = Application.Current.FindResource("NodeActionBackGround") as SolidColorBrush;
-            BackgroundBrushes[5] = Application.Current.FindResource("NodeWaitBackGround") as SolidColorBrush;
+            var errorBrush = 
+            BackgroundBrushes[0] = Application.Current.FindResource("NodeBackGround") as SolidColorBrush ?? ErrorBrush;
+            BackgroundBrushes[1] = Application.Current.FindResource("NodeBackGround") as SolidColorBrush ?? ErrorBrush;
+            BackgroundBrushes[2] = Application.Current.FindResource("NodeErrorBackGround") as SolidColorBrush ?? ErrorBrush;
+            BackgroundBrushes[3] = Application.Current.FindResource("NodeConditionBackGround") as SolidColorBrush ?? ErrorBrush;
+            BackgroundBrushes[4] = Application.Current.FindResource("NodeActionBackGround") as SolidColorBrush ?? ErrorBrush;
+            BackgroundBrushes[5] = Application.Current.FindResource("NodeWaitBackGround") as SolidColorBrush ?? ErrorBrush;
 
-            LineBrushes[0] = Application.Current.FindResource("LineRedColor") as SolidColorBrush;
-            LineBrushes[1] = Application.Current.FindResource("LineGreenColor") as SolidColorBrush;
-            LineBrushes[2] = Application.Current.FindResource("LineBlueColor") as SolidColorBrush;
-            LineBrushes[3] = Application.Current.FindResource("LineGrayColor") as SolidColorBrush;
+            LineBrushes[0] = Application.Current.FindResource("LineRedColor") as SolidColorBrush ?? ErrorBrush;
+            LineBrushes[1] = Application.Current.FindResource("LineGreenColor") as SolidColorBrush ?? ErrorBrush;
+            LineBrushes[2] = Application.Current.FindResource("LineBlueColor") as SolidColorBrush ?? ErrorBrush;
+            LineBrushes[3] = Application.Current.FindResource("LineGrayColor") as SolidColorBrush ?? ErrorBrush;
 
             if (theme == Theme.Dark)
             {
@@ -69,11 +73,11 @@ namespace NFCT.Graph.ViewModels
             //BorderBrushes[4] = BackgroundBrushes[4];
             //BorderBrushes[5] = BackgroundBrushes[5];
 
-            NodeTokenBrushes[0] = Application.Current.FindResource("NodeForeGround") as SolidColorBrush;
-            NodeTokenBrushes[1] = Application.Current.FindResource("NodeVariableForeGround") as SolidColorBrush;
-            NodeTokenBrushes[2] = Application.Current.FindResource("NodeMemberForeGround") as SolidColorBrush;
-            NodeTokenBrushes[3] = Application.Current.FindResource("NodeNumberForeGround") as SolidColorBrush;
-            NodeTokenBrushes[4] = Application.Current.FindResource("NodeStringForeGround") as SolidColorBrush;
+            NodeTokenBrushes[0] = Application.Current.FindResource("NodeForeGround") as SolidColorBrush ?? ErrorBrush;
+            NodeTokenBrushes[1] = Application.Current.FindResource("NodeVariableForeGround") as SolidColorBrush ?? ErrorBrush;
+            NodeTokenBrushes[2] = Application.Current.FindResource("NodeMemberForeGround") as SolidColorBrush ?? ErrorBrush;
+            NodeTokenBrushes[3] = Application.Current.FindResource("NodeNumberForeGround") as SolidColorBrush ?? ErrorBrush;
+            NodeTokenBrushes[4] = Application.Current.FindResource("NodeStringForeGround") as SolidColorBrush ?? ErrorBrush;
         }
     }
 
@@ -81,6 +85,11 @@ namespace NFCT.Graph.ViewModels
     {
         public Node Node;
 
+#if DEBUG
+        public BaseNodeViewModel():this(new Node(), new GraphPaneViewModel(new FlowChart.Core.Graph("design")))
+        {
+        }
+#endif
         public BaseNodeViewModel(Node node, GraphPaneViewModel g)
         {
             Node = node;
