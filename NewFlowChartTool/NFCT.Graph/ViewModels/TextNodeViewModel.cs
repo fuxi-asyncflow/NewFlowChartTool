@@ -40,6 +40,7 @@ namespace NFCT.Graph.ViewModels
             graph.AddNode(new StartNode());
             Node = new TextNode() { Text = "hello" };
             Owner = new GraphPaneViewModel(graph);
+            BgType = NodeBgType.CONDITION;
             Tokens = new ObservableCollection<TextTokenViewModel>();
             Tokens.Add(new TextTokenViewModel("$a") { Type = TextToken.TokenType.Variable });
             Tokens.Add(new TextTokenViewModel(" = ") { Type = TextToken.TokenType.Default });

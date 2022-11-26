@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Windows;
 using FlowChart.Core;
 using FlowChartCommon;
 using NFCT.Common;
@@ -28,8 +30,13 @@ namespace NewFlowChartTool.ViewModels
             public string? Description { get; set; }
         }
 
-        public ProjectHistory()
+        public ProjectHistory() : this(string.Empty)
         {
+        }
+
+        public ProjectHistory(string projectPath)
+        {
+            ProjectPath = projectPath;
             RecentOpenedGraphs = new List<GraphInfo>();
             OpenedGraphs = new List<string>();
         }
@@ -68,6 +75,16 @@ namespace NewFlowChartTool.ViewModels
             EventHelper.Sub<GraphOpenEvent, Graph>(OnGraphOpen);
             EventHelper.Sub<ProjectCloseEvent, Project>(OnProjectClose);
             HistoryData = new HistoryData();
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+            {
+                var ph = new ProjectHistory("A:\\test.project");
+                ph.RecentOpenedGraphs.Add(new ProjectHistory.GraphInfo(){FullPath = "AI.test"});
+                ph.RecentOpenedGraphs.Add(new ProjectHistory.GraphInfo() { FullPath = "Gameplay.test" });
+                HistoryData.RecentProjects.Add(ph);
+                return;
+            }
+#endif
             try
             {
                 ReadHistoryFile();
@@ -76,6 +93,7 @@ namespace NewFlowChartTool.ViewModels
             {
                 Logger.ERR($"read history data failed: {e.Message}");
             }
+
         }
 
         void CreateTmpFolder(string path)
@@ -105,7 +123,7 @@ namespace NewFlowChartTool.ViewModels
             if (projectHistory != null)
                 projects.Remove(projectHistory);
             else
-                projectHistory = new ProjectHistory() { ProjectPath = project.Path };
+                projectHistory = new ProjectHistory(project.Path);
             projects.Insert(0, projectHistory);
         }
 
