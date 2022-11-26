@@ -30,6 +30,7 @@ namespace NFCT.Graph.Views
         {
             InitializeComponent();
             DataContextChanged += OnDataContextChanged;
+            _bgColorConverter = FindResource("BgColorConverter") as IValueConverter;
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -39,9 +40,6 @@ namespace NFCT.Graph.Views
             nodeVm.DebugStatusChangeEvent += OnNodeDebugStatusChange;
             nodeVm.StopDebugEvent += OnStopDebug;
             nodeVm.EditingModeChangeEvent += OnEditingModeChange;
-            _bgColorConverter = FindResource("BgColorConverter") as IValueConverter;
-
-
         }
 
         private void NodeGrid_OnMouseMove(object sender, MouseEventArgs e)
@@ -114,7 +112,7 @@ namespace NFCT.Graph.Views
             });
         }
 
-        private IValueConverter _bgColorConverter;
+        private IValueConverter? _bgColorConverter;
 
         private void OnStopDebug()
         {

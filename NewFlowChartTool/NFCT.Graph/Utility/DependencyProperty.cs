@@ -96,7 +96,7 @@ namespace NFCT.Graph.Utility
         private static void OnVerticalOffsetPropertyChanged(DependencyObject d,
             DependencyPropertyChangedEventArgs e)
         {
-            ScrollViewer sv = d as ScrollViewer;
+            var sv = d as ScrollViewer;
             if (sv != null)
             {
                 // check whether we have a reference to the vertical scrollbar
@@ -126,7 +126,7 @@ namespace NFCT.Graph.Utility
         private static void OnHorizontalOffsetPropertyChanged(DependencyObject d,
             DependencyPropertyChangedEventArgs e)
         {
-            ScrollViewer sv = d as ScrollViewer;
+            var sv = d as ScrollViewer;
             if (sv != null)
             {
                 // check whether we have a reference to the vertical scrollbar
@@ -202,7 +202,7 @@ namespace NFCT.Graph.Utility
             while (queue.Count > 0)
             {
                 Visual e = queue.Dequeue();
-                ScrollBar scrollBar = e as ScrollBar;
+                var scrollBar = e as ScrollBar;
                 if (scrollBar != null && scrollBar.Orientation == orientation)
                 {
                     return scrollBar;

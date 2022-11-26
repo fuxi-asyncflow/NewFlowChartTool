@@ -17,9 +17,9 @@ namespace NFCT.Graph.ViewModels
 
         static PromptItemViewModel()
         {
-            InactivatedBackGroundBrush = Application.Current.FindResource("HightlightBackGroundBrush") as SolidColorBrush;
-            DefaultBackGroundBrush = Application.Current.FindResource("BackGroundBrush") as SolidColorBrush;
-            SelectedBackGroundBrush = Application.Current.FindResource("NodeActionBackGround") as SolidColorBrush;
+            InactivatedBackGroundBrush = Application.Current.FindResource("HightlightBackGroundBrush") as SolidColorBrush ?? CanvasNodeResource.ErrorBrush;
+            DefaultBackGroundBrush = Application.Current.FindResource("BackGroundBrush") as SolidColorBrush ?? CanvasNodeResource.ErrorBrush;
+            SelectedBackGroundBrush = Application.Current.FindResource("NodeActionBackGround") as SolidColorBrush ?? CanvasNodeResource.ErrorBrush;
 
             UsedPrompts = new HashSet<string>();
         }
@@ -99,14 +99,14 @@ abc + test(a,b).ob+xyz
         }
 
         public static bool IsActivate { get; set; }
-        public TextNodeViewModel Node { get; set; }
+        public TextNodeViewModel? Node { get; set; }
         private string _text;
         public string Text
         {
             get => _text;
             set => SetProperty(ref _text, value, nameof(Text));
         }
-        private GraphPaneViewModel GraphVm => Node.Owner;
+        private GraphPaneViewModel? GraphVm => Node?.Owner;
 
         private List<PromptItemViewModel> _promptList;
         public ObservableCollection<PromptItemViewModel> Prompts { get; set; }
@@ -199,6 +199,8 @@ abc + test(a,b).ob+xyz
 
         private FlowChart.Type.Type? GetOwnerType(string ownerStr)
         {
+            if (GraphVm == null)
+                return null;
             var project = GraphVm.Graph.Project;
             var builder = project.Builder;
             return builder.GetTextType(GraphVm.Graph, ownerStr);

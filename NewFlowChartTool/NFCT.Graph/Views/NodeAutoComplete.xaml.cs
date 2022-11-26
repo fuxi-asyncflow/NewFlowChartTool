@@ -75,6 +75,7 @@ namespace NFCT.Graph.Views
         {
             var vm = complete.DataContext as NodeAutoCompleteViewModel;
             if (vm == null) return;
+            if (vm.Node == null) return;
 
             vm.Node.ExitEditingMode(vm, b);
             

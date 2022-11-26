@@ -116,12 +116,12 @@ namespace NFCT.Graph.Utility
         static PromptColorConverter()
         {
             _brushes = new Brush[6];
-            _brushes[0] = Application.Current.FindResource("NodeBackGround") as SolidColorBrush;
-            _brushes[1] = Application.Current.FindResource("NodeBackGround") as SolidColorBrush; //variable
-            _brushes[2] = Application.Current.FindResource("NodeWaitBackGround") as SolidColorBrush; //event
-            _brushes[3] = Application.Current.FindResource("NodeActionBackGround") as SolidColorBrush; //action
-            _brushes[4] = Application.Current.FindResource("NodeConditionBackGround") as SolidColorBrush; // method
-            _brushes[5] = Application.Current.FindResource("NodeWaitBackGround") as SolidColorBrush; // property
+            _brushes[0] = Application.Current.FindResource("NodeBackGround") as SolidColorBrush ?? CanvasNodeResource.ErrorBrush;
+            _brushes[1] = Application.Current.FindResource("NodeBackGround") as SolidColorBrush ?? CanvasNodeResource.ErrorBrush; //variable
+            _brushes[2] = Application.Current.FindResource("NodeWaitBackGround") as SolidColorBrush ?? CanvasNodeResource.ErrorBrush; //event
+            _brushes[3] = Application.Current.FindResource("NodeActionBackGround") as SolidColorBrush ?? CanvasNodeResource.ErrorBrush; //action
+            _brushes[4] = Application.Current.FindResource("NodeConditionBackGround") as SolidColorBrush ?? CanvasNodeResource.ErrorBrush; // method
+            _brushes[5] = Application.Current.FindResource("NodeWaitBackGround") as SolidColorBrush ?? CanvasNodeResource.ErrorBrush; // property
         }
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
