@@ -8,9 +8,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
-    d:DataContext="{d:DesignInstance vm:ProjectPanelViewModel}"
+    d:DataContext="{d:DesignInstance vm:ProjectPanelViewModel,
+                                     IsDesignTimeCreatable=True}"
     d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignWidth="200"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <UserControl.Resources>
