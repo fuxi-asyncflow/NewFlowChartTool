@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using FlowChart.Core;
 using FlowChart.Type;
 using NewFlowChartTool.Event;
@@ -11,10 +13,11 @@ using NFCT.Common;
 using NFCT.Common.Events;
 using Prism.Events;
 using Prism.Mvvm;
+using ProjectFactory;
 
 namespace NewFlowChartTool.ViewModels
 {
-    internal class TypeMemberTreeItemViewModel : BindableBase
+    public class TypeMemberTreeItemViewModel : BindableBase
     {
         public enum TypeMemberType
         {
@@ -70,12 +73,22 @@ namespace NewFlowChartTool.ViewModels
         public void AddChild(TypeMemberTreeItemViewModel? child) { if (child != null) Children.Add(child); }
     }
 
-    internal class TypePanelViewModel : BindableBase
+    public class TypePanelViewModel : BindableBase
     {
-        internal TypePanelViewModel()
+        public TypePanelViewModel()
         {
             Roots = new ObservableCollection<TypeMemberTreeItemViewModel>();
             SubscribeEvents();
+
+#if DEBUG
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+            {
+                var project = new Project(new MemoryProjectFactory());
+                project.Load();
+                OnOpenProject(project);
+                return;
+            }
+#endif
         }
 
         void SubscribeEvents()
