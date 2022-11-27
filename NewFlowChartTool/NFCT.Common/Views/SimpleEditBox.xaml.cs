@@ -59,19 +59,19 @@ namespace NFCT.Common.Views
             EditBox.SelectAll();
         }
 
-        public Action<SimpleEditBox, bool> OnExit;
+        public Action<SimpleEditBox, bool>? OnExit;
 
         private void EditBox_OnLostFocus(object sender, RoutedEventArgs e)
         {
-            OnExit(this, true);
+            OnExit?.Invoke(this, true);
         }
 
         private void EditBox_OnKeyDown(object sender, KeyEventArgs e)
         {
             if(e.Key == Key.Enter)
-                OnExit(this, true);
+                OnExit?.Invoke(this, true);
             else if (e.Key == Key.Escape)
-                OnExit(this, false);
+                OnExit?.Invoke(this, false);
         }
     }
 }

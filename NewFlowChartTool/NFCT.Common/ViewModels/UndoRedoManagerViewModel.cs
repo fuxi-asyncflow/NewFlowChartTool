@@ -33,6 +33,7 @@ namespace NFCT.Common.ViewModels
         {
             UndoCommands = new ObservableCollection<UndoRedoCommand>();
             RedoCommands = new ObservableCollection<UndoRedoCommand>();
+            actions = () => { };
             reverts = new List<Action>();
         }
         public ObservableCollection<UndoRedoCommand> UndoCommands { get; set; }

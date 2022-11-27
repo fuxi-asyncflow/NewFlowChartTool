@@ -37,11 +37,11 @@ namespace NewFlowChartTool.Utility.Converter
 
     internal class TypeMemberIconConverter : IValueConverter
     {
-        private Viewbox ClassIcon => Application.Current.FindResource("Icon_Class") as Viewbox;
-        private Viewbox MethodIcon => Application.Current.FindResource("Icon_Method") as Viewbox;
-        private Viewbox PropertyIcon => Application.Current.FindResource("Icon_Field") as Viewbox;
+        private Viewbox? ClassIcon => Application.Current.FindResource("Icon_Class") as Viewbox;
+        private Viewbox? MethodIcon => Application.Current.FindResource("Icon_Method") as Viewbox;
+        private Viewbox? PropertyIcon => Application.Current.FindResource("Icon_Field") as Viewbox;
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is TypeMemberTreeItemViewModel vm)
             {

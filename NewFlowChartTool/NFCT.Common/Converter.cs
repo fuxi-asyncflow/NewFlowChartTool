@@ -94,7 +94,7 @@ namespace NFCT.Common
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             int integer = (int)value;
-            if (integer == int.Parse(parameter.ToString()))
+            if (integer == int.Parse(parameter.ToString() ?? string.Empty))
                 return true;
             else
                 return false;

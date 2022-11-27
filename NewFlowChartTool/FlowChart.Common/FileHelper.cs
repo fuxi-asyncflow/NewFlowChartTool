@@ -30,12 +30,13 @@ namespace FlowChartCommon
             return Path.GetFullPath(new Uri(fullpath).LocalPath);
         }
 
-        public static string GetRelativePath(string filePath, string referencePath)
+        public static string GetRelativePath(string filePath, string? referencePath)
         {
-            if (referencePath == null)
-                referencePath = GetExeFolder();
-
-            string fileName = null;
+            referencePath ??= GetExeFolder();
+#if NET6_0_OR_GREATER
+            return Path.GetRelativePath(referencePath, filePath);
+#else
+            string? fileName = null;
             if (!filePath.EndsWith("\\"))
             {
                 FileInfo fi = new FileInfo(filePath);
@@ -59,6 +60,7 @@ namespace FlowChartCommon
                 result = result + fileName;
             }
             return result;
+#endif
         }
 
         public static string GetExeFolder()

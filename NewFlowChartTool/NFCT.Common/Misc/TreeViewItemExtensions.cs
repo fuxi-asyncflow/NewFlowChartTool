@@ -20,8 +20,9 @@ namespace NFCT.Common.Misc
             return 0;
         }
 
-        private static TreeViewItem GetParent(TreeViewItem item)
+        private static TreeViewItem? GetParent(TreeViewItem? item)
         {
+            if (item == null) return null;
             var parent = VisualTreeHelper.GetParent(item);
             while (!(parent is TreeViewItem || parent is TreeView))
             {

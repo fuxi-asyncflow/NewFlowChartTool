@@ -24,7 +24,7 @@ namespace NFCT.Graph.ViewModels
         public string Name => _variable.Name;
 
         public string Type => _variable.Type == null ? "" : _variable.Type.Name;
-        public string Value => _variable.DefaultValue;
+        public string? Value => _variable.DefaultValue;
         public string? Description => _variable.Description;
 
         public void OnVariableChange(Variable v)

@@ -254,7 +254,7 @@ abc + test(a,b).ob+xyz
                 {
                     OutsideFuncInfo = type.FindMember(funcName) as Method;
                 }
-                if (OutsideFuncInfo == null && type == BuiltinTypes.GlobalType) //TODO
+                if (OutsideFuncInfo == null && type == BuiltinTypes.GlobalType && GraphVm != null) //TODO
                 {
                     type = GraphVm.Graph.Type;
                     OutsideFuncInfo = type.FindMember(funcName) as Method;
@@ -420,7 +420,7 @@ abc + test(a,b).ob+xyz
         {
             // 实现继承功能
             var types = new HashSet<FlowChart.Type.Type>();
-            Action<FlowChart.Type.Type> _addParentType = null;
+            Action<FlowChart.Type.Type>? _addParentType = null;
             _addParentType = c =>
             {
                 if (!types.Contains(c))
@@ -428,7 +428,7 @@ abc + test(a,b).ob+xyz
                     types.Add(c);
                     c.BaseTypes.ForEach(p =>
                     {
-                        _addParentType(p);
+                        _addParentType?.Invoke(p);
                     });
                 }
             };

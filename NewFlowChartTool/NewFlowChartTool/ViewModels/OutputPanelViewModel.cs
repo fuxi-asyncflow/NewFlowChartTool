@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using FlowChart.Core;
 using FlowChart.Misc;
 using NewFlowChartTool.Event;
@@ -42,15 +44,18 @@ namespace NewFlowChartTool.ViewModels
     }
 
 
-    internal class OutputPanelViewModel : BindableBase, IOutputMessage
+    public class OutputPanelViewModel : BindableBase, IOutputMessage
     {
         public OutputPanelViewModel()
         {
             Outputs = new ObservableCollection<OutputItemViewModel>();
 #if DEBUG
-            Output("Test ...");
-            Output("Test Error ...", OutputMessageType.Error);
-            Output("Test Warning ...", OutputMessageType.Warning);
+            if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
+            {
+                Output("Test ...");
+                Output("Test Error ...", OutputMessageType.Error);
+                Output("Test Warning ...", OutputMessageType.Warning);
+            }
 #endif
 
             EventHelper.Sub<ProjectOpenEvent, Project>(project =>
