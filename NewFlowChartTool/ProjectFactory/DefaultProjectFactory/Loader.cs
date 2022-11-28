@@ -497,7 +497,7 @@ namespace ProjectFactory.DefaultProjectFactory
                         if (node is TextNode textNode)
                         {
                             if (value.Length > 0 && value[0] == '"')
-                                textNode.Text = value.Trim('"').Replace("\\\"", "\"").Replace("\\\\", "\\");
+                                textNode.Text = value.Substring(1, value.Length-2).Replace("\\\"", "\"").Replace("\\\\", "\\");
                             else
                                 textNode.Text = value;
                         }
