@@ -230,15 +230,15 @@ namespace FlowChart.Layout.MyLayout
 
             if (height < Setting.MinHeight)
             {
-                var offsetY = (Setting.MinHeight - height) / 2;
-                foreach (var node in NodeDict.Values)
-                {
-                    node.Y += offsetY;
-                }
                 _graph.Height = Setting.MinHeight;
             }
             else
                 _graph.Height = height;
+
+            foreach (var node in NodeDict.Values)
+            {
+                node.Y += Setting.RankSpace;
+            }
         }
     }
 }
