@@ -190,6 +190,17 @@ namespace FlowChart.Layout.MyLayout
         public double RankSpace = 40.0;
         public double MinWidth = 1920.0;
         public double MinHeight = 1080.0;
+
+        public LayoutGraphSetting Clone()
+        {
+            return new LayoutGraphSetting()
+            {
+                NodeSpace = this.NodeSpace,
+                RankSpace = this.RankSpace,
+                MinWidth = this.MinWidth,
+                MinHeight = this.MinHeight,
+            };
+        }
     }
 
     public class LayoutGraph

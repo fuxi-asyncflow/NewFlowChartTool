@@ -128,7 +128,7 @@ namespace FlowChart.Layout.MyLayout
             {
                 NodeDict = NodeDict,
                 EdgeDict = EdgeDict,
-                Setting = Graph.Setting,
+                Setting = Graph.Setting.Clone(),
                 Roots = RootNodes.Keys.ToList()
             };
             layoutGraph.Setting.MinWidth = 0.0;
