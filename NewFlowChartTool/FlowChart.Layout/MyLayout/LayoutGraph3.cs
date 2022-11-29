@@ -122,11 +122,17 @@ namespace FlowChart.Layout.MyLayout
 
             // if all group nodes has input edges, then find a node with input edge as root node
             //TODO: check if there is a better rule to find root node
-            CrossEdges.ForEach(edge =>
+            if (RootNodes.Count == 0)
             {
-                if(_nodeSet.Contains(edge.EndNode))
-                    RootNodes.Add(edge.EndNode, edge.StartNode);
-            });
+                foreach (var edge in CrossEdges)
+                {
+                    if (_nodeSet.Contains(edge.EndNode))
+                    {
+                        RootNodes.Add(edge.EndNode, edge.StartNode);
+                        break;
+                    }
+                }
+            }
 
             Debug.Assert(RootNodes.Count > 0);
             CrossEdges.ForEach(edge => edge.Disconnect());
