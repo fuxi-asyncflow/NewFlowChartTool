@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -119,6 +120,15 @@ namespace FlowChart.Layout.MyLayout
                 RootNodes.Add(node, node.InEdges[0].StartNode);
             }
 
+            // if all group nodes has input edges, then find a node with input edge as root node
+            //TODO: check if there is a better rule to find root node
+            CrossEdges.ForEach(edge =>
+            {
+                if(_nodeSet.Contains(edge.EndNode))
+                    RootNodes.Add(edge.EndNode, edge.StartNode);
+            });
+
+            Debug.Assert(RootNodes.Count > 0);
             CrossEdges.ForEach(edge => edge.Disconnect());
         }
 

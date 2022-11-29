@@ -346,6 +346,8 @@ namespace FlowChart.Layout.MyLayout
                     {
                         var rank = node.Rank + 1;
                         var child = edge.EndNode;
+                        if (child == startNode) // when layout group nodes, startNode may be child of another node
+                            return;
                         if (child.TreeParent == null)
                         {
                             child.TreeParent = node;
