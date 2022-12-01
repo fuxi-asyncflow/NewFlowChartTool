@@ -14,13 +14,14 @@ namespace FlowChart.Core
     {
         public TreeItem(string name) : base(name)
         {
-
         }
 
         public virtual void Rename(string newName)
         {
             throw new NotImplementedException();
         }
+
+        public Guid Uid;
 
         #region REF PROPERTY
         public Project Project { get; set; }
@@ -63,7 +64,7 @@ namespace FlowChart.Core
     {
         static Graph()
         {
-            EmptyGraph = new Graph("empty");
+            EmptyGraph = new Graph("empty") {Uid = Guid.Empty};
             EmptyGraph.AddNode(new StartNode());
         }
         public Graph(string Name)
@@ -106,7 +107,6 @@ namespace FlowChart.Core
 
 
         #region PROPERTY
-        public string Uid { get; set; }
 
         private string _path;
         public string Path
@@ -513,7 +513,7 @@ namespace FlowChart.Core
 
         public virtual Graph Clone()
         {
-            var graph = new Graph(Name) {Path = Path, Project = Project, Type = Type};
+            var graph = new Graph(Name) {Path = Path, Project = Project, Type = Type, Uid = Project.GenUUID()};
             var nodeDict = new Dictionary<Node, Node>();
             Nodes.ForEach(node =>
             {

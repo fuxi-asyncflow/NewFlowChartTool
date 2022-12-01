@@ -409,6 +409,13 @@ namespace ProjectFactory.DefaultProjectFactory
                 {
                     graph.ReturnType = Project.GetType(value);
                 }
+                else if (key == "uid")
+                {
+                    graph.Uid = Guid.Parse(value);
+                }
+                //////////////////////////////////////////////////
+                if(graph.Uid == Guid.Empty)
+                    graph.Uid = Project.GenUUID();
             }
 
             foreach (var group in GroupDict.Values)
@@ -646,6 +653,11 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             GroupDict.Clear();
             YamlNode? node;
+
+            if (graphNode.Children.TryGetValue(YAML_UID, out node))
+            {
+                graph.Uid = Guid.Parse(((YamlScalarNode)node).Value);
+            }
 
             if (graphNode.Children.TryGetValue(YAML_TYPE, out node))
             {

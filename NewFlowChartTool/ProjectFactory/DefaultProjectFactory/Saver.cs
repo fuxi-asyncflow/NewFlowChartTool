@@ -131,6 +131,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public void SaveGraph(Graph graph, List<string> lines)
         {
             lines.Add($"path: {graph.Path}");
+            lines.Add($"uid: {graph.Uid}");
             lines.Add($"type: {graph.Type.Name}");
             if(!string.IsNullOrEmpty(graph.Description))
                 lines.Add($"description: {graph.Description}");

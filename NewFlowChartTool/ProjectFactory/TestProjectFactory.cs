@@ -177,7 +177,7 @@ namespace ProjectFactory
 
         public void ToGraph(Graph g)
         {
-            g.Uid = Uid;
+            g.Uid = Guid.Parse(Uid);
             g.Path = Path;
             g.Description = Description;
             Nodes.ForEach(node => g.AddNode(node.ToNode()));

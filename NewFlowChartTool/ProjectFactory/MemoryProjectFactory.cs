@@ -40,7 +40,7 @@ namespace ProjectFactory
 
         FlowChart.Core.Graph CreateTestGraph_1(Type tp)
         {
-            var g = new FlowChart.Core.Graph("test_0") { Path = "MonsterAI.test_0", Type = tp};
+            var g = new FlowChart.Core.Graph("test_0") { Path = "MonsterAI.test_0", Type = tp, Uid = Project.GenUUID()};
             g.AddNode(new StartNode());
             g.AddNode(new TextNode() {Text = "Say(\"hello\")"});
             g.AddNode(new TextNode() { Text = "Say(1)" });
@@ -54,7 +54,7 @@ namespace ProjectFactory
 
         FlowChart.Core.Graph CreateTestGraph_2(Type tp)
         {
-            var g = new FlowChart.Core.Graph("big_graph") { Path = "MonsterAI.big_graph", Type = tp };
+            var g = new FlowChart.Core.Graph("big_graph") { Path = "MonsterAI.big_graph", Type = tp, Uid = Project.GenUUID() };
             var startNode = new StartNode();
             var nodes = new List<Node>();
             int rows = 3;
