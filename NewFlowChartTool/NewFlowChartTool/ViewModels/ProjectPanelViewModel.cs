@@ -311,7 +311,7 @@ namespace NewFlowChartTool.ViewModels
             graph.Name = newGraphName;
             graph.Path = $"{GetPath()}.{newGraphName}";
             graph.Project = folder.Project;
-            graph.Type = folder.Type;
+            graph.Type = folder.Type ?? folder.Children.First().Type;
 
             folder.Project.AddGraph(graph);
             
