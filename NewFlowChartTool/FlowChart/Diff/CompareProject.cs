@@ -150,6 +150,7 @@ namespace FlowChart.Diff
 
         public void Print()
         {
+            var fgColor = Console.ForegroundColor;
             Console.WriteLine("==== diff result: ");
             if (DiffResult.Count == 0)
                 Console.WriteLine("no change");
@@ -157,18 +158,21 @@ namespace FlowChart.Diff
             {
                 if (diffGraph.State == DiffState.Remove)
                 {
+                    Console.WriteLine();
                     Console.ForegroundColor = ConsoleColor.Red;
                     if(diffGraph.OldGraph != null)
                         Console.WriteLine($"--- {diffGraph.OldGraph.Path}, {diffGraph.OldGraph.Uid}");
                 }
                 else if (diffGraph.State == DiffState.Add)
                 {
+                    Console.WriteLine();
                     Console.ForegroundColor = ConsoleColor.Green;
                     if (diffGraph.NewGraph != null)
                         Console.WriteLine($"+++ {diffGraph.NewGraph.Path}, {diffGraph.NewGraph.Uid}");
                 }
                 else if (diffGraph.State == DiffState.Modify)
                 {
+                    Console.WriteLine();
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     if (diffGraph.NewGraph != null)
                         Console.WriteLine($"=== {diffGraph.NewGraph.Path}, {diffGraph.NewGraph.Uid}");
@@ -178,22 +182,24 @@ namespace FlowChart.Diff
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
                             if (node.OldNode != null)
-                                Console.WriteLine($"--- {node.OldNode}, {node.OldNode.Uid}");
+                                Console.WriteLine($"- {node.OldNode}, {node.OldNode.Uid}");
                         }
                         else if (node.State == DiffState.Add)
                         {
                             Console.ForegroundColor = ConsoleColor.Green;
                             if (node.NewNode != null)
-                                Console.WriteLine($"+++ {node.NewNode}, {node.NewNode.Uid}");
+                                Console.WriteLine($"+ {node.NewNode}, {node.NewNode.Uid}");
                         }
                         else if (node.State == DiffState.Modify)
                         {
                             Console.ForegroundColor = ConsoleColor.Yellow;
-                            Console.WriteLine($"*** {node.OldNode} -> {node.NewNode} {node.OldNode.Uid}");
+                            Console.WriteLine($"= {node.OldNode} -> {node.NewNode} {node.OldNode.Uid}");
                         }
                     }
                 }
             }
+
+            Console.ForegroundColor = fgColor;
         }
     }
 }
