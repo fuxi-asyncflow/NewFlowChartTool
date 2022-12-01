@@ -336,7 +336,10 @@ namespace ProjectFactory.DefaultProjectFactory
             var path = firstLine.Substring(6).Trim();
             var name = path.Split('.').Last();
             var graph =  new Graph(name) { Path = path};
-            graph.LazyLoadFunc = delegate { CustomLoadGraph(graph, lines); };
+            if(Project.IsAsyncLoad)
+                graph.LazyLoadFunc = delegate { CustomLoadGraph(graph, lines); };
+            else
+                CustomLoadGraph(graph, lines);
             //graph.LazyLoadFunc = delegate {  };
             return graph;
         }
