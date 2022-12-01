@@ -9,6 +9,7 @@ using FlowChart.AST;
 using FlowChart.AST.Nodes;
 using FlowChart.Core;
 using FlowChart.Debug;
+using FlowChart.Diff;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
 using ProjectFactory;
@@ -59,7 +60,8 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             //OpenProjectTest();
             //ParserTest();            
             //CodeGenTest();
-            DebugTest();
+            //DebugTest();
+            DiffTest(@"F:\asyncflow\asyncflow_new\test\old", @"F:\asyncflow\asyncflow_new\test\flowchart");
         }
 
         static void OpenProjectTest()
@@ -171,6 +173,18 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             {
                 Thread.Sleep(10);
             }
+        }
+
+        static void DiffTest(string oldProjectPath, string newProjectPath)
+        {
+            var oldProject = new Project(new DefaultProjectFactory()) {Path = oldProjectPath};
+            var newProject = new Project(new DefaultProjectFactory()) { Path = newProjectPath };
+            oldProject.Load();
+            newProject.Load();
+            var diff = new CompareProject(oldProject, newProject);
+            diff.Compare();
+            diff.Print();
+
         }
     }
 }
