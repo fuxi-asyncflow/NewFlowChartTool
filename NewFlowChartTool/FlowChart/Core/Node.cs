@@ -66,7 +66,18 @@ namespace FlowChart.Core
     {
         public override Node Clone(Graph graph)
         {
-            return new StartNode();
+            return new StartNode() {Uid = Project.GenUUID()};
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj is not StartNode node)
+            {
+                return false;
+            }
+            return true;
         }
     }
 
@@ -76,6 +87,7 @@ namespace FlowChart.Core
         public override Node Clone(Graph graph)
         {
             var node = new TextNode();
+            Uid = Project.GenUUID();
             node.Text = Text;
             node.Description = Description;
             return node;
@@ -84,6 +96,20 @@ namespace FlowChart.Core
         public override string ToString()
         {
             return $"`[TextNode] {Text}`";
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj is not TextNode node)
+            {
+                return false;
+            }
+
+            if (Text != node.Text)
+                return false;
+            return true;
         }
     }
 }
