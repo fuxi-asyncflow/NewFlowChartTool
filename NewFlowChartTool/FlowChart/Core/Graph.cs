@@ -71,7 +71,7 @@ namespace FlowChart.Core
         : base(Name)
         {
             Nodes = new List<Node>();
-            NodeDict = new Dictionary<string, Node>();
+            NodeDict = new Dictionary<Guid, Node>();
             Connectors = new List<Connector>();
             Variables = new List<Variable>();
             Groups = new List<Group>();
@@ -125,7 +125,7 @@ namespace FlowChart.Core
         }
 
         public List<Node> Nodes { get; set; }
-        public Dictionary<string, Node> NodeDict { get; set; }
+        public Dictionary<Guid, Node> NodeDict { get; set; }
         public Node Root => Nodes[0];
         public List<Connector> Connectors { get; set; }
         public List<Variable> Variables { get; set; }
@@ -385,7 +385,7 @@ namespace FlowChart.Core
             return false;
         }
 
-        public Node? GetNode(string uid)
+        public Node? GetNode(Guid uid)
         {
             Node node;
             if (NodeDict.TryGetValue(uid, out node))
@@ -394,7 +394,7 @@ namespace FlowChart.Core
             return null;
         }
 
-        public void Connect(string uidStart, string uidEnd, Connector.ConnectorType connType)
+        public void Connect(Guid uidStart, Guid uidEnd, Connector.ConnectorType connType)
         {
             Connect(GetNode(uidStart), GetNode(uidEnd), connType);
         }

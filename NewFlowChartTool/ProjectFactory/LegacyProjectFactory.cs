@@ -388,7 +388,7 @@ namespace ProjectFactory
         //    return para;
         //}
 
-        private void LoadNode(JsonElement nodeObj, string nodeUId, Graph chart, Dictionary<int, string> idMap)
+        private void LoadNode(JsonElement nodeObj, Guid nodeUId, Graph chart, Dictionary<int, Guid> idMap)
         {
             var node = chart.GetNode(nodeUId) as TextNode;
             node.Text = nodeObj.GetProperty("command").GetString();
@@ -490,13 +490,13 @@ namespace ProjectFactory
             var nodesObj = chartObj.GetProperty("nodes");
 
             // 第一次遍历，获取id到uid的映射
-            Dictionary<int, string> idMap = new Dictionary<int, string>();
+            var idMap = new Dictionary<int, Guid>();
             idMap.Add(0, startNode.Uid);
 
             foreach (var kv in nodesObj.EnumerateObject())
             {
                 int nodeId = Int32.Parse(kv.Name);
-                var nodeUid = Project.GenUUID().ToString();
+                var nodeUid = Project.GenUUID();
 
                 var node = new TextNode()
                 {

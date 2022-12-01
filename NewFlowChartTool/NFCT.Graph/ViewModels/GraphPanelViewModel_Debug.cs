@@ -84,7 +84,7 @@ namespace NFCT.Graph.ViewModels
         {
             if (_debugNodesCacheDict.TryGetValue(uid, out var nodeVm))
                 return nodeVm;
-            var node = Graph.GetNode(uid.ToString("N"));
+            var node = Graph.GetNode(uid);
             if (node == null)
                 return null;
             nodeVm = GetNodeVm(node);

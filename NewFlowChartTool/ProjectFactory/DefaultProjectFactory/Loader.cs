@@ -479,13 +479,17 @@ namespace ProjectFactory.DefaultProjectFactory
                     int colonPos = uidLine.IndexOf(':');
                     var key = uidLine.Substring(0, colonPos).Trim();
                     var value = uidLine.Substring(colonPos + 1).Trim();
+                    if (!Guid.TryParse(value, out Guid uid))
+                    {
+                        uid = Project.GenUUID();
+                    }
                     if (graph.Nodes.Count == 0)
                     {
-                        node = new StartNode(){Uid = value};
+                        node = new StartNode(){Uid = uid};
                     }
                     else
                     {
-                        node = new TextNode(){Uid = value};
+                        node = new TextNode(){Uid = uid};
                     }
                     graph.AddNode(node);
 
@@ -495,11 +499,7 @@ namespace ProjectFactory.DefaultProjectFactory
                     int colonPos = line.IndexOf(':');
                     var key = line.Substring(0, colonPos).Trim();
                     var value = line.Substring(colonPos + 1).Trim();
-                    if (key == "uid")
-                    {
-                        node.Uid = value;
-                    }
-                    else if (key == "text")
+                    if (key == "text")
                     {
                         if (node is TextNode textNode)
                         {
@@ -564,7 +564,16 @@ namespace ProjectFactory.DefaultProjectFactory
                     else if (key == "type")
                     {
                         int type = int.Parse(value);
-                        graph.Connect(start, end, (Connector.ConnectorType)(type));
+                        if (!Guid.TryParse(start, out Guid startUid))
+                        {
+                            Logger.ERR($"invalid node guid in connector : {start}");
+                        }
+                        else if (!Guid.TryParse(end, out Guid endUid))
+                        {
+                            Logger.ERR($"invalid node guid in connector : {end}");
+                        }
+                        else
+                            graph.Connect(startUid, endUid, (Connector.ConnectorType)(type));
                     }
                 }
                 else
@@ -710,7 +719,16 @@ namespace ProjectFactory.DefaultProjectFactory
                     var start = ((YamlScalarNode)(connectNode.Children[YAML_START])).Value;
                     var end = ((YamlScalarNode)(connectNode.Children[YAML_END])).Value;
                     var connType = ((YamlScalarNode)(connectNode.Children[YAML_TYPE])).Value;
-                    graph.Connect(start, end, (Connector.ConnectorType)(Int32.Parse(connType)));
+                    if (!Guid.TryParse(start, out Guid startUid))
+                    {
+                        Logger.ERR($"invalid node guid in connector : {start}");
+                    }
+                    else if (!Guid.TryParse(end, out Guid endUid))
+                    {
+                        Logger.ERR($"invalid node guid in connector : {end}");
+                    }
+                    else
+                        graph.Connect(startUid, endUid, (Connector.ConnectorType)(Int32.Parse(connType)));
                 }
             }
 
@@ -724,12 +742,17 @@ namespace ProjectFactory.DefaultProjectFactory
         public Node? LoadGraphNode(YamlMappingNode root)
         {
             YamlNode? tmpNode;
-            string? uid;
+            string? uidStr;
+            Guid uid;
             if (root.Children.TryGetValue(YAML_UID, out tmpNode))
-                uid = ((YamlScalarNode)tmpNode).Value;
+            {
+                uidStr = ((YamlScalarNode)tmpNode).Value;
+                if (!Guid.TryParse(uidStr, out uid))
+                    uid = Project.GenUUID();
+            }
             else
             {
-                uid = "1";
+                uid = Project.GenUUID();
             }
 
             Node node;

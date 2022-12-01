@@ -152,13 +152,6 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             GenCode(node_10);
         }
 
-        static void ConvertProject(string path)
-        {
-            var project = new Project(new TestProjectFactory()) { Path = path };
-            project.Load();
-            project.Save();
-        }
-
         static void ConvertLegacyProject(string xmlPath, string outputPath)
         {
             var factory = new LegacyProjectFactory() {XmlPath = xmlPath};

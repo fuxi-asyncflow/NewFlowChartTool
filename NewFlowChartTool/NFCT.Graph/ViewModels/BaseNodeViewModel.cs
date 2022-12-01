@@ -86,7 +86,7 @@ namespace NFCT.Graph.ViewModels
         public Node Node;
 
 #if DEBUG
-        public BaseNodeViewModel():this(new Node(), new GraphPaneViewModel(new FlowChart.Core.Graph("design")))
+        public BaseNodeViewModel():this(new Node() { Uid = Project.GenUUID() }, new GraphPaneViewModel(new FlowChart.Core.Graph("design")))
         {
         }
 #endif

@@ -17,11 +17,10 @@ namespace FlowChart.Core
 
         public Node()
         {
-            Uid = Project.GenUUID().ToString();
             Parents = new List<Connector>();
             Children = new List<Connector>();
         }
-        public string Uid { get; set; }
+        public Guid Uid { get; set; }
         public Graph OwnerGraph { get; set; }
         public Group? OwnerGroup { get; set; }
         public string? Description { get; set; }
@@ -47,7 +46,7 @@ namespace FlowChart.Core
                 var contents = pr.Content.Contents;
                 if (contents.Count > 0 && contents[0] == "waitall")
                 {
-                    Parents.ForEach(conn => contents.Add(conn.Start.Uid));
+                    Parents.ForEach(conn => contents.Add(conn.Start.Uid.ToString()));
                 }
             }
             ParseEvent?.Invoke(this, pr);

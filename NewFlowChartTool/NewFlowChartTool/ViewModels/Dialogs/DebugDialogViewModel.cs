@@ -166,7 +166,7 @@ namespace NewFlowChartTool.ViewModels
         {
             _netManager.BroadCast(Host, StartPort, EndPort, new SetBreakPointMessage()
             {
-                ChartName = node.OwnerGraph.Path, NodeUid = node.Uid, Command = isBreakPoint
+                ChartName = node.OwnerGraph.Path, NodeUid = node.Uid.ToString(), Command = isBreakPoint
             });
         }
 

@@ -83,9 +83,14 @@ namespace NFCT.Graph.ViewModels
                 }
                 else
                 {
+                    Node? node = null;
                     if (idStr.StartsWith('"'))
                         idStr = idStr.Trim('"');
-                    var node = Owner.Graph.GetNode(idStr);
+                    if (Guid.TryParse(idStr, out Guid uid))
+                    {
+                        node = Owner.Graph.GetNode(uid);
+                    }
+                    
                     if (node == null)
                         Logger.WARN($"cannot find node with uid `{idStr}`");
                     else
