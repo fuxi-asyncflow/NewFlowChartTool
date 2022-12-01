@@ -347,7 +347,7 @@ namespace ProjectFactory.DefaultProjectFactory
             foreach (var line in yamlLines)
             {
                 //if (line.Length == 4 && line.StartsWith("---") || line.StartsWith("..."))
-                if(line.Length == 4 && (
+                if(line.Length >= 3 && (
                        (line[0] == '-' && line[1] == '-' && line[2] == '-') 
                        || (line[0] == '.' && line[1] == '.' && line[2] == '.')
                        ))
