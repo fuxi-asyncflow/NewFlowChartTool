@@ -114,7 +114,7 @@ namespace FlowChart.Core
             get => _path;
             set => SetPath(value);
         }
-        
+
         public void SetPath(string path)
         {
             if (string.Equals(_path, path))
@@ -134,6 +134,7 @@ namespace FlowChart.Core
 
         public bool IsSubGraph { get; set; }
         public FlowChart.Type.Type? ReturnType { get; set; }
+        public string? SaveFilePath;
 
         #region lazy load
         public bool IsLoaded { get; set; }
@@ -411,7 +412,7 @@ namespace FlowChart.Core
             , int startIdx = -1, int endIdx = -1)
         {
             // check exist connector
-            var conn = start.Parents.Find(conn => conn.End == end);
+            var conn = start.Children.Find(conn => conn.End == end);
             if (conn != null)
                 return null;
             conn = new Connector(start, end, connType);

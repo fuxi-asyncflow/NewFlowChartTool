@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using FlowChart;
 using FlowChart.Core;
 using FlowChart.Type;
 using FlowChartCommon;
@@ -83,6 +84,14 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             Project = project;
             ProjectFolder = new DirectoryInfo(Project.Path);
+            var config = ProjectConfig.LoadConfig(System.IO.Path.Combine(ProjectFolder.FullName, "project.json"));
+            if (config == null)
+            {
+                Logger.ERR("load project config failed");
+                return;
+            }
+
+            Project.Config = config;
             GroupDict = new Dictionary<string, Group>();
             var sw = Stopwatch.StartNew();
             LoadTypes();
@@ -318,12 +327,23 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public void LoadGraphs()
         {
-            var graphFolder = ProjectFolder.CreateSubdirectory(DefaultProjectFactory.GraphFolderName);
-            foreach (var file in graphFolder.EnumerateFiles())
+            var roots = Project.Config.GraphRoots;
+            foreach (var root in roots)
             {
-                //var yamlText = File.ReadAllText(file.FullName);
-                //LoadGraphFile(yamlText);
-                CustomLoadGraphFile(File.ReadAllLines(file.FullName).ToList());
+                var path = System.IO.Path.Combine(ProjectFolder.FullName, root.Path, root.Name);
+                if (File.Exists(path + ".yaml"))
+                {
+                    var file = new FileInfo(path + ".yaml");
+                    CustomLoadGraphFile(File.ReadAllLines(file.FullName).ToList());
+                }
+                if (Directory.Exists(path))
+                {
+                    var graphFolder = new DirectoryInfo(path);
+                    foreach (var file in graphFolder.EnumerateFiles())
+                    {
+                        CustomLoadGraphFile(File.ReadAllLines(file.FullName).ToList());
+                    }
+                }
             }
         }
 

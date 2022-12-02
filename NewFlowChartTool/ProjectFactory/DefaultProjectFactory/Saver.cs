@@ -102,21 +102,33 @@ namespace ProjectFactory.DefaultProjectFactory
                 var graphPath = kv.Key;
                 var graph = kv.Value;
                 Debug.Assert(graph.Path == graphPath);
-                var file = SaveGraphByRoot(graph);
+                if (graph.SaveFilePath == null)
+                {
+                    // get root config
+                    var rootName = graphPath.Substring(0, graphPath.IndexOf('.'));
+                    var rootConfig = Project.Config.GetGraphRoot(rootName);
+                    if (rootConfig == null)
+                    {
+                        var msg = $"invalid root for graph {graphPath}";
+                        Logger.ERR(msg);
+                        throw new Exception(msg);
+                    }
 
-                List<Graph> graphs;
-                if (!graphFiles.TryGetValue(file, out graphs))
+                    graph.SaveFilePath = rootConfig.Path + '/' + rootConfig.SaveRule.GetGraphSaveFile(graphPath);
+                }
+
+                if (!graphFiles.TryGetValue(graph.SaveFilePath, out var graphs))
                 {
                     graphs = new List<Graph>();
-                    graphFiles.Add(file, graphs);
+                    graphFiles.Add(graph.SaveFilePath, graphs);
                 }
                 graphs.Add(graph);
             }
 
             foreach (var kv in graphFiles)
             {
-                var filePath = kv.Key.Replace('.', System.IO.Path.PathSeparator) + DefaultProjectFactory.GraphFileExt;
-                filePath = System.IO.Path.Combine(graphFolder.FullName, filePath);
+                var filePath = kv.Key + DefaultProjectFactory.GraphFileExt;
+                filePath = System.IO.Path.Combine(Project.Path, filePath);
                 var lines = new List<string>();
                 foreach (var graph in kv.Value)
                 {

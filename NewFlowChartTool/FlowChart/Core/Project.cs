@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using System.Runtime.CompilerServices;
 using FlowChart.AST;
 using FlowChart.Misc;
 using FlowChart.Parser;
@@ -48,6 +47,8 @@ namespace FlowChart.Core
         }
 
         #region PROPERTIES
+
+        public ProjectConfig Config;
         public string Path { get; set; }
         public Folder Root { get; set; }
         public Dictionary<string, Type.Type> TypeDict { get; set; }
