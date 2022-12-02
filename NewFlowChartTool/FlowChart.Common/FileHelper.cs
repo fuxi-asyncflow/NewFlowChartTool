@@ -76,6 +76,17 @@ namespace FlowChartCommon
                 if (oldContent == content)
                     return;
             }
+            else
+            {
+                var di = new FileInfo(path).Directory;
+                if (di == null)
+                {
+                    Logger.ERR($"invalid folder name for file {path}");
+                }
+                else
+                    System.IO.Directory.CreateDirectory(di.FullName);
+
+            }
             System.IO.File.WriteAllText(path, content);
         }
 
