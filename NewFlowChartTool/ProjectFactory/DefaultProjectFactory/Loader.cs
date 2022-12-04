@@ -283,7 +283,6 @@ namespace ProjectFactory.DefaultProjectFactory
             if (eventsNode == null) return;
 
             YamlNode? tmpNode = null;
-            Project.AddEvent(new EventType("None") {EventId = 0});
 
             foreach (var evNode in eventsNode)
             {

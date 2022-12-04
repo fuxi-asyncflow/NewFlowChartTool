@@ -150,6 +150,9 @@ namespace FlowChart.Core
                 return false;
             }
 
+            if(EventDict.Count == 0)
+                EventDict.Add("None", new EventType("None") { EventId = 0 });
+
             if (ev.EventId < 0)
                 ev.EventId = EventDict.Count;
 

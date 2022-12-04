@@ -353,6 +353,8 @@ namespace ProjectFactory.DefaultProjectFactory
             events.Sort((a, b) =>  a.EventId.CompareTo(b.EventId));
             foreach (var ev in events)
             {
+                if(ev.EventId == 0)
+                    continue;
                 lines.Add("- ");
                 lines.Add($"  id: {ev.EventId}");
                 lines.Add($"  name: {ev.Name}");
