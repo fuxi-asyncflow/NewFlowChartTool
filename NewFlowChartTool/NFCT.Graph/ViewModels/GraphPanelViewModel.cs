@@ -529,6 +529,15 @@ namespace NFCT.Graph.ViewModels
             }
         }
 
+        public void ReplaceNodeViewModel(Node node, BaseNodeViewModel newVm)
+        {
+            var oldVm = GetNodeVm(node);
+            var idx = Nodes.IndexOf(oldVm);
+            Debug.Assert(idx >= 0);
+            Nodes[idx] = newVm;
+            NodeDict[node] = newVm;
+        }
+
         #region View Methods
 
         public void ScreenShot()

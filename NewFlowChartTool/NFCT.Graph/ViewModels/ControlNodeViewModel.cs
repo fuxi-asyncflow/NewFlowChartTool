@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using FlowChart.AST;
 using FlowChart.Core;
 using FlowChartCommon;
 
@@ -24,6 +25,8 @@ namespace NFCT.Graph.ViewModels
         {
             ParamNodes = new ObservableCollection<BaseNodeViewModel>();
         }
+
+        public string EditingText { get; set; }
 
         public static HashSet<string> ControlFuncNames;
 
@@ -46,6 +49,51 @@ namespace NFCT.Graph.ViewModels
             }
 
             return true;
+        }
+
+        public override void EnterEditingMode()
+        {
+            var paramStr = string.Join(", ", ParamNodes.ToList().ConvertAll(node => node.Id.ToString()));
+            EditingText = $"{ControlFuncName}({paramStr})";
+            base.EnterEditingMode();
+        }
+
+        public override void ExitEditingMode(NodeAutoCompleteViewModel acVm, bool save)
+        {
+            // avoid func is called twice: first called by Key.Esc, then called by LostFocus
+            if (IsEditing == false)
+                return;
+            Logger.DBG($"[{nameof(ControlNodeViewModel)}] ExitEditingMode");
+            if (save && Node is TextNode textNode)
+            {
+                var inputText = acVm.Text;
+                if (MaybeControlNodeViewModel(inputText) && ParseText(inputText)) 
+                {
+                    var paramStr = string.Join(", ", ParamNodes.ToList().ConvertAll(node => node.Node.Uid.ToString()));
+                    textNode.Text = $"{ControlFuncName}({paramStr})";
+                }
+                else
+                    textNode.Text = acVm.Text;
+                Logger.DBG($"node text is change to {textNode.Text}");
+                //RaisePropertyChanged(nameof(Text));
+                Owner.NeedLayout = true;
+                Owner.Build();
+            }
+
+            IsEditing = false;
+        }
+
+        public override void OnParseEnd(ParseResult pr)
+        {
+            if (Node is not TextNode textNode)
+                return;
+            if (!ControlNodeViewModel.MaybeControlNodeViewModel(textNode.Text))
+            {
+                var textNodeVm = new TextNodeViewModel(textNode, Owner);
+                Owner.ReplaceNodeViewModel(Node, textNodeVm);
+                textNodeVm.OnParseEnd(pr);
+                return;
+            }
         }
 
         public bool ParseText(string? text)

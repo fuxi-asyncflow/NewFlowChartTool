@@ -96,6 +96,13 @@ namespace NFCT.Graph.ViewModels
 
         public override void OnParseEnd(ParseResult pr)
         {
+            if (ControlNodeViewModel.MaybeControlNodeViewModel(Text))
+            {
+                var controlNodeVm = new ControlNodeViewModel(Node, Owner);
+                Owner.ReplaceNodeViewModel(Node, controlNodeVm);
+                return;
+            }
+
             Logger.DBG($"[OnParseEnd] Tokens count : {pr.Tokens}");
             if (pr.Tokens != null)
             {

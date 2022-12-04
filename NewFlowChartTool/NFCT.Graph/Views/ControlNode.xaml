@@ -28,6 +28,7 @@
     </UserControl.Resources>
     <Grid>
         <Border
+            x:Name="NodeBorder"
             Background="{Binding BgType, Converter={StaticResource BgColorConverter}, Mode=OneWay}"
             BorderBrush="{Binding BgType, Converter={StaticResource BorderColorConverter}, Mode=OneWay}"
             BorderThickness="{Binding IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}"
@@ -49,7 +50,10 @@
                         FontSize="16"
                         Text="{Binding Id}" />
                 </Border>
-                <TextBlock Style="{StaticResource TextStyle}" Text="{Binding ControlFuncName}" />
+                <TextBlock
+                    Style="{StaticResource TextStyle}"
+                    Text="{Binding ControlFuncName}"
+                    Visibility="{Binding IsEditing, Converter={StaticResource InvertBooleanToVisibilityConverter}}" />
                 <StackPanel x:Name="NodeIds" Visibility="{Binding IsEditing, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
                     <ItemsControl ItemsSource="{Binding ParamNodes}">
                         <ItemsControl.ItemsPanel>

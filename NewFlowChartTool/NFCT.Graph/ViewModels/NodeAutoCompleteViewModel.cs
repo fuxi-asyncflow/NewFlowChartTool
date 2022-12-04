@@ -99,7 +99,7 @@ abc + test(a,b).ob+xyz
         }
 
         public static bool IsActivate { get; set; }
-        public TextNodeViewModel? Node { get; set; }
+        public BaseNodeViewModel? Node { get; set; }
         private string _text;
         public string Text
         {
