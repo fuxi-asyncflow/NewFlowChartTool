@@ -61,7 +61,8 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             //ParserTest();            
             //CodeGenTest();
             //DebugTest();
-            DiffTest(@"F:\asyncflow\asyncflow_new\test\old", @"F:\asyncflow\asyncflow_new\test\flowchart");
+            //DiffTest(@"F:\asyncflow\asyncflow_new\test\old", @"F:\asyncflow\asyncflow_new\test\flowchart");
+            ConvertProject(@"F:\work\asyncflow\tmp\MobilisAI");
         }
 
         static void OpenProjectTest()
@@ -161,6 +162,16 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             project.Load();
             project.Save();
 
+            //var p2 = new Project(new DefaultProjectFactory()) { Path = outputPath };
+            //p2.Load();
+        }
+
+        static void ConvertProject(string path)
+        {
+            var factory = new TestProjectFactory();
+            var project = new Project(factory) { Path = path };
+            project.Load();
+            project.Save();
             //var p2 = new Project(new DefaultProjectFactory()) { Path = outputPath };
             //p2.Load();
         }

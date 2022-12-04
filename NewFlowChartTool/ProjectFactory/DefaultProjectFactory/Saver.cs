@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using FlowChart;
 using FlowChart.AST;
 using FlowChart.Core;
 using FlowChart.Type;
@@ -76,6 +78,13 @@ namespace ProjectFactory.DefaultProjectFactory
             PrepareFolder();
             SaveGraphs();
             SaveTypes();
+            SaveConfig(project.Path + "/project.json");
+        }
+
+        public void SaveConfig(string path)
+        {
+            var jsonSetting = new JsonSerializerOptions() {WriteIndented = true};
+            FileHelper.Save(path, JsonSerializer.Serialize<ProjectConfig>(Project.Config, jsonSetting));
         }
 
         public void PrepareFolder()
