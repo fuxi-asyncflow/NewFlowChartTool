@@ -14,7 +14,7 @@ namespace NFCT.Graph.ViewModels
     {
         void GraphPaneViewModel_Layout_Init()
         {
-            _layout = new MsaglLayout();
+            _layout = LayoutManager.Instance.LayoutDict["layout_group"].Invoke();
             Scale = 1.0f;
         }
         public bool NeedLayout { get; set; }
