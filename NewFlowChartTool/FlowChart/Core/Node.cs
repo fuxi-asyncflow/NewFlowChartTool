@@ -87,7 +87,7 @@ namespace FlowChart.Core
         public override Node Clone(Graph graph)
         {
             var node = new TextNode();
-            Uid = Project.GenUUID();
+            node.Uid = Project.GenUUID();
             node.Text = Text;
             node.Description = Description;
             return node;
