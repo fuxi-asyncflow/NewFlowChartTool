@@ -28,7 +28,7 @@ namespace NFCT.Graph.Views
         {
             InitializeComponent();
             DataContextChanged += OnDataContextChanged;
-            //_bgColorConverter = FindResource("BgColorConverter") as IValueConverter;
+            _bgColorConverter = FindResource("BgColorConverter") as IValueConverter;
         }
 
         private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)

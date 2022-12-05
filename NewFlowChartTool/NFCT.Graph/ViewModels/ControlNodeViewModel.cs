@@ -17,7 +17,7 @@ namespace NFCT.Graph.ViewModels
         {
             ControlFuncNames = new HashSet<string>()
             {
-                "stopnode", "stopflow", "gotonode"
+                "stopnode", "stopflow", "gotonode", "waitall"
             };
             
         }
@@ -69,7 +69,7 @@ namespace NFCT.Graph.ViewModels
                 var inputText = acVm.Text;
                 if (MaybeControlNodeViewModel(inputText) && ParseText(inputText)) 
                 {
-                    var paramStr = string.Join(", ", ParamNodes.ToList().ConvertAll(node => node.Node.Uid.ToString()));
+                    var paramStr = string.Join(", ", ParamNodes.ToList().ConvertAll(node => $"\"{node.Node.Uid.ToString()}\""));
                     textNode.Text = $"{ControlFuncName}({paramStr})";
                 }
                 else
@@ -87,13 +87,75 @@ namespace NFCT.Graph.ViewModels
         {
             if (Node is not TextNode textNode)
                 return;
-            if (!ControlNodeViewModel.MaybeControlNodeViewModel(textNode.Text))
+            if (!MaybeControlNodeViewModel(textNode.Text))
             {
                 var textNodeVm = new TextNodeViewModel(textNode, Owner);
                 Owner.ReplaceNodeViewModel(Node, textNodeVm);
                 textNodeVm.OnParseEnd(pr);
                 return;
             }
+
+            if (pr.IsError)
+                BgType = NodeBgType.ERROR;
+            else if (ControlFuncName == "waitall")
+                BgType = NodeBgType.WAIT;
+            else
+                BgType = NodeBgType.ACTION;
+            RaisePropertyChanged(nameof(BgType));
+        }
+
+        public static string? ReplaceText(string text, GraphPaneViewModel graphVm)
+        {
+            var left = text.IndexOf('(');
+            var right = text.IndexOf(')');
+            if (left == -1 || right == -1 || left > right)
+            {
+                //TODO change node type to TextNode
+                return null;
+            }
+
+            var startText = text.Substring(0, left).Trim();
+            if (!ControlFuncNames.Contains(startText))
+            {
+                //TODO change node type to TextNode
+                return null;
+            }
+
+            var funcName = startText;
+            var paramStr = text.Substring(left + 1, right - left - 1).Trim();
+            var paramList = paramStr.Split(',').ToList().ConvertAll(s => s.Trim());
+            var ParamNodes = new List<BaseNodeViewModel>();
+            paramList.ForEach(idStr =>
+            {
+                int id;
+                if (Int32.TryParse(idStr, out id))
+                {
+                    if (id < graphVm.Nodes.Count)
+                        ParamNodes.Add(graphVm.Nodes[id]);
+                    else
+                        Logger.WARN($"cannot find node with id `{id}`");
+
+                }
+                else
+                {
+                    Node? node = null;
+                    if (idStr.StartsWith('"'))
+                        idStr = idStr.Trim('"');
+                    if (Guid.TryParse(idStr, out Guid uid))
+                    {
+                        node = graphVm.Graph.GetNode(uid);
+                    }
+
+                    if (node == null)
+                        Logger.WARN($"cannot find node with uid `{idStr}`");
+                    else
+                    {
+                        ParamNodes.Add(graphVm.NodeDict[node]);
+                    }
+                }
+            });
+            var str =  string.Join(", ", ParamNodes.ToList().ConvertAll(node => $"\"{node.Node.Uid.ToString()}\""));
+            return $"{funcName}({str})";
         }
 
         public bool ParseText(string? text)

@@ -67,9 +67,18 @@ namespace NFCT.Graph.ViewModels
             if (IsEditing == false)
                 return;
             Logger.DBG($"[{nameof(TextNodeViewModel)}] ExitEditingMode");
-            if (save)
+            if (save && Node is TextNode textNode)
             {
-                Node.Text = acVm.Text;
+                var inputText = acVm.Text;
+                textNode.Text = inputText;
+                
+                if (ControlNodeViewModel.MaybeControlNodeViewModel(inputText))
+                {
+                    var str = ControlNodeViewModel.ReplaceText(inputText, Owner);
+                    if(str != null)
+                        textNode.Text = str;
+                }
+
                 Logger.DBG($"node text is change to {Node.Text}");
                 RaisePropertyChanged(nameof(Text));
                 Owner.NeedLayout = true;
@@ -99,6 +108,7 @@ namespace NFCT.Graph.ViewModels
             if (ControlNodeViewModel.MaybeControlNodeViewModel(Text))
             {
                 var controlNodeVm = new ControlNodeViewModel(Node, Owner);
+                controlNodeVm.ParseText(Node.Text);
                 Owner.ReplaceNodeViewModel(Node, controlNodeVm);
                 return;
             }

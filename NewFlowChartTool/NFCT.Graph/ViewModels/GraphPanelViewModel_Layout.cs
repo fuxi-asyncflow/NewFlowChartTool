@@ -107,7 +107,7 @@ namespace NFCT.Graph.ViewModels
 #if DEBUG
                 foreach (var nodeVm in Nodes)
                 {
-                    nodeVm.ToolTip = $"t:{nodeVm.Top:F2} l:{nodeVm.Left:F2} w:{nodeVm.ActualWidth:F2} x:{nodeVm.X:F2}";
+                    nodeVm.ToolTip = $"t:{nodeVm.Top:F2} l:{nodeVm.Left:F2} w:{nodeVm.ActualWidth:F2} h:{nodeVm.ActualHeight:F2}";
                 }
 #endif
             }

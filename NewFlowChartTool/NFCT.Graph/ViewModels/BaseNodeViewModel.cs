@@ -108,6 +108,12 @@ namespace NFCT.Graph.ViewModels
             });
             ContinueBreakPointCommand = new DelegateCommand(delegate { Owner.ContinueBreakPoint(); });
         }
+
+        public void RemoveEventCallback()
+        {
+            Node.ParseEvent -= OnParse;
+        }
+
         public string? Description => Node.Description;
         public string? _toolTip;
         public string? ToolTip { get => _toolTip; set => SetProperty(ref _toolTip, value); }
@@ -158,11 +164,6 @@ namespace NFCT.Graph.ViewModels
         {
             if (node is TextNode textNode)
             {
-                if (ControlNodeViewModel.MaybeControlNodeViewModel(textNode.Text))
-                {
-                    var controlNodeVm = new ControlNodeViewModel(node, graphVm);
-                    return controlNodeVm;
-                }
                 return new TextNodeViewModel(textNode, graphVm);
             }
             else if (node is StartNode startNode)
