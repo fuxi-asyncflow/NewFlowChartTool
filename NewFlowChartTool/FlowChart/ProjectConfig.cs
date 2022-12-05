@@ -121,6 +121,8 @@ namespace FlowChart
         public string Name;
         [JsonPropertyName("graph_roots")]
         public List<GraphRootConfig> GraphRoots { get; set; }
+        [JsonPropertyName("standalone_generate_file")]
+        public bool StandaloneGenerateFile { get; set; }
 
         public Dictionary<string, GraphRootConfig> _graphRootsDict;
 
