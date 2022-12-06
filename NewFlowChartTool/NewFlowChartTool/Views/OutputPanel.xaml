@@ -28,9 +28,6 @@
         </DataTemplate>
     </UserControl.Resources>
     <Grid Style="{DynamicResource GridStyle}">
-        <ListView
-            ItemTemplate="{StaticResource OutputItemTemplate}"
-            ItemsSource="{Binding Outputs}"
-            Style="{DynamicResource ListViewStyle}" />
+        <ListBox ItemTemplate="{StaticResource OutputItemTemplate}" ItemsSource="{Binding Outputs}" />
     </Grid>
 </UserControl>
