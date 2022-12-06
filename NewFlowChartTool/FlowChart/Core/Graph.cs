@@ -135,6 +135,7 @@ namespace FlowChart.Core
         public bool IsSubGraph { get; set; }
         public FlowChart.Type.Type? ReturnType { get; set; }
         public string? SaveFilePath;
+        public string? GenerateFilePath;
 
         #region lazy load
         public bool IsLoaded { get; set; }

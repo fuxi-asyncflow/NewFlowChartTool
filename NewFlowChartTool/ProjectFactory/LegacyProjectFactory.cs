@@ -33,7 +33,7 @@ namespace ProjectFactory
             OpenLegacyProject(XmlPath);
         }
 
-        public void Save(Graph graph, List<string> outputs)
+        public void Save(Graph graph, List<string> outputs, List<string> genLines)
         {
 
         }

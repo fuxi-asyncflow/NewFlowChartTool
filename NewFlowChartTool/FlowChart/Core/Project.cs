@@ -18,7 +18,7 @@ namespace FlowChart.Core
     {
         void Create(Project project);
         void Save(Project project);
-        void Save(Graph graph, List<string> outputs);
+        void Save(Graph graph, List<string> outputs, List<string> generates);
     }
 
     [LuaCallCSharp]
@@ -78,9 +78,9 @@ namespace FlowChart.Core
             Factory?.Save(this);
         }
 
-        public void SaveGraph(Graph graph, List<string> lines)
+        public void SaveGraph(Graph graph, List<string> lines, List<string> genLines)
         {
-            Factory?.Save(graph, lines);
+            Factory?.Save(graph, lines, genLines);
         }
 
         public void AddType(Type.Type type)

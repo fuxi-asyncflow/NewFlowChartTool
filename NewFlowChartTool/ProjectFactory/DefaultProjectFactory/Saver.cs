@@ -19,6 +19,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public const string GraphFolderName = "graphs";
         public const string TypeFolderName = "types";
         public const string GraphFileExt = ".yaml";
+        public const string GenerateFileExt = ".lua";
         public const string TypeFileExt = ".yaml";
         public const string EventFileName = "_event.yaml";
 
@@ -44,9 +45,9 @@ namespace ProjectFactory.DefaultProjectFactory
             saver.SaveProject(project);
         }
 
-        public void Save(Graph graph, List<string> outputs)
+        public void Save(Graph graph, List<string> outputs, List<string> genLines)
         {
-            saver.SaveGraph(graph, outputs);
+            saver.SaveGraph(graph, outputs, genLines);
         }
 
         public static Project CreateNewProject(string path)
@@ -64,7 +65,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public DirectoryInfo ProjectFolder;
 
         public Func<Graph, string>? GraphToFileRule;
-        private bool SaveCode = true;
+        //private bool SaveCode = true;
 
         public static string SaveGraphByRoot(Graph graph)
         {
@@ -105,7 +106,9 @@ namespace ProjectFactory.DefaultProjectFactory
         public void SaveGraphs()
         {
             var graphFolder = ProjectFolder.CreateSubdirectory(DefaultProjectFactory.GraphFolderName);
-            Dictionary<string, List<Graph>> graphFiles = new Dictionary<string, List<Graph>>();
+            var graphFiles = new Dictionary<string, List<Graph>>();
+            var generateFiles = new Dictionary<string, string>();
+
             foreach (var kv in Project.GraphDict)
             {
                 var graphPath = kv.Key;
@@ -123,13 +126,19 @@ namespace ProjectFactory.DefaultProjectFactory
                         throw new Exception(msg);
                     }
 
-                    graph.SaveFilePath = rootConfig.Path + '/' + rootConfig.SaveRule.GetGraphSaveFile(graphPath);
+                    var saveFile = rootConfig.SaveRule.GetGraphSaveFile(graphPath);
+                    graph.SaveFilePath = Path.Combine(rootConfig.Path, saveFile) ;
+                    graph.GenerateFilePath = Path.Combine(rootConfig.OutputPath, saveFile);
                 }
 
                 if (!graphFiles.TryGetValue(graph.SaveFilePath, out var graphs))
                 {
                     graphs = new List<Graph>();
                     graphFiles.Add(graph.SaveFilePath, graphs);
+                }
+                if (!generateFiles.ContainsKey(graph.SaveFilePath))
+                {
+                    generateFiles.Add(graph.SaveFilePath, graph.GenerateFilePath);
                 }
                 graphs.Add(graph);
             }
@@ -139,17 +148,19 @@ namespace ProjectFactory.DefaultProjectFactory
                 var filePath = kv.Key + DefaultProjectFactory.GraphFileExt;
                 filePath = System.IO.Path.Combine(Project.Path, filePath);
                 var lines = new List<string>();
+                var genLines = new List<string>();
                 foreach (var graph in kv.Value)
                 {
                     lines.Add("--- ");
-                    SaveGraph(graph, lines);
+                    SaveGraph(graph, lines, genLines);
                 }
                 lines.Add("...");
                 FileHelper.Save(filePath, lines);
+                FileHelper.Save(Path.Combine(Project.Path, generateFiles[kv.Key] + DefaultProjectFactory.GenerateFileExt), genLines);
             }
         }
 
-        public void SaveGraph(Graph graph, List<string> lines)
+        public void SaveGraph(Graph graph, List<string> lines, List<string> genLines)
         {
             lines.Add($"path: {graph.Path}");
             lines.Add($"uid: {graph.Uid}");
@@ -180,6 +191,7 @@ namespace ProjectFactory.DefaultProjectFactory
             }
 
             lines.Add("nodes: ");
+            var generate_standalone = graph.Project.Config.StandaloneGenerateFile;
             foreach (var node in graph.Nodes)
             {
                 lines.Add("- ");
@@ -190,7 +202,8 @@ namespace ProjectFactory.DefaultProjectFactory
                     lines.Add($"  text: \"{text}\"");
                     if(node.OwnerGroup != null)
                         lines.Add($"  group: {node.OwnerGroup.Uid}");
-                    if (SaveCode && node.Content != null)
+                    
+                    if (node.Content != null)
                     {
                         lines.Add($"  code: ");
                         var content = node.Content;
@@ -210,14 +223,33 @@ namespace ProjectFactory.DefaultProjectFactory
                             else if (content.Type == GenerateContent.ContentType.FUNC
                                      || content.Type == GenerateContent.ContentType.EVENT)
                             {
-                                if(content.ReturnVarName != null)
+                                if (content.ReturnVarName != null)
                                     lines.Add($"    return_var_name: {content.ReturnVarName}");
-                                lines.Add($"    content: |");
-                                foreach (var c in content.Contents)
+                                if (generate_standalone)
                                 {
-                                    if (c is string s)
-                                        lines.Add($"      {c.ToString()}");
+                                    var normalUidStr = node.Uid.ToString("N");
+                                    genLines.Add($"local function {normalUidStr}(self)");
+                                    foreach (var c in content.Contents)
+                                    {
+                                        if (c is string s)
+                                            genLines.Add($"    {c.ToString()}");
+                                    }
+                                    var funcName = $"{graph.Path}.{normalUidStr}";
+                                    genLines.Add($"asyncflow.set_node_func(\"{funcName}\", {normalUidStr})");
+                                    genLines.Add("");
+
+                                    lines.Add($"    func_name: \"{funcName}\"");
                                 }
+                                else
+                                {
+                                    lines.Add($"    content: |");
+                                    foreach (var c in content.Contents)
+                                    {
+                                        if (c is string s)
+                                            lines.Add($"      {c.ToString()}");
+                                    }
+                                }
+                                
                             }
                             else if (content.Type == GenerateContent.ContentType.CONTROL)
                             {
@@ -230,6 +262,7 @@ namespace ProjectFactory.DefaultProjectFactory
                             }
                         }
                     }
+                    
                 }
             }
 

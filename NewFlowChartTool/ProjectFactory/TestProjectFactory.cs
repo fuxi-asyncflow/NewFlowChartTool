@@ -251,7 +251,7 @@ namespace ProjectFactory
             //throw new NotImplementedException();
         }
 
-        public void Save(Graph graph, List<string> outputs)
+        public void Save(Graph graph, List<string> outputs, List<string> genLines)
         {
 
         }
