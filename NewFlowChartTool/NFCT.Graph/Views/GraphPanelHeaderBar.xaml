@@ -15,10 +15,22 @@
             <Button Command="{Binding ChangeLayoutCommand}" Content="layout" />
             <Button Command="{Binding CreateGroupCommand}" Content="group" />
             <CheckBox
+                Margin="5,0"
                 VerticalAlignment="Center"
                 Content="SubGraph"
                 IsChecked="{Binding IsSubGraph, Mode=TwoWay}" />
-            <ComboBox x:Name="LayoutComboBox" SelectionChanged="LayoutComboBox_OnSelectionChanged"/>
+            <ComboBox
+                x:Name="LayoutComboBox"
+                Margin="5,0"
+                SelectionChanged="LayoutComboBox_OnSelectionChanged" />
+            <TextBlock
+                Margin="5,0"
+                VerticalAlignment="Center"
+                Text="描述:" />
+            <TextBox
+                MinWidth="100"
+                VerticalAlignment="Center"
+                Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
         <StackPanel DockPanel.Dock="Right">
             <TextBlock Background="DarkSeaGreen" Text="{Binding FullPath}" />

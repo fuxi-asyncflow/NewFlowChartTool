@@ -99,7 +99,17 @@ namespace NFCT.Graph.ViewModels
 
         public string Name => _graph.Name;
         public string FullPath => _graph.Path;
-        public string? Description => _graph.Description;
+
+        public string? Description
+        {
+            get => _graph.Description;
+            set
+            {
+                if (_graph.Description == value)
+                    return;
+                _graph.Description = string.IsNullOrEmpty(value) ? null : value;
+            }
+        }
 
         public string TabHeaderName => IsDirty ? _graph.Name + "*" : _graph.Name;
         private bool _isDirty;

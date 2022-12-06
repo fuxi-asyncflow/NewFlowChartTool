@@ -13,6 +13,18 @@ namespace FlowChart.Core
             Name = name;
         }
         public string Name { get; set; }
-        public string? Description { get; set; }
+        private string? _description;
+        public string? Description
+        {
+            get => _description;
+            set
+            {
+                if (_description == value)
+                    return;
+                _description = value;
+                DescriptionChangeEvent?.Invoke(_description);
+            }
+        }
+        public event Action<string?>? DescriptionChangeEvent;
     }
 }

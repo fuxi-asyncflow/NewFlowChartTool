@@ -145,8 +145,8 @@ namespace NewFlowChartTool.ViewModels
             var graphInfo = graphs.Find(g => g.FullPath == graph.Path);
             if (graphInfo != null)
                 graphs.Remove(graphInfo);
-            else
-                graphInfo = new ProjectHistory.GraphInfo() { FullPath = graph.Path, Description = graph.Description };
+            
+            graphInfo = new ProjectHistory.GraphInfo() { FullPath = graph.Path, Description = graph.Description };
             graphs.Insert(0, graphInfo);
         }
         

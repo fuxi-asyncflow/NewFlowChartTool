@@ -58,6 +58,7 @@ namespace NewFlowChartTool.ViewModels
         {
             _item = item;
             item.NameChangeEvent += OnRename;
+            item.DescriptionChangeEvent += delegate { RaisePropertyChanged(nameof(Description)); };
         }
         protected readonly TreeItem _item;
         public TreeItem Item => _item;
@@ -70,7 +71,7 @@ namespace NewFlowChartTool.ViewModels
         {
             if (_item is Graph graph)
             {
-                EventHelper.Pub<GraphOpenEvent, Graph>(graph);
+                MainWindowViewModel.Inst?.OnOpenGraph(graph);
             }
         }
 

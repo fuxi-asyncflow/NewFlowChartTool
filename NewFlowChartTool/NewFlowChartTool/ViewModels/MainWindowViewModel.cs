@@ -38,12 +38,12 @@ namespace NewFlowChartTool.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         
-        public MainWindowViewModel(IEventAggregator ea, IDialogService dialogService, IStatusBarService statusBarService)
+        public MainWindowViewModel(IDialogService dialogService, IStatusBarService statusBarService)
         {
             if (Inst == null)
                 Inst = this;
             _testText = "Hello world";
-            _ea = ea;
+            
             _dialogService = dialogService;
             _statusBarService = statusBarService;
             _openedGraphs = new ObservableCollection<GraphPaneViewModel>();
@@ -71,7 +71,6 @@ namespace NewFlowChartTool.ViewModels
             UndoCommand = new DelegateCommand(Undo);
             RedoCommand = new DelegateCommand(Redo);
 
-            _ea.GetEvent<GraphOpenEvent>().Subscribe(OnOpenGraph);
             EventHelper.Sub<GraphCloseEvent, Graph>(OnCloseGraph);
             EventHelper.Sub<NewDebugAgentEvent, DebugAgent>(OnNewDebugAgentEvent, ThreadOption.UIThread);
             EventHelper.Sub<StartDebugGraphEvent, GraphInfo?>(OnStartDebugGraphEvent, ThreadOption.UIThread);
@@ -101,7 +100,7 @@ namespace NewFlowChartTool.ViewModels
             }
         }
 
-        readonly IEventAggregator _ea;
+        
         readonly IDialogService _dialogService;
         readonly IStatusBarService _statusBarService;
 
@@ -149,7 +148,7 @@ namespace NewFlowChartTool.ViewModels
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
-            _ea.GetEvent<ProjectOpenEvent>().Publish(p);
+            EventHelper.Pub<ProjectOpenEvent, Project>(p);
             p.Save();
             CurrentProject = p;
         }
@@ -188,7 +187,7 @@ namespace NewFlowChartTool.ViewModels
 #endif
             CurrentProject = p;
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
-            _ea.GetEvent<ProjectOpenEvent>().Publish(p);
+            EventHelper.Pub<ProjectOpenEvent, Project>(p);
 
             if (p.IsAsyncLoad)
             {
@@ -216,7 +215,7 @@ namespace NewFlowChartTool.ViewModels
             var p = DefaultProjectFactory.CreateNewProject(folderPath);
             CurrentProject = p;
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
-            _ea.GetEvent<ProjectOpenEvent>().Publish(p);
+            EventHelper.Pub<ProjectOpenEvent, Project>(p);
             p.Save();
         }
 
@@ -368,6 +367,7 @@ namespace NewFlowChartTool.ViewModels
 
         public async void OnOpenGraph(Graph graph, Node? centerNode)
         {
+            EventHelper.Pub<GraphOpenEvent, Graph>(graph);
             foreach (var gvm in OpenedGraphs)
             {
                 if (gvm.Graph == graph)

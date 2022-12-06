@@ -134,7 +134,7 @@ namespace FlowChart.Core
 
         public bool IsSubGraph { get; set; }
         public bool IsPublicSubGraph { get; set; }
-        private Type.Type? _returnType { get; set; }
+        private Type.Type? _returnType;
         public FlowChart.Type.Type? ReturnType
         {
             get => _returnType;
