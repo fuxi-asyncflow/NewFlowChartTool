@@ -21,6 +21,7 @@ using NFCT.Common.Events;
 using Prism.Commands;
 using Prism.Ioc;
 using System.ComponentModel;
+using Prism.Services.Dialogs;
 using ProjectFactory;
 
 namespace NewFlowChartTool.ViewModels
@@ -185,6 +186,23 @@ namespace NewFlowChartTool.ViewModels
             // entering editing name mode
             Logger.LOG($"RENAME {item.GetHashCode()}");
             item.EnterRenameMode();
+        }
+
+        [MenuItem(NFCT.Common.Localization.ResourceKeys.Menu_ModifyDescriptionKey)]
+        public static void MenuModifyDescription(ProjectTreeItemViewModel item)
+        {
+            var dlgService = ContainerLocator.Current.Resolve<IDialogService>();
+            var parameters = new DialogParameters();
+            parameters.Add("Description", $"set description for {item.Name}");
+            parameters.Add("Value", item.Description);
+            dlgService.Show(InputDialogViewModel.NAME, parameters, result =>
+            {
+                if (result.Result == ButtonResult.OK)
+                {
+                    var v = result.Parameters.GetValue<string>("Value");
+                    item.Item.Description = v;
+                }
+            });
         }
 
         [MenuItem(NFCT.Common.Localization.ResourceKeys.Menu_NewGraphKey)]

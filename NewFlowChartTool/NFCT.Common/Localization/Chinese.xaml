@@ -46,6 +46,7 @@
 
     <!--  ProjectTreeItemMenu  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_RenameKey}">重命名</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_ModifyDescriptionKey}">修改描述</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewGraphKey}">新建流程图</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewFolderKey}">新建文件夹</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_RemoveGraphKey}">删除</system:String>

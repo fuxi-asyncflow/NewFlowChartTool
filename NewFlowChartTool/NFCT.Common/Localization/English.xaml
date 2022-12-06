@@ -46,6 +46,7 @@
 
     <!--  ProjectTreeItemMenu  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_RenameKey}">Rename</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_ModifyDescriptionKey}">Modify Descr</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewGraphKey}">New Graph</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewFolderKey}">New Folder</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_RemoveGraphKey}">Remove</system:String>

@@ -17,8 +17,19 @@
     mc:Ignorable="d">
     <Grid>
         <StackPanel VerticalAlignment="Center">
-            <TextBlock Margin="50,20" Text="{Binding Description}" />
-            <TextBox Margin="50,0" Text="{Binding Text}" />
+            <TextBlock Margin="50,10" Text="{Binding Description}" />
+            <TextBox Margin="50,10" Text="{Binding Text, Mode=TwoWay, NotifyOnSourceUpdated=True}" />
+            <StackPanel Margin="50,10" Orientation="Horizontal">
+                <Button
+                    MinWidth="64"
+                    Margin="30,0"
+                    Command="{Binding OKCommand}"
+                    Content="OK" />
+                <Button
+                    MinWidth="64"
+                    Command="{Binding CancelCommand}"
+                    Content="Cancel" />
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>

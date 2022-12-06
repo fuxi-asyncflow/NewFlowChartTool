@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 
@@ -13,8 +14,10 @@ namespace NewFlowChartTool.ViewModels
     {
         public InputDialogViewModel()
         {
-            Description = "This is an Description: ";
+            Description = "Please input: ";
             Text = "XXXX";
+            OKCommand = new DelegateCommand(OK);
+            CancelCommand = new DelegateCommand(Cancel);
         }
         public static string NAME = "InputDialog";
         string _text;
@@ -40,10 +43,30 @@ namespace NewFlowChartTool.ViewModels
 
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            //throw new NotImplementedException();
+            var des = parameters.GetValue<string?>(nameof(Description));
+            if (des != null)
+                Description = des;
+            var v = parameters.GetValue<string?>("Value");
+            if (v != null)
+                Text = v;
         }
 
         public string Title { get; }
         public event Action<IDialogResult>? RequestClose;
+
+        public DelegateCommand OKCommand { get; set; }
+        public DelegateCommand CancelCommand { get; set; }
+
+        void OK()
+        {
+            var result = new DialogResult(ButtonResult.OK);
+            result.Parameters.Add("Value", Text);
+            RequestClose?.Invoke(result);
+        }
+
+        void Cancel()
+        {
+            RequestClose?.Invoke(new DialogResult(ButtonResult.Cancel));
+        }
     }
 }
