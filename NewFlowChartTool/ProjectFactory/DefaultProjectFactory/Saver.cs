@@ -200,6 +200,12 @@ namespace ProjectFactory.DefaultProjectFactory
                 {
                     var text = textNode.Text.Replace("\\", "\\\\").Replace("\"", "\\\"");
                     lines.Add($"  text: \"{text}\"");
+                    if (!string.IsNullOrEmpty(textNode.Description))
+                    {
+                        var description = textNode.Description.Replace("\\", "\\\\").Replace("\"", "\\\"");
+                        lines.Add($"  description: \"{description}\"");
+                    }
+                        
                     if(node.OwnerGroup != null)
                         lines.Add($"  group: {node.OwnerGroup.Uid}");
                     

@@ -15,6 +15,7 @@ using NFCT.Common.Services;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 
 namespace NFCT.Graph.ViewModels
 {
@@ -94,6 +95,7 @@ namespace NFCT.Graph.ViewModels
         {
             Node = node;
             node.ParseEvent += OnParse;
+            node.DescriptionChangedEvent += OnDescriptionChanged;
             Owner = g;
 
             OnKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnKeyDown);
@@ -101,6 +103,7 @@ namespace NFCT.Graph.ViewModels
             CopyNodesCommand = new DelegateCommand(() => Owner.CopySelectedNodes());
             CutNodesCommand = new DelegateCommand(() => Owner.CopySelectedNodes(true));
             PasteNodesCommand = new DelegateCommand(() => Owner.PasteNodes(this));
+            EditDescriptionCommand = new DelegateCommand(EditDescription);
             BreakPointCommand = new DelegateCommand(delegate
             {
                 IsBreakPoint = !IsBreakPoint; 
@@ -112,6 +115,7 @@ namespace NFCT.Graph.ViewModels
         public void RemoveEventCallback()
         {
             Node.ParseEvent -= OnParse;
+            Node.DescriptionChangedEvent -= OnDescriptionChanged;
         }
 
         public string? Description => Node.Description;
@@ -285,6 +289,11 @@ namespace NFCT.Graph.ViewModels
         {
         }
 
+        protected void OnDescriptionChanged(string? v)
+        {
+            RaisePropertyChanged(nameof(Description));
+        }
+
         #region COMMANDS
         public DelegateCommand<KeyEventArgs> OnKeyDownCommand { get; set; }
 
@@ -360,6 +369,22 @@ namespace NFCT.Graph.ViewModels
 
         }
 
+        void EditDescription()
+        {
+            var dlgService = ContainerLocator.Current.Resolve<IDialogService>();
+            var parameters = new DialogParameters();
+            parameters.Add("Description", $"set description for {ToString()}");
+            parameters.Add("Value", Description);
+            dlgService.Show("InputDialog", parameters, result =>
+            {
+                if (result.Result == ButtonResult.OK)
+                {
+                    var v = result.Parameters.GetValue<string>("Value");
+                    Node.Description = v;
+                }
+            });
+        }
+
         public event Action<bool> EditingModeChangeEvent;
 
         public void Move(double dx, double dy)
@@ -393,6 +418,7 @@ namespace NFCT.Graph.ViewModels
         public DelegateCommand CopyNodesCommand { get; set; }
         public DelegateCommand PasteNodesCommand { get; set; }
         public DelegateCommand CutNodesCommand { get; set; }
+        public DelegateCommand EditDescriptionCommand { get; set; }
 
         public DelegateCommand BreakPointCommand { get; set; }
         public DelegateCommand ContinueBreakPointCommand { get; set; }

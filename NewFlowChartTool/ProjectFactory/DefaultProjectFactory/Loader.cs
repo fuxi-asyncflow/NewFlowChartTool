@@ -531,6 +531,13 @@ namespace ProjectFactory.DefaultProjectFactory
                                 textNode.Text = value;
                         }
                     }
+                    else if (key == "description")
+                    {
+                        if (value.Length > 0 && value[0] == '"')
+                            node.Description = value.Substring(1, value.Length - 2).Replace("\\\"", "\"").Replace("\\\\", "\\");
+                        else
+                            node.Description = value;
+                    }
                     else if (key == "group")
                     {
                         Group? group = null;

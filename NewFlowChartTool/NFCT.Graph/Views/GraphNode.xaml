@@ -30,6 +30,7 @@
             StartNodeTemplate="{StaticResource StartNodeTemplate}"
             TextNodeTemplate="{StaticResource TextNodeTemplate}" />
         <utility:CutOpacityConverter x:Key="CutOpacityConverter" />
+        <common:EmptyStringVisibilityConverter x:Key="EmptyStringVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <UserControl.ContextMenu>
@@ -38,6 +39,8 @@
             <MenuItem Command="{Binding CutNodesCommand}" Header="cut" />
             <MenuItem Command="{Binding CopyNodesCommand}" Header="copy" />
             <MenuItem Command="{Binding PasteNodesCommand}" Header="paste" />
+            <Separator />
+            <MenuItem Command="{Binding EditDescriptionCommand}" Header="modify descr" />
             <Separator />
             <MenuItem Command="{Binding BreakPointCommand}" Header="breakpoint" />
             <MenuItem Command="{Binding ContinueBreakPointCommand}" Header="continue" />
@@ -53,6 +56,7 @@
         Opacity="{Binding IsCut, Converter={StaticResource CutOpacityConverter}}"
         RequestBringIntoView="Node_OnRequestBringIntoView"
         ToolTip="{Binding ToolTip}">
+
         <StackPanel Orientation="Horizontal">
             <StackPanel Visibility="{Binding IsDebugMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <TextBlock Text="{Binding SuccessCount}" />

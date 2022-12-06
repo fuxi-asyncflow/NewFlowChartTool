@@ -47,8 +47,7 @@ namespace NewFlowChartTool.ViewModels
             if (des != null)
                 Description = des;
             var v = parameters.GetValue<string?>("Value");
-            if (v != null)
-                Text = v;
+            Text = v ?? "";
         }
 
         public string Title { get; }
