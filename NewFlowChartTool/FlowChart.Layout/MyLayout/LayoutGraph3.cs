@@ -26,6 +26,8 @@ namespace FlowChart.Layout.MyLayout
             _graph = graph;
 
             Init();
+            if (GroupNodes.Count == 0)
+                return;
             GetRoots();
             Layout();
             CreateVirtualNodes();
@@ -33,6 +35,8 @@ namespace FlowChart.Layout.MyLayout
 
         public void PostProcess()
         {
+            if (GroupNodes.Count == 0)
+                return;
             CalcNodesXY();
             RestoreNodesAndEdges();
         }
