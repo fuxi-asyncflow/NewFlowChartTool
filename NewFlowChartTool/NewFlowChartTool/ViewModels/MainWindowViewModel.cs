@@ -297,6 +297,7 @@ namespace NewFlowChartTool.ViewModels
         public void BuildAll()
         {
             if(CurrentProject == null) return;
+            ContainerLocator.Current.Resolve<OutputPanelViewModel>().Clear();
             CurrentProject.Build();
             CurrentProject.Save();
         }

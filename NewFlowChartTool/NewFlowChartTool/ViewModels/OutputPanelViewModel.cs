@@ -80,5 +80,10 @@ namespace NewFlowChartTool.ViewModels
                 Graph = graph
             });
         }
+
+        public void Clear()
+        {
+            Outputs.Clear();
+        }
     }
 }
