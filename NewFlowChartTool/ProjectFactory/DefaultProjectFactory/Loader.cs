@@ -424,7 +424,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
                 else if (key == "is_subgraph")
                 {
-                    graph.IsSubGraph = value == "true";
+                    graph.SetSubGraph(value == "true");
                     graph.ReturnType = BuiltinTypes.VoidType;
                 }
                 else if (key == "return_type")
