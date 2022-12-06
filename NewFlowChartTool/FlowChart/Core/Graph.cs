@@ -133,7 +133,23 @@ namespace FlowChart.Core
         public bool AutoLayout { get; set; }
 
         public bool IsSubGraph { get; set; }
-        public FlowChart.Type.Type? ReturnType { get; set; }
+        public bool IsPublicSubGraph { get; set; }
+        private Type.Type? _returnType { get; set; }
+        public FlowChart.Type.Type? ReturnType
+        {
+            get => _returnType;
+            set
+            {
+                if (value == _returnType)
+                    return;
+                _returnType = value;
+                if (IsSubGraph)
+                {
+                    SetSubGraph(false);
+                    SetSubGraph(true);
+                }
+            }
+        }
         public string? SaveFilePath;
         public string? GenerateFilePath;
 

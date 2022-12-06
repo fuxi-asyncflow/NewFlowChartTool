@@ -34,7 +34,7 @@ namespace NewFlowChartTool.Views
                 return;
             if (vm.Node == null)
                 return;
-            MainWindowViewModel.Inst.OnOpenGraph(vm.Node.OwnerGraph, vm.Node);
+            MainWindowViewModel.Inst?.OnOpenGraph(vm.Node.OwnerGraph, vm.Node);
         }
     }
 }

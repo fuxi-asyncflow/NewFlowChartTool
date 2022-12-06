@@ -304,6 +304,17 @@ namespace FlowChart.LuaCodeGen
                 return new NodeInfo() { Type = method.Type, Code = "" };
             }
 
+            if (method.Name == "return")
+            {
+                var retType = inputArgsNodeInfo.First().Type;
+                if(G.ReturnType == null)
+                    G.ReturnType = retType;
+                else if (G.ReturnType != retType)
+                {
+                    Error($"graph has different return type `{G.ReturnType.Name}` `{retType.Name}` ");
+                }
+            }
+
             string argsString = string.Join(", ", inputArgsNodeInfo.ConvertAll(ni => ni.Code));
             
             Pr.IsAction = method.IsAction;
