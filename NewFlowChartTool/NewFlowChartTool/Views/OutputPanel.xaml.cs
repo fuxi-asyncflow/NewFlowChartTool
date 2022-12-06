@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NewFlowChartTool.ViewModels;
+using NFCT.Common;
 
 namespace NewFlowChartTool.Views
 {
@@ -23,6 +25,16 @@ namespace NewFlowChartTool.Views
         public OutputPanel()
         {
             InitializeComponent();
+        }
+
+        private void OutputItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var vm = WPFHelper.GetDataContext<OutputItemViewModel>(sender);
+            if (vm == null)
+                return;
+            if (vm.Node == null)
+                return;
+            MainWindowViewModel.Inst.OnOpenGraph(vm.Node.OwnerGraph, vm.Node);
         }
     }
 }

@@ -363,11 +363,17 @@ namespace NewFlowChartTool.ViewModels
 
         public async void OnOpenGraph(Graph graph)
         {
+            OnOpenGraph(graph, null);
+        }
+
+        public async void OnOpenGraph(Graph graph, Node? centerNode)
+        {
             foreach (var gvm in OpenedGraphs)
             {
                 if (gvm.Graph == graph)
                 {
                     ActiveGraph = gvm;
+                    ActiveGraph.MoveNodeToCenter(centerNode);
                     return;
                 }
             }
@@ -377,6 +383,7 @@ namespace NewFlowChartTool.ViewModels
 
             OpenedGraphs.Add(new GraphPaneViewModel(graph));
             ActiveGraph = OpenedGraphs.Last();
+            ActiveGraph.InitCenterNode = centerNode;
             ActiveGraph.Build();
         }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using FlowChart.Core;
 using FlowChart.Layout;
 using FlowChart.Layout.MyLayout;
 using FlowChartCommon;
@@ -17,6 +18,7 @@ namespace NFCT.Graph.ViewModels
             _layout = LayoutManager.Instance.LayoutDict["layout_group"].Invoke();
             Scale = 1.0f;
         }
+        public Node? InitCenterNode { get; set; }
         public bool NeedLayout { get; set; }
         public bool IsFirstLayout { get; set; }
         private double _width;
@@ -104,6 +106,12 @@ namespace NFCT.Graph.ViewModels
                 {
                     return false;
                 }
+
+                if (InitCenterNode != null)
+                {
+                    MoveNodeToCenter(InitCenterNode);
+                    InitCenterNode = null;
+                }
 #if DEBUG
                 foreach (var nodeVm in Nodes)
                 {
@@ -150,5 +158,14 @@ namespace NFCT.Graph.ViewModels
             }
         }
 
+        public void MoveNodeToCenter(Node? node)
+        {
+            if (node == null)
+                return;
+            var nodeVm = GetNodeVm(node);
+            ScrollX = Math.Clamp(nodeVm.Left * Scale - ScrollViewerWidth / 2, 0, Width*Scale);
+            ScrollY = Math.Clamp(nodeVm.Top * Scale - ScrollViewerHeight / 2, 0, Height*Scale);
+
+        }
     }
 }

@@ -28,6 +28,12 @@
         </DataTemplate>
     </UserControl.Resources>
     <Grid Style="{DynamicResource GridStyle}">
-        <ListBox ItemTemplate="{StaticResource OutputItemTemplate}" ItemsSource="{Binding Outputs}" />
+        <ListBox ItemTemplate="{StaticResource OutputItemTemplate}" ItemsSource="{Binding Outputs}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="OutputItem_MouseDoubleClick" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
     </Grid>
 </UserControl>
