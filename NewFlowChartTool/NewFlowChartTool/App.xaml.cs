@@ -14,6 +14,7 @@ using FlowChart.Misc;
 using FlowChartCommon;
 using NewFlowChartTool.ViewModels;
 using NewFlowChartTool.Views;
+using NewFlowChartTool.Views.Dialogs;
 using NFCT.Common.Services;
 using NFCT.Common.Views;
 using NFCT.Common.ViewModels;
@@ -72,6 +73,7 @@ namespace NewFlowChartTool
 
             //containerRegistry.RegisterSingleton<IDebugService, DebugDialogViewModel>();
             containerRegistry.RegisterDialog<TypeDialog, TypeDialogViewModel>(TypeDialogViewModel.NAME);
+            containerRegistry.RegisterDialog<InputDialog, InputDialogViewModel>(InputDialogViewModel.NAME);
 
             containerRegistry.RegisterSingleton<OutputPanelViewModel>();
             containerRegistry.RegisterSingleton<IOutputMessage, OutputPanelViewModel>();
