@@ -12,8 +12,8 @@
     mc:Ignorable="d">
     <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-            <Button Command="{Binding ChangeLayoutCommand}" Content="layout" />
-            <Button Command="{Binding CreateGroupCommand}" Content="group" />
+            <d:Button Command="{Binding ChangeLayoutCommand}" Content="layout" />
+            <d:Button Command="{Binding CreateGroupCommand}" Content="group" />
             <CheckBox
                 Margin="5,0"
                 VerticalAlignment="Center"
@@ -22,7 +22,8 @@
             <ComboBox
                 x:Name="LayoutComboBox"
                 Margin="5,0"
-                SelectionChanged="LayoutComboBox_OnSelectionChanged" />
+                SelectionChanged="LayoutComboBox_OnSelectionChanged"
+                Visibility="Collapsed" />
             <!--<TextBlock
                 Margin="5,0"
                 VerticalAlignment="Center"
@@ -33,7 +34,7 @@
                 Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
         </StackPanel>
         <StackPanel DockPanel.Dock="Right">
-            <TextBlock Background="DarkSeaGreen" Text="{Binding FullPath}" />
+            <TextBlock Background="DarkGreen" Text="{Binding FullPath}" />
         </StackPanel>
         <StackPanel />
 
