@@ -204,14 +204,18 @@ namespace NewFlowChartTool.ViewModels
             EventHelper.Pub<StartDebugGraphEvent, GraphInfo?>(null);
         }
 
-        public void Hotfix(List<string> lines)
+        public void Hotfix(List<string> lines, List<string> codes)
         {
             lines.Insert(0, "---");
             lines.Add("...");
             var chartData = string.Join('\n', lines);
             var chartDataBytes = System.Text.Encoding.UTF8.GetBytes(chartData);
             chartData = System.Convert.ToBase64String(chartDataBytes);
-            _netManager.BroadCast(Host, StartPort, EndPort, new HotfixMessage() {ChartsData = chartData, ChartsFunc = string.Empty});
+
+            var codesData = string.Join('\n', codes);
+            var codeDataBytes = System.Text.Encoding.UTF8.GetBytes(codesData);
+            codesData = System.Convert.ToBase64String(codeDataBytes);
+            _netManager.BroadCast(Host, StartPort, EndPort, new HotfixMessage() {ChartsData = chartData, ChartsFunc = codesData });
         }
     }
 }
