@@ -14,6 +14,7 @@ namespace FlowChart.Parser.ASTGenerator
             OpDict.Add("-", Operator.Sub);
             OpDict.Add("*", Operator.Mul);
             OpDict.Add("/", Operator.Div);
+            OpDict.Add("%", Operator.Mod);
             OpDict.Add("<", Operator.Lt);
             OpDict.Add(">", Operator.Gt);
             OpDict.Add("<=", Operator.Le);
