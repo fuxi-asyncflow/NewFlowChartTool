@@ -218,6 +218,7 @@ namespace ProjectFactory
             if (Current.GetType("Table") == null)
             {
                 Current.AddType("Table", BuiltinTypes.ArrayType);
+                Current.AddType("List", BuiltinTypes.ArrayType);
                 Current.AddType("NodeRef", BuiltinTypes.NumberType);
             }
             var jsonFilePath = string.Format("{0}{2}{1}.json", filePath, "class", System.IO.Path.DirectorySeparatorChar);

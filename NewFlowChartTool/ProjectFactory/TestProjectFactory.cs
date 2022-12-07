@@ -299,6 +299,13 @@ namespace ProjectFactory
         // 加载过程分为两步，第一步先快速加载，以保证类型都有
         void LoadTypes(string typeFolder)
         {
+            if (Project.GetType("Table") == null)
+            {
+                Project.AddType("Table", BuiltinTypes.ArrayType);
+                Project.AddType("List", BuiltinTypes.ArrayType);
+                Project.AddType("NodeRef", BuiltinTypes.NumberType);
+            }
+
             var files = Directory.GetFiles(typeFolder);
             var tmp_dict = new Dictionary<FlowChart.Type.Type, TypeJson>();
             string eventFileName = null;
