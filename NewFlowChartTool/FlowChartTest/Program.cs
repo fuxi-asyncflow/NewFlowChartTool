@@ -26,7 +26,7 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             var config = new NLog.Config.LoggingConfiguration();
 
             // Targets where to log to: File and Console
-            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "file.txt" };
+            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "log.txt" };
             var logconsole = new NLog.Targets.ConsoleTarget("logconsole") { 
                 Layout = "${longdate}|${level:uppercase=true} ${message:withexception=true}"
             };
@@ -62,7 +62,12 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             //CodeGenTest();
             //DebugTest();
             //DiffTest(@"F:\asyncflow\asyncflow_new\test\old", @"F:\asyncflow\asyncflow_new\test\flowchart");
-            ConvertProject(@"F:\work\asyncflow\tmp\MobilisAI");
+            if (args.Length < 2)
+                return;
+            if (args[0] == "convert2")
+            {
+                ConvertProject(args[1]);
+            }
         }
 
         static void OpenProjectTest()
