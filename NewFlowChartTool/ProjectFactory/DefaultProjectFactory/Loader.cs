@@ -327,14 +327,20 @@ namespace ProjectFactory.DefaultProjectFactory
         public void LoadGraphs()
         {
             var roots = Project.Config.GraphRoots;
-            foreach (var root in roots)
+
+            bool _loadFile(string path)
             {
-                var path = System.IO.Path.Combine(ProjectFolder.FullName, root.Path, root.Name);
                 if (File.Exists(path + ".yaml"))
                 {
                     var file = new FileInfo(path + ".yaml");
                     CustomLoadGraphFile(File.ReadAllLines(file.FullName).ToList());
+                    return true;
                 }
+                return false;
+            }
+
+            bool _loadFolder(string path)
+            {
                 if (Directory.Exists(path))
                 {
                     var graphFolder = new DirectoryInfo(path);
@@ -342,6 +348,29 @@ namespace ProjectFactory.DefaultProjectFactory
                     {
                         CustomLoadGraphFile(File.ReadAllLines(file.FullName).ToList());
                     }
+
+                    return true;
+                }
+                return false;
+            }
+
+            foreach (var root in roots)
+            {
+                var path = System.IO.Path.Combine(ProjectFolder.FullName, root.Path, root.Name);
+                if (root.SaveRule is FilePerGraphSaveRule)
+                {
+                    if (!_loadFolder(path))
+                        _loadFile(path);
+                }
+                else if (root.SaveRule is FilePerRootSaveRule)
+                {
+                    if (!_loadFile(path))
+                        _loadFolder(path);
+                }
+                else if (root.SaveRule is FilePerRootChildSaveRule)
+                {
+                    _loadFile(path);
+                    _loadFolder(path);
                 }
             }
         }

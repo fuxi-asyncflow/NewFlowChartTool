@@ -156,7 +156,8 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
                 lines.Add("...");
                 FileHelper.Save(filePath, lines);
-                FileHelper.Save(Path.Combine(Project.Path, generateFiles[kv.Key] + DefaultProjectFactory.GenerateFileExt), genLines);
+                if(Project.Config.StandaloneGenerateFile)
+                    FileHelper.Save(Path.Combine(Project.Path, generateFiles[kv.Key] + DefaultProjectFactory.GenerateFileExt), genLines);
             }
         }
 
