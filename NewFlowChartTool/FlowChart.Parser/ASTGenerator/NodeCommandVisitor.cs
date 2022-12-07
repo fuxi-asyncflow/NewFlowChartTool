@@ -22,6 +22,7 @@ namespace FlowChart.Parser.ASTGenerator
             OpDict.Add("!=", Operator.Ne);
             OpDict.Add("~=", Operator.Ne);
             OpDict.Add("==", Operator.Eq);
+            OpDict.Add("..", Operator.Strcat);
         }
         #region statement
         // assignment statement
@@ -101,6 +102,14 @@ namespace FlowChart.Parser.ASTGenerator
         public override ASTNode VisitExpr_compare(NodeParserParser.Expr_compareContext context)
         {
             var node = new BinOpNode() { Op = Str2Op(context.operatorComparison().GetText()) };
+            node.Add(Visit(context.expr(0)));
+            node.Add(Visit(context.expr(1)));
+            return node;
+        }
+
+        public override ASTNode VisitExpr_strcat(NodeParserParser.Expr_strcatContext context)
+        {
+            var node = new BinOpNode() { Op = Str2Op(context.operatorStrcat().GetText()) };
             node.Add(Visit(context.expr(0)));
             node.Add(Visit(context.expr(1)));
             return node;

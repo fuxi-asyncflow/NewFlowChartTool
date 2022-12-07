@@ -21,7 +21,8 @@ namespace FlowChart.AST.Nodes
             LE = 8,
             GE = 9,
             NE = 10,
-            EQ = 11
+            EQ = 11,
+            STRCAT = 12,
         }
 
         public Operator(OPERATOR op, string text)
@@ -46,7 +47,8 @@ namespace FlowChart.AST.Nodes
         public static Operator Ge = new Operator(OPERATOR.GE, ">=") { IsBoolOp = true };
         public static Operator Ne = new Operator(OPERATOR.NE, "!=") { IsBoolOp = true };
         public static Operator Eq = new Operator(OPERATOR.EQ, "==") { IsBoolOp = true };
-        
+        public static Operator Strcat = new Operator(OPERATOR.STRCAT, "..") {};
+
     }
 
     public class ASTNode
