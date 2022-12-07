@@ -15,6 +15,9 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Modify}">修改</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Confirm}">确认</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Cancel}">取消</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Copy}">复制</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Cut}">剪切</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Paste}">粘贴</system:String>
 
     <!--  Menu  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_FileKey}">文件</system:String>
@@ -50,5 +53,9 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewGraphKey}">新建流程图</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewFolderKey}">新建文件夹</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_RemoveGraphKey}">删除</system:String>
+
+    <!--  Node Menu  -->
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_ConnectNodes}">连接节点</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BreakPoint}">设置/取消断点</system:String>
 
 </ResourceDictionary>

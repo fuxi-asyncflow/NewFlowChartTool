@@ -15,6 +15,9 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Modify}">Modify</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Confirm}">Confirm</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Cancel}">Cancel</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Copy}">Copy</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Cut}">Cut</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Paste}">Paste</system:String>
 
     <!--  Menu  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_FileKey}">File</system:String>
@@ -50,5 +53,9 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewGraphKey}">New Graph</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewFolderKey}">New Folder</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_RemoveGraphKey}">Remove</system:String>
+
+    <!--  Node Menu  -->
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_ConnectNodes}">connect</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BreakPoint}">breakpoint</system:String>
 
 </ResourceDictionary>

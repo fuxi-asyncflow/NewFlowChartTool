@@ -6,6 +6,7 @@
     xmlns:common="clr-namespace:NFCT.Common;assembly=NFCT.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:NFCT.Graph.Views"
+    xmlns:localization="clr-namespace:NFCT.Common.Localization;assembly=NFCT.Common"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:utility="clr-namespace:NFCT.Graph.Utility"
@@ -35,15 +36,15 @@
     </UserControl.Resources>
     <UserControl.ContextMenu>
         <ContextMenu>
-            <MenuItem Command="{Binding BeginConnectCommand}" Header="connect" />
-            <MenuItem Command="{Binding CutNodesCommand}" Header="cut" />
-            <MenuItem Command="{Binding CopyNodesCommand}" Header="copy" />
-            <MenuItem Command="{Binding PasteNodesCommand}" Header="paste" />
+            <MenuItem Command="{Binding BeginConnectCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Menu_ConnectNodes}}" />
+            <MenuItem Command="{Binding CutNodesCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Cut}}" />
+            <MenuItem Command="{Binding CopyNodesCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Copy}}" />
+            <MenuItem Command="{Binding PasteNodesCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Paste}}" />
             <Separator />
-            <MenuItem Command="{Binding EditDescriptionCommand}" Header="modify descr" />
+            <MenuItem Command="{Binding EditDescriptionCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Menu_ModifyDescriptionKey}}" />
             <Separator />
-            <MenuItem Command="{Binding BreakPointCommand}" Header="breakpoint" />
-            <MenuItem Command="{Binding ContinueBreakPointCommand}" Header="continue" />
+            <MenuItem Command="{Binding BreakPointCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Menu_BreakPoint}}" />
+            <MenuItem Command="{Binding ContinueBreakPointCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_ContinueDebug}}" />
         </ContextMenu>
     </UserControl.ContextMenu>
     <Grid
