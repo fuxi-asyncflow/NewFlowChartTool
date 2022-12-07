@@ -7,7 +7,12 @@
     <UseWPF>true</UseWPF>
     <Configurations>Debug;Release;Release-NoGUI</Configurations>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>flowchart.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="flowchart.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutomaticGraphLayout" Version="1.1.12" />
