@@ -234,14 +234,16 @@ namespace ProjectFactory.DefaultProjectFactory
                                 if (generate_standalone)
                                 {
                                     var normalUidStr = node.Uid.ToString("N");
-                                    genLines.Add($"local function {normalUidStr}(self)");
+                                    genLines.Add($"-- {textNode.Text}");
+                                    genLines.Add($"local function f_{normalUidStr}(self)");
                                     foreach (var c in content.Contents)
                                     {
                                         if (c is string s)
                                             genLines.Add($"    {c.ToString()}");
                                     }
+                                    genLines.Add("end");
                                     var funcName = $"{graph.Path}.{normalUidStr}";
-                                    genLines.Add($"asyncflow.set_node_func(\"{funcName}\", {normalUidStr})");
+                                    genLines.Add($"asyncflow.set_node_func(\"{funcName}\", f_{normalUidStr})");
                                     genLines.Add("");
 
                                     lines.Add($"    func_name: \"{funcName}\"");
