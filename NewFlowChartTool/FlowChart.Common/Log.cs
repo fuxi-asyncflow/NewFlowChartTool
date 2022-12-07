@@ -12,7 +12,7 @@ namespace FlowChartCommon
             var config = new NLog.Config.LoggingConfiguration();
 
             // Targets where to log to: File and Console
-            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "file.txt" };
+            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "log.txt", MaxArchiveFiles = 5, ArchiveNumbering = ArchiveNumberingMode.Sequence, ArchiveAboveSize = 10000000 };
             //var logconsole = new NLog.Targets.ConsoleTarget("logconsole")
             var logconsole = new NLog.Targets.ColoredConsoleTarget("logconsole")
             {
