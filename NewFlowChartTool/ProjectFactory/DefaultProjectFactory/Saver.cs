@@ -262,7 +262,7 @@ namespace ProjectFactory.DefaultProjectFactory
                                     genLines.Add($"asyncflow.set_node_func(\"{funcName}\", f_{normalUidStr})");
                                     genLines.Add("");
 
-                                    lines.Add($"    func_name: \"{funcName}\"");
+                                    //lines.Add($"    func_name: \"{funcName}\"");
                                 }
                                 else
                                 {
