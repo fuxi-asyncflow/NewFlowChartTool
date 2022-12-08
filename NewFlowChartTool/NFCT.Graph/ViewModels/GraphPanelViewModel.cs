@@ -490,6 +490,12 @@ namespace NFCT.Graph.ViewModels
         public bool IsConnecting { get; set; }
         public void BeginConnect()
         {
+            if (CurrentNode == null)
+            {
+                Logger.WARN("currentnode is null when begin connect");
+                return;
+            }
+
             Console.WriteLine($"begin connect {CurrentNode.X} {CurrentNode.Y}");
             ConnectStartNode = CurrentNode;
             IsConnecting = true;
