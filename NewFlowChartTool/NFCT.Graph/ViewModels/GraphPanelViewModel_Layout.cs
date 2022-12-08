@@ -144,7 +144,7 @@ namespace NFCT.Graph.ViewModels
             var nodeSet = new HashSet<BaseNodeViewModel>();
             nodeStack.Push(Nodes[0]);
             int id = 0;
-            Nodes.Clear();
+            //Nodes.Clear();
 
             while (nodeStack.Count > 0)
             {
@@ -154,7 +154,7 @@ namespace NFCT.Graph.ViewModels
                     continue;
                 nodeSet.Add(node);
                 node.Id = id++;
-                Nodes.Add(node);
+                //Nodes.Add(node);
                 // left node push last, then pop last
                 //node.ChildLines.Sort((a, b) => a.X.CompareTo(b.X));
                 var childLines = node.ChildLines;
