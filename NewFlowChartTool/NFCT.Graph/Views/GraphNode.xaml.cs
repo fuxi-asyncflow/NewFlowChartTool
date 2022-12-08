@@ -48,6 +48,7 @@ namespace NFCT.Graph.Views
             }
             else if (e.RightButton == MouseButtonState.Pressed)
             {
+                nodeVm.Owner.SetCurrentNode(nodeVm, !Keyboard.Modifiers.HasFlag(ModifierKeys.Control));
                 //bool nodeIsSelected = UnitCanvasViewModel.Current.SelectedNodes.Contains(nodeVm);
                 //UnitCanvasViewModel.Current.SetCurrentNode(nodeVm, !nodeIsSelected, false);
                 //e.Handled = true;
