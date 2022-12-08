@@ -160,6 +160,7 @@ namespace NFCT.Graph.ViewModels
                 var childLines = node.ChildLines;
                 childLines.Reverse();
                 childLines.ForEach(connVm => nodeStack.Push(connVm.EndNode));
+                //childLines.Reverse();
             }
 
             Connectors.Clear();

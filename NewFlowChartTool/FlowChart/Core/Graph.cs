@@ -604,6 +604,7 @@ namespace FlowChart.Core
                 var childLines = node.Children;
                 childLines.Reverse();
                 childLines.ForEach(conn => nodeStack.Push(conn.End));
+                childLines.Reverse();
             }
 
             if (nodes.Count < Nodes.Count)
