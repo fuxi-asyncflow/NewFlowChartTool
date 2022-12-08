@@ -143,6 +143,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 graphs.Add(graph);
             }
 
+            var codeFiles = new List<string>();
             foreach (var kv in graphFiles)
             {
                 var filePath = kv.Key + DefaultProjectFactory.GraphFileExt;
@@ -156,8 +157,21 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
                 lines.Add("...");
                 FileHelper.Save(filePath, lines);
-                if(Project.Config.StandaloneGenerateFile)
-                    FileHelper.Save(Path.Combine(Project.Path, generateFiles[kv.Key] + DefaultProjectFactory.GenerateFileExt), genLines);
+                if (Project.Config.StandaloneGenerateFile)
+                {
+                    FileHelper.Save(
+                        Path.Combine(Project.Path, generateFiles[kv.Key] + DefaultProjectFactory.GenerateFileExt),
+                        genLines);
+                    codeFiles.Add(generateFiles[kv.Key]);
+                }
+            }
+
+            if (codeFiles.Count > 0)
+            {
+                codeFiles = codeFiles.ConvertAll(line => $"\"{line.Replace('\\', '/')}\",");
+                codeFiles.Insert(0, "return {");
+                codeFiles.Add("}");
+                FileHelper.Save(Path.Combine(Project.Path, "all_flowcharts.lua"), codeFiles);
             }
         }
 
