@@ -23,7 +23,7 @@ namespace NFCT.Graph.ViewModels
     {
         GraphPaneViewModel _g;
         public GraphLayoutAdapter(GraphPaneViewModel g) { _g = g; }
-      
+
         public IEnumerable<INode> Nodes => _g.Nodes;
 
         public IEnumerable<IEdge> Edges => _g.Connectors;
@@ -94,6 +94,7 @@ namespace NFCT.Graph.ViewModels
             _graph.GraphConnectEvent += OnConnect;
             _graph.GraphAddNodeEvent += OnAddNode;
             _graph.ConnectorTypeChangeEvent += OnConnectorTypeChange;
+            _graph.GraphSwitchChildNodeOrderEvent += OnSwitchChildNodeOrder;
             IsDirty = false;
         }
 

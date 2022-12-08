@@ -39,11 +39,15 @@ namespace NFCT.Graph.ViewModels
             _conn = conn;
 
             OnMouseUpCommand = new DelegateCommand<MouseEventArgs>(OnMouseUp);
+            MoveLeftCommand = new DelegateCommand(delegate { Owner.SwitchChildNodeOrder_Operation(this, -1); });
+            MoveRightCommand = new DelegateCommand(delegate { Owner.SwitchChildNodeOrder_Operation(this, 1); });
         }
 
         public GraphPaneViewModel Owner { get; set; }
         private Connector _conn;
         public Connector Connector => _conn;
+        public DelegateCommand MoveLeftCommand { get; set; }
+        public DelegateCommand MoveRightCommand { get; set; }
 
         private bool _isSelect;
         public bool IsSelect
@@ -241,7 +245,6 @@ namespace NFCT.Graph.ViewModels
             Owner.ChangeConnectorType_Operation(Connector, newValue);
         }
 
-
         public void OnThemeSwitch()
         {
             RaisePropertyChanged(nameof(ConnType));
@@ -251,7 +254,26 @@ namespace NFCT.Graph.ViewModels
         public void OnKeyDown(KeyEventArgs args)
         {
             bool isCtrlDown = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
-            Console.WriteLine($"connector key down {args.Key}");
+            //Console.WriteLine($"connector key down {args.Key}");
+
+            if (args.Key == Key.System)
+            {
+                switch (args.SystemKey)
+                {
+                    case Key.Left:
+                        Owner.SwitchChildNodeOrder_Operation(this, -1);
+                        args.Handled = true;
+                        break;
+                    case Key.Right:
+                        Owner.SwitchChildNodeOrder_Operation(this, 1);
+                        args.Handled = true;
+                        break;
+                }
+
+                if (args.Handled)
+                    return;
+            }
+
             switch (args.Key)
             {
                 case Key.Tab:
@@ -274,7 +296,6 @@ namespace NFCT.Graph.ViewModels
                     args.Handled = true;
                     break;
             }
-           
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -92,6 +93,7 @@ namespace NFCT.Graph.ViewModels
 
         public bool Relayout()
         {
+            ReorderId();
             Logger.DBG($"Relayout for graph {Name}");
             var graph = new GraphLayoutAdapter(this);
             if (NodeDict.Count <= 0.0 || NodeDict.First().Value.Width <= 0.0)
@@ -142,19 +144,28 @@ namespace NFCT.Graph.ViewModels
             var nodeSet = new HashSet<BaseNodeViewModel>();
             nodeStack.Push(Nodes[0]);
             int id = 0;
+            Nodes.Clear();
 
             while (nodeStack.Count > 0)
             {
                 var node = nodeStack.Pop();
+                
                 if (nodeSet.Contains(node))
                     continue;
                 nodeSet.Add(node);
                 node.Id = id++;
+                Nodes.Add(node);
                 // left node push last, then pop last
                 //node.ChildLines.Sort((a, b) => a.X.CompareTo(b.X));
                 var childLines = node.ChildLines;
                 childLines.Reverse();
                 childLines.ForEach(connVm => nodeStack.Push(connVm.EndNode));
+            }
+
+            Connectors.Clear();
+            foreach (var nodeVm in Nodes)
+            {
+                Connectors.AddRange(nodeVm.ChildLines);
             }
         }
 

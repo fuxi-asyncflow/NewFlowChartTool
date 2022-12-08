@@ -17,8 +17,12 @@
     <UserControl.Resources>
         <utility:ConnectorColorConverter x:Key="ConnectorColorConverter" />
         <utility:ConnectorStrokeWidthConverter x:Key="ConnectorStrokeWidthConverter" />
+        <ContextMenu x:Key="ConnectorContextMenu">
+            <MenuItem Command="{Binding MoveLeftCommand}" Header="left" />
+            <MenuItem Command="{Binding MoveRightCommand}" Header="right" />
+        </ContextMenu>
     </UserControl.Resources>
-    <Canvas>
+    <Canvas ContextMenu="{StaticResource ConnectorContextMenu}">
         <Path
             Data="{Binding Path}"
             Stroke="{Binding ConnType, Converter={StaticResource ConnectorColorConverter}}"

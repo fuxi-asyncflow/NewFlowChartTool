@@ -286,6 +286,39 @@ namespace NFCT.Graph.ViewModels
         }
         #endregion
 
+        #region switch child Nodes
+
+        public void SwitchChildNodeOrder_Operation(GraphConnectorViewModel conn, int direction)
+        {
+            var lines = conn.StartNode.ChildLines;
+            var idx = lines.IndexOf(conn);
+            var id = idx + direction;
+            if (id < 0 || id >= conn.StartNode.ChildLines.Count)
+                return;
+            UndoRedoManager.Begin("change connector order");
+            Graph.SwitchChildNodeOrder_atom(conn.Connector, lines[id].Connector);
+            UndoRedoManager.End();
+        }
+
+        void OnSwitchChildNodeOrder(Node node, int ida, int idb)
+        {
+            var nodeVm = GetNodeVm(node);
+            var lines = nodeVm.ChildLines;
+            var ca = lines[ida];
+            var cb = lines[idb];
+            lines[idb] = ca;
+            lines[ida] = cb;
+            
+            Relayout();
+
+            UndoRedoManager.AddAction(
+                () => { Graph.SwitchChildNodeOrder_atom(ca.Connector, cb.Connector); },
+                () => { Graph.SwitchChildNodeOrder_atom(cb.Connector, ca.Connector); }
+            );
+        }
+
+        #endregion
+
         #region Paste Nodes
 
         #endregion
