@@ -361,7 +361,9 @@ namespace FlowChart.Core
 
             // find a parent node who can connect to start node after node deleted
             var parent = parents.Find(IsNodeConnectToRoot) ?? Root;
-            int idx = idxMap[parent];
+            int idx = -1;
+            if (idxMap.ContainsKey(parent))
+                idx = idxMap[parent];
 
             // add orphan nodes to parent node
             foreach (var child in children)
