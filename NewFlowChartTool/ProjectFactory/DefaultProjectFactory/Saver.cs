@@ -163,6 +163,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public void SaveGraph(Graph graph, List<string> lines, List<string> genLines)
         {
+            graph.ReorderConnectors();
             lines.Add($"path: {graph.Path}");
             lines.Add($"uid: {graph.Uid}");
             lines.Add($"type: {graph.Type.Name}");

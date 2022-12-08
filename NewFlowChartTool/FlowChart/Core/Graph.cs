@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -92,6 +93,7 @@ namespace FlowChart.Core
         public delegate void GraphPathChangeHandler(Graph graph, string oldPath, string newPath);
         public delegate void GraphAddVariableDelegate(Graph graph, Variable variable);
         public delegate void GraphConnectorTypeChangeDelegate(Connector conn, Connector.ConnectorType oldValue);
+        public delegate void GraphSwitchChildNodeOrderDelegate(Node node, int ida, int idb);
 
         public event GraphPathChangeHandler GraphPathChangeEvent;
         public event GraphNodeDelegate? GraphRemoveNodeEvent;
@@ -100,6 +102,7 @@ namespace FlowChart.Core
         public event GraphConnectorDelegate ConnectorRemoveEvent;
         public event GraphConnectorTypeChangeDelegate ConnectorTypeChangeEvent;
         public event GraphAddVariableDelegate? GraphAddVariableEvent;
+        public event GraphSwitchChildNodeOrderDelegate? GraphSwitchChildNodeOrderEvent;
 
 
 
@@ -559,6 +562,72 @@ namespace FlowChart.Core
             Project.GraphDict.Add(newPath, this);
 
             RaiseRenameEvent(newName);
+        }
+
+        public void SwitchChildNodeOrder_atom(Connector ca, Connector cb)
+        {
+            if (ca.Start != cb.Start)
+                return;
+            var conns = ca.Start.Children;
+            var ida = conns.IndexOf(ca);
+            var idb = conns.IndexOf(cb);
+            if (ida == -1 || idb == -1)
+                return;
+            conns[ida] = cb;
+            conns[idb] = ca;
+            GraphSwitchChildNodeOrderEvent?.Invoke(ca.Start, ida, idb);
+        }
+
+        void SortNodes()
+        {
+            if (Nodes.Count == 0)
+                return;
+            var startNode = Nodes[0];
+
+            var nodeStack = new Stack<Node>();
+            var nodeSet = new HashSet<Node>();
+            nodeStack.Push(startNode);
+            int id = 0;
+            var nodes = new List<Node>();
+
+            while (nodeStack.Count > 0)
+            {
+                var node = nodeStack.Pop();
+
+                if (nodeSet.Contains(node))
+                    continue;
+                nodeSet.Add(node);
+                
+                nodes.Add(node);
+                // left node push last, then pop last
+                //node.ChildLines.Sort((a, b) => a.X.CompareTo(b.X));
+                var childLines = node.Children;
+                childLines.Reverse();
+                childLines.ForEach(conn => nodeStack.Push(conn.End));
+            }
+
+            if (nodes.Count < Nodes.Count)
+            {
+                // orphan nodes exist
+                Logger.ERR($"{startNode.OwnerGraph.Path} exist orphan nodes");
+                Nodes.ForEach(node =>
+                {
+                    if(!nodeSet.Contains(node))
+                        nodes.Add(node);
+                });
+            }
+
+            Nodes = nodes;
+        }
+
+        public void ReorderConnectors()
+        {
+            SortNodes();
+            Connectors.Clear();
+            Nodes.ForEach(node =>
+            {
+                Connectors.AddRange(node.Children);
+            });
         }
     }
 }
