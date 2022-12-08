@@ -87,6 +87,11 @@ namespace NFCT.Graph.Views
             var vm = WPFHelper.GetDataContext<GraphPaneViewModel>(this);
             if(vm == null) return;
 
+            if (vm.IsConnecting)
+            {
+                vm.EndConnect(true);
+            }
+
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 vm.ClearSelectedItems();

@@ -497,15 +497,17 @@ namespace NFCT.Graph.ViewModels
             RaisePropertyChanged(nameof(ConnectStartNode));
         }
 
-        public void EndConnect()
+        public void EndConnect(bool cancel = false)
         {
             if (!IsConnecting)
                 return;
             IsConnecting = false;
             RaisePropertyChanged(nameof(IsConnecting));
+
             if (ConnectStartNode == null || CurrentNode == null)
                 return;
-            ConnectOperation(ConnectStartNode.Node, CurrentNode.Node);
+            if(!cancel)
+                ConnectOperation(ConnectStartNode.Node, CurrentNode.Node);
             ConnectStartNode = null;
             NeedLayout = true;
         }
