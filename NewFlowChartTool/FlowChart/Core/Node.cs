@@ -21,6 +21,7 @@ namespace FlowChart.Core
             Children = new List<Connector>();
         }
         public Guid Uid { get; set; }
+        public int Id { get; set; } // be careful, only used for display
         public Graph OwnerGraph { get; set; }
         public Group? OwnerGroup { get; set; }
         private string? _description;

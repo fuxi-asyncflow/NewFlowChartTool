@@ -599,7 +599,7 @@ namespace FlowChart.Core
                 if (nodeSet.Contains(node))
                     continue;
                 nodeSet.Add(node);
-                
+                node.Id = nodes.Count;
                 nodes.Add(node);
                 // left node push last, then pop last
                 //node.ChildLines.Sort((a, b) => a.X.CompareTo(b.X));

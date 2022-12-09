@@ -35,7 +35,7 @@ namespace NewFlowChartTool.ViewModels
             get
             {
                 if (Node != null)
-                    return $"{Node.OwnerGraph.Name}[]";
+                    return $"{Node.OwnerGraph.Name}[{Node.Id}]";
                 if(Graph != null)
                     return Graph.Name;
                 return null;

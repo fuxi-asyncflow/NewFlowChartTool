@@ -542,8 +542,8 @@ namespace ProjectFactory.DefaultProjectFactory
                     {
                         node = new TextNode(){Uid = uid};
                     }
+                    node.Id = graph.Nodes.Count;
                     graph.AddNode(node);
-
                 }
                 else if (c == ' ')
                 {
