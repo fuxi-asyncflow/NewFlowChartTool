@@ -71,11 +71,11 @@ namespace FlowChart.Parser
                     Tokens.Add(new TextToken() { Start = pos + 1, End = text.Length, Type = TextToken.TokenType.Default });
                 }
 #if DEBUG
-                Console.WriteLine($"----- {text}");
-                Tokens.ForEach(token =>
-                {
-                    Console.WriteLine($"token: {text.Substring(token.Start, token.End - token.Start)}");
-                });
+                //Console.WriteLine($"----- {text}");
+                //Tokens.ForEach(token =>
+                //{
+                //    Console.WriteLine($"token: {text.Substring(token.Start, token.End - token.Start)}");
+                //});
 #endif
             }
 

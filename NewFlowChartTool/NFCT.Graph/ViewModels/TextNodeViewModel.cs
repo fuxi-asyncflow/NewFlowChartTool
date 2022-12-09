@@ -113,7 +113,6 @@ namespace NFCT.Graph.ViewModels
                 return;
             }
 
-            Logger.DBG($"[OnParseEnd] Tokens count : {pr.Tokens}");
             if (pr.Tokens != null)
             {
                 Tokens.Clear();
