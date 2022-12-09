@@ -158,9 +158,14 @@ namespace NFCT.Graph.ViewModels
                 // left node push last, then pop last
                 //node.ChildLines.Sort((a, b) => a.X.CompareTo(b.X));
                 var childLines = node.ChildLines;
-                childLines.Reverse();
-                childLines.ForEach(connVm => nodeStack.Push(connVm.EndNode));
                 //childLines.Reverse();
+                //childLines.ForEach(connVm => nodeStack.Push(connVm.EndNode));
+                //childLines.Reverse();
+                int idx = childLines.Count;
+                while (idx > 0)
+                {
+                    nodeStack.Push(childLines[--idx].EndNode);
+                }
             }
 
             Connectors.Clear();
