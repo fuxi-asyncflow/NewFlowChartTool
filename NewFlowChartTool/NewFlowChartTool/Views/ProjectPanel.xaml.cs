@@ -210,5 +210,51 @@ namespace NewFlowChartTool.Views
         //        };
         //    }
         //}
+        private void SearchTextBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            var vm = DataContext as ProjectPanelViewModel;
+            if (vm == null)
+                return;
+            //Logger.DBG($"node editbox key down: {e.Key}");
+            if (e.Key == Key.Enter)
+            {
+                vm.OpenSelectedSearchResult();
+                vm.ExitSearch();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Down)
+            {
+                //Logger.DBG($"prompts: {PromptsListBox.SelectedIndex}");
+                SearchResultListBox.SelectedIndex++;
+                SearchResultListBox.ScrollIntoView(SearchResultListBox.SelectedItem);
+            }
+            else if (e.Key == Key.Up)
+            {
+                if (SearchResultListBox.SelectedIndex < 1) return;
+                SearchResultListBox.SelectedIndex--;
+                SearchResultListBox.ScrollIntoView(SearchResultListBox.SelectedItem);
+            }
+            else if (e.Key == Key.Tab)
+            {
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                vm.ExitSearch();
+            }
+        }
+
+        // cannot use MouseDown, because it will be handled by list box item
+        private void SearchResultListBox_OnMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            var vm = DataContext as ProjectPanelViewModel;
+            if (vm == null)
+                return;
+
+            vm.OpenSelectedSearchResult();
+            vm.ExitSearch();
+            e.Handled = true;
+
+        }
     }
 }

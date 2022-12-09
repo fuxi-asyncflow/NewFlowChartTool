@@ -484,12 +484,20 @@ namespace NewFlowChartTool.ViewModels
         private bool _showPopup;
         public bool ShowPopup { get => _showPopup; set => SetProperty(ref _showPopup, value); }
         public ObservableCollection<ProjectTreeItemViewModel> SearchResult { get; set; }
+        private ProjectTreeItemViewModel? _selectedSearchItem;
+        public ProjectTreeItemViewModel? SelectedSearchItem { get => _selectedSearchItem; set => SetProperty(ref _selectedSearchItem, value); }
 
-        private string _lastSearchText;
+        private string? _lastSearchText;
         void Search(string text)
         {
+            if (string.IsNullOrEmpty(text))
+            {
+                ShowPopup = false;
+                return;
+            }
+
             text = text.ToLower();
-            if (text.Length < 3)
+            if (text.Length < 3 && Encoding.UTF8.GetByteCount(text) < 6) // start search until 3 letters or 2 Chinese character
             {
                 ShowPopup = false;
                 return;
@@ -533,6 +541,22 @@ namespace NewFlowChartTool.ViewModels
                     _searchTreeItem(text, item);
                 }
             }
+        }
+
+        public void ExitSearch()
+        {
+            ShowPopup = false;
+            _lastSearchText = null;
+            SearchResult.Clear();
+        }
+
+        public void OpenSelectedSearchResult()
+        {
+            if(SelectedSearchItem != null)
+                SelectedSearchItem.Open();
+            else if(SearchResult.Count > 0)
+                SearchResult.First().Open();
+
         }
 
         #endregion

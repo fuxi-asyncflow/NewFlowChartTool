@@ -25,9 +25,17 @@
     <Grid Style="{DynamicResource GridStyle}">
         <StackPanel Orientation="Vertical">
             <Grid>
-                <TextBox x:Name="SearchTextBox" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    x:Name="SearchTextBox"
+                    PreviewKeyDown="SearchTextBox_OnKeyDown"
+                    Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <Popup IsOpen="{Binding ShowPopup}" PlacementTarget="{Binding ElementName=SearchTextBox}">
-                    <ListBox ItemsSource="{Binding SearchResult}">
+                    <ListBox
+                        x:Name="SearchResultListBox"
+                        ItemsSource="{Binding SearchResult}"
+                        MouseUp="SearchResultListBox_OnMouseUp"
+                        SelectedItem="{Binding SelectedSearchItem}"
+                        VirtualizingPanel.IsVirtualizing="true">
                         <ListBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
                                 <local:ProjectTreeItem />
