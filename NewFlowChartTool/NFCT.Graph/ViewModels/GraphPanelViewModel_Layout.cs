@@ -177,7 +177,7 @@ namespace NFCT.Graph.ViewModels
             var nodeVm = GetNodeVm(node);
             ScrollX = Math.Clamp(nodeVm.Left * Scale - ScrollViewerWidth / 2, 0, Width*Scale);
             ScrollY = Math.Clamp(nodeVm.Top * Scale - ScrollViewerHeight / 2, 0, Height*Scale);
-
+            SetCurrentNode(nodeVm);
         }
     }
 }
