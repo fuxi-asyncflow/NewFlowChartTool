@@ -163,7 +163,7 @@ namespace FlowChart.Type
             
         }
 
-        public virtual InstanceType GetInstance(List<Type> tmpls)
+        public virtual InstanceType? GetInstance(List<Type?> tmpls)
         {
             throw new NotImplementedException();
         }
@@ -208,16 +208,18 @@ namespace FlowChart.Type
         public override int TemplateTypeCount => 1;
         public Dictionary<Type, InstanceType> InstanceTypes;
 
-        public override InstanceType GetInstance(List<Type> tmpls)
+        public override InstanceType? GetInstance(List<Type?> tmpls)
         {
             if (tmpls.Count != 1)
             {
                 Logger.ERR($"GenericType `{Name}` only receive 1 template type");
-                return GetInstance(new List<Type>() {BuiltinTypes.UndefinedType});
+                return GetInstance(new List<Type?>() {BuiltinTypes.UndefinedType});
             }
 
             InstanceType ret;
             var tmpl = tmpls[0];
+            if (tmpl == null)
+                return null;
             if (InstanceTypes.TryGetValue(tmpl, out ret))
                 return ret;
             ret = new InstanceType(Name) { GenType = this };
