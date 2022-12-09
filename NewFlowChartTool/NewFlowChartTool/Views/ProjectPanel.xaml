@@ -38,7 +38,19 @@
                         VirtualizingPanel.IsVirtualizing="true">
                         <ListBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
-                                <local:ProjectTreeItem />
+                                <StackPanel Orientation="Horizontal">
+                                    <Viewbox Child="{StaticResource Icon_CSClassFile}" Visibility="{Binding IsFolder, Converter={StaticResource InvertBooleanToVisibilityConverter}}" />
+                                    <Viewbox Child="{StaticResource Icon_FolderClosed}" Visibility="{Binding IsFolder, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    <TextBlock
+                                        Margin="5,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding Name}" />
+                                    <TextBlock
+                                        Margin="6,0"
+                                        VerticalAlignment="Center"
+                                        Foreground="{DynamicResource light-green}"
+                                        Text="{Binding Description}" />
+                                </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

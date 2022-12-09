@@ -67,6 +67,7 @@ namespace NewFlowChartTool.ViewModels
         public string? Description => _item.Description;
         public ProjectTreeFolderViewModel? Folder { get; set; }
         public ProjectTreeItemViewModel? Parent => Folder;
+        public virtual bool IsFolder => false;
 
         public virtual void Open()
         {
@@ -277,6 +278,7 @@ namespace NewFlowChartTool.ViewModels
             Children = new ObservableCollection<ProjectTreeItemViewModel>();
         }
         public ObservableCollection<ProjectTreeItemViewModel> Children { get; set; }
+        public override bool IsFolder => true;
 
         public void AddChild(ProjectTreeItemViewModel? child)
         {
