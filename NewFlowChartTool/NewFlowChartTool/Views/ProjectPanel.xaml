@@ -23,33 +23,47 @@
 
     </UserControl.Resources>
     <Grid Style="{DynamicResource GridStyle}">
-        <TreeView
-            x:Name="ProjectTree"
-            Background="Transparent"
-            ItemsSource="{Binding Roots}"
-            VirtualizingStackPanel.IsVirtualizing="True"
-            VirtualizingStackPanel.VirtualizationMode="Recycling">
-            <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type vm:ProjectTreeFolderViewModel}" ItemsSource="{Binding Children}">
-                    <StackPanel Margin="2" Orientation="Horizontal">
-                        <Viewbox Child="{StaticResource Icon_FolderClosed}" />
-                        <TextBlock
-                            Margin="5,0,0,0"
-                            VerticalAlignment="Center"
-                            Text="{Binding Name}" />
-                    </StackPanel>
+        <StackPanel Orientation="Vertical">
+            <Grid>
+                <TextBox x:Name="SearchTextBox" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <Popup IsOpen="{Binding ShowPopup}" PlacementTarget="{Binding ElementName=SearchTextBox}">
+                    <ListBox ItemsSource="{Binding SearchResult}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
+                                <local:ProjectTreeItem />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Popup>
+            </Grid>
+            <TreeView
+                x:Name="ProjectTree"
+                Background="Transparent"
+                ItemsSource="{Binding Roots}"
+                VirtualizingStackPanel.IsVirtualizing="True"
+                VirtualizingStackPanel.VirtualizationMode="Recycling">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type vm:ProjectTreeFolderViewModel}" ItemsSource="{Binding Children}">
+                        <StackPanel Margin="2" Orientation="Horizontal">
+                            <Viewbox Child="{StaticResource Icon_FolderClosed}" />
+                            <TextBlock
+                                Margin="5,0,0,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding Name}" />
+                        </StackPanel>
 
-                </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
-                    <local:ProjectTreeItem />
-                </DataTemplate>
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{DynamicResource InactiveSelectionHighlightColor}" />
-            </TreeView.Resources>
-            <TreeView.ItemContainerStyle>
-                <Style BasedOn="{StaticResource CustomTreeViewItemStyle}" TargetType="TreeViewItem">
-                    <EventSetter Event="MouseDoubleClick" Handler="ProjectTreeItem_MouseDoubleClick" />
-                </Style>
-            </TreeView.ItemContainerStyle>
-        </TreeView>
+                    </HierarchicalDataTemplate>
+                    <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
+                        <local:ProjectTreeItem />
+                    </DataTemplate>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{DynamicResource InactiveSelectionHighlightColor}" />
+                </TreeView.Resources>
+                <TreeView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource CustomTreeViewItemStyle}" TargetType="TreeViewItem">
+                        <EventSetter Event="MouseDoubleClick" Handler="ProjectTreeItem_MouseDoubleClick" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </TreeView>
+        </StackPanel>
     </Grid>
 </UserControl>

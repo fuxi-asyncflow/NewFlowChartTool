@@ -258,6 +258,15 @@ namespace NewFlowChartTool.ViewModels
                 }
             }
         }
+
+        public bool Search(string text)
+        {
+            if (Name.ToLower().Contains(text))
+                return true;
+            if (Description != null && Description.ToLower().Contains(text))
+                return true;
+            return false;
+        }
     }
 
     public class ProjectTreeFolderViewModel : ProjectTreeItemViewModel
@@ -363,6 +372,7 @@ namespace NewFlowChartTool.ViewModels
         {
             Roots = new ObservableCollection<ProjectTreeItemViewModel>();
             SubscribeEvents();
+            SearchResult = new ObservableCollection<ProjectTreeItemViewModel>();
 
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
@@ -464,5 +474,67 @@ namespace NewFlowChartTool.ViewModels
         public delegate void ProjectTreeItemDelegate(ProjectTreeItemViewModel item);
 
         public event ProjectTreeItemDelegate? AddGraphEvent;
+
+        #region Search
+
+        private string _searchText;
+        public string SearchText { get => _searchText;
+            set { SetProperty(ref _searchText, value); Search(_searchText);}
+        }
+        private bool _showPopup;
+        public bool ShowPopup { get => _showPopup; set => SetProperty(ref _showPopup, value); }
+        public ObservableCollection<ProjectTreeItemViewModel> SearchResult { get; set; }
+
+        private string _lastSearchText;
+        void Search(string text)
+        {
+            text = text.ToLower();
+            if (text.Length < 3)
+            {
+                ShowPopup = false;
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(_lastSearchText) && text.Contains(_lastSearchText))
+            {
+                var result = SearchResult;
+                for (int i = result.Count - 1; i >= 0; i--)
+                {
+                    if (!result[i].Search(text))
+                    {
+                        result.RemoveAt(i);
+                    }
+                }
+
+                _lastSearchText = text;
+                return;
+            }
+            else
+            {
+                // full search
+                SearchResult.Clear();
+                foreach (var root in Roots)
+                {
+                    _searchTreeItem(text, root);
+                }
+            }
+
+            ShowPopup = true;
+        }
+
+        void _searchTreeItem(string text, ProjectTreeItemViewModel treeItem)
+        {
+            if(treeItem.Search(text))
+                SearchResult.Add(treeItem);
+            else if (treeItem is ProjectTreeFolderViewModel folder)
+            {
+                foreach (var item in folder.Children)
+                {
+                    _searchTreeItem(text, item);
+                }
+            }
+        }
+
+        #endregion
     }
 }
