@@ -14,6 +14,7 @@ using System.Diagnostics;
 using FlowChart.AST;
 using FlowChart.Debug;
 using FlowChart.LuaCodeGen;
+using FlowChart.Misc;
 using FlowChart.Parser;
 using FlowChartCommon;
 using NewFlowChartTool.Event;
@@ -64,6 +65,7 @@ namespace NewFlowChartTool.ViewModels
             HotfixCommand = new DelegateCommand(Hotfix);
 
             ScreenShotCommand = new DelegateCommand(ScreenShot);
+            SearchNodeCommand = new DelegateCommand(SearchNode);
 
             SelectedLang = Lang.Chinese;
             SelectedTheme = Theme.Dark;
@@ -138,6 +140,7 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand HotfixCommand { get; private set; }
 
         public DelegateCommand ScreenShotCommand { get; set; }
+        public DelegateCommand SearchNodeCommand { get; set; }
 
         public void TestOpenProject()
         {
@@ -348,6 +351,38 @@ namespace NewFlowChartTool.ViewModels
             if (ActiveGraph == null)
                 return;
             ActiveGraph.ScreenShot();
+        }
+
+        void SearchNode()
+        {
+            if (CurrentProject == null)
+                return;
+            _dialogService.Show(InputDialogViewModel.NAME, result =>
+            {
+                if (result.Result != ButtonResult.OK)
+                    return;
+                var searchText = result.Parameters.GetValue<string>("Value");
+                SearchNode(searchText);
+            });
+        }
+
+        void SearchNode(string text)
+        {
+            if (CurrentProject == null)
+                return;
+            text = text.Trim().ToLower();
+            var output = ContainerLocator.Current.Resolve<OutputPanelViewModel>();
+            foreach (var graph in CurrentProject.GraphDict.Values)
+            {
+                graph.Nodes.ForEach(node =>
+                {
+                    if (node is TextNode textNode)
+                    {
+                        if(textNode.Text.Contains(text))
+                            output.Output(textNode.Text, OutputMessageType.Default, node);
+                    }
+                });
+            }
         }
 
         public async void OpenGraph(string path)

@@ -42,6 +42,10 @@
             Key="B"
             Command="{Binding BuildAllCommand}"
             Modifiers="Control" />
+        <KeyBinding
+            Key="F"
+            Command="{Binding SearchNodeCommand}"
+            Modifiers="Control" />
     </Window.InputBindings>
 
 
