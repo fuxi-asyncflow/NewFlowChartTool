@@ -64,6 +64,8 @@ namespace NewFlowChartTool.ViewModels
         protected readonly TreeItem _item;
         public TreeItem Item => _item;
         public string Name => _item.Name;
+        public string Path => _item.Path;
+
         public string? Description => _item.Description;
         public ProjectTreeFolderViewModel? Folder { get; set; }
         public ProjectTreeItemViewModel? Parent => Folder;
@@ -550,7 +552,7 @@ namespace NewFlowChartTool.ViewModels
         {
             if(treeItem.Search(text))
                 SearchResult.Add(treeItem);
-            else if (treeItem is ProjectTreeFolderViewModel folder)
+            if (treeItem is ProjectTreeFolderViewModel folder)
             {
                 foreach (var item in folder.Children)
                 {

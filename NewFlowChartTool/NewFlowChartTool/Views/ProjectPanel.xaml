@@ -38,18 +38,26 @@
                         VirtualizingPanel.IsVirtualizing="true">
                         <ListBox.ItemTemplate>
                             <DataTemplate DataType="{x:Type vm:ProjectTreeItemViewModel}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Viewbox Child="{StaticResource Icon_CSClassFile}" Visibility="{Binding IsFolder, Converter={StaticResource InvertBooleanToVisibilityConverter}}" />
-                                    <Viewbox Child="{StaticResource Icon_FolderClosed}" Visibility="{Binding IsFolder, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Viewbox Child="{StaticResource Icon_CSClassFile}" Visibility="{Binding IsFolder, Converter={StaticResource InvertBooleanToVisibilityConverter}}" />
+                                        <Viewbox Child="{StaticResource Icon_FolderClosed}" Visibility="{Binding IsFolder, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        <TextBlock
+                                            Margin="5,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Name}" />
+                                        <TextBlock
+                                            Margin="6,0"
+                                            VerticalAlignment="Center"
+                                            Foreground="{DynamicResource light-green}"
+                                            Text="{Binding Description}" />
+                                    </StackPanel>
                                     <TextBlock
-                                        Margin="5,0,0,0"
+                                        Margin="16,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding Name}" />
-                                    <TextBlock
-                                        Margin="6,0"
-                                        VerticalAlignment="Center"
-                                        Foreground="{DynamicResource light-green}"
-                                        Text="{Binding Description}" />
+                                        FontStyle="Italic"
+                                        Foreground="Gray"
+                                        Text="{Binding Path}" />
                                 </StackPanel>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
