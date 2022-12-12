@@ -65,7 +65,7 @@ namespace NewFlowChartTool.Views
         #region FUNCTION USED TO BRINGINTOVIEW
         // 对于virtualizing的treeview，实现BringTreeItemIntoView
         // http://stackoverflow.com/questions/183636/selecting-a-node-in-virtualized-treeview-with-wpf
-        public static void BringTreeItemIntoView(TreeView treeView, object item)
+        public static void BringTreeItemIntoView(TreeView treeView, object? item)
         {
             var selectedItem = item as ProjectTreeItemViewModel;
             if (selectedItem == null || selectedItem.Parent == null) return;
@@ -77,6 +77,8 @@ namespace NewFlowChartTool.Views
                 itemList.Add(iteritem);
                 iteritem = iteritem.Parent;
             }
+
+            itemList.RemoveAt(itemList.Count - 1);
             itemList.Reverse();
 
             var currentTree = treeView as ItemsControl;
@@ -89,7 +91,7 @@ namespace NewFlowChartTool.Views
                 if (nextTree == null)
                 {
                     currentTree.ApplyTemplate();
-                    var itemsPresenter = (ItemsPresenter)currentTree.Template.FindName("ItemsHost", currentTree);
+                    var itemsPresenter = currentTree.Template.FindName("ItemsHost", currentTree) as ItemsPresenter;
                     if (itemsPresenter != null)
                     {
                         itemsPresenter.ApplyTemplate();
@@ -252,6 +254,7 @@ namespace NewFlowChartTool.Views
                 return;
 
             vm.OpenSelectedSearchResult();
+            BringTreeItemIntoView(ProjectTree, vm.SelectedSearchItem);
             vm.ExitSearch();
             e.Handled = true;
 
