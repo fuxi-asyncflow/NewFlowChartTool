@@ -15,6 +15,7 @@ namespace FlowChart.Core
     {
         public TreeItem(string name) : base(name)
         {
+            Path = "";
         }
 
         public virtual void Rename(string newName)
@@ -27,6 +28,7 @@ namespace FlowChart.Core
         #region REF PROPERTY
         public Project Project { get; set; }
         public Type.Type Type { get; set; }
+        public virtual string Path { get; set; }
 
         public Folder? Parent { get; set; }
         #endregion
@@ -112,7 +114,7 @@ namespace FlowChart.Core
         #region PROPERTY
 
         private string _path;
-        public string Path
+        public override string Path
         {
             get => _path;
             set => SetPath(value);

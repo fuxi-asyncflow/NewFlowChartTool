@@ -23,7 +23,7 @@ namespace FlowChart.Core
             var child = Items.GetValueOrDefault(subFolderName);
             if(child == null)
             {
-                var item = new Folder(subFolderName) {Project = Project, Type = Type};
+                var item = new Folder(subFolderName) {Project = Project, Type = Type, Path = Path + "." + subFolderName};
                 AddChild(item);
                 return item;
 
@@ -74,6 +74,7 @@ namespace FlowChart.Core
                 var path = $"{parentPath}.{Name}";
                 if (treeItem is Folder folder)
                 {
+                    folder.Path = path;
                     folder.RenameChildren(path);
                 }
                 else if (treeItem is Graph graph)
