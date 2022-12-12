@@ -26,6 +26,8 @@
 
         <ResourceDictionary Source="Icons/WindowScreenshot.xaml" />
 
+        <ResourceDictionary Source="Icons/Search.xaml" />
+
 
 
     </ResourceDictionary.MergedDictionaries>

@@ -23,7 +23,11 @@
 
     </UserControl.Resources>
     <DockPanel Background="Transparent" LastChildFill="True">
-        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+        <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+            <Viewbox
+                Height="16"
+                Child="{StaticResource Icon_Search}"
+                DockPanel.Dock="Left" />
             <Grid>
                 <TextBox
                     x:Name="SearchTextBox"
@@ -64,7 +68,7 @@
                     </ListBox>
                 </Popup>
             </Grid>
-        </StackPanel>
+        </DockPanel>
         <TreeView
             x:Name="ProjectTree"
             Background="Transparent"
