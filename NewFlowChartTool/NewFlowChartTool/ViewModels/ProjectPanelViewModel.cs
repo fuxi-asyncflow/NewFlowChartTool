@@ -86,11 +86,14 @@ namespace NewFlowChartTool.ViewModels
         }
 
         private bool _isExpanded;
-
         public bool IsExpanded
         {
-            get { return _isExpanded; }
-            set { SetProperty(ref _isExpanded, value); }
+            get => (this is ProjectTreeFolderViewModel) && _isExpanded;
+            set
+            {
+                if (this is ProjectTreeFolderViewModel)
+                SetProperty(ref _isExpanded, value);
+            }
         }
 
         private bool _isEditingName;
@@ -268,6 +271,16 @@ namespace NewFlowChartTool.ViewModels
                 return true;
             return false;
         }
+
+        public void Expand()
+        {
+            var folder = Folder;
+            while (folder != null)
+            {
+                folder.IsExpanded = true;
+                folder = folder.Folder;
+            }
+        }
     }
 
     public class ProjectTreeFolderViewModel : ProjectTreeItemViewModel
@@ -375,6 +388,7 @@ namespace NewFlowChartTool.ViewModels
             Roots = new ObservableCollection<ProjectTreeItemViewModel>();
             SubscribeEvents();
             SearchResult = new ObservableCollection<ProjectTreeItemViewModel>();
+            _searchText = null;
 
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
@@ -479,8 +493,8 @@ namespace NewFlowChartTool.ViewModels
 
         #region Search
 
-        private string _searchText;
-        public string SearchText { get => _searchText;
+        private string? _searchText;
+        public string? SearchText { get => _searchText;
             set { SetProperty(ref _searchText, value); Search(_searchText);}
         }
         private bool _showPopup;
@@ -490,7 +504,7 @@ namespace NewFlowChartTool.ViewModels
         public ProjectTreeItemViewModel? SelectedSearchItem { get => _selectedSearchItem; set => SetProperty(ref _selectedSearchItem, value); }
 
         private string? _lastSearchText;
-        void Search(string text)
+        void Search(string? text)
         {
             if (string.IsNullOrEmpty(text))
             {
@@ -554,11 +568,10 @@ namespace NewFlowChartTool.ViewModels
 
         public void OpenSelectedSearchResult()
         {
+            if (SelectedSearchItem == null && SearchResult.Count > 0)
+                SelectedSearchItem = SearchResult.First();
             if(SelectedSearchItem != null)
                 SelectedSearchItem.Open();
-            else if(SearchResult.Count > 0)
-                SearchResult.First().Open();
-
         }
 
         #endregion

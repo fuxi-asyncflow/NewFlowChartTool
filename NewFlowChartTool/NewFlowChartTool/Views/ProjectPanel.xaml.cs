@@ -220,8 +220,7 @@ namespace NewFlowChartTool.Views
             //Logger.DBG($"node editbox key down: {e.Key}");
             if (e.Key == Key.Enter)
             {
-                vm.OpenSelectedSearchResult();
-                vm.ExitSearch();
+                OpenSearchItem();
                 e.Handled = true;
             }
             else if (e.Key == Key.Down)
@@ -249,15 +248,18 @@ namespace NewFlowChartTool.Views
         // cannot use MouseDown, because it will be handled by list box item
         private void SearchResultListBox_OnMouseUp(object sender, MouseButtonEventArgs e)
         {
+            OpenSearchItem();
+            e.Handled = true;
+        }
+
+        private void OpenSearchItem()
+        {
             var vm = DataContext as ProjectPanelViewModel;
             if (vm == null)
                 return;
-
             vm.OpenSelectedSearchResult();
             BringTreeItemIntoView(ProjectTree, vm.SelectedSearchItem);
             vm.ExitSearch();
-            e.Handled = true;
-
         }
     }
 }

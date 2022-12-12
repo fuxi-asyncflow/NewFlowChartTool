@@ -60,8 +60,7 @@
                 x:Name="ProjectTree"
                 Background="Transparent"
                 ItemsSource="{Binding Roots}"
-                VirtualizingStackPanel.IsVirtualizing="True"
-                VirtualizingStackPanel.VirtualizationMode="Recycling">
+                VirtualizingStackPanel.IsVirtualizing="True">
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type vm:ProjectTreeFolderViewModel}" ItemsSource="{Binding Children}">
                         <StackPanel Margin="2" Orientation="Horizontal">
@@ -81,6 +80,7 @@
                 <TreeView.ItemContainerStyle>
                     <Style BasedOn="{StaticResource CustomTreeViewItemStyle}" TargetType="TreeViewItem">
                         <EventSetter Event="MouseDoubleClick" Handler="ProjectTreeItem_MouseDoubleClick" />
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
                     </Style>
                 </TreeView.ItemContainerStyle>
             </TreeView>
