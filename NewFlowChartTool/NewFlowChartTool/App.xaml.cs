@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +24,7 @@ using Prism.Ioc;
 using Prism.Unity;
 using Prism.Events;
 using NFCT.Graph.Views;
+
 
 namespace NewFlowChartTool
 {
@@ -50,7 +52,7 @@ namespace NewFlowChartTool
 
 #endif
             AppDomain currentDomain = AppDomain.CurrentDomain;
-            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyExceptionHandler);
+            currentDomain.UnhandledException += new System.UnhandledExceptionEventHandler(MyExceptionHandler);
             Logger.FCLogger.Info("application startup");
 
             //var test = Application.Current.TryFindResource(SystemColors.WindowBrushKey);
@@ -90,7 +92,7 @@ namespace NewFlowChartTool
             //Console.WriteLine($"keyboard focus changed : {sender} {e}");
         }
 
-        static void MyExceptionHandler(object sender, UnhandledExceptionEventArgs args)
+        static void MyExceptionHandler(object sender, System.UnhandledExceptionEventArgs args)
         {
             var e = args.ExceptionObject as Exception;
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();

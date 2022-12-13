@@ -57,6 +57,27 @@ namespace NewFlowChartTool.Utility
 
             throw new Exception("crash report test");
         }
+
+        public string GetGitVersion()
+        {
+            var asm = typeof(PluginManager).Assembly;
+            var attrs = asm.GetCustomAttributes<AssemblyMetadataAttribute>();
+            var gitHash = attrs.FirstOrDefault(a => a.Key == "GitHash")?.Value;
+            if (gitHash == null)
+                return "unkown-git-version";
+            return gitHash;
+        }
+
+        public string GetBuildTime()
+        {
+            var asm = typeof(PluginManager).Assembly;
+            var attrs = asm.GetCustomAttributes<AssemblyMetadataAttribute>();
+            var v = attrs.FirstOrDefault(a => a.Key == "BuildTime")?.Value;
+            if (v == null)
+                return "unkown-build-time";
+            return v;
+        }
+
         public static PluginManager Inst { get; set; }
         public System.UnhandledExceptionEventHandler? UnhandledExceptionHandler { get; private set; }
 
