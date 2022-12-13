@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Input;
 using FlowChart.Common;
 using FlowChart.Misc;
+using NewFlowChartTool.Utility;
 using NewFlowChartTool.ViewModels;
 using NewFlowChartTool.Views;
 using NewFlowChartTool.Views.Dialogs;
@@ -98,6 +99,9 @@ namespace NewFlowChartTool
             string dumpMsg = $"dump for version {fileVersion} \n";
             dumpMsg += CrashDump.GetExceptionString(e, false);
             File.WriteAllText("crash.txt", dumpMsg);
+
+            if(PluginManager.Inst.UnhandledExceptionHandler != null)
+                PluginManager.Inst.UnhandledExceptionHandler.Invoke(sender, args);
         }
 
         //private void Application_Startup(object sender, StartupEventArgs e)

@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NewFlowChartTool.Utility;
 using NewFlowChartTool.ViewModels;
 using NFCT.Common;
 using NFCT.Common.Events;
@@ -29,8 +30,14 @@ namespace NewFlowChartTool.Views
         {
             InitializeComponent();
             TitleBar.MainWindow = this;
+            Loaded += OnInitialized;
 
             EventHelper.Sub<LangSwitchEvent, Lang>(OnLangSwitch);
+        }
+
+        void OnInitialized(object? sender, EventArgs args)
+        {
+            PluginManager.Inst.LoadPlugins();
         }
 
         protected override void OnClosing(CancelEventArgs e)
