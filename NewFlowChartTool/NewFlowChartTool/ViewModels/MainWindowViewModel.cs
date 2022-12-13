@@ -16,7 +16,7 @@ using FlowChart.Debug;
 using FlowChart.LuaCodeGen;
 using FlowChart.Misc;
 using FlowChart.Parser;
-using FlowChartCommon;
+using FlowChart.Common;
 using NewFlowChartTool.Event;
 using NFCT.Common;
 using NFCT.Common.Events;

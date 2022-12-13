@@ -5,7 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using FlowChart.Type;
-using FlowChartCommon;
+using FlowChart.Common;
 using Prism.Mvvm;
 using Type = System.Type;
 

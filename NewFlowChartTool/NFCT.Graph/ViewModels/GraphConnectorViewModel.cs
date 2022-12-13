@@ -10,7 +10,7 @@ using FlowChart.Core;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using FlowChartCommon;
+using FlowChart.Common;
 using Prism.Commands;
 
 

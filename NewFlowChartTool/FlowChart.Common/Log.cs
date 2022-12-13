@@ -3,7 +3,7 @@ using NLog;
 using NLog.Conditions;
 using NLog.Targets;
 
-namespace FlowChartCommon
+namespace FlowChart.Common
 {
     public class Logger
     {

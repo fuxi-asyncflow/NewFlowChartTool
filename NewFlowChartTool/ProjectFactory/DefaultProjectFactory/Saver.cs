@@ -10,7 +10,7 @@ using FlowChart;
 using FlowChart.AST;
 using FlowChart.Core;
 using FlowChart.Type;
-using FlowChartCommon;
+using FlowChart.Common;
 
 namespace ProjectFactory.DefaultProjectFactory
 {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Prism.Mvvm;
-using FlowChartCommon;
+using FlowChart.Common;
 
 namespace NFCT.Common.ViewModels
 {

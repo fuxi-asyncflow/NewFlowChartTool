@@ -14,7 +14,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using FlowChartCommon;
+using FlowChart.Common;
 using NFCT.Graph.ViewModels;
 using NFCT.Common;
 using Prism.Ioc;

@@ -10,7 +10,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 using FlowChart.Core;
-using FlowChartCommon;
+using FlowChart.Common;
 using NFCT.Common;
 using NFCT.Common.Events;
 using Prism.Events;

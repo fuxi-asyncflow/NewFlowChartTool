@@ -9,7 +9,7 @@ using System.Windows.Media;
 using FlowChart.AST;
 using FlowChart.Core;
 using FlowChart.Layout;
-using FlowChartCommon;
+using FlowChart.Common;
 using NFCT.Common;
 using NFCT.Common.Services;
 using Prism.Commands;

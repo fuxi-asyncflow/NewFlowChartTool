@@ -11,7 +11,6 @@ using System.Windows;
 using System.Windows.Input;
 using FlowChart.Common;
 using FlowChart.Misc;
-using FlowChartCommon;
 using NewFlowChartTool.ViewModels;
 using NewFlowChartTool.Views;
 using NewFlowChartTool.Views.Dialogs;

@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using WebSocketSharp;
 using WebSocketSharp.Net;
-using FlowChartCommon;
-using Logger = FlowChartCommon.Logger;
+using FlowChart.Common;
+using Logger = FlowChart.Common.Logger;
 
 namespace FlowChart.Debug.WebSocket
 {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Core;
-using FlowChartCommon;
+using FlowChart.Common;
 using Microsoft.VisualBasic.CompilerServices;
 
 namespace FlowChart.Type

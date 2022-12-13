@@ -11,7 +11,7 @@ using FlowChart.AST;
 using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
-using FlowChartCommon;
+using FlowChart.Common;
 using NFCT.Common;
 using NFCT.Common.Events;
 using NFCT.Common.ViewModels;

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FlowChartCommon;
+using FlowChart.Common;
 using Microsoft.Msagl.Core.DataStructures;
 
 namespace FlowChart.Layout.MyLayout

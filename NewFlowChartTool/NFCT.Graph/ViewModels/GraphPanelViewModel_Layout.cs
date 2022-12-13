@@ -8,7 +8,7 @@ using System.Windows;
 using FlowChart.Core;
 using FlowChart.Layout;
 using FlowChart.Layout.MyLayout;
-using FlowChartCommon;
+using FlowChart.Common;
 
 namespace NFCT.Graph.ViewModels
 {

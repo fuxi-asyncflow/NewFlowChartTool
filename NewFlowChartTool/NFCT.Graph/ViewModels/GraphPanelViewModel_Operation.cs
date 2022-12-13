@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Core;
-using FlowChartCommon;
+using FlowChart.Common;
 
 namespace NFCT.Graph.ViewModels
 {

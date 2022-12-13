@@ -14,7 +14,7 @@ using FlowChart.AST;
 using Prism.Mvvm;
 using Prism.Events;
 using FlowChart.Core;
-using FlowChartCommon;
+using FlowChart.Common;
 using NewFlowChartTool.Event;
 using NFCT.Common;
 using NFCT.Common.Events;

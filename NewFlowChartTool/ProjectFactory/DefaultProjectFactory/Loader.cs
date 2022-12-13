@@ -9,7 +9,7 @@ using System.Xml;
 using FlowChart;
 using FlowChart.Core;
 using FlowChart.Type;
-using FlowChartCommon;
+using FlowChart.Common;
 using NLog.LayoutRenderers.Wrappers;
 using YamlDotNet.Core;
 using YamlDotNet.Core.Tokens;

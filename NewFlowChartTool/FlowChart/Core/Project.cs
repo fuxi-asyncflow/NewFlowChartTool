@@ -9,7 +9,7 @@ using FlowChart.AST;
 using FlowChart.Misc;
 using FlowChart.Parser;
 using FlowChart.Type;
-using FlowChartCommon;
+using FlowChart.Common;
 using XLua;
 
 namespace FlowChart.Core

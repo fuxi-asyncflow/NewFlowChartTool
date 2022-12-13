@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FlowChart.AST;
 using FlowChart.Core;
-using FlowChartCommon;
+using FlowChart.Common;
 
 namespace NFCT.Graph.ViewModels
 {

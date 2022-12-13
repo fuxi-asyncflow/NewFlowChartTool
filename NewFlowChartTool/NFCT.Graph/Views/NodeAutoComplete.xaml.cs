@@ -15,7 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using FlowChart.Type;
-using FlowChartCommon;
+using FlowChart.Common;
 using NFCT.Common;
 using NFCT.Graph.ViewModels;
 

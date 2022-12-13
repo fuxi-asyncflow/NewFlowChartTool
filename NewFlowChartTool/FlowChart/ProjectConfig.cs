@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FlowChart.Core;
 using FlowChart.Misc;
-using FlowChartCommon;
+using FlowChart.Common;
 
 namespace FlowChart
 {

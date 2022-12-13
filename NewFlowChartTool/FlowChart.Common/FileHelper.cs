@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlowChartCommon
+namespace FlowChart.Common
 {
     public static class FileHelper
     {

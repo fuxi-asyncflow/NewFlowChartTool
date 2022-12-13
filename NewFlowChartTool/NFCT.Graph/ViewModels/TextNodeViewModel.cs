@@ -8,7 +8,7 @@ using System.Windows.Media;
 using FlowChart.AST;
 using Prism.Mvvm;
 using FlowChart.Core;
-using FlowChartCommon;
+using FlowChart.Common;
 using Prism.Regions;
 
 

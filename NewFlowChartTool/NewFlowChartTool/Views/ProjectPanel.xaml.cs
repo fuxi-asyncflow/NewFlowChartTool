@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using FlowChartCommon;
+using FlowChart.Common;
 using Prism.Events;
 using Prism.Ioc;
 using NewFlowChartTool.ViewModels;
