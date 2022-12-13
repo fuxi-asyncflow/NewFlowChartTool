@@ -17,7 +17,9 @@ using FlowChart.LuaCodeGen;
 using FlowChart.Misc;
 using FlowChart.Parser;
 using FlowChart.Common;
+using FlowChart.Common.Report;
 using NewFlowChartTool.Event;
+using NewFlowChartTool.Utility;
 using NFCT.Common;
 using NFCT.Common.Events;
 using NFCT.Common.Services;
@@ -191,6 +193,7 @@ namespace NewFlowChartTool.ViewModels
             CurrentProject = p;
             p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
             EventHelper.Pub<ProjectOpenEvent, Project>(p);
+            PluginManager.Inst.Report(new OpenProjectEvent(p.Path));
 
             if (p.IsAsyncLoad)
             {
@@ -403,6 +406,7 @@ namespace NewFlowChartTool.ViewModels
         public async void OnOpenGraph(Graph graph, Node? centerNode)
         {
             EventHelper.Pub<GraphOpenEvent, Graph>(graph);
+            PluginManager.Inst.Report(new OpenGraphEvent(graph.Path));
             foreach (var gvm in OpenedGraphs)
             {
                 if (gvm.Graph == graph)

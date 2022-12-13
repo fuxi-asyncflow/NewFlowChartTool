@@ -9,9 +9,13 @@ namespace FlowChart.Common.Report
 {
     public class ReporterEvent
     {
+        public ReporterEvent()
+        {
+            Parameters = new Dictionary<string, string>();
+        }
         public virtual string EventName { get; }
         public DateTime Time { get; private set; }
-        public Dictionary<string, string>? Parameters { get; set; }
+        public Dictionary<string, string> Parameters { get; set; }
     }
 
     public class StartupEvent : ReporterEvent
@@ -31,6 +35,7 @@ namespace FlowChart.Common.Report
 
     public class OpenGraphEvent : ReporterEvent
     {
+        public override string EventName => "OpenGraph";
         public OpenGraphEvent(string graphPath)
         {
             Parameters.Add("graph_name", graphPath);
