@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Common;
+using FlowChart.Common.Report;
 
 namespace NewFlowChartTool.Utility
 {
@@ -55,7 +56,7 @@ namespace NewFlowChartTool.Utility
                 }
             }
 
-            throw new Exception("crash report test");
+            //throw new Exception("crash report test");
         }
 
         public string GetGitVersion()
@@ -79,11 +80,34 @@ namespace NewFlowChartTool.Utility
         }
 
         public static PluginManager Inst { get; set; }
+
+        #region ExceptionHandler
         public System.UnhandledExceptionEventHandler? UnhandledExceptionHandler { get; private set; }
 
         public void SetUnhandledExceptionHandler(System.UnhandledExceptionEventHandler handler)
         {
             UnhandledExceptionHandler = handler;
         }
+        #endregion
+
+        #region Reporter
+
+        public delegate void ReporterDelegate(ReporterEvent ev);
+
+        public event ReporterDelegate? ReporterEvent;
+
+        public void Report(ReporterEvent ev)
+        {
+            ReporterEvent?.Invoke(ev);
+        }
+
+        public void SetReporterHandler(ReporterDelegate handler)
+        {
+            ReporterEvent += handler;
+        }
+
+        #endregion
+
+
     }
 }
