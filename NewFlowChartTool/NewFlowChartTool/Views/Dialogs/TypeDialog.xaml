@@ -96,16 +96,23 @@
                                 Width="*"
                                 MinWidth="64"
                                 Binding="{Binding Name, Mode=OneWay}"
+                                Foreground="{DynamicResource light-green}"
                                 Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Name}}" />
                             <DataGridTextColumn
                                 Width="*"
                                 MinWidth="64"
                                 Binding="{Binding Type, Mode=OneWay}"
+                                Foreground="{DynamicResource light-blue}"
                                 Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
                             <DataGridTextColumn
-                                Width="4*"
+                                Width="2*"
                                 Binding="{Binding Parameters, Mode=OneWay}"
                                 Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Parameter}}" />
+                            <DataGridTextColumn
+                                Width="2*"
+                                Binding="{Binding Description, Mode=OneWay}"
+                                Foreground="{DynamicResource light-defaultgrey}"
+                                Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Description}}" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
@@ -217,11 +224,13 @@
                                     Width="*"
                                     MinWidth="64"
                                     Binding="{Binding Name, Mode=OneWay}"
+                                    Foreground="{DynamicResource light-green}"
                                     Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Parameter}}" />
                                 <DataGridTextColumn
                                     Width="*"
                                     MinWidth="64"
                                     Binding="{Binding Type, Mode=OneWay}"
+                                    Foreground="{DynamicResource light-blue}"
                                     Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
                                 <DataGridTextColumn
                                     Width="*"
@@ -231,6 +240,7 @@
                                 <DataGridTextColumn
                                     Width="2*"
                                     Binding="{Binding Description, Mode=OneWay}"
+                                    Foreground="{DynamicResource light-defaultgrey}"
                                     Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Description}}" />
                             </DataGrid.Columns>
                         </DataGrid>
