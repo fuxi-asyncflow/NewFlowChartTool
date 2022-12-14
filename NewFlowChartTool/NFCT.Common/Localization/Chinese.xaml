@@ -7,9 +7,13 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Id}">序号</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Name}">名称</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Type}">类型</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Parameter}">参数</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Description}">描述</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Value}">值</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Default}">默认值</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Property}">属性</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Method}">方法</system:String>
+
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Add}">添加</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Delete}">删除</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Modify}">修改</system:String>
@@ -18,6 +22,9 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Copy}">复制</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Cut}">剪切</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Paste}">粘贴</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_MoveUp}">上移</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_MoveDown}">下移</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Save}">保存</system:String>
 
     <!--  Menu  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_FileKey}">文件</system:String>
@@ -57,5 +64,14 @@
     <!--  Node Menu  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_ConnectNodes}">连接节点</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BreakPoint}">设置/取消断点</system:String>
+
+    <!--  Type Manager  -->
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_NewType}">添加类型</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_NewProperty}">添加属性</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_NewMethod}">添加接口</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_DeleteMember}">删除成员</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_ParamInfo}">参数信息</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_MemberInfo}">成员详情</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_TypeName}">类型名称</system:String>
 
 </ResourceDictionary>

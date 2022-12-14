@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:NewFlowChartTool.Views"
+    xmlns:localization="clr-namespace:NFCT.Common.Localization;assembly=NFCT.Common"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
@@ -22,117 +23,118 @@
     </UserControl.Resources>
 
     <StackPanel>
-        <GroupBox Header="Type Information">
+        <StackPanel>
+            <StackPanel Height="40" Orientation="Horizontal">
+                <TextBlock
+                    Margin="10,0"
+                    VerticalAlignment="Center"
+                    Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
+                <ComboBox
+                    x:Name="TypeCombo"
+                    MinWidth="100"
+                    Margin="4"
+                    BorderBrush="{DynamicResource HightlightBorderBrush}"
+                    ItemsSource="{Binding Types}"
+                    SelectedItem="{Binding SelectedType}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <prism:InvokeCommandAction Command="{Binding SelectedTypeChangeCommand}" CommandParameter="{Binding SelectedType}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button
+                    Margin="4"
+                    Command="{Binding AddNewTypeCommand}"
+                    Content="{DynamicResource {x:Static localization:ResourceKeys.Dlg_NewType}}" />
+                <TextBox
+                    MinWidth="64"
+                    Margin="4"
+                    VerticalAlignment="Center"
+                    Text="{Binding TypeName}" />
+            </StackPanel>
+
             <StackPanel>
-                <StackPanel Height="40" Orientation="Horizontal">
-                    <ComboBox
-                        x:Name="TypeCombo"
-                        MinWidth="100"
-                        Margin="4"
-                        BorderBrush="{DynamicResource HightlightBorderBrush}"
-                        ItemsSource="{Binding Types}"
-                        SelectedItem="{Binding SelectedType}">
+                <Grid Height="240">
+                    <DataGrid
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        ItemsSource="{Binding Members}"
+                        ScrollViewer.CanContentScroll="True"
+                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        SelectedItem="{Binding SelectedMember, Mode=TwoWay}">
+                        <DataGrid.Resources>
+
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                            </Style>
+                            <Style TargetType="DataGridRowHeader">
+                                <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                            </Style>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
+                            </Style>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                            </Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                            </Style>
+                        </DataGrid.Resources>
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
-                                <prism:InvokeCommandAction Command="{Binding SelectedTypeChangeCommand}" CommandParameter="{Binding SelectedType}" />
+                                <prism:InvokeCommandAction Command="{Binding SelectedMemberChangeCommand}" CommandParameter="{Binding SelectedMember}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Name}" />
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Width="*"
+                                MinWidth="64"
+                                Binding="{Binding Name, Mode=OneWay}"
+                                Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Name}}" />
+                            <DataGridTextColumn
+                                Width="*"
+                                MinWidth="64"
+                                Binding="{Binding Type, Mode=OneWay}"
+                                Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
+                            <DataGridTextColumn
+                                Width="4*"
+                                Binding="{Binding Parameters, Mode=OneWay}"
+                                Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Parameter}}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+                <StackPanel Height="40" Orientation="Horizontal">
                     <Button
                         Margin="4"
-                        Command="{Binding AddNewTypeCommand}"
-                        Content="New Type" />
-                    <TextBox
-                        MinWidth="64"
-                        Margin="4"
-                        VerticalAlignment="Center"
-                        Text="{Binding TypeName}" />
-
+                        Command="{Binding AddNewPropertyCommand}"
+                        Content="{DynamicResource {x:Static localization:ResourceKeys.Dlg_NewProperty}}" />
+                    <Button
+                        Margin="20,4"
+                        Command="{Binding AddNewMethodCommand}"
+                        Content="{DynamicResource {x:Static localization:ResourceKeys.Dlg_NewMethod}}" />
+                    <Button
+                        Margin="20,4"
+                        Command="{Binding RemoveMemberCommand}"
+                        Content="{DynamicResource {x:Static localization:ResourceKeys.Common_Delete}}" />
                 </StackPanel>
-                <GroupBox Header="Type Member List">
-                    <StackPanel>
-                        <Grid Height="240">
-                            <DataGrid
-                                AutoGenerateColumns="False"
-                                CanUserAddRows="False"
-                                ItemsSource="{Binding Members}"
-                                ScrollViewer.CanContentScroll="True"
-                                ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                SelectedItem="{Binding SelectedMember, Mode=TwoWay}">
-                                <DataGrid.Resources>
-
-                                    <Style TargetType="DataGridRow">
-                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                    </Style>
-                                    <Style TargetType="DataGridRowHeader">
-                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                    </Style>
-                                    <Style TargetType="DataGridCell">
-                                        <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
-                                    </Style>
-                                    <Style TargetType="DataGridColumnHeader">
-                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                    </Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                    </Style>
-                                </DataGrid.Resources>
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="SelectionChanged">
-                                        <prism:InvokeCommandAction Command="{Binding SelectedMemberChangeCommand}" CommandParameter="{Binding SelectedMember}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn
-                                        Width="*"
-                                        MinWidth="64"
-                                        Binding="{Binding Name, Mode=OneWay}"
-                                        Header="name" />
-                                    <DataGridTextColumn
-                                        Width="*"
-                                        MinWidth="64"
-                                        Binding="{Binding Type, Mode=OneWay}"
-                                        Header="type" />
-                                    <DataGridTextColumn
-                                        Width="4*"
-                                        Binding="{Binding Parameters, Mode=OneWay}"
-                                        Header="parameters" />
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </Grid>
-                        <StackPanel Height="40" Orientation="Horizontal">
-                            <Button
-                                Margin="4"
-                                Command="{Binding AddNewPropertyCommand}"
-                                Content="New Property" />
-                            <Button
-                                Margin="20,4"
-                                Command="{Binding AddNewMethodCommand}"
-                                Content="New Method" />
-                            <Button
-                                Margin="20,4"
-                                Command="{Binding RemoveMemberCommand}"
-                                Content="Remove Member" />
-                        </StackPanel>
-                    </StackPanel>
-                </GroupBox>
             </StackPanel>
-        </GroupBox>
+        </StackPanel>
 
 
-        <GroupBox Header="Member Information">
+
+        <GroupBox Header="{DynamicResource {x:Static localization:ResourceKeys.Dlg_MemberInfo}}">
             <StackPanel>
                 <StackPanel Height="40" Orientation="Horizontal">
                     <TextBlock
                         Margin="4"
                         VerticalAlignment="Center"
-                        Text="Name" />
+                        Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Name}}" />
                     <TextBox
                         MinWidth="80"
                         Margin="4"
@@ -141,7 +143,7 @@
                     <TextBlock
                         Margin="4"
                         VerticalAlignment="Center"
-                        Text="Type" />
+                        Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
                     <TextBox
                         MinWidth="80"
                         Margin="4"
@@ -154,7 +156,7 @@
                         VerticalAlignment="Center"
                         GroupName="MemberKind"
                         IsChecked="{Binding MemberKind, Converter={StaticResource RadioBoolToIntConverter}, ConverterParameter=1}">
-                        <TextBlock Text="Property" />
+                        <TextBlock Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Property}}" />
                     </RadioButton>
                     <RadioButton
                         x:Name="MethodRadio"
@@ -163,7 +165,7 @@
                         VerticalAlignment="Center"
                         GroupName="MemberKind"
                         IsChecked="{Binding MemberKind, Converter={StaticResource RadioBoolToIntConverter}, ConverterParameter=2}">
-                        <TextBlock Text="Method" />
+                        <TextBlock Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Method}}" />
                     </RadioButton>
                 </StackPanel>
 
@@ -172,87 +174,87 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="280" />
                     </Grid.ColumnDefinitions>
-                    <GroupBox Header="Method Parameter List">
-                        <StackPanel>
-                            <DataGrid
-                                MinHeight="120"
-                                AutoGenerateColumns="False"
-                                Background="{DynamicResource HightlightBackGroundBrush}"
-                                ItemsSource="{Binding Parameters}"
-                                ScrollViewer.CanContentScroll="True"
-                                ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                SelectedItem="{Binding SelectedParameter}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="SelectionChanged">
-                                        <prism:InvokeCommandAction Command="{Binding SelectedParamChangeCommand}" CommandParameter="{Binding SelectedParameter}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <DataGrid.Resources>
-                                    <Style TargetType="DataGridRow">
-                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                    </Style>
-                                    <Style TargetType="DataGridRowHeader">
-                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                    </Style>
-                                    <Style TargetType="DataGridCell">
-                                        <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
-                                        <Style.Triggers>
-                                            <!--<DataTrigger Binding="{Binding IsActive}" Value="{x:Null}">
+
+                    <StackPanel>
+                        <DataGrid
+                            MinHeight="120"
+                            AutoGenerateColumns="False"
+                            Background="{DynamicResource HightlightBackGroundBrush}"
+                            ItemsSource="{Binding Parameters}"
+                            ScrollViewer.CanContentScroll="True"
+                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            SelectedItem="{Binding SelectedParameter}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <prism:InvokeCommandAction Command="{Binding SelectedParamChangeCommand}" CommandParameter="{Binding SelectedParameter}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <DataGrid.Resources>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                                </Style>
+                                <Style TargetType="DataGridRowHeader">
+                                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                                </Style>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
+                                    <Style.Triggers>
+                                        <!--<DataTrigger Binding="{Binding IsActive}" Value="{x:Null}">
                                     <Setter Property="Foreground" Value="Green" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsActive}" Value="True">
                                     <Setter Property="Foreground" Value="Red" />
                                 </DataTrigger>-->
-                                        </Style.Triggers>
-                                    </Style>
-                                    <Style TargetType="DataGridColumnHeader">
-                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                    </Style>
-                                </DataGrid.Resources>
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn
-                                        Width="*"
-                                        MinWidth="64"
-                                        Binding="{Binding Name, Mode=OneWay}"
-                                        Header="name" />
-                                    <DataGridTextColumn
-                                        Width="*"
-                                        MinWidth="64"
-                                        Binding="{Binding Type, Mode=OneWay}"
-                                        Header="type" />
-                                    <DataGridTextColumn
-                                        Width="*"
-                                        MinWidth="64"
-                                        Binding="{Binding DefaultValue, Mode=OneWay}"
-                                        Header="value" />
-                                    <DataGridTextColumn
-                                        Width="2*"
-                                        Binding="{Binding Description, Mode=OneWay}"
-                                        Header="description" />
-                                </DataGrid.Columns>
-                            </DataGrid>
-                            <StackPanel Orientation="Horizontal">
-                                <Button
-                                    Margin="2"
-                                    Command="{Binding AddNewParamCommand}"
-                                    Content="Add Param" />
-                                <Button
-                                    Margin="2"
-                                    Command="{Binding RemoveParamCommand}"
-                                    Content="Remove Param" />
-                                <Button
-                                    Margin="2"
-                                    Command="{Binding ParamUpCommand}"
-                                    Content="Up" />
-                                <Button
-                                    Margin="2"
-                                    Command="{Binding ParamDownCommand}"
-                                    Content="Down" />
-                            </StackPanel>
+                                    </Style.Triggers>
+                                </Style>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                                </Style>
+                            </DataGrid.Resources>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    MinWidth="64"
+                                    Binding="{Binding Name, Mode=OneWay}"
+                                    Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Parameter}}" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    MinWidth="64"
+                                    Binding="{Binding Type, Mode=OneWay}"
+                                    Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
+                                <DataGridTextColumn
+                                    Width="*"
+                                    MinWidth="64"
+                                    Binding="{Binding DefaultValue, Mode=OneWay}"
+                                    Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Default}}" />
+                                <DataGridTextColumn
+                                    Width="2*"
+                                    Binding="{Binding Description, Mode=OneWay}"
+                                    Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Description}}" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Margin="2"
+                                Command="{Binding AddNewParamCommand}"
+                                Content="{DynamicResource {x:Static localization:ResourceKeys.Common_Add}}" />
+                            <Button
+                                Margin="2"
+                                Command="{Binding RemoveParamCommand}"
+                                Content="{DynamicResource {x:Static localization:ResourceKeys.Common_Delete}}" />
+                            <Button
+                                Margin="2"
+                                Command="{Binding ParamUpCommand}"
+                                Content="{DynamicResource {x:Static localization:ResourceKeys.Common_MoveUp}}" />
+                            <Button
+                                Margin="2"
+                                Command="{Binding ParamDownCommand}"
+                                Content="{DynamicResource {x:Static localization:ResourceKeys.Common_MoveDown}}" />
                         </StackPanel>
-                    </GroupBox>
-                    <GroupBox Grid.Column="1" Header="Parameter Information">
+                    </StackPanel>
+
+                    <GroupBox Grid.Column="1" Header="{DynamicResource {x:Static localization:ResourceKeys.Dlg_ParamInfo}}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -262,19 +264,19 @@
                                 <TextBlock
                                     Height="24"
                                     Margin="2"
-                                    Text="Name" />
+                                    Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Name}}" />
                                 <TextBlock
                                     Height="24"
                                     Margin="2"
-                                    Text="Type" />
+                                    Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
                                 <TextBlock
                                     Height="24"
                                     Margin="2"
-                                    Text="Value" />
+                                    Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Default}}" />
                                 <TextBlock
                                     Height="24"
                                     Margin="2"
-                                    Text="Description" />
+                                    Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Description}}" />
                             </StackPanel>
                             <StackPanel Grid.Column="1">
                                 <TextBox
@@ -306,7 +308,7 @@
                 MinWidth="64"
                 Margin="4"
                 Command="{Binding SaveCommand}"
-                Content="Save" />
+                Content="{DynamicResource {x:Static localization:ResourceKeys.Common_Save}}" />
         </StackPanel>
 
     </StackPanel>

@@ -18,9 +18,14 @@ namespace NFCT.Common.Localization
         public static readonly ComponentResourceKey Common_Id = KEY(nameof(Common_Id));
         public static readonly ComponentResourceKey Common_Name = KEY(nameof(Common_Name));
         public static readonly ComponentResourceKey Common_Type = KEY(nameof(Common_Type));
+        public static readonly ComponentResourceKey Common_Parameter = KEY(nameof(Common_Parameter));
         public static readonly ComponentResourceKey Common_Description = KEY(nameof(Common_Description));
         public static readonly ComponentResourceKey Common_Value = KEY(nameof(Common_Value));
         public static readonly ComponentResourceKey Common_Default = KEY(nameof(Common_Default));
+        public static readonly ComponentResourceKey Common_Property = KEY(nameof(Common_Property));
+        public static readonly ComponentResourceKey Common_Method = KEY(nameof(Common_Method));
+
+
         public static readonly ComponentResourceKey Common_Add = KEY(nameof(Common_Add));
         public static readonly ComponentResourceKey Common_Delete = KEY(nameof(Common_Delete));
         public static readonly ComponentResourceKey Common_Modify = KEY(nameof(Common_Modify));
@@ -29,6 +34,9 @@ namespace NFCT.Common.Localization
         public static readonly ComponentResourceKey Common_Copy = KEY(nameof(Common_Copy));
         public static readonly ComponentResourceKey Common_Cut = KEY(nameof(Common_Cut));
         public static readonly ComponentResourceKey Common_Paste = KEY(nameof(Common_Paste));
+        public static readonly ComponentResourceKey Common_MoveUp = KEY(nameof(Common_MoveUp));
+        public static readonly ComponentResourceKey Common_MoveDown = KEY(nameof(Common_MoveDown));
+        public static readonly ComponentResourceKey Common_Save = KEY(nameof(Common_Save));
 
         #endregion
 
@@ -80,6 +88,18 @@ namespace NFCT.Common.Localization
         #region Node Menu
         public static readonly ComponentResourceKey Menu_ConnectNodes = KEY(nameof(Menu_ConnectNodes));
         public static readonly ComponentResourceKey Menu_BreakPoint = KEY(nameof(Menu_BreakPoint));
+        #endregion
+
+        #region Type Manager
+
+        public static readonly ComponentResourceKey Dlg_NewType = KEY(nameof(Dlg_NewType));
+        public static readonly ComponentResourceKey Dlg_NewProperty = KEY(nameof(Dlg_NewProperty));
+        public static readonly ComponentResourceKey Dlg_NewMethod = KEY(nameof(Dlg_NewMethod));
+        public static readonly ComponentResourceKey Dlg_DeleteMember = KEY(nameof(Dlg_DeleteMember));
+        public static readonly ComponentResourceKey Dlg_ParamInfo = KEY(nameof(Dlg_ParamInfo));
+        public static readonly ComponentResourceKey Dlg_MemberInfo = KEY(nameof(Dlg_MemberInfo));
+        public static readonly ComponentResourceKey Dlg_TypeName = KEY(nameof(Dlg_TypeName));
+
         #endregion
 
     }
