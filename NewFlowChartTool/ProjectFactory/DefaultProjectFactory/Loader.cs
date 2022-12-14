@@ -418,6 +418,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public void CustomLoadGraph(Graph graph, List<string> lines)
         {
             GroupDict.Clear();
+            bool isSubGraph = false;
             int pos = 1;
             while (pos < lines.Count)
             {
@@ -453,7 +454,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
                 else if (key == "is_subgraph")
                 {
-                    graph.SetSubGraph(value == "true");
+                    isSubGraph = value == "true";
                     graph.ReturnType = BuiltinTypes.VoidType;
                 }
                 else if (key == "return_type")
@@ -468,6 +469,9 @@ namespace ProjectFactory.DefaultProjectFactory
                 if(graph.Uid == Guid.Empty)
                     graph.Uid = Project.GenUUID();
             }
+
+            if(isSubGraph)
+                graph.SetSubGraph(isSubGraph);
 
             foreach (var group in GroupDict.Values)
             {
