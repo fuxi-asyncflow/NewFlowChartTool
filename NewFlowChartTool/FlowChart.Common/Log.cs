@@ -52,6 +52,7 @@ namespace FlowChart.Common
         public static void ERR(string msg)
         {
             FCLogger.Error(msg);
+            OnErrEvent?.Invoke(msg);
         }
 
         [Conditional("DEBUG")]
@@ -63,7 +64,11 @@ namespace FlowChart.Common
         public static void WARN(string msg)
         {
             FCLogger.Warn(msg);
+            OnWarnEvent?.Invoke(msg);
         }
+
+        public static event Action<string>? OnErrEvent;
+        public static event Action<string>? OnWarnEvent;
     }
 
 }
