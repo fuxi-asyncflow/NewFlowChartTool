@@ -68,7 +68,7 @@
     <!--  Type Manager  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_NewType}">添加类型</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_NewProperty}">添加属性</system:String>
-    <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_NewMethod}">添加接口</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_NewMethod}">添加方法</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_DeleteMember}">删除成员</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_ParamInfo}">参数信息</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_MemberInfo}">成员详情</system:String>

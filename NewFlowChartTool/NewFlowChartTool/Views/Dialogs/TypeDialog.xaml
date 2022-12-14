@@ -69,7 +69,7 @@
                         ScrollViewer.VerticalScrollBarVisibility="Auto"
                         SelectedItem="{Binding SelectedMember, Mode=TwoWay}">
                         <DataGrid.Resources>
-
+                            <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#8054A8FC" />
                             <Style TargetType="DataGridRow">
                                 <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
                             </Style>
@@ -198,6 +198,7 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                             <DataGrid.Resources>
+                                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#8054A8FC" />
                                 <Style TargetType="DataGridRow">
                                     <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
                                 </Style>
