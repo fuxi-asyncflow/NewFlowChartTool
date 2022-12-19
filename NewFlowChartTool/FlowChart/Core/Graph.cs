@@ -410,6 +410,98 @@ namespace FlowChart.Core
             return false;
         }
 
+        private bool IsNodeConnectToRoot(Node node, Node startNode, Node obstacleNode)
+        {
+            Queue<Node> nodeQueue = new Queue<Node>();
+            var handledNodes = new HashSet<Node>();
+            nodeQueue.Enqueue(node);
+            handledNodes.Add(node);
+            handledNodes.Add(obstacleNode);
+
+            while (nodeQueue.Count > 0)
+            {
+                var curNode = nodeQueue.Dequeue();
+                if (curNode == startNode)
+                    return true;
+
+                curNode.Parents.ForEach(conn =>
+                {
+                    var parent = conn.Start;
+                    if (!handledNodes.Contains(parent))
+                    {
+                        handledNodes.Add(parent);
+                        nodeQueue.Enqueue(parent);
+                    }
+                });
+            }
+
+            return false;
+        }
+
+        public List<Node> FindSubGraph(Node root)
+        {
+            var startNode = Nodes[0];
+            var subgraphNodes = new HashSet<Node>();
+            var outsideNodes = new HashSet<Node>();
+            var handledNodes = new HashSet<Node>();
+            var nodeQueue = new Queue<Node>();
+            
+            handledNodes.Add(root);
+            subgraphNodes.Add(root);
+            root.Children.ForEach(conn => nodeQueue.Enqueue(conn.End));
+
+            while (nodeQueue.Count > 0)
+            {
+                var curNode = nodeQueue.Dequeue();
+                if (handledNodes.Contains(curNode))
+                    continue;
+
+                var isParentOutside = false;
+
+                foreach (var conn in curNode.Parents)
+                {
+                    var parentNode = conn.Start;
+                    if (!subgraphNodes.Contains(parentNode))
+                    {
+                        if (outsideNodes.Contains(parentNode))
+                        {
+                            isParentOutside = true;
+                            break;
+                        }
+                        else
+                        {
+                            if (IsNodeConnectToRoot(parentNode, startNode, root))
+                            {
+                                outsideNodes.Add(parentNode);
+                                isParentOutside = true;
+                                break;
+                            }
+                            else
+                            {
+                                subgraphNodes.Add(parentNode);
+                            }
+                        }
+                    }
+                }
+
+                if (isParentOutside)
+                {
+                    outsideNodes.Add(curNode);
+                }
+                else
+                {
+                    subgraphNodes.Add(curNode);
+                    curNode.Children.ForEach(conn =>
+                    {
+                        nodeQueue.Enqueue(conn.End);
+                    });
+                }
+            }
+
+            subgraphNodes.Remove(root);
+            return subgraphNodes.ToList();
+        }
+
         public Node? GetNode(Guid uid)
         {
             Node node;

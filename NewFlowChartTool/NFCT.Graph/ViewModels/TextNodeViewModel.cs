@@ -110,6 +110,10 @@ namespace NFCT.Graph.ViewModels
                 var controlNodeVm = new ControlNodeViewModel(Node, Owner);
                 controlNodeVm.ParseText(Node.Text);
                 Owner.ReplaceNodeViewModel(Node, controlNodeVm);
+                if (controlNodeVm.ControlFuncName == "repeat")
+                {
+                    controlNodeVm.HandleRepeatNode(pr);
+                }
                 return;
             }
 

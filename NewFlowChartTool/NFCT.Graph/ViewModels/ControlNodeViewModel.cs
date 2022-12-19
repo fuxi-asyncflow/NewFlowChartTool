@@ -17,7 +17,7 @@ namespace NFCT.Graph.ViewModels
         {
             ControlFuncNames = new HashSet<string>()
             {
-                "stopnode", "stopflow", "gotonode", "waitall"
+                "stopnode", "stopflow", "gotonode", "waitall", "repeat"
             };
             
         }
@@ -83,6 +83,22 @@ namespace NFCT.Graph.ViewModels
             IsEditing = false;
         }
 
+        public void HandleRepeatNode(ParseResult pr)
+        {
+            var graph = Node.OwnerGraph;
+            var subNodes = graph.FindSubGraph(Node);
+
+            var content = Node.Content ?? new GenerateContent();
+            content.Type = GenerateContent.ContentType.CONTROL;
+            content.Contents.Clear();
+            content.Contents.Add("repeat");
+
+            subNodes.ForEach(node =>
+            {
+                content.Contents.Add(node.Uid.ToString());
+            });
+        }
+
         public override void OnParseEnd(ParseResult pr)
         {
             if (Node is not TextNode textNode)
@@ -93,6 +109,11 @@ namespace NFCT.Graph.ViewModels
                 Owner.ReplaceNodeViewModel(Node, textNodeVm);
                 textNodeVm.OnParseEnd(pr);
                 return;
+            }
+
+            if (ControlFuncName == "repeat")
+            {
+                HandleRepeatNode(pr);
             }
 
             if (pr.IsError)
