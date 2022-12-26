@@ -76,7 +76,22 @@ namespace NewFlowChartTool.ViewModels
         public string Type { get => _type; set => SetProperty(ref _type, value); }
         private string? _description;
         public string? Description { get => _description; set => SetProperty(ref _description, value); }
-        public bool IsVariadic;
+
+        public bool IsVariadic
+        {
+            get
+            {
+                if(Model is Method method)
+                    return method.IsVariadic;
+                return false;
+            }
+
+            set
+            {
+                if (Model is Method method)
+                    method.IsVariadic = value;
+            }
+        }
 
         public string? Parameters
         {
@@ -322,6 +337,8 @@ namespace NewFlowChartTool.ViewModels
         public string MemberType { get => _memberType; set => SetProperty(ref _memberType, value); }
         private int _memberKind;
         public int MemberKind { get => _memberKind; set => SetProperty(ref _memberKind, value); }
+        private bool _isVariadicMethod;
+        public bool IsVariadicMethod { get => _isVariadicMethod; set => SetProperty(ref _isVariadicMethod, value); }
 
         public ObservableCollection<ParameterViewModel> Parameters { get; set; }
         private string _paraName;
@@ -364,6 +381,8 @@ namespace NewFlowChartTool.ViewModels
                     };
                     Parameters.Add(pvm);
                 });
+
+                IsVariadicMethod = method.IsVariadic;
             }
             else
             {
@@ -553,6 +572,7 @@ namespace NewFlowChartTool.ViewModels
                 SelectedMember.Name = MemberName;
                 SelectedMember.Description = MemberDescription;
                 SelectedMember.Type = MemberType;
+                SelectedMember.IsVariadic = IsVariadicMethod;
                 if(SelectedType != null)
                     SelectedMember.UpdateToModel(CurrentProject, SelectedType.Model);
             }
