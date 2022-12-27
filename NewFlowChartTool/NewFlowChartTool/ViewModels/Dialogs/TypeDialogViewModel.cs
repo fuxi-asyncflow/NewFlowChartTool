@@ -183,8 +183,8 @@ namespace NewFlowChartTool.ViewModels
 
             AddNewParamCommand = new DelegateCommand(AddParameter);
             RemoveParamCommand = new DelegateCommand(RemoveParameter);
-            ParamUpCommand = new DelegateCommand(UpParameter);
-            ParamDownCommand = new DelegateCommand(DownParameter);
+            ParamUpCommand = new DelegateCommand(delegate { MoveParameter(-1); });
+            ParamDownCommand = new DelegateCommand(delegate { MoveParameter(1); });
 
             SaveCommand = new DelegateCommand(Save);
         }
@@ -377,15 +377,7 @@ namespace NewFlowChartTool.ViewModels
             if (m.Model is Method method)
             {
                 MemberKind = 2;
-                method.Parameters.ForEach(p =>
-                {
-                    var pvm = new ParameterViewModel(p)
-                    {
-                        Description = p.Description,
-                        DefaultValue = p.Default
-                    };
-                    Parameters.Add(pvm);
-                });
+                UpdateParameterView(method);
 
                 IsVariadicMethod = method.IsVariadic;
             }
@@ -576,19 +568,57 @@ namespace NewFlowChartTool.ViewModels
             SelectedParameter = paraVm;
         }
 
+        void UpdateParameterView(Method method)
+        {
+            Parameters.Clear();
+            method.Parameters.ForEach(p =>
+            {
+                var pvm = new ParameterViewModel(p)
+                {
+                    Description = p.Description,
+                    DefaultValue = p.Default
+                };
+                Parameters.Add(pvm);
+            });
+        }
+
         void RemoveParameter()
         {
+            if (SelectedType == null || SelectedMember == null || SelectedParameter == null)
+                return;
+            if (SelectedMember.Model is not Method method)
+                return;
+            var p = SelectedParameter.Model;
+            method.Parameters.Remove(p);
 
+            UpdateParameterView(method);
+            
         }
 
-        void UpParameter()
+        void MoveParameter(int direction) // -1 - up, 1 - down
         {
-
-        }
-
-        void DownParameter()
-        {
-
+            if (SelectedType == null || SelectedMember == null || SelectedParameter == null)
+                return;
+            if (SelectedMember.Model is not Method method)
+                return;
+            
+            var parameters = method.Parameters;
+            var idx = parameters.IndexOf(SelectedParameter.Model);
+            if (idx < 0)
+                return;
+            var newIdx = idx + direction;
+            if (direction > 0)
+            {
+                if (newIdx >= parameters.Count)
+                    return;
+            }
+            else
+            {
+                if (newIdx < 0)
+                    return;
+            }
+            (parameters[newIdx], parameters[idx]) = (parameters[idx], parameters[newIdx]);
+            UpdateParameterView(method);
         }
 
         void Update()
