@@ -51,11 +51,14 @@
                     Margin="4"
                     Command="{Binding AddNewTypeCommand}"
                     Content="{DynamicResource {x:Static localization:ResourceKeys.Dlg_NewType}}" />
-                <TextBox
-                    MinWidth="64"
+                <Button
                     Margin="4"
-                    VerticalAlignment="Center"
-                    Text="{Binding TypeName}" />
+                    Command="{Binding RemoveTypeCommand}"
+                    Content="Remove Type" />
+                <Button
+                    Margin="4"
+                    Command="{Binding RenameTypeCommand}"
+                    Content="Rename Type" />
             </StackPanel>
 
             <StackPanel>

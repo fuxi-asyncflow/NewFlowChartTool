@@ -93,6 +93,12 @@ namespace FlowChart.Core
             TypeDict.Add(alias, type);
         }
 
+        public void RemoveType(string name)
+        {
+            if (TypeDict.ContainsKey(name))
+                TypeDict.Remove(name);
+        }
+
         public bool RenameType(string oldName, string newName)
         {
             var type = GetType(newName);

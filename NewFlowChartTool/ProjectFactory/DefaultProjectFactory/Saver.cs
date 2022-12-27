@@ -18,6 +18,7 @@ namespace ProjectFactory.DefaultProjectFactory
     {
         public const string GraphFolderName = "graphs";
         public const string TypeFolderName = "types";
+        public const string TmpFolderName = "tmp";
         public const string GraphFileExt = ".yaml";
         public const string GenerateFileExt = ".lua";
         public const string TypeFileExt = ".yaml";
@@ -316,6 +317,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public void SaveTypes()
         {
             var typeFolder = ProjectFolder.CreateSubdirectory(DefaultProjectFactory.TypeFolderName);
+            var files = new HashSet<string>();
             foreach (var kv in Project.TypeDict)
             {
                 var tp = kv.Value;
@@ -329,12 +331,25 @@ namespace ProjectFactory.DefaultProjectFactory
                 var lines = new List<string>();
                 SaveType(tp, lines);
                 FileHelper.Save(filePath, lines);
+                files.Add(new FileInfo(filePath).FullName);
             }
 
             var evFilePath = System.IO.Path.Combine(typeFolder.FullName, DefaultProjectFactory.EventFileName);
             var evlines = new List<string>();
             SaveEvents(evlines);
             FileHelper.Save(evFilePath, evlines);
+            files.Add(new FileInfo(evFilePath).FullName);
+
+            // remove type not exist any more
+            var tmpFolder = ProjectFolder.CreateSubdirectory(DefaultProjectFactory.TmpFolderName);
+            foreach (var file in typeFolder.EnumerateFiles())
+            {
+                if (!files.Contains(file.FullName))
+                {
+                    var newFileName = Path.Combine(tmpFolder.FullName, Path.GetFileName(file.FullName));
+                    file.MoveTo(newFileName, true);
+                }
+            }
         }
 
         public void SaveType(FlowChart.Type.Type type, List<string> lines)

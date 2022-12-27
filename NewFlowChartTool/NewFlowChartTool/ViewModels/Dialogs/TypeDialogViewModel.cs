@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using FlowChart.Core;
 using FlowChart.Misc;
 using Prism.Mvvm;
@@ -157,7 +158,7 @@ namespace NewFlowChartTool.ViewModels
         public static string NAME = "TypeDialog";
         public Project? CurrentProject;
 
-        public TypeDialogViewModel(IEventAggregator _ev, IOutputMessage outputService)
+        public TypeDialogViewModel(IDialogService dlgService, IOutputMessage outputService)
         {
             Types = new ObservableCollection<TypeViewModel>();
             Members = new ObservableCollection<TypeMemberViewModel>();
@@ -167,12 +168,15 @@ namespace NewFlowChartTool.ViewModels
             _memberType = string.Empty;
 
             _outputService = outputService;
+            _dialogService = dlgService;
             EventHelper.Sub<ProjectCloseEvent, Project>(OnCloseProject, ThreadOption.UIThread);
 
             SelectedTypeChangeCommand = new DelegateCommand(OnSelectedTypeChange);
             SelectedMemberChangeCommand = new DelegateCommand(OnSelectedMemberChange);
             SelectedParamChangeCommand = new DelegateCommand(OnSelectedParamChange);
             AddNewTypeCommand = new DelegateCommand(AddNewType);
+            RemoveTypeCommand = new DelegateCommand(RemoveType);
+            RenameTypeCommand = new DelegateCommand(RenameType);
             AddNewPropertyCommand = new DelegateCommand(AddNewProperty);
             RemoveMemberCommand = new DelegateCommand(RemoveMember);
             AddNewMethodCommand = new DelegateCommand(AddNewMethod);
@@ -186,6 +190,7 @@ namespace NewFlowChartTool.ViewModels
         }
 
         private readonly IOutputMessage _outputService;
+        private readonly IDialogService _dialogService;
         void Output(string msg) { _outputService.Output(msg); }
 
         #region IDialogAware
@@ -265,6 +270,8 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand SelectedMemberChangeCommand { get; set; }
         public DelegateCommand SelectedParamChangeCommand { get; set; }
         public DelegateCommand AddNewTypeCommand { get; set; }
+        public DelegateCommand RemoveTypeCommand { get; set; }
+        public DelegateCommand RenameTypeCommand { get; set; }
         public DelegateCommand AddNewPropertyCommand { get; set; }
         public DelegateCommand AddNewMethodCommand { get; set; }
         public DelegateCommand RemoveMemberCommand { get; set; }
@@ -299,8 +306,6 @@ namespace NewFlowChartTool.ViewModels
                     Members.Add(new TypeMemberViewModel(kv.Value));
                 }
             }
-
-            TypeName = SelectedType.Name;
         }
 
         void ShowEvents()
@@ -321,8 +326,8 @@ namespace NewFlowChartTool.ViewModels
 
         #region Type Editor
 
-        private string? _typeName;
-        public string? TypeName { get => _typeName; set => SetProperty(ref _typeName, value); }
+        //private string? _typeName;
+        //public string? TypeName { get => _typeName; set => SetProperty(ref _typeName, value); }
 
 
         #endregion
@@ -434,6 +439,42 @@ namespace NewFlowChartTool.ViewModels
             Types.Add(newTypeVm);
             SelectedType = newTypeVm;
             OnSelectedTypeChange();
+        }
+
+        void RemoveType()
+        {
+            if (SelectedType == null || CurrentProject == null)
+                return;
+            var typeName = SelectedType.Name;
+            if (typeName == BuiltinTypes.GlobalType.Name
+                || typeName == "Event")
+                return;
+            var result = MessageBox.Show($"this operation will remove type `{typeName}`", "Remove Type",MessageBoxButton.OKCancel);
+            if (result != MessageBoxResult.OK)
+                return;
+            
+            CurrentProject.RemoveType(typeName);
+            Types.Remove(SelectedType);
+            SelectedType = null;
+        }
+
+        void RenameType()
+        {
+            if (SelectedType == null || CurrentProject == null)
+                return;
+            var typeName = SelectedType.Name;
+            if (typeName == BuiltinTypes.GlobalType.Name
+                || typeName == "Event")
+                return;
+
+            _dialogService.Show(InputDialogViewModel.NAME, result =>
+            {
+                if (result.Result != ButtonResult.OK)
+                    return;
+                var newName = result.Parameters.GetValue<string>("Value");
+                CurrentProject.RenameType(typeName, newName);
+                SelectedType.OnNameChange();
+            });
         }
 
         string? GetNewMemberName(string defaultNewName)
@@ -577,19 +618,19 @@ namespace NewFlowChartTool.ViewModels
                     SelectedMember.UpdateToModel(CurrentProject, SelectedType.Model);
             }
 
-            // type rename
-            if (SelectedType != null && !string.IsNullOrEmpty(TypeName))
-            {
-                if (SelectedType.Name == "Global" || SelectedType.Name == "Event")
-                {
-                    // output message
-                }
-                else if (SelectedType.Name != TypeName)
-                {
-                    CurrentProject.RenameType(SelectedType.Name, TypeName);
-                    SelectedType.OnNameChange();
-                }
-            }
+            //// type rename
+            //if (SelectedType != null && !string.IsNullOrEmpty(TypeName))
+            //{
+            //    if (SelectedType.Name == "Global" || SelectedType.Name == "Event")
+            //    {
+            //        // output message
+            //    }
+            //    else if (SelectedType.Name != TypeName)
+            //    {
+            //        CurrentProject.RenameType(SelectedType.Name, TypeName);
+            //        SelectedType.OnNameChange();
+            //    }
+            //}
 
             // save type
             foreach (var typeVm in Types)
