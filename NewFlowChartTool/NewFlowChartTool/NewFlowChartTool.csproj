@@ -37,6 +37,10 @@
     <ProjectReference Include="..\NFCT.Themes\NFCT.Themes.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\Dialogs\TypeDialog\" />
+  </ItemGroup>
+
     <!-- https://stackoverflow.com/questions/15141338/embed-git-commit-hash-in-a-net-dll -->
     <Target Name="GetGitHash" BeforeTargets="WriteGitHash" Condition="'$(BuildHash)' == ''">
         <PropertyGroup>
