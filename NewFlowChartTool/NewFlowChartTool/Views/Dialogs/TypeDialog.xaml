@@ -2,6 +2,7 @@
     x:Class="NewFlowChartTool.Views.TypeDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
     xmlns:common="clr-namespace:NFCT.Common;assembly=NFCT.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -9,6 +10,7 @@
     xmlns:localization="clr-namespace:NFCT.Common.Localization;assembly=NFCT.Common"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:reskeys="clr-namespace:NFCT.Themes;assembly=NFCT.Themes"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
     d:DataContext="{d:DesignInstance vm:TypeDialogViewModel}"
@@ -20,6 +22,14 @@
     <UserControl.Resources>
         <common:RadioBoolToIntConverter x:Key="RadioBoolToIntConverter" />
         <sys:Double x:Key="FontSize">16.0</sys:Double>
+        <InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+        <Style TargetType="{x:Type avalonEdit:TextEditor}">
+            <!--  AvalonEdit does not support RTL, so ensure we use LTR by default  -->
+            <Setter Property="FlowDirection" Value="LeftToRight" />
+            <Setter Property="Background" Value="{DynamicResource {x:Static reskeys:ResourceKeys.EditorBackground}}" />
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static reskeys:ResourceKeys.EditorForeground}}" />
+            <Setter Property="LineNumbersForeground" Value="{DynamicResource {x:Static reskeys:ResourceKeys.EditorLineNumbersForeground}}" />
+        </Style>
     </UserControl.Resources>
 
     <StackPanel>
@@ -138,189 +148,211 @@
 
 
 
-        <GroupBox Header="{DynamicResource {x:Static localization:ResourceKeys.Dlg_MemberInfo}}">
-            <StackPanel>
-                <StackPanel Height="40" Orientation="Horizontal">
-                    <TextBlock
-                        Margin="4"
-                        VerticalAlignment="Center"
-                        Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Name}}" />
-                    <TextBox
-                        MinWidth="80"
-                        Margin="4"
-                        VerticalAlignment="Center"
-                        Text="{Binding MemberName}" />
-                    <TextBlock
-                        Margin="4"
-                        VerticalAlignment="Center"
-                        Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
-                    <TextBox
-                        MinWidth="80"
-                        Margin="4"
-                        VerticalAlignment="Center"
-                        Text="{Binding MemberType}" />
-                    <RadioButton
-                        x:Name="PropRadio"
-                        Margin="20,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        GroupName="MemberKind"
-                        IsChecked="{Binding MemberKind, Converter={StaticResource RadioBoolToIntConverter}, ConverterParameter=1}">
-                        <TextBlock Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Property}}" />
-                    </RadioButton>
-                    <RadioButton
-                        x:Name="MethodRadio"
-                        Margin="20,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        GroupName="MemberKind"
-                        IsChecked="{Binding MemberKind, Converter={StaticResource RadioBoolToIntConverter}, ConverterParameter=2}">
-                        <TextBlock Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Method}}" />
-                    </RadioButton>
+        <GroupBox>
+            <GroupBox.Header>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{DynamicResource {x:Static localization:ResourceKeys.Dlg_MemberInfo}}" />
                     <CheckBox
                         Margin="20,0"
-                        VerticalAlignment="Center"
                         VerticalContentAlignment="Center"
-                        Content="Variadic Method"
-                        IsChecked="{Binding IsVariadicMethod}" />
+                        Content="代码显示"
+                        IsChecked="{Binding IsCodeStyle}" />
                 </StackPanel>
+            </GroupBox.Header>
+            <Grid>
+                <avalonEdit:TextEditor
+                    xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+                    Name="textEditor"
+                    Background="{DynamicResource {x:Static reskeys:ResourceKeys.EditorBackground}}"
+                    Document="{Binding MethodCode}"
+                    FontFamily="Consolas"
+                    FontSize="10pt"
+                    Foreground="{DynamicResource {x:Static reskeys:ResourceKeys.EditorForeground}}"
+                    SyntaxHighlighting="{Binding HighlightingDefinition, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                    Visibility="{Binding IsCodeStyle, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <StackPanel Visibility="{Binding IsCodeStyle, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    <StackPanel Height="40" Orientation="Horizontal">
+                        <TextBlock
+                            Margin="4"
+                            VerticalAlignment="Center"
+                            Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Name}}" />
+                        <TextBox
+                            MinWidth="80"
+                            Margin="4"
+                            VerticalAlignment="Center"
+                            Text="{Binding MemberName}" />
+                        <TextBlock
+                            Margin="4"
+                            VerticalAlignment="Center"
+                            Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
+                        <TextBox
+                            MinWidth="80"
+                            Margin="4"
+                            VerticalAlignment="Center"
+                            Text="{Binding MemberType}" />
+                        <RadioButton
+                            x:Name="PropRadio"
+                            Margin="20,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            GroupName="MemberKind"
+                            IsChecked="{Binding MemberKind, Converter={StaticResource RadioBoolToIntConverter}, ConverterParameter=1}">
+                            <TextBlock Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Property}}" />
+                        </RadioButton>
+                        <RadioButton
+                            x:Name="MethodRadio"
+                            Margin="20,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            GroupName="MemberKind"
+                            IsChecked="{Binding MemberKind, Converter={StaticResource RadioBoolToIntConverter}, ConverterParameter=2}">
+                            <TextBlock Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Method}}" />
+                        </RadioButton>
+                        <CheckBox
+                            Margin="20,0"
+                            VerticalAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Content="Variadic Method"
+                            IsChecked="{Binding IsVariadicMethod}" />
+                    </StackPanel>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="280" />
-                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="280" />
+                        </Grid.ColumnDefinitions>
 
-                    <StackPanel>
-                        <DataGrid
-                            MinHeight="120"
-                            AutoGenerateColumns="False"
-                            Background="{DynamicResource HightlightBackGroundBrush}"
-                            ItemsSource="{Binding Parameters}"
-                            ScrollViewer.CanContentScroll="True"
-                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            SelectedItem="{Binding SelectedParameter}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="SelectionChanged">
-                                    <prism:InvokeCommandAction Command="{Binding SelectedParamChangeCommand}" CommandParameter="{Binding SelectedParameter}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <DataGrid.Resources>
-                                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#8054A8FC" />
-                                <Style TargetType="DataGridRow">
-                                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                </Style>
-                                <Style TargetType="DataGridRowHeader">
-                                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                </Style>
-                                <Style TargetType="DataGridCell">
-                                    <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
-                                    <Style.Triggers>
-                                        <!--<DataTrigger Binding="{Binding IsActive}" Value="{x:Null}">
+                        <StackPanel>
+                            <DataGrid
+                                MinHeight="120"
+                                AutoGenerateColumns="False"
+                                Background="{DynamicResource HightlightBackGroundBrush}"
+                                ItemsSource="{Binding Parameters}"
+                                ScrollViewer.CanContentScroll="True"
+                                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                SelectedItem="{Binding SelectedParameter}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <prism:InvokeCommandAction Command="{Binding SelectedParamChangeCommand}" CommandParameter="{Binding SelectedParameter}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <DataGrid.Resources>
+                                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#8054A8FC" />
+                                    <Style TargetType="DataGridRow">
+                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                                    </Style>
+                                    <Style TargetType="DataGridRowHeader">
+                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                                    </Style>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
+                                        <Style.Triggers>
+                                            <!--<DataTrigger Binding="{Binding IsActive}" Value="{x:Null}">
                                     <Setter Property="Foreground" Value="Green" />
                                 </DataTrigger>
                                 <DataTrigger Binding="{Binding IsActive}" Value="True">
                                     <Setter Property="Foreground" Value="Red" />
                                 </DataTrigger>-->
-                                    </Style.Triggers>
-                                </Style>
-                                <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
-                                </Style>
-                            </DataGrid.Resources>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn
-                                    Width="*"
-                                    MinWidth="64"
-                                    Binding="{Binding Name, Mode=OneWay}"
-                                    Foreground="{DynamicResource light-green}"
-                                    Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Parameter}}" />
-                                <DataGridTextColumn
-                                    Width="*"
-                                    MinWidth="64"
-                                    Binding="{Binding Type, Mode=OneWay}"
-                                    Foreground="{DynamicResource light-blue}"
-                                    Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
-                                <DataGridTextColumn
-                                    Width="*"
-                                    MinWidth="64"
-                                    Binding="{Binding DefaultValue, Mode=OneWay}"
-                                    Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Default}}" />
-                                <DataGridTextColumn
-                                    Width="2*"
-                                    Binding="{Binding Description, Mode=OneWay}"
-                                    Foreground="{DynamicResource light-defaultgrey}"
-                                    Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Description}}" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <StackPanel Orientation="Horizontal">
-                            <Button
-                                Margin="2"
-                                Command="{Binding AddNewParamCommand}"
-                                Content="{DynamicResource {x:Static localization:ResourceKeys.Common_Add}}" />
-                            <Button
-                                Margin="2"
-                                Command="{Binding RemoveParamCommand}"
-                                Content="{DynamicResource {x:Static localization:ResourceKeys.Common_Delete}}" />
-                            <Button
-                                Margin="2"
-                                Command="{Binding ParamUpCommand}"
-                                Content="{DynamicResource {x:Static localization:ResourceKeys.Common_MoveUp}}" />
-                            <Button
-                                Margin="2"
-                                Command="{Binding ParamDownCommand}"
-                                Content="{DynamicResource {x:Static localization:ResourceKeys.Common_MoveDown}}" />
+                                        </Style.Triggers>
+                                    </Style>
+                                    <Style TargetType="DataGridColumnHeader">
+                                        <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                                    </Style>
+                                </DataGrid.Resources>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        MinWidth="64"
+                                        Binding="{Binding Name, Mode=OneWay}"
+                                        Foreground="{DynamicResource light-green}"
+                                        Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Parameter}}" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        MinWidth="64"
+                                        Binding="{Binding Type, Mode=OneWay}"
+                                        Foreground="{DynamicResource light-blue}"
+                                        Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
+                                    <DataGridTextColumn
+                                        Width="*"
+                                        MinWidth="64"
+                                        Binding="{Binding DefaultValue, Mode=OneWay}"
+                                        Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Default}}" />
+                                    <DataGridTextColumn
+                                        Width="2*"
+                                        Binding="{Binding Description, Mode=OneWay}"
+                                        Foreground="{DynamicResource light-defaultgrey}"
+                                        Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Description}}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <StackPanel Orientation="Horizontal">
+                                <Button
+                                    Margin="2"
+                                    Command="{Binding AddNewParamCommand}"
+                                    Content="{DynamicResource {x:Static localization:ResourceKeys.Common_Add}}" />
+                                <Button
+                                    Margin="2"
+                                    Command="{Binding RemoveParamCommand}"
+                                    Content="{DynamicResource {x:Static localization:ResourceKeys.Common_Delete}}" />
+                                <Button
+                                    Margin="2"
+                                    Command="{Binding ParamUpCommand}"
+                                    Content="{DynamicResource {x:Static localization:ResourceKeys.Common_MoveUp}}" />
+                                <Button
+                                    Margin="2"
+                                    Command="{Binding ParamDownCommand}"
+                                    Content="{DynamicResource {x:Static localization:ResourceKeys.Common_MoveDown}}" />
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
 
-                    <GroupBox Grid.Column="1" Header="{DynamicResource {x:Static localization:ResourceKeys.Dlg_ParamInfo}}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="2*" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel>
-                                <TextBlock
-                                    Height="24"
-                                    Margin="2"
-                                    Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Name}}" />
-                                <TextBlock
-                                    Height="24"
-                                    Margin="2"
-                                    Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
-                                <TextBlock
-                                    Height="24"
-                                    Margin="2"
-                                    Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Default}}" />
-                                <TextBlock
-                                    Height="24"
-                                    Margin="2"
-                                    Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Description}}" />
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBox
-                                    Height="24"
-                                    Margin="2"
-                                    Text="{Binding ParaName, Mode=TwoWay}" />
-                                <TextBox
-                                    Height="24"
-                                    Margin="2"
-                                    Text="{Binding ParaType, Mode=TwoWay}" />
-                                <TextBox
-                                    Height="24"
-                                    Margin="2"
-                                    Text="{Binding ParaValue, Mode=TwoWay}" />
-                                <TextBox
-                                    Height="24"
-                                    Margin="2"
-                                    Text="{Binding ParaDescription, Mode=TwoWay}" />
-                            </StackPanel>
-                        </Grid>
-                    </GroupBox>
-                </Grid>
+                        <GroupBox Grid.Column="1" Header="{DynamicResource {x:Static localization:ResourceKeys.Dlg_ParamInfo}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock
+                                        Height="24"
+                                        Margin="2"
+                                        Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Name}}" />
+                                    <TextBlock
+                                        Height="24"
+                                        Margin="2"
+                                        Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Type}}" />
+                                    <TextBlock
+                                        Height="24"
+                                        Margin="2"
+                                        Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Default}}" />
+                                    <TextBlock
+                                        Height="24"
+                                        Margin="2"
+                                        Text="{DynamicResource {x:Static localization:ResourceKeys.Common_Description}}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <TextBox
+                                        Height="24"
+                                        Margin="2"
+                                        Text="{Binding ParaName, Mode=TwoWay}" />
+                                    <TextBox
+                                        Height="24"
+                                        Margin="2"
+                                        Text="{Binding ParaType, Mode=TwoWay}" />
+                                    <TextBox
+                                        Height="24"
+                                        Margin="2"
+                                        Text="{Binding ParaValue, Mode=TwoWay}" />
+                                    <TextBox
+                                        Height="24"
+                                        Margin="2"
+                                        Text="{Binding ParaDescription, Mode=TwoWay}" />
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
 
-            </StackPanel>
+                </StackPanel>
+            </Grid>
         </GroupBox>
 
         <StackPanel Height="40" Orientation="Horizontal">

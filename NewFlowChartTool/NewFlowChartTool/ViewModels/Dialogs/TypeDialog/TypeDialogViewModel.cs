@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Printing;
 using System.Runtime.CompilerServices;
 using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 using FlowChart.Core;
 using FlowChart.Misc;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using FlowChart.Type;
+using HL.Manager;
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Highlighting;
 using NFCT.Common;
 using NFCT.Common.Events;
 using Prism.Commands;
@@ -164,6 +169,9 @@ namespace NewFlowChartTool.ViewModels
             Members = new ObservableCollection<TypeMemberViewModel>();
             Parameters = new ObservableCollection<ParameterViewModel>();
 
+            MethodDefineCodes = new List<string>();
+            MethodCode = new TextDocument();
+
             _memberName = string.Empty;
             _memberType = string.Empty;
 
@@ -187,6 +195,9 @@ namespace NewFlowChartTool.ViewModels
             ParamDownCommand = new DelegateCommand(delegate { MoveParameter(1); });
 
             SaveCommand = new DelegateCommand(Save);
+
+            EventHelper.Sub<NFCT.Common.Events.ThemeSwitchEvent, NFCT.Common.Theme>(OnThemeSwitch);
+            OnThemeSwitch(Theme.Dark);
         }
 
         private readonly IOutputMessage _outputService;
@@ -263,6 +274,26 @@ namespace NewFlowChartTool.ViewModels
         {
             get => _selectedParameter;
             set { Update(); SetProperty(ref _selectedParameter, value); }
+        }
+
+        private bool _isCodeStyle;
+        public bool IsCodeStyle
+        {
+            get => _isCodeStyle;
+            set { SetProperty(ref _isCodeStyle, value);
+                GetMethodDefineCodes();
+            }
+        }
+
+        public List<string> MethodDefineCodes;
+        public TextDocument MethodCode { get; set; }
+
+        private IHighlightingDefinition _highlightingDefinition;
+
+        public IHighlightingDefinition HighlightingDefinition
+        {
+            get => _highlightingDefinition;
+            set => SetProperty(ref _highlightingDefinition, value);
         }
 
         public ObservableCollection<TypeMemberViewModel> Members { get; set; }
@@ -385,6 +416,8 @@ namespace NewFlowChartTool.ViewModels
             {
                 MemberKind = 1;
             }
+
+            GetMethodDefineCodes();
         }
 
         void OnSelectedParamChange()
@@ -619,6 +652,129 @@ namespace NewFlowChartTool.ViewModels
             }
             (parameters[newIdx], parameters[idx]) = (parameters[idx], parameters[newIdx]);
             UpdateParameterView(method);
+        }
+
+        void GetMethodDefineCodes()
+        {
+            if (!IsCodeStyle || SelectedMember == null )
+            {
+                return;
+            }
+
+            MethodDefineCodes.Clear();
+            if (SelectedMember.Model is Method method)
+            {
+                if (method.Description != null)
+                {
+                    MethodDefineCodes.Add($"// {method.Description}");
+                }
+                if(method.Parameters.Count == 0)
+                    MethodDefineCodes.Add($"{method.Type.Name} {method.Name}();");
+                else
+                {
+                    MethodDefineCodes.Add($"{method.Type.Name} {method.Name}(");
+                    var last = method.Parameters.Last();
+                    foreach (var para in method.Parameters)
+                    {
+                        var comma = para == last ? "" : ",";
+                        var line = $"  {para.Type.Name} {para.Name}";
+                        if (para.Default != null)
+                        {
+                            line += $" = {para.Default}";
+                        }
+
+                        line += comma;
+                        if (para.Description != null)
+                            line += $" // {para.Description}";
+                        MethodDefineCodes.Add(line);
+                    }
+                    MethodDefineCodes.Add(");");
+                }
+
+                MethodCode.Text = string.Join('\n', MethodDefineCodes);
+            }
+        }
+
+        void OnThemeSwitch(Theme theme)
+        {
+            void ApplyToDynamicResource(ComponentResourceKey key, Color? newColor)
+            {
+                if (Application.Current.Resources[key] == null || newColor == null)
+                    return;
+
+                // Re-coloring works with SolidColorBrushs linked as DynamicResource
+                if (Application.Current.Resources[key] is SolidColorBrush)
+                {
+                    //backupDynResources.Add(resourceName);
+
+                    var newColorBrush = new SolidColorBrush((Color)newColor);
+                    newColorBrush.Freeze();
+
+                    Application.Current.Resources[key] = newColorBrush;
+                }
+            }
+
+            if (theme == Theme.Dark)
+            {
+                ThemedHighlightingManager.Instance.SetCurrentTheme("VS2019_Dark");
+            }
+            else
+            {
+                ThemedHighlightingManager.Instance.SetCurrentTheme("Light");
+            }
+
+            HighlightingDefinition = ThemedHighlightingManager.Instance.GetDefinitionByExtension(".cs");
+
+            var hltheme = ThemedHighlightingManager.Instance.CurrentTheme.HlTheme;
+            if (hltheme == null)
+                return;
+
+            //foreach (var item in hltheme.GlobalStyles)
+            //{
+            //    switch (item.TypeName)
+            //    {
+            //        case "DefaultStyle":
+            //            ApplyToDynamicResource(NFCT.Themes.ResourceKeys.EditorBackground, item.backgroundcolor);
+            //            ApplyToDynamicResource(NFCT.Themes.ResourceKeys.EditorForeground, item.foregroundcolor);
+            //            break;
+
+            //        case "CurrentLineBackground":
+            //            ApplyToDynamicResource(NFCT.Themes.ResourceKeys.EditorCurrentLineBackgroundBrushKey, item.backgroundcolor);
+            //            ApplyToDynamicResource(NFCT.Themes.ResourceKeys.EditorCurrentLineBorderBrushKey, item.bordercolor);
+            //            break;
+
+            //        case "LineNumbersForeground":
+            //            ApplyToDynamicResource(NFCT.Themes.ResourceKeys.EditorLineNumbersForeground, item.foregroundcolor);
+            //            break;
+
+            //        case "Selection":
+            //            ApplyToDynamicResource(NFCT.Themes.ResourceKeys.EditorSelectionBrush, item.backgroundcolor);
+            //            ApplyToDynamicResource(NFCT.Themes.ResourceKeys.EditorSelectionBorder, item.bordercolor);
+            //            break;
+
+            //        case "Hyperlink":
+            //            ApplyToDynamicResource(NFCT.Themes.ResourceKeys.EditorLinkTextBackgroundBrush, item.backgroundcolor);
+            //            ApplyToDynamicResource(NFCT.Themes.ResourceKeys.EditorLinkTextForegroundBrush, item.foregroundcolor);
+            //            break;
+
+            //        case "NonPrintableCharacter":
+            //            ApplyToDynamicResource(NFCT.Themes.ResourceKeys.EditorNonPrintableCharacterBrush, item.foregroundcolor);
+            //            break;
+
+            //        default:
+            //            throw new System.ArgumentOutOfRangeException("GlobalStyle named '{0}' is not supported.", item.TypeName);
+            //    }
+            //}
+
+            if (HighlightingDefinition != null)
+            {
+                // Reset property for currently select highlighting definition
+                HighlightingDefinition = ThemedHighlightingManager.Instance.GetDefinition(HighlightingDefinition.Name);
+
+                if (HighlightingDefinition != null)
+                    return;
+            }
+
         }
 
         void Update()

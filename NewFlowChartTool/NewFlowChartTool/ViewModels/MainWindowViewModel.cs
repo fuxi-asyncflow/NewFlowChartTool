@@ -236,6 +236,8 @@ namespace NewFlowChartTool.ViewModels
                     = new Uri("pack://application:,,,/NFCT.Themes;component/LightTheme.xaml");
                 Application.Current.Resources.MergedDictionaries[5].Source
                     = new Uri("pack://application:,,,/NFCT.Themes;component/WPFDarkTheme/LightTheme.xaml");
+                Application.Current.Resources.MergedDictionaries[6].Source
+                    = new Uri("pack://application:,,,/NFCT.Themes;component/AvalonEditTheme/LightBrushs.xaml");
                 //Application.Current.Resources.MergedDictionaries[1].Source = new Uri("pack://application:,,,/VS2013Test;component/Themes/DarkBrushsExtended.xaml");
 
             }
@@ -248,6 +250,8 @@ namespace NewFlowChartTool.ViewModels
                     = new Uri("pack://application:,,,/NFCT.Themes;component/DarkTheme.xaml");
                 Application.Current.Resources.MergedDictionaries[5].Source
                     = new Uri("pack://application:,,,/NFCT.Themes;component/WPFDarkTheme/DarkTheme.xaml");
+                Application.Current.Resources.MergedDictionaries[6].Source
+                    = new Uri("pack://application:,,,/NFCT.Themes;component/AvalonEditTheme/DarkBrushs.xaml");
             }
 
             EventHelper.Pub<ThemeSwitchEvent, Theme>(SelectedTheme);

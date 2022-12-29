@@ -13,7 +13,7 @@ namespace FlowChart.Type
         }
 
         public bool IsOptional { get; set; }
-        public string Default { get; set; }
+        public string? Default { get; set; }
         
     }
 }
