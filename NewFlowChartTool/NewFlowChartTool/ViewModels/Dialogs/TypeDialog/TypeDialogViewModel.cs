@@ -18,10 +18,12 @@ using FlowChart.Type;
 using HL.Manager;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
+using NewFlowChartTool.ViewModels.TypeDialog;
 using NFCT.Common;
 using NFCT.Common.Events;
 using Prism.Commands;
 using Prism.Events;
+using Sprache;
 using Type = FlowChart.Type.Type;
 
 namespace NewFlowChartTool.ViewModels
@@ -75,6 +77,16 @@ namespace NewFlowChartTool.ViewModels
             _type = member.Type.Name;
             Description = member.Description;
         }
+
+        public void SetModel(Member member)
+        {
+            Model = member;
+            Name = member.Name;
+            Type = member.Type.Name;
+            Description = member.Description;
+            OnParameterUpdate();
+        }
+
         public Member Model { get; set; }
         private string _name;
         public string Name { get => _name; set => SetProperty(ref _name, value); }
@@ -782,26 +794,47 @@ namespace NewFlowChartTool.ViewModels
             if (CurrentProject == null)
                 return;
 
+            if (IsCodeStyle && SelectedMember != null && SelectedType != null)
+            {
+                var code = MethodCode.Text;
+                var methodResult = MethodStringParser.Method.Parse(code);
+                var m = methodResult.ToMember(CurrentProject);
+                if (m != null)
+                {
+                    var originModel = SelectedMember.Model;
+                    SelectedType.Model.RemoveMember(originModel.Name);
+                    SelectedMember.SetModel(m);
+                    SelectedType.Model.AddMember(m);
+                    OnSelectedMemberChange();
+                }
+            }
+
             // save param
             if (SelectedParameter != null)
             {
-                SelectedParameter.Name = ParaName;
-                SelectedParameter.Description = ParaDescription;
-                SelectedParameter.DefaultValue = ParaValue;
-                SelectedParameter.Type = ParaType;
-                SelectedParameter.UpdateToModel(CurrentProject);
-                SelectedMember?.OnParameterUpdate();
+                if (SelectedMember != null  && SelectedMember.Model.SaveToFile)
+                {
+                    SelectedParameter.Name = ParaName;
+                    SelectedParameter.Description = ParaDescription;
+                    SelectedParameter.DefaultValue = ParaValue;
+                    SelectedParameter.Type = ParaType;
+                    SelectedParameter.UpdateToModel(CurrentProject);
+                    SelectedMember?.OnParameterUpdate();
+                }
             }
 
             // save member
             if (SelectedMember != null)
             {
-                SelectedMember.Name = MemberName;
-                SelectedMember.Description = MemberDescription;
-                SelectedMember.Type = MemberType;
-                SelectedMember.IsVariadic = IsVariadicMethod;
-                if(SelectedType != null)
-                    SelectedMember.UpdateToModel(CurrentProject, SelectedType.Model);
+                if (SelectedMember.Model.SaveToFile)
+                {
+                    SelectedMember.Name = MemberName;
+                    SelectedMember.Description = MemberDescription;
+                    SelectedMember.Type = MemberType;
+                    SelectedMember.IsVariadic = IsVariadicMethod;
+                    if (SelectedType != null)
+                        SelectedMember.UpdateToModel(CurrentProject, SelectedType.Model);
+                }
             }
 
             //// type rename

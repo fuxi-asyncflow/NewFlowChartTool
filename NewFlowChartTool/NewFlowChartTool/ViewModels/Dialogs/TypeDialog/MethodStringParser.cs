@@ -31,6 +31,9 @@ namespace NewFlowChartTool.ViewModels.TypeDialog
             {
                 throw new Exception($"unkown type: tp");
             }
+
+            if (Description != null)
+                Description = Description.Trim();
             if (Parameters == null)
             {
                 member = new Property(Name) { Description = Description, Type = tp};
@@ -43,12 +46,14 @@ namespace NewFlowChartTool.ViewModels.TypeDialog
 
                 method.Parameters = Parameters.ConvertAll(p =>
                 {
+                    if (p.Description != null)
+                        p.Description = p.Description.Trim();
                     tp = project.GetType(p.Type);
                     if (tp == null)
                     {
                         throw new Exception($"unkown type: tp");
                     }
-                    var para = new Parameter(Name) { Description = p.Description, Type = tp, Default = p.Value};
+                    var para = new Parameter(p.Name) { Description = p.Description, Type = tp, Default = p.Value};
                     return para;
                 });
                 if (Parameters.Count > 0 && Parameters.Last().IsParams)
