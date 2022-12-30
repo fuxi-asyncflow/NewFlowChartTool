@@ -110,6 +110,7 @@ namespace FlowChart.Debug.WebSocket
                 gi.ObjectName = jObj.GetProperty("object_name").GetString();
                 gi.GraphName = jObj.GetProperty("chart_name").GetString();
                 gi.OwnerGraphName = jObj.GetProperty("owner_chart_name").GetString();
+                gi.GraphUid = jObj.GetProperty("graph_uid").GetString();
                 list.Add(gi);
             }
 

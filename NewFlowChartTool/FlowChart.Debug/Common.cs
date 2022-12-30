@@ -152,6 +152,7 @@ namespace FlowChart.Debug
         public string ObjectName { get; set; }
         public string GraphName { get; set; }
         public string OwnerGraphName { get; set; }
+        public string GraphUid { get; set; }
 
         #region client info
         public string Host { get; set; }

@@ -56,6 +56,7 @@ namespace FlowChart.Debug
     public class DebugAgent
     {
         public Guid GraphGuid { get; set; }
+        public GraphInfo? Info { get; set; }
         public string GraphName { get; set; }
         //public Dictionary<Guid, DebugNodeInfo> Nodes { get; set; }
         public Dictionary<string, string> Variables { get; set; }
