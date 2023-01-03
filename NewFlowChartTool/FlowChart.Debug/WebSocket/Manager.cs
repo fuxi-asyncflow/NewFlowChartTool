@@ -17,7 +17,7 @@ namespace FlowChart.Debug.WebSocket
             _protocal = new JsonProtocol();
             _clients = new Dictionary<string, Client>();
             _agents = new Dictionary<Guid, DebugAgent>();
-            _graphInfos = new Dictionary<string, GraphInfo>();
+            _graphInfos = new Dictionary<Guid, GraphInfo>();
         }
 
         public static string MakeAddr(string host, int port)
@@ -28,7 +28,7 @@ namespace FlowChart.Debug.WebSocket
         private Dictionary<string, Client> _clients;
         private IDebugProtocal<string> _protocal;
         private Dictionary<Guid, DebugAgent> _agents;
-        private Dictionary<string, GraphInfo> _graphInfos;
+        private Dictionary<Guid, GraphInfo> _graphInfos;
         public INetClient? GetClient(string host, int port)
         {
             Client? client = null;
@@ -114,9 +114,10 @@ namespace FlowChart.Debug.WebSocket
                 {
                     graphInfo.Host = client.Host;
                     graphInfo.Port = client.Port;
-                    if (!_graphInfos.ContainsKey(graphInfo.GraphUid))
+                    var graphUid = Guid.Parse(graphInfo.GraphUid);
+                    if (!_graphInfos.ContainsKey(graphUid))
                     {
-                        _graphInfos.Add(graphInfo.GraphUid, graphInfo);
+                        _graphInfos.Add(graphUid, graphInfo);
                     }
                     Logger.DBG($"[ws] graph: {graphInfo.GraphName}");
                 }
@@ -130,7 +131,7 @@ namespace FlowChart.Debug.WebSocket
                 if (!_agents.TryGetValue(graphDebugData.ChartUid, out var agent))
                 {
                     GraphInfo? graphInfo;
-                    _graphInfos.TryGetValue(graphDebugData.ChartUid.ToString(), out graphInfo);
+                    _graphInfos.TryGetValue(graphDebugData.ChartUid, out graphInfo);
                     agent = new DebugAgent()
                     {
                         GraphGuid = graphDebugData.ChartUid, 
@@ -150,15 +151,17 @@ namespace FlowChart.Debug.WebSocket
             {
                 // set graphinfo to graphviewmodel
                 NewDebugGraphEvent?.Invoke(gi);
-                if (!_graphInfos.ContainsKey(gi.GraphUid))
+                var graphUid = Guid.Parse(gi.GraphUid);
+                if (!_graphInfos.ContainsKey(graphUid))
                 {
-                    _graphInfos.Add(gi.GraphUid, gi);
+                    _graphInfos.Add(graphUid, gi);
                 }
             }
         }
 
         public void Stop()
         {
+            ReplayFile.Inst.Stop();
             foreach (var kv in _clients)
             {
                 kv.Value.Stop();

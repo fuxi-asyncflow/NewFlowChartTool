@@ -159,6 +159,34 @@ namespace FlowChart.Debug
         public int Port { get; set; }
 
         #endregion
+
+        public void Serialize(BinaryWriter bw)
+        {
+            bw.Write(AgentId);
+            bw.Write(OwnerNodeAddr);
+            bw.Write(OwnerNodeId);
+            bw.Write(OwnerNodeUid);
+            bw.Write(ObjectName);
+            bw.Write(GraphName);
+            bw.Write(OwnerGraphName);
+            bw.Write(GraphUid);
+            bw.Write(Host);
+            bw.Write(Port);
+        }
+
+        public void Deserialize(BinaryReader br)
+        {
+            AgentId = br.ReadInt32();
+            OwnerNodeAddr = br.ReadUInt64();
+            OwnerNodeId = br.ReadInt32();
+            OwnerNodeUid = br.ReadString();
+            ObjectName = br.ReadString();
+            GraphName = br.ReadString();
+            OwnerGraphName = br.ReadString();
+            GraphUid = br.ReadString();
+            Host = br.ReadString();
+            Port = br.ReadInt32();
+        }
     }
 
     public class GraphDebugData
