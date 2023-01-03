@@ -19,6 +19,11 @@ namespace FlowChart.Debug
         public int OldStatus;
         public int NewStatus;
         public bool result;
+
+        public override string ToString()
+        {
+            return $"{NodeId}({NodeUid}): {OldStatus} -> {NewStatus}, {result}";
+        }
     }
 
     public class VariablesStatusData : DebugData
@@ -27,6 +32,11 @@ namespace FlowChart.Debug
         public string NodeUid;
         public string OldValue;
         public string NewValue;
+
+        public override string ToString()
+        {
+            return $"{VariableName}: {OldValue} -> {NewValue}, {NodeUid}";
+        }
     }
 
     public class EventStatusData : DebugData

@@ -16,12 +16,13 @@ namespace FlowChart.Debug
 
     public interface INetClient
     {
-        public string Host { get;}
+        public string Host { get; }
         public int Port { get; }
         public void Send(string message);
         public void Send(byte[] data);
         public void Stop();
     }
+
     public interface INetManager
     {
         public INetClient? GetClient(string host, int port);
@@ -33,13 +34,17 @@ namespace FlowChart.Debug
         public void Stop();
 
         #region events
+
         public delegate void RecvGraphListDelegate(string host, int port, List<GraphInfo> graphs);
+
         public event RecvGraphListDelegate? RecvGraphListEvent;
 
         public delegate void NewDebugAgentDelegate(DebugAgent agent);
+
         public event NewDebugAgentDelegate? NewDebugAgentEvent;
 
         public delegate void NewDebugGraphDelegate(GraphInfo graphInfo);
+
         public event NewDebugGraphDelegate? NewDebugGraphEvent;
 
         #endregion
@@ -50,6 +55,7 @@ namespace FlowChart.Debug
         public string Name => "get_chart_list";
         public string ChartName { get; set; }
         public string ObjectName { get; set; }
+
         public Dictionary<string, object> GetParams()
         {
             var dict = new Dictionary<string, object>();
@@ -68,6 +74,7 @@ namespace FlowChart.Debug
 
         public string Name => "debug_chart";
         public GraphInfo GraphInfo { get; set; }
+
         public Dictionary<string, object> GetParams()
         {
             var dict = new Dictionary<string, object>();
@@ -98,6 +105,7 @@ namespace FlowChart.Debug
     public class ContinueBreakPointMessage : IDebugMessage
     {
         public string Name => "continue";
+
         public ContinueBreakPointMessage(GraphInfo graphInfo)
         {
             GraphInfo = graphInfo;
@@ -155,6 +163,7 @@ namespace FlowChart.Debug
         public string GraphUid { get; set; }
 
         #region client info
+
         public string Host { get; set; }
         public int Port { get; set; }
 
@@ -187,16 +196,39 @@ namespace FlowChart.Debug
             Host = br.ReadString();
             Port = br.ReadInt32();
         }
+
+        public void Print(List<string> outputs)
+        {
+            outputs.Add($"  {AgentId}");
+            outputs.Add($"  {OwnerNodeAddr}");
+            outputs.Add($"  {OwnerNodeId}");
+            outputs.Add($"  {OwnerNodeUid}");
+            outputs.Add($"  {ObjectName}");
+            outputs.Add($"  {GraphName}");
+            outputs.Add($"  {OwnerGraphName}");
+            outputs.Add($"  {GraphUid}");
+            outputs.Add($"  {Host}");
+            outputs.Add($"  {Port}");
+        }
     }
 
     public class GraphDebugData
     {
+        public GraphDebugData()
+        {
+            DebugDataList = new List<DebugData>();
+        }
+
         public string ChartName { get; set; }
         public Guid ChartUid { get; set; }
         public Int64 Frame { get; set; }
         public Int64 Time { get; set; }
         public List<DebugData> DebugDataList { get; set; }
+
+        public void Print(List<string> outputs)
+        {
+            outputs.Add($"graph: {ChartName} {ChartUid}");
+            DebugDataList.ForEach(data => outputs.Add(data.ToString()));
+        }
     }
-
-
 }

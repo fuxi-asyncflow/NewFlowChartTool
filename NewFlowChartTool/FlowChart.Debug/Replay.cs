@@ -8,7 +8,7 @@ using FlowChart.Common;
 
 namespace FlowChart.Debug
 {
-    internal class GraphDebugInfo
+    public class GraphDebugInfo
     {
         public GraphDebugInfo()
         {
@@ -22,6 +22,7 @@ namespace FlowChart.Debug
         {
             if (!_nodeIdDict.ContainsKey(uid))
             {
+                Logger.DBG($"[debug] add node uid {uid} {id}");
                 _nodeIdDict.Add(uid, id);
                 _nodeGuidDict.Add(id, uid);
             }
@@ -102,8 +103,22 @@ namespace FlowChart.Debug
                 _variableNameDict.Add(varId, varName);
             }
         }
+
+        public void Print(List<string> outputs)
+        {
+            outputs.Add($"node id:");
+            foreach (var kv in _nodeGuidDict)
+            {
+                outputs.Add($"  {kv.Key}  {kv.Value}");
+            }
+            outputs.Add($"var name:");
+            foreach (var kv in _variableNameDict)
+            {
+                outputs.Add($"  {kv.Key}  {kv.Value}");
+            }
+        }
     }
-    internal class ReplayFile
+    public class ReplayFile
     {
         enum Flag
         {
@@ -117,6 +132,12 @@ namespace FlowChart.Debug
         static ReplayFile()
         {
             Inst = new ReplayFile();
+            var exefolder = FileHelper.GetExeFolder();
+            var debugFileFolder = System.IO.Path.Combine(exefolder, "debug");
+            if (!Directory.Exists(debugFileFolder))
+            {
+                System.IO.Directory.CreateDirectory(debugFileFolder);
+            }
         }
 
         public static ReplayFile Inst;
@@ -126,18 +147,36 @@ namespace FlowChart.Debug
             Data = new List<GraphDebugData>();
             GraphInfoDict = new Dictionary<Guid, GraphInfo>();
             GraphDebugInfoDict = new Dictionary<string, GraphDebugInfo>();
-            _buffer = new byte[1024 * 1024];
+        }
+
+        public void Reset()
+        {
+            Data.Clear();
+            GraphInfoDict.Clear();
+            GraphDebugInfoDict.Clear();
         }
 
         public List<GraphDebugData> Data { get; set; }
         public Dictionary<Guid, GraphInfo> GraphInfoDict { get; set; }
         public Dictionary<string, GraphDebugInfo> GraphDebugInfoDict { get; set; }
 
-        private byte[] _buffer;
 
         public void AddDebugData(GraphDebugData data)
         {
             Data.Add(data);
+            //TODO optimize
+            var gdi = GraphDebugInfoDict[data.ChartName];
+            data.DebugDataList.ForEach(d =>
+            {
+                if (d is NodeStatusData nsd)
+                {
+                    gdi.AddNode(nsd.NodeUid, nsd.NodeId);
+                }
+                else if (d is VariablesStatusData vsd)
+                {
+                    gdi.GetVariableId(vsd.VariableName);
+                }
+            });
         }
 
         public void AddGraphInfo(GraphInfo? gi)
@@ -224,7 +263,7 @@ namespace FlowChart.Debug
             long frame = -1;
             long time = -1;
 
-            while (true)
+            while (br.BaseStream.Position < br.BaseStream.Length)
             {
                 var flag = br.ReadByte();
                 if (flag == (byte)Flag.Frame)
@@ -300,7 +339,6 @@ namespace FlowChart.Debug
                 bw.Write((byte)nsd.OldStatus);
                 bw.Write((byte)nsd.NewStatus);
                 bw.Write(nsd.result);
-                gi.AddNode(nsd.NodeUid, nsd.NodeId);
             }
             else if (data is VariablesStatusData vsd)
             {
@@ -355,6 +393,40 @@ namespace FlowChart.Debug
             fileName = System.IO.Path.Combine(exefolder, "debug", fileName);
             Logger.LOG($"save debug data {fileName}");
             Save(fileName);
+
+            Reset();
+            // Load(fileName);
+        }
+
+        public void Print(List<string> output)
+        {
+            output.Add($"GraphDebugInfo:");
+            foreach (var kv in GraphDebugInfoDict)
+            {
+                output.Add($"{kv.Key}");
+                kv.Value.Print(output);
+            }
+
+            output.Add("GraphInfo");
+            foreach (var kv in GraphInfoDict)
+            {
+                output.Add($"{kv.Key}");
+                kv.Value.Print(output);
+            }
+
+            long frame = -1;
+            foreach (var data in Data)
+            {
+                // write frame info
+                if (data.Frame != frame)
+                {
+                    output.Add($"== frame: {data.Frame} {data.Time}");
+                    frame = data.Frame;
+                }
+
+                data.Print(output);
+            }
+
         }
     }
 }
