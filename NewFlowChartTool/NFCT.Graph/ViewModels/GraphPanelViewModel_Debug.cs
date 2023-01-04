@@ -9,6 +9,7 @@ using FlowChart.Common;
 using NFCT.Common;
 using NFCT.Common.Events;
 using NFCT.Common.Services;
+using Prism.Commands;
 using Prism.Ioc;
 
 namespace NFCT.Graph.ViewModels
@@ -23,8 +24,33 @@ namespace NFCT.Graph.ViewModels
     }
     public partial class GraphPaneViewModel
     {
+        public void GraphPanelViewModel_Debug_Init()
+        {
+            _debugNodesCacheDict = new Dictionary<Guid, BaseNodeViewModel>();
+            ReplayNextCommand = new DelegateCommand(ReplayNext);
+            ReplayNextFrameCommand = new DelegateCommand(ReplayNextFrame);
+            ReplayStartCommand = new DelegateCommand(ReplayStart);
+        }
         private bool _isDebugMode;
         public bool IsDebugMode { get => _isDebugMode; set => SetProperty(ref _isDebugMode, value); }
+
+        private bool _isReplayMode;
+
+        public bool IsReplayMode
+        {
+            get
+            {
+                if (!IsDebugMode)
+                    return false;
+                return _isReplayMode;
+            }
+
+            set => SetProperty(ref _isReplayMode, value);
+        }
+
+        public DelegateCommand ReplayNextCommand { get; set; }
+        public DelegateCommand ReplayNextFrameCommand { get; set; }
+        public DelegateCommand ReplayStartCommand { get; set; }
 
         public void EnterDebugMode(GraphInfo? graphInfo = null)
         {
@@ -64,7 +90,7 @@ namespace NFCT.Graph.ViewModels
 
         private DebugAgent? _currentDebugAgent { get; set; }
         private List<DebugAgent>? _agents;
-        private Dictionary<Guid, BaseNodeViewModel> _debugNodesCacheDict = new Dictionary<Guid, BaseNodeViewModel>();
+        private Dictionary<Guid, BaseNodeViewModel> _debugNodesCacheDict;
         private GraphInfo? _graphInfo;
 
         public void UpdateAgents(List<DebugAgent>? agents)
@@ -77,6 +103,10 @@ namespace NFCT.Graph.ViewModels
                 _currentDebugAgent = _agents.First();
                 Logger.LOG($"[debug] {FullPath} bind to a debug agent");
                 _currentDebugAgent.NodeStatusChange += OnNodeStatusChange;
+                if (_currentDebugAgent is ReplayAgent)
+                    IsReplayMode = true;
+                else
+                    IsReplayMode = false;
             }
         }
 
@@ -117,6 +147,27 @@ namespace NFCT.Graph.ViewModels
                 return;
             }
             ContainerLocator.Current.Resolve<IDebugService>().ContinueBreakPoint(_graphInfo);
+        }
+
+        void ReplayNext()
+        {
+            if (_currentDebugAgent is not ReplayAgent agent)
+                return;
+            agent.Next();
+        }
+
+        void ReplayNextFrame()
+        {
+            if (_currentDebugAgent is not ReplayAgent agent)
+                return;
+            agent.NextFrame();
+        }
+
+        void ReplayStart()
+        {
+            if (_currentDebugAgent is not ReplayAgent agent)
+                return;
+            agent.Play();
         }
     }
 }

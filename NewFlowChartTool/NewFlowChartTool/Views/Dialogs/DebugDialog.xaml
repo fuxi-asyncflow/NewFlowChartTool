@@ -74,6 +74,12 @@
                     <TextBox MinWidth="100" Margin="8,0" />
                 </StackPanel>
             </StackPanel>
+            <Button
+                MinWidth="48"
+                Margin="8,4"
+                Background="Transparent"
+                Command="{Binding OpenReplayFileCommand}"
+                Content="回放" />
         </StackPanel>
         <DataGrid
             x:Name="SearchDataGrid"

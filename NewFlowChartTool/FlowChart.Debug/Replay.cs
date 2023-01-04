@@ -398,6 +398,20 @@ namespace FlowChart.Debug
             // Load(fileName);
         }
 
+        public DebugAgent GetAgent(GraphInfo graphInfo)
+        {
+            var graphUid = Guid.Parse((ReadOnlySpan<char>)graphInfo.GraphUid);
+            var data = Data.FindAll(d => d.ChartUid == graphUid);
+            var agent = new ReplayAgent(data)
+            {
+                GraphGuid = graphUid,
+                GraphName = graphInfo.GraphName,
+                Info = graphInfo
+            };
+            return agent;
+
+        }
+
         public void Print(List<string> output)
         {
             output.Add($"GraphDebugInfo:");

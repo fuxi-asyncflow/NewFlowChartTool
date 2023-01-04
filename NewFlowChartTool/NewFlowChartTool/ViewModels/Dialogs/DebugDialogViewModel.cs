@@ -56,6 +56,7 @@ namespace NewFlowChartTool.ViewModels
             _outputService = outputService;
             CloseCommand = new DelegateCommand(() => { RequestClose.Invoke(new DialogResult(ButtonResult.OK)); });
             GetGraphListCommand = new DelegateCommand(GetGraphList);
+            OpenReplayFileCommand = new DelegateCommand(ChooseReplayFile);
             StartPort = 9000;
             EndPort = 9003;
             Host = "127.0.0.1";
@@ -115,6 +116,7 @@ namespace NewFlowChartTool.ViewModels
 
         public DelegateCommand CloseCommand { get; set;}
         public DelegateCommand GetGraphListCommand { get; set; }
+        public DelegateCommand OpenReplayFileCommand { get; set; }
         
         private INetManager _netManager;
         private Dictionary<string, List<DebugAgent>> _agents;
@@ -125,6 +127,7 @@ namespace NewFlowChartTool.ViewModels
         public int StartPort { get => _startPort; set => SetProperty(ref _startPort, value); }
         private int _endPort;
         public int EndPort { get => _endPort; set => SetProperty(ref _endPort, value); }
+        public bool IsReplay { get; set; }
 
         public void GetGraphList()
         {
@@ -179,6 +182,7 @@ namespace NewFlowChartTool.ViewModels
         {
             _netManager.Stop();
             _agents.Clear();
+            IsReplay = false;
         }
 
         public void QuickDebug(Graph graph)
@@ -217,5 +221,38 @@ namespace NewFlowChartTool.ViewModels
             codesData = System.Convert.ToBase64String(codeDataBytes);
             _netManager.BroadCast(Host, StartPort, EndPort, new HotfixMessage() {ChartsData = chartData, ChartsFunc = codesData });
         }
+
+        #region REPLAY
+        void ChooseReplayFile()
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.DefaultExt = ".dat";
+            dialog.Filter = "Replay Files (.dat)|*.dat";
+            dialog.InitialDirectory = FileHelper.GetFolder("debug");
+
+            var result = dialog.ShowDialog();
+            if (result != true)
+                return;
+            var fileName = dialog.FileName;
+
+            // load file
+            IsReplay = true;
+            var replayFile = ReplayFile.Inst;
+            GraphList.Clear();
+            replayFile.Load(fileName);
+            OnRecvGraphListEvent(replayFile.GraphInfoDict.Values.ToList());
+        }
+
+        public void StartReplay(GraphInfo graphInfo)
+        {
+            var replayFile = ReplayFile.Inst;
+            EventHelper.Pub<StartDebugGraphEvent, GraphInfo?>(graphInfo);
+
+            var agent = replayFile.GetAgent(graphInfo);
+            EventHelper.Pub<NewDebugAgentEvent, DebugAgent>(agent);
+        }
+
+        #endregion
+
     }
 }

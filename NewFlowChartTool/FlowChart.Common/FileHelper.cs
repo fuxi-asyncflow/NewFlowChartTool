@@ -68,6 +68,11 @@ namespace FlowChart.Common
             return System.AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
         }
 
+        public static string GetFolder(string subDir)
+        {
+            return Path.Combine(GetExeFolder(), subDir);
+        }
+
         public static void Save(string path, string content)
         {
             if (System.IO.File.Exists(path))

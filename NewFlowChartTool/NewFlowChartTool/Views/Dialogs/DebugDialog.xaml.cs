@@ -36,7 +36,14 @@ namespace NewFlowChartTool.Views
             if (vm.SelectedGraphInfo == null) return;
             
             //vm.OpenUnitInDebugMode(vm.SelectedChart.ChartName);
-            vm.StartDebugGraph(vm.SelectedGraphInfo.GraphInfo);
+            if (vm.IsReplay)
+            {
+                vm.StartReplay(vm.SelectedGraphInfo.GraphInfo);
+            }
+            else
+            {
+                vm.StartDebugGraph(vm.SelectedGraphInfo.GraphInfo);
+            }
         }
 
         private void TitleBlank_OnMouseDown(object sender, MouseButtonEventArgs e)
