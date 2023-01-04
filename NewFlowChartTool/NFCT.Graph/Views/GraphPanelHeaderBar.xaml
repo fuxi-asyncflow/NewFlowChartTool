@@ -50,6 +50,14 @@
                     Margin="4,0"
                     Command="{Binding ReplayNextFrameCommand}"
                     Content="NextFrame" />
+                <Button
+                    Margin="4,0"
+                    Command="{Binding ReplayStopCommand}"
+                    Content="Stop" />
+                <Button
+                    Margin="4,0"
+                    Command="{Binding ReplayPauseCommand}"
+                    Content="Pause" />
             </StackPanel>
             <TextBlock Background="DarkGreen" Text="{Binding FullPath}" />
         </StackPanel>

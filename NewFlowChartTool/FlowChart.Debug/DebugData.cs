@@ -153,12 +153,18 @@ namespace FlowChart.Debug
             }
         }
 
-        public async void Play()
+        public void Play()
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+            Task.Factory.StartNew(AsyncPlay, _cancellationTokenSource.Token);
+        }
+
+        async void AsyncPlay()
         {
             FinishCurrentFrame();
             await Task.Delay(1000);
 
-            while (_currentFrameDataIndex < Data.Count)
+            while (_currentFrameDataIndex < Data.Count && !_cancellationTokenSource.Token.IsCancellationRequested)
             {
                 Accept(Data[_currentFrameDataIndex].DebugDataList);
                 _currentFrameDataIndex++;
@@ -174,6 +180,7 @@ namespace FlowChart.Debug
             while (_currentDataIndex < data.Count)
             {
                 Accept(data[_currentDataIndex]);
+                _currentDataIndex++;
             }
 
             _currentFrameDataIndex++;
@@ -182,13 +189,25 @@ namespace FlowChart.Debug
 
         public void Pause()
         {
-
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+            }
         }
 
-        public void Reset()
+        void Reset()
         {
             _currentFrameDataIndex = 0;
             _currentDataIndex = 0;
+        }
+
+        public void Stop()
+        {
+            if (_cancellationTokenSource != null)
+            {
+                _cancellationTokenSource.Cancel();
+            }
+            Reset();
         }
 
         private List<GraphDebugData> Data;
@@ -199,6 +218,7 @@ namespace FlowChart.Debug
 
         private int _currentFrameDataIndex;
         private int _currentDataIndex;
+        private CancellationTokenSource? _cancellationTokenSource;
 
         public event Action? EndEvent;
     }
