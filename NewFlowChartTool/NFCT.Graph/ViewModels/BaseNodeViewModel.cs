@@ -199,19 +199,34 @@ namespace NFCT.Graph.ViewModels
         }
 
         #region DEBUG STATUS
+
+        private NodeBgType _originBgType;
         public bool IsDebugMode => Owner.IsDebugMode;
-        public void ChangeDebugMode() { RaisePropertyChanged(nameof(IsDebugMode)); }
         public int SuccessCount { get; set; }
         public int FailureCount { get; set; }
 
+        public void EnterDebugMode()
+        {
+            _originBgType = BgType;
+            RaisePropertyChanged(nameof(IsDebugMode));
+        }
+
         public void ExitDebugMode()
+        {
+            ResetDebugState();
+            StopDebugEvent?.Invoke();
+            BgType = _originBgType;
+            RaisePropertyChanged(nameof(IsDebugMode));
+            //RaisePropertyChanged(nameof(BgType));
+        }
+
+        public void ResetDebugState()
         {
             SuccessCount = 0;
             FailureCount = 0;
             RaisePropertyChanged(nameof(SuccessCount));
             RaisePropertyChanged(nameof(FailureCount));
-            StopDebugEvent?.Invoke();
-            //RaisePropertyChanged(nameof(BgType));
+            RaisePropertyChanged(nameof(IsDebugMode));
         }
 
         public void ChangeDebugStatus(DebugNodeStatus status)

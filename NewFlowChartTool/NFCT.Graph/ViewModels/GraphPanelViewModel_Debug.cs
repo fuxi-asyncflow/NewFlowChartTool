@@ -72,7 +72,7 @@ namespace NFCT.Graph.ViewModels
             IsDebugMode = true;
             foreach (var baseNodeViewModel in Nodes)
             {
-                baseNodeViewModel.ChangeDebugMode();
+                baseNodeViewModel.EnterDebugMode();
             }
         }
 
@@ -81,13 +81,13 @@ namespace NFCT.Graph.ViewModels
             if (!IsDebugMode)
                 return;
             IsDebugMode = false;
+            IsReplayMode = false;
             _graphInfo = null;
             Logger.LOG($"[debug] {FullPath} exit debug mode");
             _currentDebugAgent = null;
             _agents = null;
             foreach (var baseNodeViewModel in Nodes)
             {
-                baseNodeViewModel.ChangeDebugMode();
                 baseNodeViewModel.ExitDebugMode();
             }
         }
@@ -183,6 +183,10 @@ namespace NFCT.Graph.ViewModels
             if (_currentDebugAgent is not ReplayAgent agent)
                 return;
             agent.Stop();
+            foreach (var baseNodeViewModel in Nodes)
+            {
+                baseNodeViewModel.ResetDebugState();
+            }
         }
 
         void ReplayPause()
