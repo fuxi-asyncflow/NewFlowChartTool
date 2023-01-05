@@ -7,27 +7,28 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModels="clr-namespace:NFCT.Graph.ViewModels"
     d:DataContext="{d:DesignInstance viewModels:GraphPaneViewModel}"
-    d:DesignHeight="30"
+    d:DesignHeight="40"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
-    <DockPanel LastChildFill="True">
-        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-            <d:Button Command="{Binding ChangeLayoutCommand}" Content="layout" />
-            <d:Button Command="{Binding CreateGroupCommand}" Content="group" />
-            <CheckBox
-                Margin="5,0"
-                VerticalAlignment="Center"
-                Content="SubGraph"
-                IsChecked="{Binding IsSubGraph, Mode=TwoWay}" />
-            <ComboBox
-                x:Name="LayoutComboBox"
-                Margin="5,0"
-                SelectionChanged="LayoutComboBox_OnSelectionChanged"
-                Visibility="Collapsed" />
-            <!--<TextBlock
+    <StackPanel>
+        <DockPanel LastChildFill="True">
+            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                <d:Button Command="{Binding ChangeLayoutCommand}" Content="layout" />
+                <d:Button Command="{Binding CreateGroupCommand}" Content="group" />
+                <CheckBox
+                    Margin="5,0"
+                    VerticalAlignment="Center"
+                    Content="SubGraph"
+                    IsChecked="{Binding IsSubGraph, Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="LayoutComboBox"
+                    Margin="5,0"
+                    SelectionChanged="LayoutComboBox_OnSelectionChanged"
+                    Visibility="Collapsed" />
+                <!--<TextBlock
                 Margin="5,0"
                 VerticalAlignment="Center"
                 Text="描述:" />
@@ -35,33 +36,39 @@
                 MinWidth="100"
                 VerticalAlignment="Center"
                 Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />-->
-        </StackPanel>
-        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-            <StackPanel Orientation="Horizontal" Visibility="{Binding IsReplayMode, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Button
-                    Margin="4,0"
-                    Command="{Binding ReplayStartCommand}"
-                    Content="Play" />
-                <Button
-                    Margin="4,0"
-                    Command="{Binding ReplayNextCommand}"
-                    Content="Next" />
-                <Button
-                    Margin="4,0"
-                    Command="{Binding ReplayNextFrameCommand}"
-                    Content="NextFrame" />
-                <Button
-                    Margin="4,0"
-                    Command="{Binding ReplayStopCommand}"
-                    Content="Stop" />
-                <Button
-                    Margin="4,0"
-                    Command="{Binding ReplayPauseCommand}"
-                    Content="Pause" />
             </StackPanel>
-            <TextBlock Background="DarkGreen" Text="{Binding FullPath}" />
-        </StackPanel>
-        <StackPanel />
-
-    </DockPanel>
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Visibility="{Binding IsReplayMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Button
+                        Margin="4,0"
+                        Command="{Binding ReplayStartCommand}"
+                        Content="Play" />
+                    <Button
+                        Margin="4,0"
+                        Command="{Binding ReplayNextCommand}"
+                        Content="Next" />
+                    <Button
+                        Margin="4,0"
+                        Command="{Binding ReplayNextFrameCommand}"
+                        Content="NextFrame" />
+                    <Button
+                        Margin="4,0"
+                        Command="{Binding ReplayStopCommand}"
+                        Content="Stop" />
+                    <Button
+                        Margin="4,0"
+                        Command="{Binding ReplayPauseCommand}"
+                        Content="Pause" />
+                    <TextBlock MinWidth="20" Text="{Binding ReplayCurrentFrame}" />
+                </StackPanel>
+                <TextBlock Background="DarkGreen" Text="{Binding FullPath}" />
+            </StackPanel>
+            <StackPanel />
+        </DockPanel>
+        <Slider
+            Maximum="{Binding ReplayMaxFrame}"
+            Minimum="{Binding ReplayMinFrame}"
+            Visibility="{Binding IsReplayMode, Converter={StaticResource BooleanToVisibilityConverter}}"
+            Value="{Binding ReplayCurrentFrame, Mode=TwoWay}" />
+    </StackPanel>
 </UserControl>

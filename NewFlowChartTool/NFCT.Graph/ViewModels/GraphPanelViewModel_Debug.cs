@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Debug;
 using FlowChart.Common;
+using Microsoft.Msagl.Core.DataStructures;
 using NFCT.Common;
 using NFCT.Common.Events;
 using NFCT.Common.Services;
@@ -108,7 +109,10 @@ namespace NFCT.Graph.ViewModels
                 Logger.LOG($"[debug] {FullPath} bind to a debug agent");
                 _currentDebugAgent.NodeStatusChange += OnNodeStatusChange;
                 if (_currentDebugAgent is ReplayAgent)
+                {
+                    OnSetDebugAgent(_currentDebugAgent);
                     IsReplayMode = true;
+                }
                 else
                     IsReplayMode = false;
             }
@@ -153,6 +157,7 @@ namespace NFCT.Graph.ViewModels
             ContainerLocator.Current.Resolve<IDebugService>().ContinueBreakPoint(_graphInfo);
         }
 
+        #region REPLAY
         void ReplayNext()
         {
             if (_currentDebugAgent is not ReplayAgent agent)
@@ -174,7 +179,7 @@ namespace NFCT.Graph.ViewModels
             agent.Play();
             //var task = agent.Play();
             //task.Start();
-            
+
 
         }
 
@@ -195,5 +200,42 @@ namespace NFCT.Graph.ViewModels
                 return;
             agent.Pause();
         }
+
+        private int _replayMinFrame;
+        public int ReplayMinFrame
+        {
+            get => _replayMinFrame;
+            set => SetProperty(ref _replayMinFrame, value);
+        }
+
+        private int _replayMaxFrame;
+        public int ReplayMaxFrame
+        {
+            get => _replayMaxFrame;
+            set => SetProperty(ref _replayMaxFrame, value);
+        }
+
+        private int _replayCurrentFrame;
+
+        public int ReplayCurrentFrame
+        {
+            get => _replayCurrentFrame;
+            set => SetProperty(ref _replayCurrentFrame, value);
+        }
+
+        void OnSetDebugAgent(DebugAgent agent)
+        {
+            if (agent is ReplayAgent replayAgent)
+            {
+                ReplayMinFrame = (int)replayAgent.StartFrame;
+                ReplayMaxFrame = (int)replayAgent.EndFrame;
+                replayAgent.CurrentFrameChangeEvent += frame => ReplayCurrentFrame = frame;
+            }
+        }
+
+
+
+        #endregion
+
     }
 }

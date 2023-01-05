@@ -116,15 +116,15 @@ namespace FlowChart.Debug
             StartTime = Data.First().Time;
             EndTime = Data.First().Time;
 
-            _currentFrameDataIndex = 0;
+            CurrentFrameDataIndex = 0;
             _currentDataIndex = 0;
         }
 
         public void Next()
         {
-            if (_currentFrameDataIndex >= Data.Count)
+            if (CurrentFrameDataIndex >= Data.Count)
                 return;
-            var currentData = Data[_currentFrameDataIndex].DebugDataList;
+            var currentData = Data[CurrentFrameDataIndex].DebugDataList;
             if (_currentDataIndex < currentData.Count)
             {
                 Accept(currentData[_currentDataIndex]);
@@ -133,7 +133,7 @@ namespace FlowChart.Debug
 
             if (_currentDataIndex >= currentData.Count)
             {
-                _currentFrameDataIndex++;
+                CurrentFrameDataIndex++;
                 _currentDataIndex = 0;
             }
         }
@@ -146,10 +146,10 @@ namespace FlowChart.Debug
                 return;
             }
 
-            if (_currentFrameDataIndex < Data.Count)
+            if (CurrentFrameDataIndex < Data.Count)
             {
-                Accept(Data[_currentFrameDataIndex].DebugDataList);
-                _currentFrameDataIndex++;
+                Accept(Data[CurrentFrameDataIndex].DebugDataList);
+                CurrentFrameDataIndex++;
             }
         }
 
@@ -164,26 +164,26 @@ namespace FlowChart.Debug
             FinishCurrentFrame();
             await Task.Delay(1000);
 
-            while (_currentFrameDataIndex < Data.Count && !_cancellationTokenSource.Token.IsCancellationRequested)
+            while (CurrentFrameDataIndex < Data.Count && !_cancellationTokenSource.Token.IsCancellationRequested)
             {
-                Accept(Data[_currentFrameDataIndex].DebugDataList);
-                _currentFrameDataIndex++;
+                Accept(Data[CurrentFrameDataIndex].DebugDataList);
+                CurrentFrameDataIndex++;
                 await Task.Delay(1000);
             }
         }
 
         void FinishCurrentFrame()
         {
-            if (_currentFrameDataIndex >= Data.Count)
+            if (CurrentFrameDataIndex >= Data.Count)
                 return;
-            var data = Data[_currentFrameDataIndex].DebugDataList;
+            var data = Data[CurrentFrameDataIndex].DebugDataList;
             while (_currentDataIndex < data.Count)
             {
                 Accept(data[_currentDataIndex]);
                 _currentDataIndex++;
             }
 
-            _currentFrameDataIndex++;
+            CurrentFrameDataIndex++;
             _currentDataIndex = 0;
         }
 
@@ -197,7 +197,7 @@ namespace FlowChart.Debug
 
         void Reset()
         {
-            _currentFrameDataIndex = 0;
+            CurrentFrameDataIndex = 0;
             _currentDataIndex = 0;
         }
 
@@ -217,6 +217,19 @@ namespace FlowChart.Debug
         public long EndTime;
 
         private int _currentFrameDataIndex;
+        private int CurrentFrameDataIndex
+        {
+            get => _currentFrameDataIndex;
+            set
+            {
+                _currentFrameDataIndex = value;
+                if(_currentFrameDataIndex>=0 && _currentFrameDataIndex < Data.Count)
+                    CurrentFrameChangeEvent?.Invoke((int)Data[_currentFrameDataIndex].Frame);
+            }
+        }
+
+        public event Action<int>? CurrentFrameChangeEvent;
+
         private int _currentDataIndex;
         private CancellationTokenSource? _cancellationTokenSource;
 
