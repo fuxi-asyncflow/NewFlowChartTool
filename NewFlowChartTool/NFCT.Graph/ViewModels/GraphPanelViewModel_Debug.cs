@@ -189,6 +189,11 @@ namespace NFCT.Graph.ViewModels
             IsQuickMode = true;
             agent.PlayTo(frame);
             IsQuickMode = false;
+
+            foreach (var baseNodeViewModel in Nodes)
+            {
+                baseNodeViewModel.SetDebugRunning();
+            }
         }
 
         void ReplayStop()

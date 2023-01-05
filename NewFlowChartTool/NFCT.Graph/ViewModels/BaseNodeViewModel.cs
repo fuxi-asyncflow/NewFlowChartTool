@@ -204,6 +204,7 @@ namespace NFCT.Graph.ViewModels
         public bool IsDebugMode => Owner.IsDebugMode;
         public int SuccessCount { get; set; }
         public int FailureCount { get; set; }
+        private bool _isRunning { get; set; }
 
         public void EnterDebugMode()
         {
@@ -229,13 +230,20 @@ namespace NFCT.Graph.ViewModels
             RaisePropertyChanged(nameof(IsDebugMode));
         }
 
+        public void SetDebugRunning()
+        {
+            DebugStatusChangeEvent?.Invoke(_isRunning ? DebugNodeStatus.RUNNING : DebugNodeStatus.IDLE);
+        }
+
         public void ChangeDebugStatus(DebugNodeStatus status, bool quickMode = false)
         {
             switch (status)
             {
                 case DebugNodeStatus.IDLE:
+                    _isRunning = false;
                     break;
                 case DebugNodeStatus.RUNNING:
+                    _isRunning = true;
                     break;
                 case DebugNodeStatus.SUCCESS:
                     SuccessCount++;
