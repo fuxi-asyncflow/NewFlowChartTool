@@ -66,8 +66,10 @@
             <StackPanel />
         </DockPanel>
         <Slider
+            x:Name="ReplayFrameSlider"
             Maximum="{Binding ReplayMaxFrame}"
             Minimum="{Binding ReplayMinFrame}"
+            Thumb.DragCompleted="Thumb_OnDragCompleted"
             Visibility="{Binding IsReplayMode, Converter={StaticResource BooleanToVisibilityConverter}}"
             Value="{Binding ReplayCurrentFrame, Mode=TwoWay}" />
     </StackPanel>

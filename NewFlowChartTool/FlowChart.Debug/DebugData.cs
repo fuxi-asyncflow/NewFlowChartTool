@@ -159,6 +159,15 @@ namespace FlowChart.Debug
             Task.Factory.StartNew(AsyncPlay, _cancellationTokenSource.Token);
         }
 
+        public void PlayTo(int frame)
+        {
+            while (CurrentFrameDataIndex < Data.Count && Data[CurrentFrameDataIndex].Frame < frame)
+            {
+                Accept(Data[CurrentFrameDataIndex].DebugDataList);
+                CurrentFrameDataIndex++;
+            }
+        }
+
         async void AsyncPlay()
         {
             FinishCurrentFrame();

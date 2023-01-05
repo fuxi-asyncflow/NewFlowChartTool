@@ -51,6 +51,8 @@ namespace NFCT.Graph.ViewModels
             set => SetProperty(ref _isReplayMode, value);
         }
 
+        public bool IsQuickMode { get; set; }
+
         public DelegateCommand ReplayNextCommand { get; set; }
         public DelegateCommand ReplayNextFrameCommand { get; set; }
         public DelegateCommand ReplayStartCommand { get; set; }
@@ -137,14 +139,14 @@ namespace NFCT.Graph.ViewModels
                 return;
             if (nsd.NewStatus == 2) // 2 is endrun
             {
-                nodeVm.ChangeDebugStatus(nsd.result ? DebugNodeStatus.SUCCESS : DebugNodeStatus.FAILURE);
+                nodeVm.ChangeDebugStatus(nsd.result ? DebugNodeStatus.SUCCESS : DebugNodeStatus.FAILURE, IsQuickMode);
             }
             else if (nsd.NewStatus == 1)
             {
-                nodeVm.ChangeDebugStatus(DebugNodeStatus.RUNNING);
+                nodeVm.ChangeDebugStatus(DebugNodeStatus.RUNNING, IsQuickMode);
             }
             else if(nsd.NewStatus == 0)
-                nodeVm.ChangeDebugStatus(DebugNodeStatus.IDLE);
+                nodeVm.ChangeDebugStatus(DebugNodeStatus.IDLE, IsQuickMode);
         }
 
         public void ContinueBreakPoint()
@@ -177,10 +179,16 @@ namespace NFCT.Graph.ViewModels
             if (_currentDebugAgent is not ReplayAgent agent)
                 return;
             agent.Play();
-            //var task = agent.Play();
-            //task.Start();
+        }
 
-
+        public void ReplayPlayTo(int frame)
+        {
+            if (_currentDebugAgent is not ReplayAgent agent)
+                return;
+            ReplayStop();
+            IsQuickMode = true;
+            agent.PlayTo(frame);
+            IsQuickMode = false;
         }
 
         void ReplayStop()

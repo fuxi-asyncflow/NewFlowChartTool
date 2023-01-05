@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -50,6 +51,14 @@ namespace NFCT.Graph.Views
                 var layout = layoutFactory.Invoke();
                 vm.ChangeLayout(layout);
             }
+        }
+
+        private void Thumb_OnDragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            var vm = DataContext as GraphPaneViewModel;
+            if (vm == null)
+                return;
+            vm.ReplayPlayTo((int)ReplayFrameSlider.Value);
         }
     }
 }

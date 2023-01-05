@@ -229,7 +229,7 @@ namespace NFCT.Graph.ViewModels
             RaisePropertyChanged(nameof(IsDebugMode));
         }
 
-        public void ChangeDebugStatus(DebugNodeStatus status)
+        public void ChangeDebugStatus(DebugNodeStatus status, bool quickMode = false)
         {
             switch (status)
             {
@@ -248,7 +248,8 @@ namespace NFCT.Graph.ViewModels
                 case DebugNodeStatus.ERROR:
                     break;
             }
-            DebugStatusChangeEvent?.Invoke(status);
+            if(!quickMode)
+                DebugStatusChangeEvent?.Invoke(status);
         }
 
         private bool _isBreakPoint;
