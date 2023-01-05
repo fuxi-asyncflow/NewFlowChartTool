@@ -219,6 +219,15 @@ namespace FlowChart.Debug
             Reset();
         }
 
+        public int GetPrevFrame()
+        {
+            if (CurrentFrameDataIndex == 0)
+                return 0;
+            CurrentFrameDataIndex--;
+            return (int)Data[CurrentFrameDataIndex].Frame;
+
+        }
+
         private List<GraphDebugData> Data;
         public long StartFrame;
         public long EndFrame;

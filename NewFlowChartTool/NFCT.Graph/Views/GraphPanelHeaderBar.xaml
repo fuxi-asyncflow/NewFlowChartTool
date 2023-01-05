@@ -41,6 +41,10 @@
                 <StackPanel Orientation="Horizontal" Visibility="{Binding IsReplayMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Button
                         Margin="4,0"
+                        Command="{Binding ReplayPlayToPrevFrameCommand}"
+                        Content="PrevFrame" />
+                    <Button
+                        Margin="4,0"
                         Command="{Binding ReplayStartCommand}"
                         Content="Play" />
                     <Button

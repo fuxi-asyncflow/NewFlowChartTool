@@ -33,6 +33,7 @@ namespace NFCT.Graph.ViewModels
             ReplayStartCommand = new DelegateCommand(ReplayStart);
             ReplayPauseCommand = new DelegateCommand(ReplayPause);
             ReplayStopCommand = new DelegateCommand(ReplayStop);
+            ReplayPlayToPrevFrameCommand = new DelegateCommand(ReplayPlayToPrevFrame);
         }
         private bool _isDebugMode;
         public bool IsDebugMode { get => _isDebugMode; set => SetProperty(ref _isDebugMode, value); }
@@ -58,6 +59,7 @@ namespace NFCT.Graph.ViewModels
         public DelegateCommand ReplayStartCommand { get; set; }
         public DelegateCommand ReplayPauseCommand { get; set; }
         public DelegateCommand ReplayStopCommand { get; set; }
+        public DelegateCommand ReplayPlayToPrevFrameCommand { get; set; }
 
         public void EnterDebugMode(GraphInfo? graphInfo = null)
         {
@@ -194,6 +196,14 @@ namespace NFCT.Graph.ViewModels
             {
                 baseNodeViewModel.SetDebugRunning();
             }
+        }
+
+        public void ReplayPlayToPrevFrame()
+        {
+            if (_currentDebugAgent is not ReplayAgent agent)
+                return;
+            ReplayPlayTo(agent.GetPrevFrame());
+            Logger.DBG($"prev frame {ReplayCurrentFrame}");
         }
 
         void ReplayStop()
