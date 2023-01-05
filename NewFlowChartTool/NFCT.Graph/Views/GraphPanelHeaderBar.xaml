@@ -11,7 +11,12 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/NFCT.Common;component/IconsDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel>
         <DockPanel LastChildFill="True">
@@ -42,27 +47,33 @@
                     <Button
                         Margin="4,0"
                         Command="{Binding ReplayPlayToPrevFrameCommand}"
-                        Content="PrevFrame" />
+                        Content="{StaticResource Icon_PrevFrame}"
+                        ToolTip="Prev Frame" />
                     <Button
                         Margin="4,0"
                         Command="{Binding ReplayStartCommand}"
-                        Content="Play" />
+                        Content="{StaticResource Icon_RunNoColor}"
+                        ToolTip="Run" />
                     <Button
                         Margin="4,0"
                         Command="{Binding ReplayNextCommand}"
-                        Content="Next" />
+                        Content="{StaticResource Icon_Next}"
+                        ToolTip="Next Data" />
                     <Button
                         Margin="4,0"
                         Command="{Binding ReplayNextFrameCommand}"
-                        Content="NextFrame" />
-                    <Button
-                        Margin="4,0"
-                        Command="{Binding ReplayStopCommand}"
-                        Content="Stop" />
+                        Content="{StaticResource Icon_NextFrame}"
+                        ToolTip="Next Frame" />
                     <Button
                         Margin="4,0"
                         Command="{Binding ReplayPauseCommand}"
-                        Content="Pause" />
+                        Content="{StaticResource Icon_Pause}"
+                        ToolTip="Pause" />
+                    <Button
+                        Margin="4,0"
+                        Command="{Binding ReplayStopCommand}"
+                        Content="{StaticResource Icon_StopNoColor}"
+                        ToolTip="Stop" />
                     <TextBlock MinWidth="20" Text="{Binding ReplayCurrentFrame}" />
                 </StackPanel>
                 <TextBlock Background="DarkGreen" Text="{Binding FullPath}" />

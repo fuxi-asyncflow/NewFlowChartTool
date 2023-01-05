@@ -28,6 +28,13 @@
 
         <ResourceDictionary Source="Icons/Search.xaml" />
 
+        <ResourceDictionary Source="Icons/NextFrame.xaml" />
+        <ResourceDictionary Source="Icons/PreviousFrame.xaml" />
+        <ResourceDictionary Source="Icons/RunOutlineNoColor.xaml" />
+        <ResourceDictionary Source="Icons/Pause.xaml" />
+        <ResourceDictionary Source="Icons/StopNoColor.xaml" />
+        <ResourceDictionary Source="Icons/Next.xaml" />
+
 
 
     </ResourceDictionary.MergedDictionaries>
