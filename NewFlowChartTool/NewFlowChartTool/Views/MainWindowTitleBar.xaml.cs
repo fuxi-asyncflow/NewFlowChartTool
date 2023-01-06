@@ -70,7 +70,8 @@ namespace NewFlowChartTool.Views
                 MaximizeOrRestore();
                 return;
             }
-            MainWindow.DragMove();
+            if(e.ChangedButton == MouseButton.Left)
+                MainWindow.DragMove();
         }
 
         private void ButtonRestore_OnClick(object sender, RoutedEventArgs e)
