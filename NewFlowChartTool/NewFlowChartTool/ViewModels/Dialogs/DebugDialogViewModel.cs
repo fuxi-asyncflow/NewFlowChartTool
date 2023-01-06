@@ -127,10 +127,11 @@ namespace NewFlowChartTool.ViewModels
         public int StartPort { get => _startPort; set => SetProperty(ref _startPort, value); }
         private int _endPort;
         public int EndPort { get => _endPort; set => SetProperty(ref _endPort, value); }
-        public bool IsReplay { get; set; }
+        public bool IsReplay => ReplayFile.Inst.IsLoadFromFile;
 
         public void GetGraphList()
         {
+            ReplayFile.Inst.Reset();
             GraphList.Clear();
           
             _netManager.BroadCast(Host, StartPort, EndPort, new GetChartListMessage(){ChartName = "", ObjectName = ""});
@@ -182,11 +183,11 @@ namespace NewFlowChartTool.ViewModels
         {
             _netManager.Stop();
             _agents.Clear();
-            IsReplay = false;
         }
 
         public void QuickDebug(Graph graph)
         {
+            ReplayFile.Inst.Reset();
             Task.Factory.StartNew(delegate { _quickDebug(graph); });
         }
 
@@ -236,7 +237,6 @@ namespace NewFlowChartTool.ViewModels
             var fileName = dialog.FileName;
 
             // load file
-            IsReplay = true;
             var replayFile = ReplayFile.Inst;
             GraphList.Clear();
             replayFile.Load(fileName);

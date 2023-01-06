@@ -91,6 +91,7 @@ namespace NFCT.Graph.ViewModels
             _graphInfo = null;
             Logger.LOG($"[debug] {FullPath} exit debug mode");
             _currentDebugAgent = null;
+            _agents?.ForEach(agent => agent.Stop());
             _agents = null;
             foreach (var baseNodeViewModel in Nodes)
             {

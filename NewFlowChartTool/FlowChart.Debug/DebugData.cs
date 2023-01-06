@@ -101,6 +101,8 @@ namespace FlowChart.Debug
 
         }
 
+        public virtual void Stop() {}
+
         public delegate void NodeStatusChangeDelegate(NodeStatusData info);
         public event NodeStatusChangeDelegate? NodeStatusChange;
         public event Action<VariablesStatusData>? VariableStatusChangeEvent;
@@ -111,11 +113,13 @@ namespace FlowChart.Debug
         public ReplayAgent(List<GraphDebugData> data)
         {
             Data = data;
-
-            StartFrame = Data.First().Frame;
-            EndFrame = Data.Last().Frame;
-            StartTime = Data.First().Time;
-            EndTime = Data.First().Time;
+            if (Data.Count > 0)
+            {
+                StartFrame = Data.First().Frame;
+                EndFrame = Data.Last().Frame;
+                StartTime = Data.First().Time;
+                EndTime = Data.First().Time;
+            }
 
             CurrentFrameDataIndex = 0;
             _currentDataIndex = 0;
@@ -211,7 +215,7 @@ namespace FlowChart.Debug
             _currentDataIndex = 0;
         }
 
-        public void Stop()
+        public override void Stop()
         {
             if (_cancellationTokenSource != null)
             {

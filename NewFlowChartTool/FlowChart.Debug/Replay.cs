@@ -161,6 +161,7 @@ namespace FlowChart.Debug
         public Dictionary<Guid, GraphInfo> GraphInfoDict { get; set; }
         public Dictionary<string, GraphDebugInfo> GraphDebugInfoDict { get; set; }
         private bool _isLoadFromFile;
+        public bool IsLoadFromFile => _isLoadFromFile;
 
 
         public void AddDebugData(GraphDebugData data)
@@ -399,8 +400,6 @@ namespace FlowChart.Debug
                 Logger.LOG($"save debug data {fileName}");
                 Save(fileName);
             }
-
-            Reset();
             // Load(fileName);
         }
 
