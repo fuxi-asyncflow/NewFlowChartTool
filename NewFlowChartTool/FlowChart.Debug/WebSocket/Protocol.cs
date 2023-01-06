@@ -150,6 +150,18 @@ namespace FlowChart.Debug.WebSocket
                     }
                     ret.DebugDataList.Add(nsd);
                 }
+                else if (typeStr == "variable_status")
+                {
+                    var vsd = new VariablesStatusData()
+                    {
+                        Id = dataObj.GetProperty("id").GetInt32(),
+                        VariableName = dataObj.GetProperty("variable_name").GetString(),
+                        NodeUid = dataObj.GetProperty("node_uid").GetString(),
+                        OldValue = dataObj.GetProperty("old_value").GetString(),
+                        NewValue = dataObj.GetProperty("new_value").GetString(),
+                    };
+                    ret.DebugDataList.Add(vsd);
+                }
             }
             return ret;
         }

@@ -30,6 +30,8 @@ namespace NFCT.Graph.ViewModels
             ModifyVariableCommand = new DelegateCommand(ModifyVariable);
             ConfirmCommand = new DelegateCommand(Confirm);
             CancelCommand = new DelegateCommand(Cancel);
+
+            _varDict = new Dictionary<string, GraphVariableViewModel>();
         }
 
         public GraphPaneViewModel _graphVm;
@@ -151,6 +153,41 @@ namespace NFCT.Graph.ViewModels
         {
             IsEditing = false;
         }
+
+        #region DEBUG
+
+        private Dictionary<string, GraphVariableViewModel> _varDict;
+
+        public void OnEnterDebugMode()
+        {
+            _varDict.Clear();
+            foreach (var varVm in Variables)
+            {
+                varVm.Value = "-";
+                _varDict.Add(varVm.Name, varVm);
+            }
+        }
+
+        public void OnExitDebugMode()
+        {
+            foreach (var varVm in Variables)
+            {
+                varVm.ResetValue();
+            }
+        }
+
+        public void UpdateDebugValue(string varName, string varValue)
+        {
+            if (_varDict.TryGetValue(varName, out var vm))
+            {
+                vm.Value = varValue;
+            }
+        }
+
+
+
+        #endregion
+
 
     }
 }

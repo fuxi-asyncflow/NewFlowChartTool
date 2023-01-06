@@ -93,7 +93,7 @@ namespace FlowChart.Debug
 
         public void Accept(VariablesStatusData vsd)
         {
-
+            VariableStatusChangeEvent?.Invoke(vsd);
         }
 
         public void Accept(EventStatusData esd)
@@ -103,6 +103,7 @@ namespace FlowChart.Debug
 
         public delegate void NodeStatusChangeDelegate(NodeStatusData info);
         public event NodeStatusChangeDelegate? NodeStatusChange;
+        public event Action<VariablesStatusData>? VariableStatusChangeEvent;
     }
 
     public class ReplayAgent : DebugAgent

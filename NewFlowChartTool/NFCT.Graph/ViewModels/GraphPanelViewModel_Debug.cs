@@ -79,6 +79,7 @@ namespace NFCT.Graph.ViewModels
             {
                 baseNodeViewModel.EnterDebugMode();
             }
+            VariablesPanel.OnEnterDebugMode();
         }
 
         public void ExitDebugMode()
@@ -95,6 +96,7 @@ namespace NFCT.Graph.ViewModels
             {
                 baseNodeViewModel.ExitDebugMode();
             }
+            VariablesPanel.OnExitDebugMode();
         }
 
         private DebugAgent? _currentDebugAgent { get; set; }
@@ -112,6 +114,7 @@ namespace NFCT.Graph.ViewModels
                 _currentDebugAgent = _agents.First();
                 Logger.LOG($"[debug] {FullPath} bind to a debug agent");
                 _currentDebugAgent.NodeStatusChange += OnNodeStatusChange;
+                _currentDebugAgent.VariableStatusChangeEvent += OnVariableStatusChange;
                 if (_currentDebugAgent is ReplayAgent)
                 {
                     OnSetDebugAgent(_currentDebugAgent);
@@ -149,6 +152,11 @@ namespace NFCT.Graph.ViewModels
             }
             else if(nsd.NewStatus == 0)
                 nodeVm.ChangeDebugStatus(DebugNodeStatus.IDLE, IsQuickMode);
+        }
+
+        void OnVariableStatusChange(VariablesStatusData vsd)
+        {
+            VariablesPanel.UpdateDebugValue(vsd.VariableName, vsd.NewValue);
         }
 
         public void ContinueBreakPoint()

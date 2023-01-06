@@ -16,6 +16,7 @@ namespace NFCT.Graph.ViewModels
         public GraphVariableViewModel(FlowChart.Core.Variable v)
         {
             _variable = v;
+            _value = _variable.DefaultValue;
             v.VariableChangeEvent += OnVariableChange;
         }
         private FlowChart.Core.Variable _variable;
@@ -24,7 +25,18 @@ namespace NFCT.Graph.ViewModels
         public string Name => _variable.Name;
 
         public string Type => _variable.Type == null ? "" : _variable.Type.Name;
-        public string? Value => _variable.DefaultValue;
+        private string? _value;
+
+        public string? Value
+        {
+            get => _value;
+            set => SetProperty(ref _value, value);
+        }
+
+        public void ResetValue()
+        {
+            Value = _variable.DefaultValue;
+        }
         public string? Description => _variable.Description;
 
         public void OnVariableChange(Variable v)
@@ -32,11 +44,8 @@ namespace NFCT.Graph.ViewModels
             Debug.Assert(v == _variable);
             RaisePropertyChanged(nameof(Name));
             RaisePropertyChanged(nameof(Type));
-            RaisePropertyChanged(nameof(Value));
+            _value = _variable.DefaultValue;
             RaisePropertyChanged(nameof(Description));
-
         }
-
-        
     }
 }
