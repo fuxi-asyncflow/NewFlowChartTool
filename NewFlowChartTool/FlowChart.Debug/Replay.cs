@@ -151,6 +151,7 @@ namespace FlowChart.Debug
 
         public void Reset()
         {
+            _isLoadFromFile = false;
             Data.Clear();
             GraphInfoDict.Clear();
             GraphDebugInfoDict.Clear();
@@ -159,6 +160,7 @@ namespace FlowChart.Debug
         public List<GraphDebugData> Data { get; set; }
         public Dictionary<Guid, GraphInfo> GraphInfoDict { get; set; }
         public Dictionary<string, GraphDebugInfo> GraphDebugInfoDict { get; set; }
+        private bool _isLoadFromFile;
 
 
         public void AddDebugData(GraphDebugData data)
@@ -233,6 +235,7 @@ namespace FlowChart.Debug
         {
             using var ms = new FileStream(fileName, FileMode.Open, FileAccess.Read);
             using var br = new BinaryReader(ms);
+            _isLoadFromFile = true;
             Load(br);
         }
 
@@ -387,12 +390,15 @@ namespace FlowChart.Debug
 
         public void Stop()
         {
-            var timeStr = DateTime.Now.ToString("yyyy-MM-dd-HHmmss");
-            var fileName = $"debug_{timeStr}.dat";
-            var exefolder = FileHelper.GetExeFolder();
-            fileName = System.IO.Path.Combine(exefolder, "debug", fileName);
-            Logger.LOG($"save debug data {fileName}");
-            Save(fileName);
+            if (!_isLoadFromFile)
+            {
+                var timeStr = DateTime.Now.ToString("yyyy-MM-dd-HHmmss");
+                var fileName = $"debug_{timeStr}.dat";
+                var exefolder = FileHelper.GetExeFolder();
+                fileName = System.IO.Path.Combine(exefolder, "debug", fileName);
+                Logger.LOG($"save debug data {fileName}");
+                Save(fileName);
+            }
 
             Reset();
             // Load(fileName);
