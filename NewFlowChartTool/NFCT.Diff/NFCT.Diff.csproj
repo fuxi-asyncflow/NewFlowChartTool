@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FlowChart.Common\FlowChart.Common.csproj" />
+    <ProjectReference Include="..\FlowChart\FlowChart.csproj" />
+    <ProjectReference Include="..\NFCT.Common\NFCT.Common.csproj" />
+  </ItemGroup>
+
+</Project>

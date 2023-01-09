@@ -1,0 +1,85 @@
+﻿<UserControl
+    x:Class="NFCT.Diff.Views.VersionControlPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:NFCT.Diff.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:vm="clr-namespace:NFCT.Diff.ViewModels"
+    d:DataContext="{d:DesignInstance vm:VersionControlPanelViewModel,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/NFCT.Common;component/IconsDictionary.xaml" />
+                <ResourceDictionary Source="/AvalonDock.Themes.VS2013;component/DarkTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <TreeView
+            Grid.Column="0"
+            ItemsSource="{Binding Files}"
+            TreeViewItem.Expanded="TreeViewItem_OnExpanded">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type vm:FileItemViewModel}" ItemsSource="{Binding Graphs}">
+                    <StackPanel Margin="2" Orientation="Horizontal">
+                        <Viewbox Child="{StaticResource Icon_FolderClosed}" />
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding Name}" />
+                    </StackPanel>
+
+                </HierarchicalDataTemplate>
+                <DataTemplate DataType="{x:Type vm:GraphItemViewModel}">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}" />
+                    </StackPanel>
+                </DataTemplate>
+                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{DynamicResource InactiveSelectionHighlightColor}" />
+            </TreeView.Resources>
+            <TreeView.ItemContainerStyle>
+                <Style BasedOn="{StaticResource CustomTreeViewItemStyle}" TargetType="TreeViewItem">
+                    <EventSetter Event="MouseDoubleClick" Handler="GraphItem_OnDoubleClick" />
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
+        <DataGrid
+            Grid.Column="1"
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            ItemsSource="{Binding Versions}">
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <EventSetter Event="MouseDoubleClick" Handler="OnDoubleClick_VersionItem" />
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Width="40*"
+                    Binding="{Binding Version, Mode=OneWay}"
+                    Header="revision" />
+                <DataGridTextColumn
+                    Width="40*"
+                    Binding="{Binding Time, Mode=OneWay}"
+                    Header="date" />
+                <DataGridTextColumn
+                    Width="20*"
+                    Binding="{Binding Author, Mode=OneWay}"
+                    Header="author" />
+                <DataGridTextColumn Binding="{Binding Message, Mode=OneWay}" Header="message" />
+            </DataGrid.Columns>
+
+        </DataGrid>
+    </Grid>
+</UserControl>
