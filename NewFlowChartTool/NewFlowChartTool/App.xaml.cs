@@ -24,6 +24,7 @@ using Prism.Ioc;
 using Prism.Unity;
 using Prism.Events;
 using NFCT.Graph.Views;
+using NFCT.Diff.ViewModels;
 
 
 namespace NewFlowChartTool
@@ -82,6 +83,8 @@ namespace NewFlowChartTool
 
             containerRegistry.RegisterSingleton<MainWindowStatusBarViewModel>();
             containerRegistry.RegisterSingleton<IStatusBarService, MainWindowStatusBarViewModel>();
+
+            containerRegistry.RegisterSingleton<VersionControlPanelViewModel>();
 
             //throw new NotImplementedException();
         }

@@ -23,6 +23,7 @@ using NewFlowChartTool.Utility;
 using NFCT.Common;
 using NFCT.Common.Events;
 using NFCT.Common.Services;
+using NFCT.Diff.ViewModels;
 using NFCT.Graph.ViewModels;
 using Prism.Ioc;
 using Prism.Services.Dialogs;
@@ -49,7 +50,7 @@ namespace NewFlowChartTool.ViewModels
             
             _dialogService = dialogService;
             _statusBarService = statusBarService;
-            _openedGraphs = new ObservableCollection<GraphPaneViewModel>();
+            _openedGraphs = new ObservableCollection<BindableBase>();
             CurrentProject = null;
 
             OpenProjectCommand = new DelegateCommand(ChooseProjectPath, () => CurrentProject == null);
@@ -68,6 +69,7 @@ namespace NewFlowChartTool.ViewModels
 
             ScreenShotCommand = new DelegateCommand(ScreenShot);
             SearchNodeCommand = new DelegateCommand(SearchNode);
+            DiffCommand = new DelegateCommand(Diff);
 
             SelectedLang = Lang.Chinese;
             SelectedTheme = Theme.Dark;
@@ -114,13 +116,27 @@ namespace NewFlowChartTool.ViewModels
         public Theme SelectedTheme;
         public Lang SelectedLang;
 
-        public GraphPaneViewModel? _activeGraph;
-        public GraphPaneViewModel? ActiveGraph { get => _activeGraph; set => SetProperty(ref _activeGraph, value, nameof(ActiveGraph)); }
+        public BindableBase? _activeDoc;
+        public GraphPaneViewModel? ActiveGraph { get => _activeDoc as GraphPaneViewModel; set => ActiveDoc = value; }
+        public BindableBase? ActiveDoc
+        {
+            get => _activeDoc;
+            set => SetProperty(ref _activeDoc, value, nameof(ActiveDoc));
+        }
 
-        private ObservableCollection<GraphPaneViewModel> _openedGraphs;    
-        public ObservableCollection<GraphPaneViewModel> OpenedGraphs
+        private ObservableCollection<BindableBase> _openedGraphs;    
+        public ObservableCollection<BindableBase> OpenedGraphs
         {
             get { return _openedGraphs; }
+        }
+
+        public void ForEachOpenedGraphs(Action<GraphPaneViewModel> action)
+        {
+            foreach (var vm in _openedGraphs)
+            {
+                if(vm is GraphPaneViewModel gvm)
+                    action.Invoke(gvm);
+            }
         }
 
         #region COMMAND
@@ -143,6 +159,7 @@ namespace NewFlowChartTool.ViewModels
 
         public DelegateCommand ScreenShotCommand { get; set; }
         public DelegateCommand SearchNodeCommand { get; set; }
+        public DelegateCommand DiffCommand { get; set; }
 
         public void TestOpenProject()
         {
@@ -281,12 +298,11 @@ namespace NewFlowChartTool.ViewModels
                 return;
             Logger.LOG($"save project");
             CurrentProject.Save();
-            foreach (var graphVm in OpenedGraphs)
+            ForEachOpenedGraphs(graphVm =>
             {
                 if (graphVm.IsDirty)
                     graphVm.IsDirty = false;
-            }
-
+            });
         }
 
         public void CloseProject()
@@ -336,10 +352,10 @@ namespace NewFlowChartTool.ViewModels
         public void StopDebug()
         {
             DebugDialogViewModel.Inst?.StopDebug();
-            foreach (var graphVm in OpenedGraphs)
+            ForEachOpenedGraphs(graphVm =>
             {
                 graphVm.ExitDebugMode();
-            }
+            });
         }
 
         void Hotfix()
@@ -392,6 +408,26 @@ namespace NewFlowChartTool.ViewModels
             }
         }
 
+        void Diff()
+        {
+            var vcpVm = ContainerLocator.Current.Resolve<VersionControlPanelViewModel>();
+            foreach (var vm in OpenedGraphs)
+            {
+                if (vm == vcpVm)
+                {
+                    ActiveDoc = vm;
+                    return;
+                }
+            }
+
+            if (CurrentProject != null)
+            {
+                OpenedGraphs.Add(vcpVm);
+                vcpVm.OpenProject(CurrentProject);
+                ActiveDoc = vcpVm;
+            }
+        }
+
         public async void OpenGraph(string path)
         {
             if (CurrentProject == null)
@@ -411,31 +447,37 @@ namespace NewFlowChartTool.ViewModels
         {
             EventHelper.Pub<GraphOpenEvent, Graph>(graph);
             PluginManager.Inst.Report(new OpenGraphEvent(graph.Path));
-            foreach (var gvm in OpenedGraphs)
+            bool isOpened = false;
+            ForEachOpenedGraphs(gvm =>
             {
                 if (gvm.Graph == graph)
                 {
                     ActiveGraph = gvm;
                     ActiveGraph.MoveNodeToCenter(centerNode);
-                    return;
+                    isOpened = true;
                 }
-            }
+            });
+            if (isOpened)
+                return;
 
             if (!graph.IsLoaded && graph.LazyLoadCompletionSource != null)
                 await graph.LazyLoadCompletionSource.Task;
 
             OpenedGraphs.Add(new GraphPaneViewModel(graph));
-            ActiveGraph = OpenedGraphs.Last();
-            ActiveGraph.InitCenterNode = centerNode;
-            ActiveGraph.Build();
+            if (OpenedGraphs.Last() is GraphPaneViewModel graphVm)
+            {
+                ActiveGraph = graphVm;
+                ActiveGraph.InitCenterNode = centerNode;
+                ActiveGraph.Build();
+            }
         }
 
         public void OnCloseGraph(Graph graph)
         {
             GraphPaneViewModel? vm = null;
-            foreach (var gvm in OpenedGraphs)
+            foreach (var v in OpenedGraphs)
             {
-                if (gvm.Graph == graph)
+                if(v is GraphPaneViewModel gvm && gvm.Graph == graph)
                 {
                     vm = gvm;
                 }
@@ -474,11 +516,11 @@ namespace NewFlowChartTool.ViewModels
 
         void OnNewDebugAgentEvent(DebugAgent agent)
         {
-            foreach (var graphVm in OpenedGraphs)
+            ForEachOpenedGraphs(graphVm =>
             {
-                if(graphVm.IsDebugMode && graphVm.FullPath == agent.GraphName)
+                if (graphVm.IsDebugMode && graphVm.FullPath == agent.GraphName)
                     graphVm.UpdateAgents(DebugDialogViewModel.Inst.GetAgents(agent.GraphName));
-            }
+            });
         }
 
         void OnStartDebugGraphEvent(GraphInfo? graphInfo)
@@ -494,14 +536,14 @@ namespace NewFlowChartTool.ViewModels
                 OnOpenGraph(graph);
             }
 
-            foreach (var graphVm in OpenedGraphs)
+            ForEachOpenedGraphs(graphVm =>
             {
                 if (graphVm.Graph == graph)
                 {
                     graphVm.EnterDebugMode(graphInfo);
                     graphVm.UpdateAgents(DebugDialogViewModel.Inst.GetAgents(graphInfo.GraphName));
                 }
-            }
+            });
         }
     }
 }

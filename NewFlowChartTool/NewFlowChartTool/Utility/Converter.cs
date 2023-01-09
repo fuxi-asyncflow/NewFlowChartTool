@@ -14,6 +14,7 @@ using FlowChart.Type;
 using NewFlowChartTool.ViewModels;
 using NFCT.Common;
 using NFCT.Graph.ViewModels;
+using Prism.Mvvm;
 using Type = System.Type;
 
 namespace NewFlowChartTool.Utility.Converter
@@ -22,14 +23,14 @@ namespace NewFlowChartTool.Utility.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is GraphPaneViewModel)
+            if (value is BindableBase)
                 return value;
             return Binding.DoNothing;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is GraphPaneViewModel)
+            if (value is BindableBase)
                 return value;
             return Binding.DoNothing;
         }

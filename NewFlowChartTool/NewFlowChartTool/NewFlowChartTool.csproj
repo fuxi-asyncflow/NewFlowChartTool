@@ -33,6 +33,7 @@
     <ProjectReference Include="..\FlowChartTest\FlowChartTest.csproj" />
     <ProjectReference Include="..\FlowChart\FlowChart.csproj" />
     <ProjectReference Include="..\NFCT.Common\NFCT.Common.csproj" />
+    <ProjectReference Include="..\NFCT.Diff\NFCT.Diff.csproj" />
     <ProjectReference Include="..\NFCT.FlowChart\NFCT.FlowChart.csproj" />
     <ProjectReference Include="..\NFCT.Graph\NFCT.Graph.csproj" />
     <ProjectReference Include="..\ProjectFactory\ProjectFactory.csproj" />

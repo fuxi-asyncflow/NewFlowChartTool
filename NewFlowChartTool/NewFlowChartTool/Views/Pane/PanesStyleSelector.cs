@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using NewFlowChartTool.Views;
 using NewFlowChartTool.ViewModels;
 using NFCT.Graph.ViewModels;
+using NFCT.Diff.ViewModels;
 
 namespace NewFlowChartTool.Views.Pane
 {
@@ -26,7 +27,7 @@ namespace NewFlowChartTool.Views.Pane
             if (item is OutputPanelViewModel)
                 return OutputPanelStyle;
 
-            if (item is GraphPaneViewModel)
+            if (item is GraphPaneViewModel || item is VersionControlPanelViewModel)
                 return GraphPaneStyle;
             if (item is TypePanelViewModel)
                 return TypePanelStyle;
@@ -38,10 +39,13 @@ namespace NewFlowChartTool.Views.Pane
     class PanesTemplateSelector : DataTemplateSelector
     {
         public DataTemplate? GraphViewTemplate { get; set; }
+        public DataTemplate? VersionControlPanelTemplate { get; set; }
         public override DataTemplate? SelectTemplate(object item, DependencyObject container)
         {
             if (item is GraphPaneViewModel)
                 return GraphViewTemplate;
+            if (item is VersionControlPanelViewModel)
+                return VersionControlPanelTemplate;
             return base.SelectTemplate(item, container);
         }
     }
