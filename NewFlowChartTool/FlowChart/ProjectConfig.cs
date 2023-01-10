@@ -115,12 +115,15 @@ namespace FlowChart
         {
             GraphRoots = new List<GraphRootConfig>();
             _graphRootsDict = new Dictionary<string, GraphRootConfig>();
+            Output = ".";
         }
 
         [JsonPropertyName("name")]
         public string Name;
         [JsonPropertyName("graph_roots")]
         public List<GraphRootConfig> GraphRoots { get; set; }
+        [JsonPropertyName("output")]
+        public string Output { get; set; }
         [JsonPropertyName("standalone_generate_file")]
         public bool StandaloneGenerateFile { get; set; }
 

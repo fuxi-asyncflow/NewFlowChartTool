@@ -177,7 +177,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 codeFiles = codeFiles.ConvertAll(line => $"\"{line.Replace('\\', '/')}\",");
                 codeFiles.Insert(0, "return {");
                 codeFiles.Add("}");
-                FileHelper.Save(Path.Combine(Project.Path, "all_flowcharts.lua"), codeFiles);
+                FileHelper.Save(Path.Combine(Project.Path, Project.Config.Output, "all_flowcharts.lua"), codeFiles);
             }
         }
 
