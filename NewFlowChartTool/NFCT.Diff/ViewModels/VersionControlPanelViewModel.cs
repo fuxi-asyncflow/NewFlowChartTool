@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,13 +46,28 @@ namespace NFCT.Diff.ViewModels
         {
             DummyGraph = new GraphItemViewModel("__dummy");
         }
+
         public GraphItemViewModel(string name)
         {
             Name = name;
         }
 
+        public GraphItemViewModel(DiffGraph graph)
+        {
+            Graph = graph;
+            if (graph.OldGraph != null)
+            {
+                Name = graph.OldGraph.Name;
+            }
+            else if (graph.NewGraph != null)
+            {
+                Name = graph.NewGraph.Name;
+            }
+        }
+
         public static GraphItemViewModel DummyGraph { get; set; }
         public string Name { get; set; }
+        public DiffGraph? Graph { get; set; }
     }
 
     public class VersionControlPanelViewModel: BindableBase
@@ -109,7 +125,9 @@ namespace NFCT.Diff.ViewModels
                 return;
             var fileName = fvm.Name;
             var files = _versionControl.ExportFiles(fileName, _version);
-            CompareProject.Diff(Project, files.Item1, files.Item2);
+            var diffGraphs = CompareProject.Diff(Project, files.Item1, files.Item2);
+            fvm.Graphs.Clear();
+            diffGraphs.ForEach(graph => fvm.Graphs.Add(new GraphItemViewModel(graph)));
         }
         
     }

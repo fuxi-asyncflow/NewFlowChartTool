@@ -80,6 +80,11 @@ namespace ProjectFactory.DefaultProjectFactory
         public static YamlScalarNode YAML_ISSUBCHART = new YamlScalarNode("is_subgraph");
         public static YamlScalarNode YAML_RETURNTYPE = new YamlScalarNode("return_type");
 
+        public Loader()
+        {
+            GroupDict = new Dictionary<string, Group>();
+        }
+
         public void Load(Project project)
         {
             Project = project;

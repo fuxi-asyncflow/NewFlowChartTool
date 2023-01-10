@@ -62,8 +62,8 @@ namespace FlowChart.Diff
 
         public static List<DiffGraph> Diff(Project project, string file1, string file2)
         {
-            var p1 = new SimpleProject(project.Factory);
-            var p2 = new SimpleProject(project.Factory);
+            var p1 = new SimpleProject(project.Factory.Clone());
+            var p2 = new SimpleProject(project.Factory.Clone());
             p1.Path = project.Path;
             p2.Path = project.Path;
             var cfg1 = project.Config.Clone();
@@ -75,12 +75,12 @@ namespace FlowChart.Diff
 
             cfg1.GraphRoots.Clear();
             p1.Config = cfg1;
-            p1.Load();
+            //p1.Load();
             p1.Factory.LoadGraph(p1, System.IO.File.ReadAllLines(file1).ToList());
 
             cfg2.GraphRoots.Clear();
             p2.Config = cfg2;
-            p2.Load();
+            //p2.Load();
             p2.Factory.LoadGraph(p2, System.IO.File.ReadAllLines(file2).ToList());
 
             var compare = new CompareProject(p1, p2);

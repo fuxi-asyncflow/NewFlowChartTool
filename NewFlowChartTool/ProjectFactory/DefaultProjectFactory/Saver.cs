@@ -27,6 +27,11 @@ namespace ProjectFactory.DefaultProjectFactory
         private Saver saver;
         private Loader loader;
 
+        public IProjectFactory Clone()
+        {
+            return new DefaultProjectFactory();
+        }
+
         public DefaultProjectFactory()
         {
             saver = new Saver();
@@ -61,6 +66,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public void LoadGraph(Project project, List<string> lines)
         {
+            loader.Project = project;
             loader.CustomLoadGraphFile(lines);
         }
     }

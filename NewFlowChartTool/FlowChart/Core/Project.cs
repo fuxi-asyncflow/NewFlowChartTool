@@ -20,6 +20,7 @@ namespace FlowChart.Core
         void Save(Project project);
         void Save(Graph graph, List<string> outputs, List<string> generates);
         void LoadGraph(Project project, List<string> lines);
+        IProjectFactory Clone();
     }
 
     [LuaCallCSharp]

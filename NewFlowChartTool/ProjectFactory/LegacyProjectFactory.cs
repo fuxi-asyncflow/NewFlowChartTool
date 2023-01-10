@@ -42,6 +42,11 @@ namespace ProjectFactory
         {
         }
 
+        public IProjectFactory Clone()
+        {
+            return new LegacyProjectFactory();
+        }
+
         public bool OpenLegacyProject(string xmlPath)
         {
             var fi = new FileInfo(xmlPath);

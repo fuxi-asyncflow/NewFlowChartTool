@@ -260,6 +260,11 @@ namespace ProjectFactory
         {
         }
 
+        public IProjectFactory Clone()
+        {
+            return new TestProjectFactory();
+        }
+
         public FileStream GetFileStream(string fileName)
         {
             if (FileDict.ContainsKey(fileName))
