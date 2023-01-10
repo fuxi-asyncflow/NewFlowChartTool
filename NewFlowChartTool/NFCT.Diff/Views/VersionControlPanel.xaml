@@ -27,6 +27,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <TreeView
+            x:Name="DiffTreeView"
             Grid.Column="0"
             ItemsSource="{Binding Files}"
             TreeViewItem.Expanded="TreeViewItem_OnExpanded">

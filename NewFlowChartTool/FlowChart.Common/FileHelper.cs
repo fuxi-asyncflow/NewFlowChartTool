@@ -70,7 +70,13 @@ namespace FlowChart.Common
 
         public static string GetFolder(string subDir)
         {
-            return Path.Combine(GetExeFolder(), subDir);
+            var path =  Path.Combine(GetExeFolder(), subDir);
+            if (System.IO.Directory.Exists(path))
+            {
+                System.IO.Directory.CreateDirectory(path);
+            }
+            var di = new DirectoryInfo(path);
+            return di.FullName;
         }
 
         public static void Save(string path, string content)

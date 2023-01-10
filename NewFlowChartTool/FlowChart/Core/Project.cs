@@ -19,6 +19,7 @@ namespace FlowChart.Core
         void Create(Project project);
         void Save(Project project);
         void Save(Graph graph, List<string> outputs, List<string> generates);
+        void LoadGraph(Project project, List<string> lines);
     }
 
     [LuaCallCSharp]
@@ -48,12 +49,12 @@ namespace FlowChart.Core
 
         #region PROPERTIES
 
-        public ProjectConfig Config;
+        public ProjectConfig? Config;
         public string Path { get; set; }
         public Folder Root { get; set; }
         public Dictionary<string, Type.Type> TypeDict { get; set; }
         public Dictionary<string, Type.EventType> EventDict { get; set; }
-        IProjectFactory Factory { get; set; }
+        public IProjectFactory Factory { get; private set; }
         public bool IsAsyncLoad { get; set; }
         public Dictionary<string, Graph> GraphDict { get; set; }
         public Builder Builder { get; set; }
@@ -116,7 +117,7 @@ namespace FlowChart.Core
             return true;
         }
 
-        public Type.Type? GetType(string typeName)
+        public virtual Type.Type? GetType(string typeName)
         {
             Type.Type? type = null;
             TypeDict.TryGetValue(typeName, out type);

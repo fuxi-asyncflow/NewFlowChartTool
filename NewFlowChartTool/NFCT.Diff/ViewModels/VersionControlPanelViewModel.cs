@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Core;
+using FlowChart.Diff;
 using NFCT.Diff.Utils;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -69,6 +70,8 @@ namespace NFCT.Diff.ViewModels
         public ObservableCollection<FileItemViewModel> Files { get; set; }
         private IVersionControlTool _versionControl;
         private string GraphPath { get; set; }
+        private Project? Project { get; set; }
+        private string? _version { get; set; }
 
         //public bool OpenProject(string projectPath)
         //{
@@ -78,6 +81,7 @@ namespace NFCT.Diff.ViewModels
 
         public bool OpenProject(Project project)
         {
+            Project = project;
             var roots = project.Config.GraphRoots;
             if (roots.Count == 0)
                 return true;
@@ -94,8 +98,18 @@ namespace NFCT.Diff.ViewModels
         public void ShowVersion(string version)
         {
             var files = _versionControl.GetChangedFiles(GraphPath, version);
+            _version = version;
             Files.Clear();
             files.ForEach(f => Files.Add(new FileItemViewModel(f)));
+        }
+
+        public void GetChangedGraphInFile(FileItemViewModel fvm)
+        {
+            if (Project == null || _version == null)
+                return;
+            var fileName = fvm.Name;
+            var files = _versionControl.ExportFiles(fileName, _version);
+            CompareProject.Diff(Project, files.Item1, files.Item2);
         }
         
     }

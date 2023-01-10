@@ -256,6 +256,10 @@ namespace ProjectFactory
 
         }
 
+        public void LoadGraph(Project project, List<string> lines)
+        {
+        }
+
         public FileStream GetFileStream(string fileName)
         {
             if (FileDict.ContainsKey(fileName))

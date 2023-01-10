@@ -58,6 +58,11 @@ namespace ProjectFactory.DefaultProjectFactory
             factory.Create(p);
             return p;
         }
+
+        public void LoadGraph(Project project, List<string> lines)
+        {
+            loader.CustomLoadGraphFile(lines);
+        }
     }
 
     public class Saver

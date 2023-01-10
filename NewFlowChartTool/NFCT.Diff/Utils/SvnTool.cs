@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -83,12 +84,35 @@ namespace NFCT.Diff.Utils
                 {
                     if(line.Length < 8)
                         continue;
-                    var name = line.Substring(8 + path.Length).Trim();
+                    var name = line.Substring(8).Trim();
                     fileList.Add(name);
                 }
             }
 
             return fileList;
+        }
+
+        public Tuple<string, string> ExportFiles(string file, string version)
+        {
+            int v = Int32.Parse(version);
+            var oldFile = ExportFile(file, v - 1);
+            var newFile = ExportFile(file, v);
+            if (oldFile == null || newFile == null)
+                return new Tuple<string, string>(string.Empty, string.Empty);
+            return new Tuple<string, string>(oldFile, newFile);
+        }
+
+        public string? ExportFile(string file, int version)
+        {
+            file = file.Trim('\\').Trim('/');
+            var tmpFolder = FileHelper.GetFolder("tmp");
+            var exportFileName = $"{file}.r{version}".Replace('\\', '_').Replace('/', '_');
+            exportFileName = Path.Combine(tmpFolder, exportFileName);
+            var arg = $"export -r {version} {file} {exportFileName}";
+            RunCommand(arg);
+            if (System.IO.File.Exists(exportFileName))
+                return exportFileName;
+            return null;
         }
 
         public string? RunCommand(string args)

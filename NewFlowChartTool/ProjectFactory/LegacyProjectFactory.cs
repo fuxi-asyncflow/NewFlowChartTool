@@ -38,6 +38,10 @@ namespace ProjectFactory
 
         }
 
+        public void LoadGraph(Project project, List<string> lines)
+        {
+        }
+
         public bool OpenLegacyProject(string xmlPath)
         {
             var fi = new FileInfo(xmlPath);

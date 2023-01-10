@@ -43,14 +43,18 @@ namespace NFCT.Diff.Views
             var vm = DataContext as VersionControlPanelViewModel;
             if (vm == null)
                 return;
-            var item = (sender as FrameworkElement).DataContext as FileItemViewModel;
+            var item = (e.OriginalSource as FrameworkElement).DataContext as FileItemViewModel;
             if (item == null)
                 return;
+            vm.GetChangedGraphInFile(item);
+
         }
 
         private void GraphItem_OnDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            
+            var vm = DataContext as VersionControlPanelViewModel;
+            if (vm == null)
+                return;
         }
     }
 }

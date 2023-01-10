@@ -143,6 +143,12 @@ namespace FlowChart
 
         }
 
+        public ProjectConfig? Clone()
+        {
+            var str = JsonSerializer.Serialize<ProjectConfig>(this);
+            return JsonSerializer.Deserialize<ProjectConfig>(str);
+        }
+
         public static ProjectConfig CreateDefaultConfig()
         {
             return new ProjectConfig();

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlowChart.Common;
 using FlowChart.Core;
+using FlowChart.Type;
 
 namespace FlowChart.Diff
 {
@@ -36,6 +38,19 @@ namespace FlowChart.Diff
         public List<DiffNode> Nodes;
     }
 
+    public class SimpleProject : Project
+    {
+        public SimpleProject(IProjectFactory factory) : base(factory)
+        {
+
+        }
+
+        public override Type.Type? GetType(string typeName)
+        {
+            return BuiltinTypes.AnyType;
+        }
+    }
+
     public class CompareProject
     {
         public CompareProject(Project oldProject, Project newProject)
@@ -43,6 +58,35 @@ namespace FlowChart.Diff
             DiffResult = new List<DiffGraph>();
             OldProject = oldProject;
             NewProject = newProject;
+        }
+
+        public static List<DiffGraph> Diff(Project project, string file1, string file2)
+        {
+            var p1 = new SimpleProject(project.Factory);
+            var p2 = new SimpleProject(project.Factory);
+            p1.Path = project.Path;
+            p2.Path = project.Path;
+            var cfg1 = project.Config.Clone();
+            var cfg2 = project.Config.Clone();
+            if (cfg1 == null || cfg2 == null)
+            {
+                return new List<DiffGraph>();
+            }
+
+            cfg1.GraphRoots.Clear();
+            p1.Config = cfg1;
+            p1.Load();
+            p1.Factory.LoadGraph(p1, System.IO.File.ReadAllLines(file1).ToList());
+
+            cfg2.GraphRoots.Clear();
+            p2.Config = cfg2;
+            p2.Load();
+            p2.Factory.LoadGraph(p2, System.IO.File.ReadAllLines(file2).ToList());
+
+            var compare = new CompareProject(p1, p2);
+            compare.Compare();
+            compare.Print();
+            return compare.DiffResult;
         }
 
         public void Compare()

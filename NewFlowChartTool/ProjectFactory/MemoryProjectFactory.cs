@@ -99,5 +99,9 @@ namespace ProjectFactory
         {
 
         }
+
+        public void LoadGraph(Project project, List<string> lines)
+        {
+        }
     }
 }

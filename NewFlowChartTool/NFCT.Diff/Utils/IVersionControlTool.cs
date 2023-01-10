@@ -28,5 +28,6 @@ namespace NFCT.Diff.Utils
         public string WorkingDir { set; }
         public List<VersionItem> GetHistory(string path);
         public List<string> GetChangedFiles(string path, string version);
+        public Tuple<string, string> ExportFiles(string file, string version);
     }
 }

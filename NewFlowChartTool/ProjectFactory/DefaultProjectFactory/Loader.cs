@@ -84,14 +84,17 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             Project = project;
             ProjectFolder = new DirectoryInfo(Project.Path);
-            var config = ProjectConfig.LoadConfig(System.IO.Path.Combine(ProjectFolder.FullName, "project.json"));
-            if (config == null)
+            if (Project.Config == null)
             {
-                Logger.ERR("load project config failed");
-                return;
+                var config = ProjectConfig.LoadConfig(System.IO.Path.Combine(ProjectFolder.FullName, "project.json"));
+                if (config == null)
+                {
+                    Logger.ERR("load project config failed");
+                    return;
+                }
+                Project.Config = config;
             }
 
-            Project.Config = config;
             GroupDict = new Dictionary<string, Group>();
             var sw = Stopwatch.StartNew();
             LoadTypes();
