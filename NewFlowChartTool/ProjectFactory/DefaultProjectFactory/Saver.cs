@@ -459,6 +459,27 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
             }
             lines.Add("...");
+
+            var luaLines = new List<string>();
+            luaLines.Add("if asyncflow and asyncflow.EventId then");
+            foreach (var ev in events)
+            {
+                if (ev.EventId == 0)
+                    continue;
+                if (string.IsNullOrEmpty(ev.Description))
+                    luaLines.Add($"  asyncflow.EventId.{ev.Name} = {ev.EventId}");
+                else
+                    luaLines.Add($"  asyncflow.EventId.{ev.Name} = {ev.EventId}    -- {ev.Description}");
+            }
+            luaLines.Add("end");
+            luaLines.Add("");
+
+            luaLines.Add("local str = [[");
+            luaLines.AddRange(lines);
+            luaLines.Add("]]");
+            luaLines.Add("asyncflow.import_event(str)");
+
+            FileHelper.Save(Path.Combine(Project.Path, Project.Config.Output, "asyncflow_events.lua"), luaLines);
         }
 
         //TODO if string has #, it should inside double quotes
