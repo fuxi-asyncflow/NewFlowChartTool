@@ -119,14 +119,14 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             var graphFolder = ProjectFolder.CreateSubdirectory(DefaultProjectFactory.GraphFolderName);
             var graphFiles = new Dictionary<string, List<Graph>>();
-            var generateFiles = new Dictionary<string, string>();
+            var generateFiles = new Dictionary<string, Tuple<string, string, string>>();
 
             foreach (var kv in Project.GraphDict)
             {
                 var graphPath = kv.Key;
                 var graph = kv.Value;
                 Debug.Assert(graph.Path == graphPath);
-                if (graph.SaveFilePath == null)
+                //if (graph.SaveFilePath == null)
                 {
                     // get root config
                     var rootName = graphPath.Substring(0, graphPath.IndexOf('.'));
@@ -141,6 +141,10 @@ namespace ProjectFactory.DefaultProjectFactory
                     var saveFile = rootConfig.SaveRule.GetGraphSaveFile(graphPath);
                     graph.SaveFilePath = Path.Combine(rootConfig.Path, saveFile) ;
                     graph.GenerateFilePath = Path.Combine(rootConfig.OutputPath, saveFile);
+                    if (!generateFiles.ContainsKey(graph.SaveFilePath))
+                    {
+                        generateFiles.Add(graph.SaveFilePath, new Tuple<string, string, string>(rootConfig.Name, saveFile, graph.GenerateFilePath));
+                    }
                 }
 
                 if (!graphFiles.TryGetValue(graph.SaveFilePath, out var graphs))
@@ -148,10 +152,7 @@ namespace ProjectFactory.DefaultProjectFactory
                     graphs = new List<Graph>();
                     graphFiles.Add(graph.SaveFilePath, graphs);
                 }
-                if (!generateFiles.ContainsKey(graph.SaveFilePath))
-                {
-                    generateFiles.Add(graph.SaveFilePath, graph.GenerateFilePath);
-                }
+                
                 graphs.Add(graph);
             }
 
@@ -171,16 +172,17 @@ namespace ProjectFactory.DefaultProjectFactory
                 FileHelper.Save(filePath, lines);
                 if (Project.Config.StandaloneGenerateFile)
                 {
+                    var fileInfo = generateFiles[kv.Key];
                     FileHelper.Save(
-                        Path.Combine(Project.Path, generateFiles[kv.Key] + DefaultProjectFactory.GenerateFileExt),
+                        Path.Combine(Project.Path, fileInfo.Item3 + DefaultProjectFactory.GenerateFileExt),
                         genLines);
-                    codeFiles.Add(generateFiles[kv.Key]);
+                    //codeFiles.Add(generateFiles[kv.Key].Item2);
+                    codeFiles.Add($"  {{ \"{fileInfo.Item1}\", \"{fileInfo.Item2.Replace('\\', '/')}\"}},");
                 }
             }
 
             if (codeFiles.Count > 0)
             {
-                codeFiles = codeFiles.ConvertAll(line => $"\"{line.Replace('\\', '/')}\",");
                 codeFiles.Insert(0, "return {");
                 codeFiles.Add("}");
                 FileHelper.Save(Path.Combine(Project.Path, Project.Config.Output, "all_flowcharts.lua"), codeFiles);
