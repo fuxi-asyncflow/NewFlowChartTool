@@ -49,9 +49,9 @@
     </UserControl.ContextMenu>
     <Grid
         common:FocusExtension.IsFocused="{Binding IsFocused}"
-        utility:SizeObserver.Observe="True"
-        utility:SizeObserver.ObservedHeight="{Binding ActualHeight, Mode=OneWayToSource}"
-        utility:SizeObserver.ObservedWidth="{Binding ActualWidth, Mode=OneWayToSource}"
+        common:SizeObserver.Observe="True"
+        common:SizeObserver.ObservedHeight="{Binding ActualHeight, Mode=OneWayToSource}"
+        common:SizeObserver.ObservedWidth="{Binding ActualWidth, Mode=OneWayToSource}"
         Focusable="True"
         MouseDown="NodeGrid_OnMouseDown"
         Opacity="{Binding IsCut, Converter={StaticResource CutOpacityConverter}}"

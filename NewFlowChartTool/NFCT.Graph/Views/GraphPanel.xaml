@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:common="clr-namespace:NFCT.Common;assembly=NFCT.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:interactivity="http://prismlibrary.com/"
     xmlns:local="clr-namespace:NFCT.Graph.Views"
@@ -38,11 +39,11 @@
             </b:Interaction.Triggers>
             <ScrollViewer
                 Name="CanvasScroll"
-                utility:ScrollViewerBinding.HorizontalOffset="{Binding ScrollX, Mode=TwoWay}"
-                utility:ScrollViewerBinding.VerticalOffset="{Binding ScrollY, Mode=TwoWay}"
-                utility:SizeObserver.Observe="True"
-                utility:SizeObserver.ObservedHeight="{Binding ScrollViewerHeight, Mode=OneWayToSource}"
-                utility:SizeObserver.ObservedWidth="{Binding ScrollViewerWidth, Mode=OneWayToSource}"
+                common:ScrollViewerBinding.HorizontalOffset="{Binding ScrollX, Mode=TwoWay}"
+                common:ScrollViewerBinding.VerticalOffset="{Binding ScrollY, Mode=TwoWay}"
+                common:SizeObserver.Observe="True"
+                common:SizeObserver.ObservedHeight="{Binding ScrollViewerHeight, Mode=OneWayToSource}"
+                common:SizeObserver.ObservedWidth="{Binding ScrollViewerWidth, Mode=OneWayToSource}"
                 HorizontalScrollBarVisibility="Auto"
                 VerticalScrollBarVisibility="Auto">
                 <Canvas
