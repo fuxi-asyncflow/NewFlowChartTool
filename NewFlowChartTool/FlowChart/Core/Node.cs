@@ -73,6 +73,8 @@ namespace FlowChart.Core
         }
 
         public static Node DefaultNode { get; set; }
+
+        public virtual string DisplayString => string.Empty;
     }
 
     public class StartNode : Node
@@ -92,6 +94,8 @@ namespace FlowChart.Core
             }
             return true;
         }
+
+        public override string DisplayString => "start";
     }
 
     public class TextNode : Node
@@ -124,5 +128,7 @@ namespace FlowChart.Core
                 return false;
             return true;
         }
+
+        public override string DisplayString => Text;
     }
 }
