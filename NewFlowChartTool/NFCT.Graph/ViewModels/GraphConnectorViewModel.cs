@@ -201,7 +201,7 @@ namespace NFCT.Graph.ViewModels
             RaisePropertyChanged(nameof(Top));
         }
 
-        public void StaightLineConnect(Point start, Point end)
+        public void StraightLineConnect(Point start, Point end)
         {
             var curves = new List<Curve>();
             curves.Add(new Curve(){Type = Curve.CurveType.Line, Points = new List<Position>() {new(start.X, start.Y), new (end.X, end.Y)}});
