@@ -183,11 +183,13 @@ namespace NewFlowChartTool.ViewModels
         {
             _netManager.Stop();
             _agents.Clear();
+            GraphList.Clear();
         }
 
         public void QuickDebug(Graph graph)
         {
             ReplayFile.Inst.Reset();
+            GraphList.Clear();
             Task.Factory.StartNew(delegate { _quickDebug(graph); });
         }
 
@@ -239,6 +241,7 @@ namespace NewFlowChartTool.ViewModels
             // load file
             StopDebug();
             var replayFile = ReplayFile.Inst;
+            replayFile.Stop();
             GraphList.Clear();
             replayFile.Load(fileName);
             OnRecvGraphListEvent(replayFile.GraphInfoDict.Values.ToList());

@@ -403,10 +403,9 @@ namespace FlowChart.Debug
                 Logger.LOG($"save debug data {fileName}");
                 Save(fileName);
             }
-            else
-            {
-                Reset();
-            }
+            
+            Reset();
+            
             // Load(fileName);
         }
 
