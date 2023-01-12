@@ -25,17 +25,28 @@ namespace FlowChart.Diff
         public Node? OldNode;
     }
 
+    public class DiffConnector
+    {
+        public DiffState State { get; set; }
+        public Connector? NewConn;
+        public Connector? OldConn;
+    }
+
     public class DiffGraph
     {
         public DiffGraph()
         {
             Nodes = new List<DiffNode>();
+            Connectors = new List<DiffConnector>();
+            UnchangedConnectors = new List<DiffConnector>();
         }
         public DiffState State { get; set; }
         public Graph? OldGraph;
         public Graph? NewGraph;
         public Graph ResultGraph;
         public List<DiffNode> Nodes;
+        public List<DiffConnector> Connectors;
+        public List<DiffConnector> UnchangedConnectors;
     }
 
     public class SimpleProject : Project
@@ -143,6 +154,8 @@ namespace FlowChart.Diff
         DiffGraph? CompareGraph(Graph oldGraph, Graph newGraph)
         {
             var nodes = new List<DiffNode>();
+            var conns = new List<DiffConnector>();
+            var unchangedConns = new List<DiffConnector>();
             var oldNodesDict = new Dictionary<Guid, Node>(oldGraph.NodeDict);
             var newNodesDict = new Dictionary<Guid, Node>(newGraph.NodeDict);
             foreach (var kv in oldNodesDict)
@@ -173,9 +186,82 @@ namespace FlowChart.Diff
             {
                 nodes.Add(new DiffNode() {OldNode = null, NewNode = kv.Value, State = DiffState.Add});
             }
-            if(nodes.Count == 0)
+
+            ////////////////////////////////////////////////////////////////////////////////////////
+            var oldConnDict = new Dictionary<Guid, Dictionary<Guid, Connector>>();
+            oldGraph.Connectors.ForEach(conn =>
+            {
+                if (!oldConnDict.TryGetValue(conn.Start.Uid, out var dict))
+                {
+                    dict = new Dictionary<Guid, Connector>();
+                    oldConnDict.Add(conn.Start.Uid, dict);
+                }
+                dict.Add(conn.End.Uid, conn);
+            });
+
+            var newConnDict = new Dictionary<Guid, Dictionary<Guid, Connector>>();
+            newGraph.Connectors.ForEach(conn =>
+            {
+                if (!newConnDict.TryGetValue(conn.Start.Uid, out var dict))
+                {
+                    dict = new Dictionary<Guid, Connector>();
+                    newConnDict.Add(conn.Start.Uid, dict);
+                }
+                dict.Add(conn.End.Uid, conn);
+            });
+
+            oldGraph.Connectors.ForEach(conn =>
+            {
+                if(newConnDict.TryGetValue(conn.Start.Uid, out var dict))
+                {
+                    if (dict.TryGetValue(conn.End.Uid, out var newConn))
+                    {
+                        dict.Remove(conn.End.Uid);
+                        if (!CompareConnector(conn, newConn))
+                        {
+                            conns.Add(new DiffConnector()
+                            {
+                                NewConn = newConn,
+                                OldConn = conn,
+                                State = DiffState.Modify
+                            });
+                        }
+                        else
+                        {
+                            unchangedConns.Add(new DiffConnector()
+                            {
+                                NewConn = newConn,
+                                OldConn = conn,
+                                State = DiffState.NoChange
+                            });
+                        }
+                        return;
+                    }
+                }
+                conns.Add(new DiffConnector()
+                {
+                    OldConn = conn,
+                    NewConn = null,
+                    State = DiffState.Remove,
+                });
+            });
+
+            foreach (var dict in newConnDict.Values)
+            {
+                foreach (var conn in dict.Values)
+                {
+                    conns.Add(new DiffConnector()
+                    {
+                        OldConn = null,
+                        NewConn = conn,
+                        State = DiffState.Add,
+                    });
+                }
+            }
+
+            if (nodes.Count == 0 && conns.Count == 0)
                 return null;
-            return new DiffGraph() { OldGraph = oldGraph, NewGraph = newGraph, Nodes = nodes, State = DiffState.Modify};
+            return new DiffGraph() { OldGraph = oldGraph, NewGraph = newGraph, Nodes = nodes, Connectors = conns, State = DiffState.Modify, UnchangedConnectors = unchangedConns};
         }
 
         bool CompareNode(Node oldNode, Node newNode)
@@ -184,6 +270,11 @@ namespace FlowChart.Diff
             if (oldType != newNode.GetType())
                 return false;
             return oldNode.Equals(newNode);
+        }
+
+        bool CompareConnector(Connector newConn, Connector oldConn)
+        {
+            return newConn.ConnType == oldConn.ConnType;
         }
 
         public List<DiffGraph> DiffResult;

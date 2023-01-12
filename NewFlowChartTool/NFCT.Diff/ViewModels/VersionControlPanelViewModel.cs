@@ -129,6 +129,25 @@ namespace NFCT.Diff.ViewModels
             fvm.Graphs.Clear();
             diffGraphs.ForEach(graph => fvm.Graphs.Add(new GraphItemViewModel(graph)));
         }
-        
+
+        public bool IsShowGraph => _diffGraphVm != null;
+
+        private DiffGraphPanelViewModel? _diffGraphVm;
+        public DiffGraphPanelViewModel? DiffGraphVm
+        {
+            get => _diffGraphVm;
+            set
+            {
+                SetProperty(ref _diffGraphVm, value);
+                RaisePropertyChanged(nameof(IsShowGraph));
+            }
+        }
+
+        public void ShowGraph(GraphItemViewModel item)
+        {
+            if (item.Graph == null)
+                return;
+            DiffGraphVm = new DiffGraphPanelViewModel(item.Graph);
+        }
     }
 }

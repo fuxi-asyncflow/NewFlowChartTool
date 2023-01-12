@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FlowChart.Parser.NodeParser;
 using NFCT.Diff.ViewModels;
 
 namespace NFCT.Diff.Views
@@ -55,6 +56,13 @@ namespace NFCT.Diff.Views
             var vm = DataContext as VersionControlPanelViewModel;
             if (vm == null)
                 return;
+            var item = (e.OriginalSource as FrameworkElement).DataContext as GraphItemViewModel;
+            if (item == null)
+                return;
+            vm.ShowGraph(item);
+
         }
+
+        
     }
 }
