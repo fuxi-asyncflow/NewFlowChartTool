@@ -195,6 +195,8 @@ namespace FlowChart.Debug
 
         public void Save(string fileName)
         {
+            if (Data.Count == 0)
+                return;
             using var ms = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write);
             using var bw = new BinaryWriter(ms);
             long frame = -1;
@@ -234,7 +236,7 @@ namespace FlowChart.Debug
 
         public void Load(string fileName)
         {
-            Reset();
+            Stop();
             using var ms = new FileStream(fileName, FileMode.Open, FileAccess.Read);
             using var br = new BinaryReader(ms);
             _isLoadFromFile = true;
@@ -400,6 +402,10 @@ namespace FlowChart.Debug
                 fileName = System.IO.Path.Combine(exefolder, "debug", fileName);
                 Logger.LOG($"save debug data {fileName}");
                 Save(fileName);
+            }
+            else
+            {
+                Reset();
             }
             // Load(fileName);
         }
