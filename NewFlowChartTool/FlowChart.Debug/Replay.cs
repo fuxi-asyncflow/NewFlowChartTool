@@ -234,6 +234,7 @@ namespace FlowChart.Debug
 
         public void Load(string fileName)
         {
+            Reset();
             using var ms = new FileStream(fileName, FileMode.Open, FileAccess.Read);
             using var br = new BinaryReader(ms);
             _isLoadFromFile = true;

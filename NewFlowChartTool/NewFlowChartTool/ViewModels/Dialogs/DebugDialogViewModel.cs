@@ -237,6 +237,7 @@ namespace NewFlowChartTool.ViewModels
             var fileName = dialog.FileName;
 
             // load file
+            StopDebug();
             var replayFile = ReplayFile.Inst;
             GraphList.Clear();
             replayFile.Load(fileName);
