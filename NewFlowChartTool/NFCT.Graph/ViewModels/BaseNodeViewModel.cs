@@ -424,12 +424,12 @@ namespace NFCT.Graph.ViewModels
             ParentLines.ForEach(line =>
             {
                 var parent = (BaseNodeViewModel)line.Start;
-                line.StaightLineConnect(new Point(parent.Left + parent.ActualWidth * 0.5, parent.Top + ActualHeight), new Point(mid, _top));
+                line.StraightLineConnect(new Point(parent.Left + parent.ActualWidth * 0.5, parent.Top + ActualHeight), new Point(mid, _top));
             });
             ChildLines.ForEach(line =>
             {
                 var child = (BaseNodeViewModel)line.End;
-                line.StaightLineConnect(new Point(mid, bottom), new Point(child.Left + child.ActualWidth * 0.5, child.Top));
+                line.StraightLineConnect(new Point(mid, bottom), new Point(child.Left + child.ActualWidth * 0.5, child.Top));
             });
             OwnerGroup?.Resize();
         }
