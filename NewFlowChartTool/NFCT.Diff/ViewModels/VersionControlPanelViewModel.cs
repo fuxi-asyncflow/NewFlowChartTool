@@ -78,6 +78,7 @@ namespace NFCT.Diff.ViewModels
             Versions = new ObservableCollection<VersionItemViewModel>();
             Files = new ObservableCollection<FileItemViewModel>();
             OnCloseCommand = new DelegateCommand(delegate { });
+            UpdateVersionListCommand = new DelegateCommand(GetVersionList);
             GraphPath = ".";
         }
 
@@ -89,6 +90,8 @@ namespace NFCT.Diff.ViewModels
         private string GraphPath { get; set; }
         private Project? Project { get; set; }
         private string? _version { get; set; }
+
+        public DelegateCommand UpdateVersionListCommand { get; set; }
 
         //public bool OpenProject(string projectPath)
         //{
@@ -112,6 +115,9 @@ namespace NFCT.Diff.ViewModels
 
         public void GetVersionList()
         {
+            if (Project == null)
+                return;
+            DiffGraphVm = null;
             Versions.Clear();
             // get local changed
             Versions.Add(new VersionItemViewModel(new VersionItem(string.Empty, string.Empty, DateTime.Now, "uncommit files") {IsLocalUnCommit = true}));

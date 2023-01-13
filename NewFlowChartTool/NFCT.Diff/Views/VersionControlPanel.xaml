@@ -29,37 +29,38 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <TreeView
-            x:Name="DiffTreeView"
-            Grid.Column="0"
-            ItemsSource="{Binding Files}"
-            TreeViewItem.Expanded="TreeViewItem_OnExpanded">
-            <TreeView.Resources>
-                <HierarchicalDataTemplate DataType="{x:Type vm:FileItemViewModel}" ItemsSource="{Binding Graphs}">
-                    <StackPanel Margin="2" Orientation="Horizontal">
-                        <Viewbox Child="{StaticResource Icon_FolderClosed}" />
-                        <TextBlock
-                            Margin="5,0,0,0"
-                            VerticalAlignment="Center"
-                            Text="{Binding Name}" />
-                    </StackPanel>
+        <StackPanel Grid.Column="0">
+            <Button Command="{Binding UpdateVersionListCommand}" Content="Show Commit History" />
+            <TreeView
+                x:Name="DiffTreeView"
+                ItemsSource="{Binding Files}"
+                TreeViewItem.Expanded="TreeViewItem_OnExpanded">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type vm:FileItemViewModel}" ItemsSource="{Binding Graphs}">
+                        <StackPanel Margin="2" Orientation="Horizontal">
+                            <Viewbox Child="{StaticResource Icon_FolderClosed}" />
+                            <TextBlock
+                                Margin="5,0,0,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding Name}" />
+                        </StackPanel>
 
-                </HierarchicalDataTemplate>
-                <DataTemplate DataType="{x:Type vm:GraphItemViewModel}">
-                    <StackPanel>
-                        <TextBlock Text="{Binding Name}" />
-                    </StackPanel>
-                </DataTemplate>
-                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{DynamicResource InactiveSelectionHighlightColor}" />
-            </TreeView.Resources>
-            <TreeView.ItemContainerStyle>
-                <Style BasedOn="{StaticResource CustomTreeViewItemStyle}" TargetType="TreeViewItem">
-                    <EventSetter Event="MouseDoubleClick" Handler="GraphItem_OnDoubleClick" />
-                </Style>
-            </TreeView.ItemContainerStyle>
-        </TreeView>
+                    </HierarchicalDataTemplate>
+                    <DataTemplate DataType="{x:Type vm:GraphItemViewModel}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" />
+                        </StackPanel>
+                    </DataTemplate>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="{DynamicResource InactiveSelectionHighlightColor}" />
+                </TreeView.Resources>
+                <TreeView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource CustomTreeViewItemStyle}" TargetType="TreeViewItem">
+                        <EventSetter Event="MouseDoubleClick" Handler="GraphItem_OnDoubleClick" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </TreeView>
+        </StackPanel>
         <DataGrid
             Grid.Column="1"
             AutoGenerateColumns="False"
@@ -87,7 +88,7 @@
                 <DataGridTextColumn Binding="{Binding Message, Mode=OneWay}" Header="message" />
             </DataGrid.Columns>
         </DataGrid>
-        <Grid Grid.Column="2" Visibility="{Binding IsShowGraph, Converter={StaticResource NullToVisibilityConverter}}">
+        <Grid Grid.Column="1" Visibility="{Binding IsShowGraph, Converter={StaticResource BooleanToVisibilityConverter}}">
             <local:DiffGraphPanel DataContext="{Binding DiffGraphVm}" />
         </Grid>
 
