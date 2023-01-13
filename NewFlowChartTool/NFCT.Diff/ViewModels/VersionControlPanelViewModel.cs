@@ -5,6 +5,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using FlowChart.Core;
 using FlowChart.Diff;
 using NFCT.Diff.Utils;
@@ -105,10 +106,19 @@ namespace NFCT.Diff.ViewModels
             _versionControl.WorkingDir = project.Path;
             
             GraphPath = project.Config.GraphRoots.First().Path;
-            var versionItems = _versionControl.GetHistory(GraphPath);
-            Versions.Clear();
-            versionItems.ForEach(item => Versions.Add(new VersionItemViewModel(item)));
+            GetVersionList();
             return true;
+        }
+
+        public void GetVersionList()
+        {
+            Versions.Clear();
+            // get local changed
+            Versions.Add(new VersionItemViewModel(new VersionItem(string.Empty, string.Empty, DateTime.Now, "uncommit files") {IsLocalUnCommit = true}));
+
+            var versionItems = _versionControl.GetHistory(GraphPath);
+            versionItems.ForEach(item => Versions.Add(new VersionItemViewModel(item)));
+
         }
 
         public void ShowVersion(string version)

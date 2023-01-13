@@ -26,6 +26,7 @@ namespace NFCT.Diff.Utils
         }
         public string WorkingDir
         {
+            get => StartInfo.WorkingDirectory;
             set => StartInfo.WorkingDirectory = value;
         }
         public string ExePath { get; set; }
@@ -70,6 +71,9 @@ namespace NFCT.Diff.Utils
         public List<string> GetChangedFiles(string path, string version)
         {
             var args = $"diff --summarize -c {version} {path}";
+            if (string.IsNullOrEmpty(version))
+                args = $"status {path}";
+
             var output = RunCommand(args);
             var fileList = new List<string>();
             if (output == null)
@@ -94,15 +98,26 @@ namespace NFCT.Diff.Utils
 
         public Tuple<string, string> ExportFiles(string file, string version)
         {
-            int v = Int32.Parse(version);
-            var oldFile = ExportFile(file, v - 1);
-            var newFile = ExportFile(file, v);
+            string? oldFile;
+            string? newFile;
+            if (string.IsNullOrEmpty(version))
+            {
+                oldFile = ExportFile(file, "BASE");
+                newFile = CopyLocalFile(file);
+            }
+            else
+            {
+                int v = Int32.Parse(version);
+                oldFile = ExportFile(file, (v - 1).ToString());
+                newFile = ExportFile(file, v.ToString());
+            }
+
             if (oldFile == null || newFile == null)
                 return new Tuple<string, string>(string.Empty, string.Empty);
             return new Tuple<string, string>(oldFile, newFile);
         }
 
-        public string? ExportFile(string file, int version)
+        public string? ExportFile(string file, string version)
         {
             file = file.Trim('\\').Trim('/');
             var tmpFolder = FileHelper.GetFolder("tmp");
@@ -110,6 +125,20 @@ namespace NFCT.Diff.Utils
             exportFileName = Path.Combine(tmpFolder, exportFileName);
             var arg = $"export -r {version} {file} {exportFileName}";
             RunCommand(arg);
+            if (System.IO.File.Exists(exportFileName))
+                return exportFileName;
+            return null;
+        }
+
+        public string? CopyLocalFile(string file)
+        {
+            file = file.Trim('\\').Trim('/');
+            var tmpFolder = FileHelper.GetFolder("tmp");
+            var exportFileName = $"{file}.rmine".Replace('\\', '_').Replace('/', '_');
+            exportFileName = Path.Combine(tmpFolder, exportFileName);
+
+            File.Copy(Path.Combine(WorkingDir, file), exportFileName);
+            
             if (System.IO.File.Exists(exportFileName))
                 return exportFileName;
             return null;

@@ -16,10 +16,11 @@ namespace NFCT.Diff.Utils
             Message = message;
         }
 
-        public string Version { get; set; }
+        public string Version { get; set; } // empty for local version
         public string Author { get; set; }
         public DateTime Time { get; set; }
         public string Message { get; set; }
+        public bool IsLocalUnCommit { get; set; }
     }
 
     public interface IVersionControlTool
