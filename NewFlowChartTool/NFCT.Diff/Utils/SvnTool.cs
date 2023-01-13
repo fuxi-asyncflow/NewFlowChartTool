@@ -33,8 +33,19 @@ namespace NFCT.Diff.Utils
         public string GraphFileFolder { get; set; }
         public string SvnRepoUrl { get; set; }
         ProcessStartInfo StartInfo { get; set; }
+
+        string GetSvnRepoUrl(string path)
+        {
+            var args = "info --show-item url";
+            var output = RunCommand(args);
+            if(output == null)
+                return string.Empty;
+            return output.Trim();
+        }
+
         public List<VersionItem> GetHistory(string path)
         {
+            SvnRepoUrl = GetSvnRepoUrl(path);
             var args = $"log --limit 100 --xml {SvnRepoUrl}";
             var output = RunCommand(args);
             var versionItems = new List<VersionItem>();
