@@ -39,6 +39,8 @@ namespace NFCT.Diff.ViewModels
         }
         public string Name { get; set; }
         public ObservableCollection<GraphItemViewModel> Graphs { get; set; }
+        public bool IsSelected { get; set; }
+        public bool IsExpanded { get; set; }
     }
 
     public class GraphItemViewModel : BindableBase
@@ -69,6 +71,8 @@ namespace NFCT.Diff.ViewModels
         public static GraphItemViewModel DummyGraph { get; set; }
         public string Name { get; set; }
         public DiffGraph? Graph { get; set; }
+        public bool IsSelected { get; set; }
+        public bool IsExpanded { get; set; }
     }
 
     public class VersionControlPanelViewModel: BindableBase
@@ -164,6 +168,7 @@ namespace NFCT.Diff.ViewModels
             if (item.Graph == null)
                 return;
             DiffGraphVm = new DiffGraphPanelViewModel(item.Graph);
+            DiffGraphVm.ObserveScrollSize = true;
         }
     }
 }

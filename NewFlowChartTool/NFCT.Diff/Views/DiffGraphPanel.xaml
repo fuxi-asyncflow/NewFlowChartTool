@@ -16,7 +16,7 @@
             Name="CanvasScroll"
             common:ScrollViewerBinding.HorizontalOffset="{Binding ScrollX, Mode=TwoWay}"
             common:ScrollViewerBinding.VerticalOffset="{Binding ScrollY, Mode=TwoWay}"
-            common:SizeObserver.Observe="True"
+            common:SizeObserver.Observe="{Binding ObserveScrollSize}"
             common:SizeObserver.ObservedHeight="{Binding ScrollViewerHeight, Mode=OneWayToSource}"
             common:SizeObserver.ObservedWidth="{Binding ScrollViewerWidth, Mode=OneWayToSource}"
             HorizontalScrollBarVisibility="Auto"
