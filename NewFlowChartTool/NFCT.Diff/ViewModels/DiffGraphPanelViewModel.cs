@@ -300,6 +300,8 @@ namespace NFCT.Diff.ViewModels
         public DoubleCollection Dash => State == DiffState.Remove ? DashLines[0] : DashLines[1];
 
         private static List<DoubleCollection> DashLines;
+        public string DisplayText => $"{((DiffNodeViewModel)Start).Content} -> {((DiffNodeViewModel)End).Content}";
+        public Brush BgColor => DiffNodeViewModel.GetColor(State);
     }
 
     internal class DiffGraphLayoutAdapter : IGraph
@@ -338,6 +340,7 @@ namespace NFCT.Diff.ViewModels
             Nodes = new ObservableCollection<DiffNodeViewModel>();
             ChangedNodes = new List<DiffNodeViewModel>();
             Connectors = new ObservableCollection<DiffConnectorViewModel>();
+            ChangedConnectors = new List<DiffConnectorViewModel>();
             _layout = LayoutManager.Instance.LayoutDict["layout_group"].Invoke();
             Init(graph);
             NeedLayout = true;
@@ -401,15 +404,27 @@ namespace NFCT.Diff.ViewModels
                 {
                     if (conn.State == DiffState.Modify)
                     {
-                        Connectors.Add(new DiffConnectorViewModel(nodeDict[conn.OldConn.Start.Uid], nodeDict[conn.OldConn.End.Uid]) { State = DiffState.Modify, ConnectorType = conn.NewConn.ConnType});
+                        var connVm =
+                            new DiffConnectorViewModel(nodeDict[conn.OldConn.Start.Uid], nodeDict[conn.OldConn.End.Uid])
+                                { State = DiffState.Modify, ConnectorType = conn.NewConn.ConnType };
+                        Connectors.Add(connVm);
+                        ChangedConnectors.Add(connVm);
                     }
                     else if (conn.State == DiffState.Add)
                     {
-                        Connectors.Add(new DiffConnectorViewModel(nodeDict[conn.NewConn.Start.Uid], nodeDict[conn.NewConn.End.Uid]) { State = DiffState.Add, ConnectorType = conn.NewConn.ConnType });
+                        var connVm =
+                            new DiffConnectorViewModel(nodeDict[conn.NewConn.Start.Uid], nodeDict[conn.NewConn.End.Uid])
+                                { State = DiffState.Add, ConnectorType = conn.NewConn.ConnType };
+                        Connectors.Add(connVm);
+                        ChangedConnectors.Add(connVm);
                     }
                     else if (conn.State == DiffState.Remove)
                     {
-                        Connectors.Add(new DiffConnectorViewModel(nodeDict[conn.OldConn.Start.Uid], nodeDict[conn.OldConn.End.Uid]) { State = DiffState.Remove, ConnectorType = conn.OldConn.ConnType });
+                        var connVm =
+                            new DiffConnectorViewModel(nodeDict[conn.OldConn.Start.Uid], nodeDict[conn.OldConn.End.Uid])
+                                { State = DiffState.Remove, ConnectorType = conn.OldConn.ConnType };
+                        Connectors.Add(connVm);
+                        ChangedConnectors.Add(connVm);
                     }
                 });
             }

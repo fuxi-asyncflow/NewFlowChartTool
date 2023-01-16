@@ -61,6 +61,7 @@
                     </Style>
                 </TreeView.ItemContainerStyle>
             </TreeView>
+            <!--  Changed Nodes  -->
             <ListBox
                 HorizontalContentAlignment="Stretch"
                 ItemsSource="{Binding DiffGraphVm.ChangedNodes, FallbackValue=null}"
@@ -69,6 +70,24 @@
                     <DataTemplate>
                         <Grid Background="{Binding BgColor}">
                             <TextBlock Foreground="Black" Text="{Binding Content}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <EventSetter Event="MouseDoubleClick" Handler="ChangedItem_OnHandler" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+            <!--  Changed Connector  -->
+            <ListBox
+                HorizontalContentAlignment="Stretch"
+                ItemsSource="{Binding DiffGraphVm.ChangedConnectors, FallbackValue=null}"
+                Visibility="{Binding IsShowGraph, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Background="{Binding BgColor}">
+                            <TextBlock Foreground="Black" Text="{Binding DisplayText}" />
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
