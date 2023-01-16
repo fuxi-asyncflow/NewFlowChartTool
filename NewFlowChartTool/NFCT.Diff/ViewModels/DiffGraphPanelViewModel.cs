@@ -336,6 +336,7 @@ namespace NFCT.Diff.ViewModels
             Graph = graph;
             Scale = 1.0;
             Nodes = new ObservableCollection<DiffNodeViewModel>();
+            ChangedNodes = new List<DiffNodeViewModel>();
             Connectors = new ObservableCollection<DiffConnectorViewModel>();
             _layout = LayoutManager.Instance.LayoutDict["layout_group"].Invoke();
             Init(graph);
@@ -368,17 +369,22 @@ namespace NFCT.Diff.ViewModels
                 {
                     if (node.State == DiffState.Modify)
                     {
-                        nodeDict[node.OldNode.Uid].State = node.State;
+                        var dnVm = nodeDict[node.OldNode.Uid];
+                        dnVm.State = node.State;
+                        ChangedNodes.Add(dnVm);
                     }
                     else if (node.State == DiffState.Add)
                     {
                         var dnVm = new DiffNodeViewModel(node.NewNode);
                         dnVm.State = DiffState.Add;
                         nodeDict.Add(node.NewNode.Uid, dnVm);
+                        ChangedNodes.Add(dnVm);
                     }
                     else if (node.State == DiffState.Remove)
                     {
-                        nodeDict[node.OldNode.Uid].State = node.State;
+                        var dnVm = nodeDict[node.OldNode.Uid];
+                        dnVm.State = node.State;
+                        ChangedNodes.Add(dnVm);
                     }
                 });
                 foreach (var diffNodeViewModel in nodeDict.Values)
@@ -413,6 +419,8 @@ namespace NFCT.Diff.ViewModels
 
         public ObservableCollection<DiffNodeViewModel> Nodes { get; set; }
         public ObservableCollection<DiffConnectorViewModel> Connectors { get; set; }
+        public List<DiffNodeViewModel> ChangedNodes { get; set; }
+        public List<DiffConnectorViewModel> ChangedConnectors { get; set; }
 
         #region SCROLL
 
@@ -445,6 +453,9 @@ namespace NFCT.Diff.ViewModels
             get => _scrollViewerHeight;
             set => SetProperty(ref _scrollViewerHeight, value);
         }
+
+        private bool _observeScrollSize;
+        public bool ObserveScrollSize { get => _observeScrollSize; set => SetProperty(ref _observeScrollSize, value); }
 
         #endregion
 
@@ -490,6 +501,15 @@ namespace NFCT.Diff.ViewModels
         public Node? InitCenterNode { get; set; }
         public bool NeedLayout { get; set; }
         public bool IsFirstLayout { get; set; }
+
+        public void MoveNodeToCenter(DiffNodeViewModel? nodeVm)
+        {
+            if (nodeVm == null)
+                return;
+            ScrollX = nodeVm.Left + (nodeVm.Width - ScrollViewerWidth) / 2;
+            ScrollY = nodeVm.Top - ScrollViewerHeight / 2;
+            Logger.DBG($"MoveNodeToCenter {nodeVm.Left} {ScrollViewerWidth} {nodeVm.Content} {ScrollX} {ScrollY}");
+        }
 
         public bool Relayout()
         {

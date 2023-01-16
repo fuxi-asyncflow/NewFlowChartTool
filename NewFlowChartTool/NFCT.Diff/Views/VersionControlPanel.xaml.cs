@@ -63,6 +63,17 @@ namespace NFCT.Diff.Views
 
         }
 
-        
+
+        private void ChangedItem_OnHandler(object sender, MouseButtonEventArgs e)
+        {
+            var vm = DataContext as VersionControlPanelViewModel;
+            if (vm == null || vm.DiffGraphVm == null)
+                return;
+            var item = (e.OriginalSource as FrameworkElement).DataContext;
+            if (item is DiffNodeViewModel nodeVm)
+            {
+                vm.DiffGraphVm.MoveNodeToCenter(nodeVm);
+            }
+        }
     }
 }

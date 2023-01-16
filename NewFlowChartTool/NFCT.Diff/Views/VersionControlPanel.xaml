@@ -34,6 +34,7 @@
             <Button Command="{Binding UpdateVersionListCommand}" Content="Show Commit History" />
             <TreeView
                 x:Name="DiffTreeView"
+                MinHeight=" 100"
                 ItemsSource="{Binding Files}"
                 TreeViewItem.Expanded="TreeViewItem_OnExpanded">
                 <TreeView.Resources>
@@ -60,6 +61,23 @@
                     </Style>
                 </TreeView.ItemContainerStyle>
             </TreeView>
+            <ListBox
+                HorizontalContentAlignment="Stretch"
+                ItemsSource="{Binding DiffGraphVm.ChangedNodes, FallbackValue=null}"
+                Visibility="{Binding IsShowGraph, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Background="{Binding BgColor}">
+                            <TextBlock Foreground="Black" Text="{Binding Content}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <EventSetter Event="MouseDoubleClick" Handler="ChangedItem_OnHandler" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
         </StackPanel>
         <DataGrid
             Grid.Column="1"
