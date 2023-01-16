@@ -373,6 +373,7 @@ namespace NFCT.Diff.ViewModels
                     else if (node.State == DiffState.Add)
                     {
                         var dnVm = new DiffNodeViewModel(node.NewNode);
+                        dnVm.State = DiffState.Add;
                         nodeDict.Add(node.NewNode.Uid, dnVm);
                     }
                     else if (node.State == DiffState.Remove)
