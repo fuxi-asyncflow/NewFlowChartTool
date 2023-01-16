@@ -147,9 +147,18 @@ namespace NFCT.Diff.Utils
             var tmpFolder = FileHelper.GetFolder("tmp");
             var exportFileName = $"{file}.rmine".Replace('\\', '_').Replace('/', '_');
             exportFileName = Path.Combine(tmpFolder, exportFileName);
+            var srcPath = Path.Combine(WorkingDir, file);
 
-            File.Copy(Path.Combine(WorkingDir, file), exportFileName);
-            
+            try
+            {
+                File.Copy(srcPath, exportFileName, true);
+            }
+            catch (Exception e)
+            {
+                Logger.WARN($"[diff] copy local file failed: {e.Message}");
+                return null;
+            }
+
             if (System.IO.File.Exists(exportFileName))
                 return exportFileName;
             return null;
