@@ -526,6 +526,15 @@ namespace NFCT.Diff.ViewModels
             Logger.DBG($"MoveNodeToCenter {nodeVm.Left} {ScrollViewerWidth} {nodeVm.Content} {ScrollX} {ScrollY}");
         }
 
+        public void MoveLineToCenter(DiffConnectorViewModel? connVm)
+        {
+            if (connVm == null)
+                return;
+            ScrollX = connVm.Left - ScrollViewerWidth / 2;
+            ScrollY = connVm.Top - ScrollViewerHeight / 2;
+            //Logger.DBG($"MoveNodeToCenter {nodeVm.Left} {ScrollViewerWidth} {nodeVm.Content} {ScrollX} {ScrollY}");
+        }
+
         public bool Relayout()
         {
             var graph = new DiffGraphLayoutAdapter(this);

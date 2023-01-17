@@ -74,6 +74,10 @@ namespace NFCT.Diff.Views
             {
                 vm.DiffGraphVm.MoveNodeToCenter(nodeVm);
             }
+            else if (item is DiffConnectorViewModel connVm)
+            {
+                vm.DiffGraphVm.MoveLineToCenter(connVm);
+            }
         }
     }
 }
