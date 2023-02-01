@@ -33,9 +33,33 @@ namespace NewFlowChartTool.ViewModels
 {
     class CodeGenFactory : ICodeGenFactory
     {
+        static CodeGenFactory()
+        {
+            CodeGeneratorMap = new Dictionary<string, Type>();
+            CodeGeneratorMap.Add("lua", typeof(LuaCodeGenerator));
+            CodeGeneratorMap.Add("python", typeof(PyCodeGenerator));
+        }
+
+        private static Dictionary<string, Type> CodeGeneratorMap;
         public ICodeGenerator CreateCodeGenerator(Project p, Graph g)
         {
-            return new CodeGenerator() { G = g, P = p };
+            if (CodeGeneratorMap.TryGetValue(p.Config.CodeGenerator, out var tp))
+            {
+                var generator = (ICodeGenerator)Activator.CreateInstance(tp);
+                if (generator is not CodeGenerator gen)
+                {
+                    throw new NotImplementedException("generator should inherit from CodeGenerator");
+                }
+
+                gen.G = g;
+                gen.P = p;
+                p.Config.CodeLang = gen.Lang;
+                return gen;
+            }
+            else
+            {
+                throw new NotSupportedException($"no code generator named {p.Config.CodeGenerator}");
+            }
         }
     }
 

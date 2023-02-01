@@ -47,7 +47,7 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
     {
         public ICodeGenerator CreateCodeGenerator(Project p, Graph g)
         {
-            return new CodeGenerator() { G = g, P = p };
+            return new LuaCodeGenerator() { G = g, P = p };
         }
     }
 

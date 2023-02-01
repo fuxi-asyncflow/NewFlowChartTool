@@ -20,7 +20,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public const string TypeFolderName = "types";
         public const string TmpFolderName = "tmp";
         public const string GraphFileExt = ".yaml";
-        public const string GenerateFileExt = ".lua";
+        public static string GenerateFileExt = ".lua";
         public const string TypeFileExt = ".yaml";
         public const string EventFileName = "_event.yaml";
 
@@ -77,7 +77,14 @@ namespace ProjectFactory.DefaultProjectFactory
         public DirectoryInfo ProjectFolder;
 
         public Func<Graph, string>? GraphToFileRule;
+
+        public ISaveForLang _saveForLang;
         //private bool SaveCode = true;
+
+        public Saver()
+        {
+            _saveForLang = new SaveForDefault();
+        }
 
         public static string SaveGraphByRoot(Graph graph)
         {
@@ -87,11 +94,25 @@ namespace ProjectFactory.DefaultProjectFactory
         public void SaveProject(Project project)
         {
             Project = project;
+            var lang = Project.Config.CodeLang;
+            if (lang == "lua")
+            {
+                _saveForLang = new SaveForLua();
+                DefaultProjectFactory.GenerateFileExt = ".lua";
+            }
+            else if (lang == "python")
+            {
+                _saveForLang = new SaveForPython();
+                DefaultProjectFactory.GenerateFileExt = ".py";
+            }
+
             GraphToFileRule = SaveGraphByRoot;
             PrepareFolder();
             SaveGraphs();
             SaveTypes();
             SaveConfig(project.Path + "/project.json");
+
+            
         }
 
         public void SaveConfig(string path)
@@ -263,20 +284,7 @@ namespace ProjectFactory.DefaultProjectFactory
                                     lines.Add($"    return_var_name: {content.ReturnVarName}");
                                 if (generate_standalone)
                                 {
-                                    var normalUidStr = node.Uid.ToString("N");
-                                    genLines.Add($"-- {textNode.Text}");
-                                    genLines.Add($"local function f_{normalUidStr}(self)");
-                                    foreach (var c in content.Contents)
-                                    {
-                                        if (c is string s)
-                                            genLines.Add($"    {c.ToString()}");
-                                    }
-                                    genLines.Add("end");
-                                    var funcName = $"{graph.Path}.{normalUidStr}";
-                                    genLines.Add($"asyncflow.set_node_func(\"{funcName}\", f_{normalUidStr})");
-                                    genLines.Add("");
-
-                                    //lines.Add($"    func_name: \"{funcName}\"");
+                                    _saveForLang.SaveNodeFunc(textNode, genLines);
                                 }
                                 else
                                 {
@@ -426,8 +434,6 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
                 
             }
-
-
             lines.Add("...");
         }
 
@@ -461,27 +467,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
             }
             lines.Add("...");
-
-            var luaLines = new List<string>();
-            luaLines.Add("if asyncflow and asyncflow.EventId then");
-            foreach (var ev in events)
-            {
-                if (ev.EventId == 0)
-                    continue;
-                if (string.IsNullOrEmpty(ev.Description))
-                    luaLines.Add($"  asyncflow.EventId.{ev.Name} = {ev.EventId}");
-                else
-                    luaLines.Add($"  asyncflow.EventId.{ev.Name} = {ev.EventId}    -- {ev.Description}");
-            }
-            luaLines.Add("end");
-            luaLines.Add("");
-
-            luaLines.Add("local str = [[");
-            luaLines.AddRange(lines);
-            luaLines.Add("]]");
-            luaLines.Add("asyncflow.import_event(str)");
-
-            FileHelper.Save(Path.Combine(Project.Path, Project.Config.Output, "asyncflow_events.lua"), luaLines);
+            _saveForLang.SaveEventDefine(Project, lines);
         }
 
         //TODO if string has #, it should inside double quotes
