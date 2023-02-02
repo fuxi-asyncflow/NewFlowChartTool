@@ -26,6 +26,9 @@ namespace NFCT.Graph.Views
     /// </summary>
     public partial class TextNode : UserControl
     {
+        static SolidColorBrush SuccessBrush = new SolidColorBrush(Colors.GreenYellow);
+        static SolidColorBrush FailBrush = new SolidColorBrush(Colors.Red);
+        static SolidColorBrush RunningBrush = new SolidColorBrush(Colors.Blue);
         public TextNode()
         {
             InitializeComponent();
@@ -96,17 +99,17 @@ namespace NFCT.Graph.Views
                 switch (status)
                 {
                     case DebugNodeStatus.SUCCESS:
-                        NodeBorder.Background = new SolidColorBrush(Colors.GreenYellow);
+                        NodeBorder.Background = SuccessBrush;
                         anim = new ColorAnimation(Colors.Transparent, new Duration(TimeSpan.FromMilliseconds(200)));
                         NodeBorder.Background.BeginAnimation(SolidColorBrush.ColorProperty, anim);
                         break;
                     case DebugNodeStatus.FAILURE:
-                        NodeBorder.Background = new SolidColorBrush(Colors.Red);
+                        NodeBorder.Background = FailBrush;
                         anim = new ColorAnimation(Colors.Transparent, new Duration(TimeSpan.FromMilliseconds(200)));
                         NodeBorder.Background.BeginAnimation(SolidColorBrush.ColorProperty, anim);
                         break;
                     case DebugNodeStatus.RUNNING:
-                        NodeBorder.Background = new SolidColorBrush(Colors.Blue);
+                        NodeBorder.Background = RunningBrush;
                         break;
                 }
             });
