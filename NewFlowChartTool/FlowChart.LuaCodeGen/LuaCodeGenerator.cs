@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.AST;
+using FlowChart.AST.Nodes;
 using FlowChart.Type;
 
 namespace FlowChart.LuaCodeGen
@@ -11,6 +12,10 @@ namespace FlowChart.LuaCodeGen
     public class LuaCodeGenerator : CodeGenerator
     {
         public override string Lang => "lua";
+        public LuaCodeGenerator()
+        {
+            Operator.Strcat.Text = "..";
+        }
         protected override void PrepareCode(NodeInfo info)
         {
             var content = Pr.Content;
