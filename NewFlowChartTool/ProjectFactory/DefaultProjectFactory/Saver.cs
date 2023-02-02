@@ -194,19 +194,17 @@ namespace ProjectFactory.DefaultProjectFactory
                 if (Project.Config.StandaloneGenerateFile)
                 {
                     var fileInfo = generateFiles[kv.Key];
+                    codeFiles.Add(_saveForLang.SaveGenerateFile(fileInfo.Item1, fileInfo.Item2, lines, genLines));
                     FileHelper.Save(
                         Path.Combine(Project.Path, fileInfo.Item3 + DefaultProjectFactory.GenerateFileExt),
                         genLines);
-                    //codeFiles.Add(generateFiles[kv.Key].Item2);
-                    codeFiles.Add($"  {{ \"{fileInfo.Item1}\", \"{fileInfo.Item2.Replace('\\', '/')}\"}},");
                 }
             }
 
             if (codeFiles.Count > 0)
             {
-                codeFiles.Insert(0, "return {");
-                codeFiles.Add("}");
-                FileHelper.Save(Path.Combine(Project.Path, Project.Config.Output, "all_flowcharts.lua"), codeFiles);
+                var fileName = _saveForLang.SaveAllFlowChartsFile(codeFiles);
+                FileHelper.Save(Path.Combine(Project.Path, Project.Config.Output, fileName), codeFiles);
             }
         }
 

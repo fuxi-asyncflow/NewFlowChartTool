@@ -12,6 +12,10 @@ namespace ProjectFactory.DefaultProjectFactory
     {
         public void SaveEventDefine(Project Project, List<string> lines);
         public void SaveNodeFunc(TextNode textNode, List<string> lines);
+        public string SaveGenerateFile(string belongRoot, string outputFile, List<string> yamlLines,
+            List<string> codeLines);
+
+        public string SaveAllFlowChartsFile(List<string> lines);
     }
 
     public class SaveForDefault : ISaveForLang
@@ -24,6 +28,17 @@ namespace ProjectFactory.DefaultProjectFactory
         public void SaveNodeFunc(TextNode textNode, List<string> lines)
         {
             
+        }
+
+        public string SaveGenerateFile(string belongRoot, string outputFile, List<string> yamlLines,
+            List<string> codeLines)
+        {
+            return string.Empty;
+        }
+
+        public string SaveAllFlowChartsFile(List<string> lines)
+        {
+            return string.Empty;
         }
     }
 
@@ -67,6 +82,26 @@ namespace ProjectFactory.DefaultProjectFactory
             var funcName = $"{textNode.OwnerGraph.Path}.{normalUidStr}";
             genLines.Add($"asyncflow.set_node_func(\"{funcName}\", f_{normalUidStr})");
             genLines.Add("");
+        }
+
+        public string SaveGenerateFile(string belongRoot, string outputFile, List<string> yamlLines,
+            List<string> codeLines)
+        {
+            codeLines.Add("");
+            codeLines.Add("local str = [[");
+            codeLines.AddRange(yamlLines);
+            codeLines.Add("]]");
+            codeLines.Add("");
+            codeLines.Add("asyncflow.import_charts(str)");
+
+            return $"  {{ \"{belongRoot}\", \"{outputFile.Replace('\\', '/')}\"}},";
+        }
+
+        public string SaveAllFlowChartsFile(List<string> lines)
+        {
+            lines.Insert(0, "return {");
+            lines.Add("}");
+            return "all_flowcharts.lua";
         }
     }
 
@@ -117,6 +152,26 @@ namespace ProjectFactory.DefaultProjectFactory
             var funcName = $"{textNode.OwnerGraph.Path}.{normalUidStr}";
             genLines.Add($"asyncflow.set_node_func(\"{funcName}\", f_{normalUidStr})");
             genLines.Add("");
+        }
+
+        public string SaveGenerateFile(string belongRoot, string outputFile, List<string> yamlLines,
+            List<string> codeLines)
+        {
+            codeLines.Add("");
+            codeLines.Add("str = '''");
+            codeLines.AddRange(yamlLines);
+            codeLines.Add("'''");
+            codeLines.Add("");
+            codeLines.Add("asyncflow.import_charts(str)");
+
+            return $"  [ \"{belongRoot}\", \"{outputFile.Replace('\\', '/')}\"],";
+        }
+
+        public string SaveAllFlowChartsFile(List<string> lines)
+        {
+            lines.Insert(0, "file_list = [");
+            lines.Add("]");
+            return "all_flowcharts.py";
         }
     }
 }
