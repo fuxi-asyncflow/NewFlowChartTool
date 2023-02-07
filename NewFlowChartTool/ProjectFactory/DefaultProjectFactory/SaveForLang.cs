@@ -127,7 +127,7 @@ namespace ProjectFactory.DefaultProjectFactory
             pyLines.Add("");
             pyLines.Add("asyncflow.EventId = EventId");
 
-            pyLines.Add("str = '''");
+            pyLines.Add("str = r'''");
             pyLines.AddRange(lines);
             pyLines.Add("'''");
             pyLines.Add("asyncflow.import_event(str)");
@@ -158,7 +158,7 @@ namespace ProjectFactory.DefaultProjectFactory
             List<string> codeLines)
         {
             codeLines.Add("");
-            codeLines.Add("str = '''");
+            codeLines.Add("str = r'''");
             codeLines.AddRange(yamlLines);
             codeLines.Add("'''");
             codeLines.Add("");
