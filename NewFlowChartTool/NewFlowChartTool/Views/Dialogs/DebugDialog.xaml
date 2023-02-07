@@ -33,6 +33,7 @@
         <Style TargetType="TextBox">
             <Setter Property="Background" Value="{DynamicResource HightlightBackGroundBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource HightlightBorderBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource ForeGroundBrush}" />
         </Style>
     </UserControl.Resources>
     <StackPanel>
@@ -63,15 +64,32 @@
             <StackPanel Margin="0,4" Orientation="Vertical">
                 <StackPanel Margin="0,4" Orientation="Horizontal">
                     <TextBlock Text="对象名称" />
-                    <TextBox MinWidth="100" Margin="8,0" />
+                    <TextBox
+                        MinWidth="100"
+                        Margin="8,0"
+                        Text="{Binding ObjectNameFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Text="流程图名称" />
-                    <TextBox MinWidth="100" Margin="8,0" />
+                    <TextBox
+                        MinWidth="100"
+                        Margin="8,0"
+                        Text="{Binding ChartNameFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Margin="0,4" Orientation="Horizontal">
                     <TextBlock Text="服务器" />
-                    <TextBox MinWidth="100" Margin="8,0" />
+                    <TextBox
+                        MinWidth="100"
+                        Margin="8,0"
+                        Text="{Binding Host, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock Text="端口" />
-                    <TextBox MinWidth="100" Margin="8,0" />
+                    <TextBox
+                        MinWidth="60"
+                        Margin="8,0"
+                        Text="{Binding StartPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Text="-" />
+                    <TextBox
+                        MinWidth="60"
+                        Margin="8,0"
+                        Text="{Binding EndPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
             </StackPanel>
             <Button

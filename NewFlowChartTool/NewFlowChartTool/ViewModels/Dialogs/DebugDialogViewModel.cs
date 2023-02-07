@@ -59,6 +59,8 @@ namespace NewFlowChartTool.ViewModels
             OpenReplayFileCommand = new DelegateCommand(ChooseReplayFile);
             StartPort = 9000;
             EndPort = 9003;
+            ChartNameFilter = "";
+            ObjectNameFilter = "";
             Host = "127.0.0.1";
 
             _netManager = new FlowChart.Debug.WebSocket.Manager();
@@ -127,6 +129,10 @@ namespace NewFlowChartTool.ViewModels
         public int StartPort { get => _startPort; set => SetProperty(ref _startPort, value); }
         private int _endPort;
         public int EndPort { get => _endPort; set => SetProperty(ref _endPort, value); }
+        private string _chartNameFilter;
+        public string ChartNameFilter { get => _chartNameFilter; set => SetProperty(ref _chartNameFilter, value); }
+        private string _objectNameFilter;
+        public string ObjectNameFilter { get => _objectNameFilter; set => SetProperty(ref _objectNameFilter, value); }
         public bool IsReplay => ReplayFile.Inst.IsLoadFromFile;
 
         public void GetGraphList()
@@ -134,7 +140,7 @@ namespace NewFlowChartTool.ViewModels
             ReplayFile.Inst.Reset();
             GraphList.Clear();
           
-            _netManager.BroadCast(Host, StartPort, EndPort, new GetChartListMessage(){ChartName = "", ObjectName = ""});
+            _netManager.BroadCast(Host, StartPort, EndPort, new GetChartListMessage(){ChartName = ChartNameFilter.Trim(), ObjectName = ObjectNameFilter.Trim()});
         }
 
         private void OnRecvGraphListEvent(List<GraphInfo> graphs)
