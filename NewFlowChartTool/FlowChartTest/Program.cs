@@ -43,14 +43,6 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
         public static NLog.Logger MyLogger ;
     }
 
-    class CodeGenFactory : ICodeGenFactory
-    {
-        public ICodeGenerator CreateCodeGenerator(Project p, Graph g)
-        {
-            return new LuaCodeGenerator() { G = g, P = p };
-        }
-    }
-
     internal class Program
     {
         static void Main(string[] args)
@@ -78,7 +70,7 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
 
-            var builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
+            var builder = new Builder(new FlowChart.Parser.Parser());
             builder.Build(p);
         }
 

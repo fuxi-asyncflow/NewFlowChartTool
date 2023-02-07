@@ -11,6 +11,7 @@ using FlowChart.AST;
 using FlowChart.Core;
 using FlowChart.Type;
 using FlowChart.Common;
+using FlowChart.Parser;
 
 namespace ProjectFactory.DefaultProjectFactory
 {
@@ -44,6 +45,7 @@ namespace ProjectFactory.DefaultProjectFactory
             // test = new TestProjectFactory();
             // test.Create(project);
             loader.Load(project);
+            saver.SetLang(CodeGenFactory.GetLang(project.Config.CodeGenerator));
         }
 
         public void Save(Project project)
@@ -91,10 +93,8 @@ namespace ProjectFactory.DefaultProjectFactory
             return graph.Path.Split('.').First();
         }
 
-        public void SaveProject(Project project)
+        public void SetLang(string? lang)
         {
-            Project = project;
-            var lang = Project.Config.CodeLang;
             if (lang == "lua")
             {
                 _saveForLang = new SaveForLua();
@@ -105,14 +105,16 @@ namespace ProjectFactory.DefaultProjectFactory
                 _saveForLang = new SaveForPython();
                 DefaultProjectFactory.GenerateFileExt = ".py";
             }
+        }
 
+        public void SaveProject(Project project)
+        {
+            Project = project;
             GraphToFileRule = SaveGraphByRoot;
             PrepareFolder();
             SaveGraphs();
             SaveTypes();
             SaveConfig(project.Path + "/project.json");
-
-            
         }
 
         public void SaveConfig(string path)

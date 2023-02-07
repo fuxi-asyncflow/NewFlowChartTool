@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Common;
 using FlowChart.Common.Report;
+using FlowChart.LuaCodeGen;
+using FlowChart.Parser;
 
 namespace NewFlowChartTool.Utility
 {
@@ -15,6 +17,8 @@ namespace NewFlowChartTool.Utility
         static PluginManager()
         {
             Inst = new PluginManager();
+            CodeGenFactory.Register("lua", typeof(LuaCodeGenerator));
+            CodeGenFactory.Register("python", typeof(PyCodeGenerator));
         }
 
         public void LoadPlugins()

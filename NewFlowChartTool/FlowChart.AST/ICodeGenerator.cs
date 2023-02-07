@@ -54,11 +54,6 @@ namespace FlowChart.AST
         public bool IsAsync { get; set; }
     }
 
-    public interface ICodeGenerator
-    {
-        public ParseResult GenerateCode(ASTNode ast, ParserConfig cfg);
-    }
-
     public class TextToken
     {
         public enum TokenType

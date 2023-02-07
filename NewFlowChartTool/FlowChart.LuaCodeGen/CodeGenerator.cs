@@ -4,6 +4,7 @@ using FlowChart.AST;
 using FlowChart;
 using FlowChart.AST.Nodes;
 using FlowChart.Core;
+using FlowChart.Parser;
 using FlowChart.Type;
 
 namespace FlowChart.LuaCodeGen
@@ -12,14 +13,13 @@ namespace FlowChart.LuaCodeGen
     {
         public string Code;
         public Type.Type Type;
-
         public static NodeInfo ErrorNodeInfo = new NodeInfo();
     }
 
     public class CodeGenerator : IASTNodeVisitor<NodeInfo>, ICodeGenerator
     {
-        public Project P;
-        public Graph G;
+        public Project P { get; set; }
+        public Graph G { get; set; }
         public ParseResult Pr;
         public bool OnlyGetType;
         public virtual char InvokeOperator => ':';

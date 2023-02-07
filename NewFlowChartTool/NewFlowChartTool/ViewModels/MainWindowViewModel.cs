@@ -31,38 +31,6 @@ using ProjectFactory.DefaultProjectFactory;
 
 namespace NewFlowChartTool.ViewModels
 {
-    class CodeGenFactory : ICodeGenFactory
-    {
-        static CodeGenFactory()
-        {
-            CodeGeneratorMap = new Dictionary<string, Type>();
-            CodeGeneratorMap.Add("lua", typeof(LuaCodeGenerator));
-            CodeGeneratorMap.Add("python", typeof(PyCodeGenerator));
-        }
-
-        private static Dictionary<string, Type> CodeGeneratorMap;
-        public ICodeGenerator CreateCodeGenerator(Project p, Graph g)
-        {
-            if (CodeGeneratorMap.TryGetValue(p.Config.CodeGenerator, out var tp))
-            {
-                var generator = (ICodeGenerator)Activator.CreateInstance(tp);
-                if (generator is not CodeGenerator gen)
-                {
-                    throw new NotImplementedException("generator should inherit from CodeGenerator");
-                }
-
-                gen.G = g;
-                gen.P = p;
-                p.Config.CodeLang = gen.Lang;
-                return gen;
-            }
-            else
-            {
-                throw new NotSupportedException($"no code generator named {p.Config.CodeGenerator}");
-            }
-        }
-    }
-
     public class MainWindowViewModel : BindableBase
     {
         
@@ -193,7 +161,7 @@ namespace NewFlowChartTool.ViewModels
             //var p = new FlowChart.Core.Project(new DefaultProjectFactory());
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
-            p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
+            p.Builder = new Builder(new FlowChart.Parser.Parser());
             EventHelper.Pub<ProjectOpenEvent, Project>(p);
             p.Save();
             CurrentProject = p;
@@ -232,7 +200,7 @@ namespace NewFlowChartTool.ViewModels
             }
 #endif
             CurrentProject = p;
-            p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
+            p.Builder = new Builder(new FlowChart.Parser.Parser());
             EventHelper.Pub<ProjectOpenEvent, Project>(p);
             PluginManager.Inst.Report(new OpenProjectEvent(p.Path));
 
@@ -261,7 +229,7 @@ namespace NewFlowChartTool.ViewModels
 
             var p = DefaultProjectFactory.CreateNewProject(folderPath);
             CurrentProject = p;
-            p.Builder = new Builder(new FlowChart.Parser.Parser(), new CodeGenFactory());
+            p.Builder = new Builder(new FlowChart.Parser.Parser());
             EventHelper.Pub<ProjectOpenEvent, Project>(p);
             p.Save();
         }
