@@ -74,6 +74,11 @@
             Background="Transparent"
             ItemsSource="{Binding Roots}"
             VirtualizingStackPanel.IsVirtualizing="True">
+            <TreeView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding NewGraphRootCommand}" Header="新建根目录" />
+                </ContextMenu>
+            </TreeView.ContextMenu>
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type vm:ProjectTreeRootViewModel}" ItemsSource="{Binding Children}">
                     <HierarchicalDataTemplate.Resources>

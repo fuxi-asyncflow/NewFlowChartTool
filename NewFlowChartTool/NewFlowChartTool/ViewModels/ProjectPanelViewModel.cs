@@ -21,6 +21,7 @@ using NFCT.Common.Events;
 using Prism.Commands;
 using Prism.Ioc;
 using System.ComponentModel;
+using FlowChart;
 using Prism.Services.Dialogs;
 using ProjectFactory;
 
@@ -415,6 +416,7 @@ namespace NewFlowChartTool.ViewModels
             SubscribeEvents();
             SearchResult = new ObservableCollection<ProjectTreeItemViewModel>();
             _searchText = null;
+            NewGraphRootCommand = new DelegateCommand(NewGraphRoot);
 
 #if DEBUG
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()))
@@ -510,8 +512,38 @@ namespace NewFlowChartTool.ViewModels
             return root;
         }
 
+        void NewGraphRoot()
+        {
+            if (Project == null)
+                return;
+            var config = Project.Config;
+            if (config == null)
+                return;
+            var dialogService = ContainerLocator.Current.Resolve<IDialogService>();
+
+
+            GraphRootConfig rootConfig;
+            rootConfig = config.GraphRoots.Count > 0 ? config.GraphRoots[0].Clone() : new GraphRootConfig();
+            rootConfig.Name = "NewFile";
+
+            var parameters = new DialogParameters();
+            parameters.Add("graph_root", rootConfig);
+            parameters.Add("project", Project);
+            dialogService.ShowDialog(GraphRootConfigDialogViewModel.NAME, parameters, result =>
+            {
+                if (result.Result == ButtonResult.OK)
+                {
+                    
+                    config.GraphRoots.Add(rootConfig);
+                    config.GetGraphRoot(rootConfig.Name);
+                    Project.Save();
+                }
+            });
+        }
+
         public ProjectTreeItemViewModel? ProjectTreeRoot { get; set; }
         public ObservableCollection<ProjectTreeItemViewModel> Roots { get; set; }
+        public DelegateCommand NewGraphRootCommand { get; private set; }
 
         public delegate void ProjectTreeItemDelegate(ProjectTreeItemViewModel item);
 

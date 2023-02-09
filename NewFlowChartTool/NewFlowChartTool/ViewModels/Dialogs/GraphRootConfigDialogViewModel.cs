@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart;
 using FlowChart.Core;
+using FlowChart.Type;
 using Microsoft.Msagl.Core.DataStructures;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -15,6 +17,10 @@ namespace NewFlowChartTool.ViewModels
 {
     internal class GraphRootConfigDialogViewModel: BindableBase, IDialogAware
     {
+        public GraphRootConfigDialogViewModel()
+        {
+            TypeNames = new ObservableCollection<string>();
+        }
         public static string NAME = nameof(GraphRootConfigDialogViewModel);
         public bool CanCloseDialog()
         {
@@ -32,7 +38,18 @@ namespace NewFlowChartTool.ViewModels
             project = parameters.GetValue<Project>("project");
             Name = config.Name;
             Path = config.Path;
+            TypeName = config.DefaultType;
             OutputPath = config.OutputPath;
+
+            TypeNames.Clear();
+            foreach (var kv in project.TypeDict)
+            {
+                var type = kv.Value;
+                if (!type.IsBuiltinType && type is not GenericType)
+                {
+                    TypeNames.Add(kv.Key);
+                }
+            }
 
             if (SaveCommand == null)
             {
@@ -47,7 +64,8 @@ namespace NewFlowChartTool.ViewModels
 
         GraphRootConfig config;
         Project project;
-        
+        public ObservableCollection<string> TypeNames { get; set; }
+
         public DelegateCommand? SaveCommand { get; set; }
 
         private string _name;
@@ -86,7 +104,7 @@ namespace NewFlowChartTool.ViewModels
             if(TypeName != null)
                 config.DefaultType = TypeName.Trim();
             project.Save();
-
+            RequestClose?.Invoke(new DialogResult(ButtonResult.OK));
         }
     }
 }

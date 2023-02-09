@@ -76,7 +76,9 @@ namespace FlowChart
             Name = "root";
             Path = "graphs";
             OutputPath = "generate";
-            
+            DefaultType = "Global";
+            SaveRuleString = "per_root_child";
+
         }
         [JsonPropertyName("name")]
         public string Name { get; set; }
@@ -85,7 +87,7 @@ namespace FlowChart
         [JsonPropertyName("output")]
         public string OutputPath { get; set; }
         [JsonPropertyName("type")]
-        public string DefaultType;
+        public string DefaultType { get; set; }
 
         private string _saveRuleString;
         [JsonPropertyName("save_rule")]
@@ -107,6 +109,15 @@ namespace FlowChart
 
         public IGraphSaveRule SaveRule;
         public static Dictionary<string, IGraphSaveRule> GraphSaveRules;
+
+        public GraphRootConfig Clone()
+        {
+            return new GraphRootConfig()
+            {
+                Name = Name, Path = Path, OutputPath = OutputPath, DefaultType = DefaultType,
+                SaveRuleString = SaveRuleString
+            };
+        }
     }
 
     public class ProjectConfig

@@ -20,7 +20,12 @@
                 <TextBlock Width="80" Text="Name" />
                 <TextBox MinWidth="120" Text="{Binding Name}" />
                 <TextBlock Margin="20,0,20,0" Text="DefaultType" />
-                <TextBox MinWidth="120" Text="{Binding TypeName}" />
+                <!--<TextBox MinWidth="120" Text="{Binding TypeName}" />-->
+                <ComboBox
+                    x:Name="TypeBox"
+                    MinWidth="120"
+                    ItemsSource="{Binding TypeNames}"
+                    Text="{Binding TypeName}" />
             </StackPanel>
             <StackPanel Margin="10" Orientation="Horizontal">
                 <TextBlock Width="80" Text="Path" />
