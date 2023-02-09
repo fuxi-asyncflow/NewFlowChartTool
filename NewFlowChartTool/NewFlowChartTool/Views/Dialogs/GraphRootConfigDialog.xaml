@@ -1,0 +1,44 @@
+﻿<UserControl
+    x:Class="NewFlowChartTool.Views.Dialogs.GraphRootConfigDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:NewFlowChartTool.Views.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
+    Width="480"
+    Height="160"
+    d:DataContext="{d:DesignInstance vm:GraphRootConfigDialogViewModel}"
+    d:DesignHeight="160"
+    d:DesignWidth="480"
+    prism:Dialog.WindowStyle="{DynamicResource CustomWindowStyle}"
+    mc:Ignorable="d">
+    <Grid>
+        <StackPanel>
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <TextBlock Width="80" Text="Name" />
+                <TextBox MinWidth="120" Text="{Binding Name}" />
+                <TextBlock Margin="20,0,20,0" Text="DefaultType" />
+                <TextBox MinWidth="120" Text="{Binding TypeName}" />
+            </StackPanel>
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <TextBlock Width="80" Text="Path" />
+                <TextBox MinWidth="220" Text="{Binding Path}" />
+            </StackPanel>
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <TextBlock Width="80" Text="OutputPath" />
+                <TextBox MinWidth="220" Text="{Binding OutputPath}" />
+            </StackPanel>
+            <StackPanel FlowDirection="RightToLeft" Orientation="Horizontal">
+                <Button
+                    Width="60"
+                    Margin="80,0,0,0"
+                    Command="{Binding SaveCommand}"
+                    Content="Save" />
+
+            </StackPanel>
+
+        </StackPanel>
+    </Grid>
+</UserControl>

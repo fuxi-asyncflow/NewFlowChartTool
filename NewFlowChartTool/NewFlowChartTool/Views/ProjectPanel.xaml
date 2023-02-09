@@ -9,7 +9,7 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
     d:DataContext="{d:DesignInstance vm:ProjectPanelViewModel,
-                                     IsDesignTimeCreatable=True}"
+                                     IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
     d:DesignWidth="200"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -75,6 +75,25 @@
             ItemsSource="{Binding Roots}"
             VirtualizingStackPanel.IsVirtualizing="True">
             <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type vm:ProjectTreeRootViewModel}" ItemsSource="{Binding Children}">
+                    <HierarchicalDataTemplate.Resources>
+                        <ContextMenu x:Key="TreeRootContextMenu">
+                            <MenuItem Command="{Binding ConfigCommand}" Header="设置" />
+                        </ContextMenu>
+                    </HierarchicalDataTemplate.Resources>
+                    <StackPanel
+                        Margin="2"
+                        ContextMenu="{StaticResource TreeRootContextMenu}"
+                        Orientation="Horizontal">
+
+                        <Viewbox Child="{StaticResource Icon_FolderClosed}" />
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            VerticalAlignment="Center"
+                            Text="{Binding Name}" />
+                    </StackPanel>
+
+                </HierarchicalDataTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type vm:ProjectTreeFolderViewModel}" ItemsSource="{Binding Children}">
                     <StackPanel Margin="2" Orientation="Horizontal">
                         <Viewbox Child="{StaticResource Icon_FolderClosed}" />

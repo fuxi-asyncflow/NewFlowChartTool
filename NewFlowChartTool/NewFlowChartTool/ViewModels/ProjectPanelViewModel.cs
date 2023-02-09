@@ -383,6 +383,30 @@ namespace NewFlowChartTool.ViewModels
         }
     }
 
+    public class ProjectTreeRootViewModel : ProjectTreeFolderViewModel
+    {
+        public ProjectTreeRootViewModel(TreeItem item) : base(item)
+        {
+            ConfigCommand = new DelegateCommand(ShowConfigDialog);
+        }
+
+        public DelegateCommand ConfigCommand { get; set; }
+
+        void ShowConfigDialog()
+        {
+            var dialogService = ContainerLocator.Current.Resolve<IDialogService>();
+            
+            var config = Item.Project.Config.GraphRoots.Find(cfg => cfg.Name == Item.Name);
+            if (config != null)
+            {
+                var parameters = new DialogParameters();
+                parameters.Add("graph_root", config);
+                parameters.Add("project", Item.Project);
+                dialogService.ShowDialog(GraphRootConfigDialogViewModel.NAME, parameters, result => { });
+            }
+        }
+    }
+
     public class ProjectPanelViewModel : BindableBase
     {
         public ProjectPanelViewModel()
@@ -422,7 +446,7 @@ namespace NewFlowChartTool.ViewModels
                 if (item is Graph) return new ProjectTreeItemViewModel(item);
                 if (item is Folder folder)
                 {
-                    var vm = new ProjectTreeFolderViewModel(folder);
+                    ProjectTreeFolderViewModel vm = folder.Parent != project.Root ? new ProjectTreeFolderViewModel(folder) : new ProjectTreeRootViewModel(folder);
                     folder.Children.ForEach(child => vm.AddChild(CreateTreeItemViewModel(child)));
                     return vm;
                 }
