@@ -31,7 +31,7 @@ namespace FlowChart.Core
             Factory = factory;
             Root = new Folder("") {Project = this};
             TypeDict = new Dictionary<string, Type.Type>();
-            GraphDict = new Dictionary<string, Graph>();
+            GraphDict = new Dictionary<string, TreeItem>();
             EventDict = new Dictionary<string, EventType>();
             BuiltinTypes.Types.ForEach(tp =>
             {
@@ -57,7 +57,7 @@ namespace FlowChart.Core
         public Dictionary<string, Type.EventType> EventDict { get; set; }
         public IProjectFactory Factory { get; private set; }
         public bool IsAsyncLoad { get; set; }
-        public Dictionary<string, Graph> GraphDict { get; set; }
+        public Dictionary<string, TreeItem> GraphDict { get; set; }
         public Builder Builder { get; set; }
         #endregion
 
@@ -202,25 +202,12 @@ namespace FlowChart.Core
                 graph.Path = originPath + "_dup" + graph.GetHashCode() % 10000;
                 Logger.WARN($"exist same path when add graph: {originPath} rename to {graph.Path}");
             }
-            var paths = graph.Path.Split(".");
+            var path = graph.Path;
+            var paths = path.Split(".");
             graph.Name = paths.Last();
-            var folder = Root;
-            
-            foreach(var path in paths.SkipLast(1))
-            {
-                folder = folder.GetOrCreateSubFolder(path);
-                if(folder == null)
-                {
-                    break;
-                }
-                if (folder.Type == null)
-                {
-                    folder.Type = graph.Type;
-                }
-            }
-            if (folder == null)
-                return;
-            folder.AddChild(graph);
+
+            var parent = GetFolder(path.Substring(0, path.LastIndexOf('.')));
+            parent.AddChild(graph);
             
             // Console.WriteLine($"graph path: {graph.Path}");
             
@@ -230,10 +217,49 @@ namespace FlowChart.Core
             AddGraphEvent?.Invoke(graph);
         }
 
+        public void AddFolder(Folder folder)
+        {
+            
+        }
+
         public Graph? GetGraph(string path)
         {
-            GraphDict.TryGetValue(path, out var graph);
-            return graph;
+            GraphDict.TryGetValue(path, out var item);
+            return item as Graph;
+        }
+
+        public TreeItem? GetItem(string path)
+        {
+            GraphDict.TryGetValue(path, out var item);
+            return item;
+        }
+
+        public Folder GetFolder(string path)
+        {
+            var item = GetItem(path);
+            if (item is Folder f)
+                return f;
+
+            Folder folder;
+            var dotPos = path.LastIndexOf('.');
+            if (dotPos == -1)
+            {
+                var config = Config.GraphRoots.Find(cfg => cfg.Name == path);
+                var type = config == null ? BuiltinTypes.GlobalType : GetType(config.DefaultType);
+                folder = new Folder(path) { Path = path, Parent = Root, Type = type ?? BuiltinTypes.GlobalType};
+                Root.AddChild(folder);
+                GraphDict.Add(folder.Path, folder);
+            }
+            else
+            {
+                var parent = GetFolder(path.Substring(0, dotPos));
+                var name = path.Substring(dotPos + 1);
+                folder = new Folder(name) { Path = path, Parent = parent };
+                parent.AddChild(folder);
+                GraphDict.Add(folder.Path, folder);
+            }
+            return folder;
+
         }
 
         public void Remove(Graph graph)

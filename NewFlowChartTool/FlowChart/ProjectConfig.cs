@@ -46,14 +46,8 @@ namespace FlowChart
         public string GetGraphSaveFile(string graphPath)
         {
             var splits = graphPath.Split('.');
-            if (splits.Length < 2)
-            {
-                var msg = $"graphPath {graphPath} should contains .";
-                Logger.ERR(msg);
-                throw new Exception(msg);
-            }
 
-            if (splits.Length == 2)
+            if (splits.Length <= 2)
             {
                 return splits[0];
             }

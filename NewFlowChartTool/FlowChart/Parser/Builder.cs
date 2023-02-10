@@ -74,7 +74,8 @@ namespace FlowChart.Parser
             ParserConfig cfg = new ParserConfig();
             foreach (var graphKV in p.GraphDict)
             {
-                BuildGraph(graphKV.Value, cfg);
+                if(graphKV.Value is Graph graph)
+                    BuildGraph(graph, cfg);
             }
         }
 

@@ -104,14 +104,16 @@ namespace FlowChart.Diff
         {
             DiffResult.Clear();
             var oldDict = new Dictionary<Guid, Graph>();
-            foreach (var graph in OldProject.GraphDict.Values)
+            foreach (var item in OldProject.GraphDict.Values)
             {
-                oldDict.Add(graph.Uid, graph);
+                if(item is Graph graph)
+                    oldDict.Add(graph.Uid, graph);
             }
             var newDict = new Dictionary<Guid, Graph>();
-            foreach (var graph in NewProject.GraphDict.Values)
+            foreach (var item in NewProject.GraphDict.Values)
             {
-                newDict.Add(graph.Uid, graph);
+                if (item is Graph graph)
+                    newDict.Add(graph.Uid, graph);
             }
 
             foreach (var kv in oldDict)

@@ -209,10 +209,13 @@ namespace NewFlowChartTool.ViewModels
                 int count = 0;
                 _statusBarService.BeginProgress(p.GraphDict.Count, "loading graphs ...");
                 var sw = Stopwatch.StartNew();
-                foreach (var graph in p.GraphDict.Values)
+                foreach (var item in p.GraphDict.Values)
                 {
-                    await Task.Run(graph.LazyLoad);
-                    _statusBarService.UpdateProgress(count++);
+                    if (item is Graph graph)
+                    {
+                        await Task.Run(graph.LazyLoad);
+                        _statusBarService.UpdateProgress(count++);
+                    }
                 }
                 Logger.LOG($"lazy load graph : {sw.ElapsedMilliseconds}");
                 //var loadAllGraphTask = Task.WhenAll(p.GraphDict.Values.ToList().ConvertAll(graph => Task.Run(graph.LazyLoadFunc)));
@@ -387,16 +390,19 @@ namespace NewFlowChartTool.ViewModels
                 return;
             text = text.Trim().ToLower();
             var output = ContainerLocator.Current.Resolve<OutputPanelViewModel>();
-            foreach (var graph in CurrentProject.GraphDict.Values)
+            foreach (var item in CurrentProject.GraphDict.Values)
             {
-                graph.Nodes.ForEach(node =>
+                if (item is Graph graph)
                 {
-                    if (node is TextNode textNode)
+                    graph.Nodes.ForEach(node =>
                     {
-                        if(textNode.Text.Contains(text))
-                            output.Output(textNode.Text, OutputMessageType.Default, node);
-                    }
-                });
+                        if (node is TextNode textNode)
+                        {
+                            if (textNode.Text.Contains(text))
+                                output.Output(textNode.Text, OutputMessageType.Default, node);
+                        }
+                    });
+                }
             }
         }
 
@@ -523,14 +529,15 @@ namespace NewFlowChartTool.ViewModels
                 ActiveGraph.EnterDebugMode(graphInfo);
                 return;
             }
-            if (CurrentProject.GraphDict.TryGetValue(graphInfo.GraphName, out var graph))
+            if (CurrentProject.GraphDict.TryGetValue(graphInfo.GraphName, out var item))
             {
-                OnOpenGraph(graph);
+                if(item is Graph graph)
+                    OnOpenGraph(graph);
             }
 
             ForEachOpenedGraphs(graphVm =>
             {
-                if (graphVm.Graph == graph)
+                if (graphVm.Graph == item)
                 {
                     graphVm.EnterDebugMode(graphInfo);
                     graphVm.UpdateAgents(DebugDialogViewModel.Inst.GetAgents(graphInfo.GraphName));

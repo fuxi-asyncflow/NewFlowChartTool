@@ -140,7 +140,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public void SaveGraphs()
         {
             var graphFolder = ProjectFolder.CreateSubdirectory(DefaultProjectFactory.GraphFolderName);
-            var graphFiles = new Dictionary<string, List<Graph>>();
+            var graphFiles = new Dictionary<string, List<TreeItem>>();
             var generateFiles = new Dictionary<string, Tuple<string, string, string>>();
 
             foreach (var kv in Project.GraphDict)
@@ -149,30 +149,31 @@ namespace ProjectFactory.DefaultProjectFactory
                 var graph = kv.Value;
                 Debug.Assert(graph.Path == graphPath);
                 //if (graph.SaveFilePath == null)
+                
+                // get root config
+                var firstDotIndex = graphPath.IndexOf('.');
+                var rootName = firstDotIndex == -1 ? graphPath : graphPath.Substring(0, firstDotIndex);
+                var rootConfig = Project.Config.GetGraphRoot(rootName);
+                if (rootConfig == null)
                 {
-                    // get root config
-                    var rootName = graphPath.Substring(0, graphPath.IndexOf('.'));
-                    var rootConfig = Project.Config.GetGraphRoot(rootName);
-                    if (rootConfig == null)
-                    {
-                        var msg = $"invalid root for graph {graphPath}";
-                        Logger.ERR(msg);
-                        throw new Exception(msg);
-                    }
-
-                    var saveFile = rootConfig.SaveRule.GetGraphSaveFile(graphPath);
-                    graph.SaveFilePath = Path.Combine(rootConfig.Path, saveFile) ;
-                    graph.GenerateFilePath = Path.Combine(rootConfig.OutputPath, saveFile);
-                    if (!generateFiles.ContainsKey(graph.SaveFilePath))
-                    {
-                        generateFiles.Add(graph.SaveFilePath, new Tuple<string, string, string>(rootConfig.Name, saveFile, graph.GenerateFilePath));
-                    }
+                    var msg = $"invalid root for graph {graphPath}";
+                    Logger.ERR(msg);
+                    throw new Exception(msg);
                 }
 
-                if (!graphFiles.TryGetValue(graph.SaveFilePath, out var graphs))
+                var saveFile = rootConfig.SaveRule.GetGraphSaveFile(graphPath);
+                var saveFilePath = Path.Combine(rootConfig.Path, saveFile) ;
+                var generateFilePath = Path.Combine(rootConfig.OutputPath, saveFile);
+                if (!generateFiles.ContainsKey(saveFilePath))
                 {
-                    graphs = new List<Graph>();
-                    graphFiles.Add(graph.SaveFilePath, graphs);
+                    generateFiles.Add(saveFilePath, new Tuple<string, string, string>(rootConfig.Name, saveFile, generateFilePath));
+                }
+                
+
+                if (!graphFiles.TryGetValue(saveFilePath, out var graphs))
+                {
+                    graphs = new List<TreeItem>();
+                    graphFiles.Add(saveFilePath, graphs);
                 }
                 
                 graphs.Add(graph);
@@ -185,10 +186,13 @@ namespace ProjectFactory.DefaultProjectFactory
                 filePath = System.IO.Path.Combine(Project.Path, filePath);
                 var lines = new List<string>();
                 var genLines = new List<string>();
-                foreach (var graph in kv.Value)
+                foreach (var item in kv.Value)
                 {
                     lines.Add("--- ");
-                    SaveGraph(graph, lines, genLines);
+                    if(item is Graph graph)
+                        SaveGraph(graph, lines, genLines);
+                    else
+                        SaveFolder(item as Folder, lines);
                 }
                 lines.Add("...");
                 FileHelper.Save(filePath, lines);
@@ -207,6 +211,15 @@ namespace ProjectFactory.DefaultProjectFactory
                 var fileName = _saveForLang.SaveAllFlowChartsFile(codeFiles);
                 FileHelper.Save(Path.Combine(Project.Path, Project.Config.Output, fileName), codeFiles);
             }
+        }
+
+        void SaveFolder(Folder folder, List<string> lines)
+        {
+            lines.Add($"kind: folder");
+            lines.Add($"path: {folder.Path}");
+            if (!string.IsNullOrEmpty(folder.Description))
+                lines.Add($"description: {folder.Description}");
+
         }
 
         public void SaveGraph(Graph graph, List<string> lines, List<string> genLines)

@@ -383,6 +383,32 @@ namespace ProjectFactory.DefaultProjectFactory
             }
         }
 
+        Folder? CustomCreateFolder(List<string> lines)
+        {
+            Folder? folder = null;
+            int pos = 1;
+            while (pos < lines.Count)
+            {
+                var line = lines[pos++];
+                int colonPos = line.IndexOf(':');
+                var key = line.Substring(0, colonPos).Trim();
+                var value = line.Substring(colonPos + 1).Trim();
+                //if (value.Length > 0 && value[0] == '"')
+                //    value = value.Trim();
+                if (key == "description")
+                {
+                    if(folder != null)
+                        folder.Description = value;
+                }
+
+                if (key == "path")
+                {
+                    folder = Project.GetFolder(value);
+                }
+            }
+            return folder;
+        }
+
         public Graph? CustomCreateGraph(List<string> lines)
         {
             if(lines.Count == 0) return null;
@@ -411,9 +437,18 @@ namespace ProjectFactory.DefaultProjectFactory
                        || (line[0] == '.' && line[1] == '.' && line[2] == '.')
                        ))
                 {
-                    var graph = CustomCreateGraph(graphLines);
-                    if(graph != null)
-                        Project.AddGraph(graph);
+                    if (graphLines.Count > 1 && graphLines[0] == "kind: folder")
+                    {
+                        var folder = CustomCreateFolder(graphLines);
+                        if(folder != null)
+                            Project.AddFolder(folder);
+                    }
+                    else
+                    {
+                        var graph = CustomCreateGraph(graphLines);
+                        if (graph != null)
+                            Project.AddGraph(graph);
+                    }
                     graphLines = new List<string>();
                 }
                 else
