@@ -17,6 +17,8 @@ namespace FlowChart.LuaCodeGen
         public PyCodeGenerator()
         {
             Operator.Strcat.Text = "+";
+            Operator.And.Text = "and";
+            Operator.Or.Text = "or";
         }
 
         protected override void PrepareCode(NodeInfo info)

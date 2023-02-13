@@ -23,6 +23,8 @@ namespace FlowChart.AST.Nodes
             NE = 10,
             EQ = 11,
             STRCAT = 12,
+            AND = 13,
+            OR = 14
         }
 
         public Operator(OPERATOR op, string text)
@@ -48,6 +50,9 @@ namespace FlowChart.AST.Nodes
         public static Operator Ne = new Operator(OPERATOR.NE, "!=") { IsBoolOp = true };
         public static Operator Eq = new Operator(OPERATOR.EQ, "==") { IsBoolOp = true };
         public static Operator Strcat = new Operator(OPERATOR.STRCAT, "..") {};
+
+        public static Operator And = new Operator(OPERATOR.AND, "&&") { IsBoolOp = true };
+        public static Operator Or = new Operator(OPERATOR.OR, "||") { IsBoolOp = true };
 
     }
 
