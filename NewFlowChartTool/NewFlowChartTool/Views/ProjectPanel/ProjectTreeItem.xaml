@@ -10,21 +10,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ContextMenu
-            x:Key="ProjectTreeItemContext"
-            x:Shared="False"
-            ItemsSource="{Binding Source={x:Static vm:ProjectTreeItemViewModel.MenuItems}}">
-            <ContextMenu.ItemContainerStyle>
-                <Style TargetType="{x:Type MenuItem}">
-                    <Setter Property="Command" Value="{Binding Command}" />
-                    <Setter Property="Header" Value="{Binding Text}" />
-                    <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeViewItem}}, Path=DataContext}" />
-                </Style>
-            </ContextMenu.ItemContainerStyle>
-        </ContextMenu>
-    </UserControl.Resources>
-    <Grid Margin="2" ContextMenu="{StaticResource ProjectTreeItemContext}">
+    <Grid Margin="2">
         <StackPanel Orientation="Horizontal">
             <Viewbox Child="{StaticResource Icon_CSClassFile}" />
             <TextBlock

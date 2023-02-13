@@ -19,7 +19,20 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/AvalonDock.Themes.VS2013;component/DarkTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <ContextMenu
+                x:Key="ProjectTreeItemContext"
+                x:Shared="False"
+                ItemsSource="{Binding Source={x:Static vm:ProjectTreeItemViewModel.MenuItems}}">
+                <ContextMenu.ItemContainerStyle>
+                    <Style TargetType="{x:Type MenuItem}">
+                        <Setter Property="Command" Value="{Binding Command}" />
+                        <Setter Property="Header" Value="{Binding Text}" />
+                        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeViewItem}}, Path=DataContext}" />
+                    </Style>
+                </ContextMenu.ItemContainerStyle>
+            </ContextMenu>
         </ResourceDictionary>
+
 
     </UserControl.Resources>
     <DockPanel Background="Transparent" LastChildFill="True">
@@ -118,6 +131,7 @@
                 <Style BasedOn="{StaticResource CustomTreeViewItemStyle}" TargetType="TreeViewItem">
                     <EventSetter Event="MouseDoubleClick" Handler="ProjectTreeItem_MouseDoubleClick" />
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
+                    <Setter Property="ContextMenu" Value="{StaticResource ProjectTreeItemContext}" />
                 </Style>
             </TreeView.ItemContainerStyle>
         </TreeView>
