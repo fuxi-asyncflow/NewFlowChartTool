@@ -442,6 +442,7 @@ abc + test(a,b).ob+xyz
                 // Event可能包含Type多种类型,此时任一类型匹配都加入到对应类型的提示中,
                 // Type为空则是当前图类型ownerEvent事件
                 prompts.Add(new PromptItemViewModel(PromptItemViewModel.PromptType.Event, ev.Name) { Description = ev.Description});
+                prompts.Add(new PromptItemViewModel(PromptItemViewModel.PromptType.Event, "On" + ev.Name) { Description = ev.Description });
                 //if (member is Event)
                 //{
                 //    var curEvent = member as Event;
