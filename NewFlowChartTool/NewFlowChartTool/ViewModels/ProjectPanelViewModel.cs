@@ -95,7 +95,7 @@ namespace NewFlowChartTool.ViewModels
             set
             {
                 if (this is ProjectTreeFolderViewModel)
-                SetProperty(ref _isExpanded, value);
+                    SetProperty(ref _isExpanded, value);
             }
         }
 

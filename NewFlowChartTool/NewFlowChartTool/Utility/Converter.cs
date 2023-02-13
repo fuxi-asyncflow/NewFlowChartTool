@@ -88,4 +88,24 @@ namespace NewFlowChartTool.Utility.Converter
             throw new NotImplementedException();
         }
     }
+
+    public class ProjetTreeItemIconConverter : IValueConverter
+    {
+        public static Viewbox? GraphIcon => Application.Current.FindResource("Icon_CSClassFile") as Viewbox;
+        public static Viewbox? FolderClosedIcon => Application.Current.FindResource("Icon_FolderClosed") as Viewbox;
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is ProjectTreeFolderViewModel)
+                return FolderClosedIcon;
+            return GraphIcon;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+
+
+    }
 }
