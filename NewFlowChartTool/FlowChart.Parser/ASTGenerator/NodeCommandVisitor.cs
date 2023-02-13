@@ -119,7 +119,7 @@ namespace FlowChart.Parser.ASTGenerator
 
         public override ASTNode VisitExpr_and(NodeParserParser.Expr_andContext context)
         {
-            var node = new BinOpNode() { Op =  Operator.Or };
+            var node = new BinOpNode() { Op =  Operator.And };
             node.Add(Visit(context.expr(0)));
             node.Add(Visit(context.expr(1)));
             return node;
@@ -127,7 +127,7 @@ namespace FlowChart.Parser.ASTGenerator
 
         public override ASTNode VisitExpr_or(NodeParserParser.Expr_orContext context)
         {
-            var node = new BinOpNode() { Op = Operator.Add };
+            var node = new BinOpNode() { Op = Operator.Or };
             node.Add(Visit(context.expr(0)));
             node.Add(Visit(context.expr(1)));
             return node;
