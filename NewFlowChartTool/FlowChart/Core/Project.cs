@@ -246,7 +246,7 @@ namespace FlowChart.Core
             {
                 var config = Config.GraphRoots.Find(cfg => cfg.Name == path);
                 var type = config == null ? BuiltinTypes.GlobalType : GetType(config.DefaultType);
-                folder = new Folder(path) { Path = path, Parent = Root, Type = type ?? BuiltinTypes.GlobalType};
+                folder = new Folder(path) { Path = path, Parent = Root, Project = this, Type = type ?? BuiltinTypes.GlobalType};
                 Root.AddChild(folder);
                 GraphDict.Add(folder.Path, folder);
             }
@@ -254,7 +254,7 @@ namespace FlowChart.Core
             {
                 var parent = GetFolder(path.Substring(0, dotPos));
                 var name = path.Substring(dotPos + 1);
-                folder = new Folder(name) { Path = path, Parent = parent };
+                folder = new Folder(name) { Path = path, Parent = parent, Project = this};
                 parent.AddChild(folder);
                 GraphDict.Add(folder.Path, folder);
             }
