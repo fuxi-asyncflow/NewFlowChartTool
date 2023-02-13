@@ -217,6 +217,18 @@ namespace FlowChart.Core
             AddGraphEvent?.Invoke(graph);
         }
 
+        public void RenameItem(TreeItem item, string oldPath, string newPath)
+        {
+            var foundItem = GetItem(oldPath);
+            if (foundItem != null)
+            {
+                Debug.Assert(foundItem == item);
+                GraphDict.Remove(oldPath);
+            }
+
+            GraphDict.Add(newPath, item);
+        }
+
         public void AddFolder(Folder folder)
         {
             

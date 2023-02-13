@@ -71,7 +71,7 @@ namespace FlowChart.Core
         {
             foreach (var treeItem in Children)
             {
-                var path = $"{parentPath}.{Name}";
+                var path = $"{parentPath}.{treeItem.Name}";
                 if (treeItem is Folder folder)
                 {
                     folder.Path = path;

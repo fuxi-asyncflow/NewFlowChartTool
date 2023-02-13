@@ -126,6 +126,7 @@ namespace FlowChart.Core
                 return;
             var oldPath = _path;
             _path = path;
+            Project?.RenameItem(this, oldPath, path);
             GraphPathChangeEvent?.Invoke(this, oldPath, path);
         }
 
