@@ -76,7 +76,11 @@
                         ToolTip="Stop" />
                     <TextBlock MinWidth="20" Text="{Binding ReplayCurrentFrame}" />
                 </StackPanel>
-                <TextBlock Background="DarkGreen" Text="{Binding FullPath}" />
+                <ComboBox ItemsSource="{Binding TypeNames}" Text="{Binding TypeName}" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Background="DarkGreen"
+                    Text="{Binding FullPath}" />
             </StackPanel>
             <StackPanel />
         </DockPanel>

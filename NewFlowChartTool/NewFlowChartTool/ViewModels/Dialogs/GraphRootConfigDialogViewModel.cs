@@ -20,6 +20,7 @@ namespace NewFlowChartTool.ViewModels
         public GraphRootConfigDialogViewModel()
         {
             TypeNames = new ObservableCollection<string>();
+            SaveCommand = new DelegateCommand(Save);
         }
         public static string NAME = nameof(GraphRootConfigDialogViewModel);
         public bool CanCloseDialog()
@@ -42,19 +43,7 @@ namespace NewFlowChartTool.ViewModels
             OutputPath = config.OutputPath;
 
             TypeNames.Clear();
-            foreach (var kv in project.TypeDict)
-            {
-                var type = kv.Value;
-                if (!type.IsBuiltinType && type is not GenericType)
-                {
-                    TypeNames.Add(kv.Key);
-                }
-            }
-
-            if (SaveCommand == null)
-            {
-                SaveCommand = new DelegateCommand(Save);
-            }
+            TypeNames.AddRange(project.GetCustomTypeNames());
         }
 
         public string Title => "Graph Root Config";

@@ -129,6 +129,20 @@ namespace FlowChart.Core
             return type;
         }
 
+        public List<string> GetCustomTypeNames()
+        {
+            var types = new List<string>();
+            foreach (var kv in TypeDict)
+            {
+                var type = kv.Value;
+                if (!type.IsBuiltinType && type is not GenericType)
+                {
+                    types.Add(kv.Key);
+                }
+            }
+            return types;
+        }
+
         public Type.Type? AddGenericTypeInstance(string typeName)
         {
             var idx = typeName.IndexOf('<');

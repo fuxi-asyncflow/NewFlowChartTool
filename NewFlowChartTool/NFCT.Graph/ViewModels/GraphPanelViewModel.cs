@@ -89,6 +89,8 @@ namespace NFCT.Graph.ViewModels
                     controlVm.ParseText(null);
             }
 
+            TypeNames = _graph.Project.GetCustomTypeNames();
+
             _graph.GraphPathChangeEvent += OnGraphPathChange;
             _graph.GraphRemoveNodeEvent += OnRemoveNode;
             _graph.ConnectorRemoveEvent += OnRemoveConnector;
@@ -101,6 +103,23 @@ namespace NFCT.Graph.ViewModels
 
         public string Name => _graph.Name;
         public string FullPath => _graph.Path;
+
+        public string TypeName
+        {
+            get => _graph.Type.Name;
+            set
+            {
+                if (value == _graph.Type.Name)
+                    return;
+                var tp = _graph.Project.GetType(value);
+                if (tp == null)
+                    return;
+                _graph.Type = tp;
+                RaisePropertyChanged(nameof(TypeName));
+            }
+        }
+
+        public List<string> TypeNames { get; set; }
 
         public string? Description
         {
