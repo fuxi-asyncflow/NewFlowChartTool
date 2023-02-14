@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using FlowChart.Core;
 using FlowChart.Debug;
 using FlowChart.Misc;
@@ -82,10 +84,14 @@ namespace NewFlowChartTool.ViewModels
             {
                 EventHelper.Pub<StartDebugGraphEvent, GraphInfo?>(graphInfo);
             };
+
+            _syncContext = SynchronizationContext.Current;
         }
 
         private IDialogService _dialogService;
         private IOutputMessage _outputService;
+
+        private readonly SynchronizationContext? _syncContext;
         public static DebugDialogViewModel? Inst { get; set; }
 
         public const string NAME = "DebugDialog";
@@ -212,7 +218,7 @@ namespace NewFlowChartTool.ViewModels
             }
 
             // if no running graph, then wait for running graph
-            _outputService.Output("quick debug recv no running graph, waiting graph start running");
+            _syncContext.Post(o => { _outputService.Output("quick debug recv no running graph, waiting graph start running"); }, null);
             _netManager.BroadCast(Host, StartPort, EndPort, new QuickDebugMessage() { ChartName = graph.Path });
             EventHelper.Pub<StartDebugGraphEvent, GraphInfo?>(null);
         }
