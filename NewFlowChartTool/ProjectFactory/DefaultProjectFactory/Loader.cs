@@ -70,6 +70,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public static YamlScalarNode YAML_START = new YamlScalarNode("start");
         public static YamlScalarNode YAML_END = new YamlScalarNode("end");
 
+        public static YamlScalarNode YAML_ABBR = new YamlScalarNode("abbr");
         public static YamlScalarNode YAML_BASE = new YamlScalarNode("base");
         public static YamlScalarNode YAML_METHODS = new YamlScalarNode("methods");
         public static YamlScalarNode YAML_PROPERTIES = new YamlScalarNode("properties");
@@ -173,6 +174,11 @@ namespace ProjectFactory.DefaultProjectFactory
         public void LoadType(Type type, YamlMappingNode root)
         {
             YamlNode? node;
+
+            if (root.Children.TryGetValue(YAML_ABBR, out node))
+            {
+                type.Abbr = (node as YamlScalarNode).Value;
+            }
 
             if (root.Children.TryGetValue(YAML_BASE, out node))
             {

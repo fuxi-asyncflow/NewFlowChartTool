@@ -389,6 +389,7 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             lines.Add("--- ");
             lines.Add($"name: {type.Name}");
+            lines.Add($"abbr: {type.Abbr}");
 
             if (type.BaseTypes.Count > 0)
             {
