@@ -152,7 +152,7 @@ namespace NewFlowChartTool.ViewModels
         }
     }
 
-    class TypeViewModel : BindableBase
+    public class TypeViewModel : BindableBase
     {
         public TypeViewModel(FlowChart.Type.Type type)
         {
@@ -161,6 +161,7 @@ namespace NewFlowChartTool.ViewModels
         public FlowChart.Type.Type Model { get; set; }
 
         public string Name => Model.Name;
+        public string Abbr => Model.Abbr;
         public string? Description => Model.Description;
 
         public void OnNameChange()

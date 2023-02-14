@@ -64,12 +64,24 @@ namespace FlowChart.Type
             CompatibleTypes = new List<Type>();
             BaseTypes = new List<Type>();
             IsBuiltinType = false;
+            if (name.Length >= 2)
+            {
+                Abbr = $"{Char.ToUpper(name[0])}{Char.ToLower(name[1])}";
+            }
+            else if (name.Length == 1)
+            {
+                Abbr = $"{Char.ToUpper(name[0])}";
+            }
+            else
+                Abbr = string.Empty;
         }
 
         public override string ToString()
         {
-            return $"[Type] {Name}";
+            return Name;
         }
+
+        public string Abbr { get; set; }
 
         public List<Type> BaseTypes;
 

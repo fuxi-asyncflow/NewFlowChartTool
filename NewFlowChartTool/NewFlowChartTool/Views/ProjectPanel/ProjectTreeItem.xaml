@@ -17,6 +17,12 @@
     <Grid Margin="2">
         <StackPanel Orientation="Horizontal">
             <ContentControl Content="{Binding Converter={StaticResource ProjetTreeItemIconConverter}, Mode=OneTime}" />
+            <Border
+                Background="Chocolate"
+                CornerRadius="2"
+                Opacity="0.5">
+                <TextBlock Text="{Binding Type.Abbr}" ToolTip="{Binding Type.Name}" />
+            </Border>
             <TextBlock
                 Margin="5,0,0,0"
                 VerticalAlignment="Center"

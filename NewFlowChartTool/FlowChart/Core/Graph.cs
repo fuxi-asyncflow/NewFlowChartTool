@@ -27,7 +27,20 @@ namespace FlowChart.Core
 
         #region REF PROPERTY
         public Project Project { get; set; }
-        public Type.Type Type { get; set; }
+        private Type.Type _type;
+        public Type.Type Type
+        {
+            get => _type;
+            set
+            {
+                if (_type == value)
+                    return;
+                var oldType = _type;
+                _type = value;
+                TypeChangeEvent?.Invoke(this, oldType);
+            }
+        }
+
         public virtual string Path { get; set; }
 
         public Folder? Parent { get; set; }
@@ -57,6 +70,7 @@ namespace FlowChart.Core
         public delegate void NameChangeDelegate(TreeItem item, string name);
 
         public NameChangeDelegate? NameChangeEvent;
+        public event Action<TreeItem, Type.Type>? TypeChangeEvent;
 
         public void RaiseRenameEvent(string newName)
         {
@@ -105,9 +119,6 @@ namespace FlowChart.Core
         public event GraphConnectorTypeChangeDelegate ConnectorTypeChangeEvent;
         public event GraphAddVariableDelegate? GraphAddVariableEvent;
         public event GraphSwitchChildNodeOrderDelegate? GraphSwitchChildNodeOrderEvent;
-
-
-
         #endregion
 
 

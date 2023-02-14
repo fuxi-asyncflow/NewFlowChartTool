@@ -61,11 +61,27 @@ namespace NewFlowChartTool.ViewModels
             _item = item;
             item.NameChangeEvent += OnRename;
             item.DescriptionChangeEvent += delegate { RaisePropertyChanged(nameof(Description)); };
+            item.TypeChangeEvent += delegate { RaisePropertyChanged(nameof(Type)); };
         }
         protected readonly TreeItem _item;
         public TreeItem Item => _item;
         public string Name => _item.Name;
         public string Path => _item.Path;
+        [Obsolete("Should be refactored")]
+        private static Dictionary<FlowChart.Type.Type, TypeViewModel> _types;
+        public TypeViewModel Type //TODO use TypeViewModel saved in TypeManagerDialog
+        {
+            get
+            {
+                if (_types == null)
+                    _types = new Dictionary<FlowChart.Type.Type, TypeViewModel>();
+                if (_types.ContainsKey(_item.Type))
+                    return _types[_item.Type];
+                var vm = new TypeViewModel(_item.Type);
+                _types.Add(_item.Type, vm);
+                return vm;
+            }
+        }
 
         public string? Description => _item.Description;
         public ProjectTreeFolderViewModel? Folder { get; set; }
