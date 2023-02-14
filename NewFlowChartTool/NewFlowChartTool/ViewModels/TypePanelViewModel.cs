@@ -14,6 +14,7 @@ using NFCT.Common.Events;
 using Prism.Events;
 using Prism.Mvvm;
 using ProjectFactory;
+using Type = FlowChart.Type.Type;
 
 namespace NewFlowChartTool.ViewModels
 {
@@ -65,12 +66,19 @@ namespace NewFlowChartTool.ViewModels
     {
         public TypeMemberTreeFolderViewModel(Item item) : base(item)
         {
-
             Children = new ObservableCollection<TypeMemberTreeItemViewModel>();
+            if (item is Type type && type.BaseTypes.Count > 0)
+            {
+                BaseType = string.Join(',', type.BaseTypes.ConvertAll(tp => tp.Name));
+                BaseType = $"({BaseType})";
+            }
+            
         }
         public ObservableCollection<TypeMemberTreeItemViewModel> Children { get; set; }
 
         public void AddChild(TypeMemberTreeItemViewModel? child) { if (child != null) Children.Add(child); }
+
+        public string? BaseType { get; set; }
     }
 
     public class TypePanelViewModel : BindableBase

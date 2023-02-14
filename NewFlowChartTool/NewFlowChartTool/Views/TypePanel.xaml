@@ -36,6 +36,10 @@
                             Margin="5,0,0,0"
                             VerticalAlignment="Center"
                             Text="{Binding Name}" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="DarkGreen"
+                            Text="{Binding BaseType}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type vm:TypeMemberTreeItemViewModel}">
