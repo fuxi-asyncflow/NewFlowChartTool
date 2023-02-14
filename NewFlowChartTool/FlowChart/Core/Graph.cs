@@ -665,10 +665,7 @@ namespace FlowChart.Core
 
             Name = newName;
             var newPath = $"{parentPath}.{Name}";
-            Project.GraphDict.Remove(Path);
             Path = newPath;
-            Project.GraphDict.Add(newPath, this);
-
             RaiseRenameEvent(newName);
         }
 
