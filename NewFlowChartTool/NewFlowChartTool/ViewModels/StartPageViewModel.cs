@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -26,8 +27,20 @@ namespace NewFlowChartTool.ViewModels
             {
                 FullPath = string.Empty;
             }
-            public string FullPath { get; set; }
-            public string? Description { get; set; }
+
+            private string _fullPath;
+            public string FullPath
+            {
+                get => _fullPath;
+                set => SetProperty(ref _fullPath, value);
+            }
+
+            private string? _description;
+            public string? Description
+            {
+                get => _description;
+                set => SetProperty(ref _description, value);
+            }
         }
 
         public ProjectHistory() : this(string.Empty)
@@ -37,24 +50,38 @@ namespace NewFlowChartTool.ViewModels
         public ProjectHistory(string projectPath)
         {
             ProjectPath = projectPath;
-            RecentOpenedGraphs = new List<GraphInfo>();
+            RecentOpenedGraphs = new ObservableCollection<GraphInfo>();
             OpenedGraphs = new List<string>();
         }
 
         private const int MAX_RECENT_GRAPH_COUNT = 20;
 
         public string ProjectPath { get; set; }
-        public List<GraphInfo> RecentOpenedGraphs { get; set; }
+        public ObservableCollection<GraphInfo> RecentOpenedGraphs { get; set; }
         public List<string> OpenedGraphs { get; set; } // Opened Charts when closing
+        
+
+        public void Open(Graph graph)
+        {
+            var graphInfo = RecentOpenedGraphs.ToList().Find(g => g.FullPath == graph.Path);
+            if (graphInfo != null)
+            {
+                RecentOpenedGraphs.Remove(graphInfo);
+            }
+
+            graphInfo = new ProjectHistory.GraphInfo() { FullPath = graph.Path, Description = graph.Description };
+            RecentOpenedGraphs.Insert(0, graphInfo);
+            
+        }
     }
 
     public class HistoryData
     {
         public HistoryData()
         {
-            RecentProjects = new List<ProjectHistory>();
+            RecentProjects = new ObservableCollection<ProjectHistory>();
         }
-        public List<ProjectHistory> RecentProjects { get; set; }
+        public ObservableCollection<ProjectHistory> RecentProjects { get; set; }
     }
 
     internal class StartPageViewModel : BindableBase
@@ -66,7 +93,8 @@ namespace NewFlowChartTool.ViewModels
         {
             JsonSerializerOption = new JsonSerializerOptions()
             {
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                WriteIndented = true
             };
         }
         public StartPageViewModel()
@@ -119,7 +147,7 @@ namespace NewFlowChartTool.ViewModels
         void OnProjectOpen(Project project)
         {
             var projects = HistoryData.RecentProjects;
-            var projectHistory = projects.Find(p => p.ProjectPath == project.Path);
+            var projectHistory = projects.ToList().Find(p => p.ProjectPath == project.Path);
             if (projectHistory != null)
                 projects.Remove(projectHistory);
             else
@@ -141,13 +169,8 @@ namespace NewFlowChartTool.ViewModels
                 OnProjectOpen(graph.Project);
             }
             var projectHistory = HistoryData.RecentProjects.First();
-            var graphs = projectHistory.RecentOpenedGraphs;
-            var graphInfo = graphs.Find(g => g.FullPath == graph.Path);
-            if (graphInfo != null)
-                graphs.Remove(graphInfo);
+            projectHistory.Open(graph);
             
-            graphInfo = new ProjectHistory.GraphInfo() { FullPath = graph.Path, Description = graph.Description };
-            graphs.Insert(0, graphInfo);
         }
         
         public HistoryData HistoryData { get; set; }
