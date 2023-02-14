@@ -389,6 +389,13 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             lines.Add("--- ");
             lines.Add($"name: {type.Name}");
+
+            if (type.BaseTypes.Count > 0)
+            {
+                var baseTypesStr = string.Join(", ", type.BaseTypes.ConvertAll(baseType => baseType.Name));
+                lines.Add($"base: [{baseTypesStr}]");
+            }
+
             var props = new SortedList<string, Property>();
             var methods = new SortedList<string, Method>();
             foreach (var kv in type.MemberDict)

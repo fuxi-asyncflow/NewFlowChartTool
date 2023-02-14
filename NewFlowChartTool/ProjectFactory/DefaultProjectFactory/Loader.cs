@@ -70,6 +70,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public static YamlScalarNode YAML_START = new YamlScalarNode("start");
         public static YamlScalarNode YAML_END = new YamlScalarNode("end");
 
+        public static YamlScalarNode YAML_BASE = new YamlScalarNode("base");
         public static YamlScalarNode YAML_METHODS = new YamlScalarNode("methods");
         public static YamlScalarNode YAML_PROPERTIES = new YamlScalarNode("properties");
         public static YamlScalarNode YAML_PARAMETERS = new YamlScalarNode("parameters");
@@ -172,6 +173,21 @@ namespace ProjectFactory.DefaultProjectFactory
         public void LoadType(Type type, YamlMappingNode root)
         {
             YamlNode? node;
+
+            if (root.Children.TryGetValue(YAML_BASE, out node))
+            {
+                if (node is YamlScalarNode oneBaseNode)
+                {
+                    type.BaseTypes.Add(Project.GetType(oneBaseNode.Value));
+                }
+                else if (node is YamlSequenceNode baseNodes)
+                {
+                    foreach (var baseNode in baseNodes)
+                    {
+                        type.BaseTypes.Add(Project.GetType((baseNode as YamlScalarNode).Value));
+                    }
+                }
+            }
 
             if (root.Children.TryGetValue(YAML_PROPERTIES, out node))
             {
