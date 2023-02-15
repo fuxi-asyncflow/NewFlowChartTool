@@ -194,7 +194,7 @@ namespace ProjectFactory
                 g.Connect(start, Guid.Parse(con.End), (Connector.ConnectorType)(con.Type));
             });
             if (IsSubChart != null)
-                g.IsSubGraph = IsSubChart.Value;
+                g.SubGraphType = Graph.SubGraphTypeEnum.GLOBAL;
         }
     }
 

@@ -23,11 +23,19 @@
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
                 <d:Button Command="{Binding ChangeLayoutCommand}" Content="layout" />
                 <d:Button Command="{Binding CreateGroupCommand}" Content="group" />
-                <CheckBox
-                    Margin="5,0"
-                    VerticalAlignment="Center"
-                    Content="SubGraph"
-                    IsChecked="{Binding IsSubGraph, Mode=TwoWay}" />
+                <TextBlock VerticalAlignment="Center" Text="子图类型" />
+                <ComboBox
+                    x:Name="SubGraphComboBox"
+                    MinWidth="80"
+                    ItemsSource="{Binding SubGraphTypes}"
+                    SelectedIndex="{Binding SubGraphType}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" ToolTip="{Binding Description}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
                 <ComboBox
                     x:Name="LayoutComboBox"
                     Margin="5,0"

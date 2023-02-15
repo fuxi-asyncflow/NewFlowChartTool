@@ -79,6 +79,13 @@ namespace FlowChart.Core
     }
     public class Graph : TreeItem
     {
+        public enum SubGraphTypeEnum
+        {
+            NONE = 0,
+            LOCAL = 1,
+            GLOBAL = 2
+        }
+
         static Graph()
         {
             EmptyGraph = new Graph("empty") {Uid = Guid.Empty};
@@ -149,8 +156,10 @@ namespace FlowChart.Core
         public List<Group> Groups { get; set; }
         public bool AutoLayout { get; set; }
 
-        public bool IsSubGraph { get; set; }
-        public bool IsPublicSubGraph { get; set; }
+        public bool IsSubGraph => SubGraphType != SubGraphTypeEnum.NONE;
+        public bool IsGlobalSubGraph => SubGraphType == SubGraphTypeEnum.GLOBAL;
+        public bool IsLocalSubGraph => SubGraphType == SubGraphTypeEnum.LOCAL;
+        public SubGraphTypeEnum SubGraphType { get; set; }
         private Type.Type? _returnType;
         public FlowChart.Type.Type? ReturnType
         {
@@ -160,10 +169,21 @@ namespace FlowChart.Core
                 if (value == _returnType)
                     return;
                 _returnType = value;
-                if (IsSubGraph)
+                if (IsLocalSubGraph)
                 {
-                    SetSubGraph(false);
-                    SetSubGraph(true);
+                    var member = Parent.LocalSubGraphs.Find(method => method.RelativeGraph == this);
+                    if (member != null)
+                    {
+                        member.Type = _returnType;
+                    }
+                }
+                else if (IsGlobalSubGraph)
+                {
+                    var member = Type.FindMember(Name, false);
+                    if (member != null)
+                    {
+                        member.Type = _returnType;
+                    }
                 }
             }
         }
@@ -204,16 +224,25 @@ namespace FlowChart.Core
         #endregion
 
 
-        public bool SetSubGraph(bool b)
+        public bool SetSubGraph(SubGraphTypeEnum subType)
         {
-            if (IsSubGraph == b)
+            var oldType = SubGraphType;
+            if (oldType == subType)
                 return false;
-            IsSubGraph = b;
-            if (IsSubGraph)
+
+            // will conflict with global member, return false
+            if (subType == SubGraphTypeEnum.GLOBAL)
             {
-                ToMethod();
+                if (Type.FindMember(Name) != null)
+                    return false;
             }
-            else
+
+
+            if (oldType == SubGraphTypeEnum.LOCAL)
+            {
+                Parent?.RemoveLocalSubGraph(this);
+            }
+            else if (oldType == SubGraphTypeEnum.GLOBAL)
             {
                 var method = Type.FindMember(Name, false);
                 if (method != null)
@@ -221,15 +250,27 @@ namespace FlowChart.Core
                     Type.RemoveMember(Name);
                 }
             }
+
+            SubGraphType = subType;
+            if (subType == SubGraphTypeEnum.LOCAL)
+            {
+                Parent?.AddLocalSubGraph(this);
+            }
+            else if (subType == SubGraphTypeEnum.GLOBAL)
+            {
+                var method = ToMethod();
+                Type.AddMember(method);
+            }
             return true;
         }
 
-        public Method ToMethod()
+        public SubGraphMethod ToMethod()
         {
-            var method = new Method(Name)
+            var method = new SubGraphMethod(Name)
             {
                 Type = ReturnType ?? BuiltinTypes.VoidType,
-                SaveToFile = false
+                SaveToFile = false,
+                RelativeGraph = this
             };
             foreach (var v in Variables)
             {
@@ -240,14 +281,27 @@ namespace FlowChart.Core
                     });
             }
 
+            method.Type = Type;
+
             //TODO when subgraph path changes, template should update
             method.IsAsync = true;
             if (method.Parameters.Count == 0)
                 method.Template = $"asyncflow.call_sub(\"{Path}\", $caller)";
             else
                 method.Template = $"asyncflow.call_sub(\"{Path}\", $caller, $params)";
-            Type.AddMember(method);
             return method;
+        }
+
+        public Member? FindMember(FlowChart.Type.Type type, string name)
+        {
+            if (Parent != null)
+            {
+                var method = Parent.FindSubGraphMethod(name);
+                if(method != null && method.RelativeGraph.Type == type)
+                    return method;
+            }
+
+            return type.FindMember(name);
         }
 
         #endregion

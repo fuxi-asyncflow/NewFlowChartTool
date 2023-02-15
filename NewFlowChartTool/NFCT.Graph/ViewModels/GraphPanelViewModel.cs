@@ -34,6 +34,19 @@ namespace NFCT.Graph.ViewModels
         public double Height { set => _g.Height = value; }
     }
 
+    public class SubGraphTypeViewModel
+    {
+        public SubGraphTypeViewModel(FlowChart.Core.Graph.SubGraphTypeEnum type, string name, string description)
+        {
+            SubGraphType = type;
+            Name = name;
+            Description = description;
+        }
+        public FlowChart.Core.Graph.SubGraphTypeEnum SubGraphType;
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
     public partial class GraphPaneViewModel : BindableBase
     {
 
@@ -44,7 +57,13 @@ namespace NFCT.Graph.ViewModels
         static GraphPaneViewModel()
         {
             GraphClipboard = new List<BaseNodeViewModel>();
+            SubGraphTypes = new ObservableCollection<SubGraphTypeViewModel>();
+            SubGraphTypes.Add(new SubGraphTypeViewModel(FlowChart.Core.Graph.SubGraphTypeEnum.NONE, "    ", "不可在其它流程图中调用"));
+            SubGraphTypes.Add(new SubGraphTypeViewModel(FlowChart.Core.Graph.SubGraphTypeEnum.LOCAL, "局部子图", "可在同目录下的其它流程图中使用"));
+            SubGraphTypes.Add(new SubGraphTypeViewModel(FlowChart.Core.Graph.SubGraphTypeEnum.GLOBAL, "全局子图", "可在任意流程图中调用，谨慎使用"));
         }
+
+        public  static ObservableCollection<SubGraphTypeViewModel> SubGraphTypes { get; set; }
 
         public GraphPaneViewModel(FlowChart.Core.Graph graph)
         {
@@ -62,7 +81,6 @@ namespace NFCT.Graph.ViewModels
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             CreateGroupCommand = new DelegateCommand(CreateGroupFromSelectedNodes);
             OnCloseCommand = new DelegateCommand(OnClose);
-            SubgraphCommand = new DelegateCommand(delegate { _graph.SetSubGraph(!_graph.IsSubGraph); });
             OnPreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnPreviewKeyDown);
 
             EventHelper.Sub<ThemeSwitchEvent, Theme>(OnThemeSwitch);
@@ -144,17 +162,24 @@ namespace NFCT.Graph.ViewModels
             }
         }
 
-        public bool IsSubGraph
+        public int SubGraphType
         {
-            get => _graph.IsSubGraph;
+            get => (int)_graph.SubGraphType;
             set
             {
-                if (value == _graph.IsSubGraph)
+                //TODO check if can set as SubGraph
+                if (value < 0 || value > 2)
                     return;
-                if (_graph.SetSubGraph(value))
+                var newValue = (FlowChart.Core.Graph.SubGraphTypeEnum)value;
+                if (newValue == FlowChart.Core.Graph.SubGraphTypeEnum.GLOBAL)
                 {
-                    RaisePropertyChanged(nameof(IsSubGraph));
+                    if (_graph.Type.FindMember(Name) != null)
+                    {
+                        return;
+                    }
                 }
+                _graph.SetSubGraph(newValue);
+                RaisePropertyChanged(nameof(SubGraphType));
             }
         }
 

@@ -211,7 +211,7 @@ namespace FlowChart.LuaCodeGen
             string code = "";
             if (!node.HasCaller)
             {
-                member = G.Type.FindMember(node.FuncName);
+                member = G.FindMember(G.Type, node.FuncName);
                 if (member is Method)
                 {
                     code = $"self{InvokeOperator}";
@@ -224,7 +224,7 @@ namespace FlowChart.LuaCodeGen
             else
             {
                 var callerNodeInfo = node.Caller.OnVisit(this);
-                member = callerNodeInfo.Type.FindMember(node.FuncName);
+                member = G.FindMember(callerNodeInfo.Type, node.FuncName);
                 code = callerNodeInfo.Code + InvokeOperator;
 
             }

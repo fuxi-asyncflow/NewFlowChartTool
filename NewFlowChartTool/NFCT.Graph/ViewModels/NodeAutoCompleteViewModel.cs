@@ -284,9 +284,7 @@ abc + test(a,b).ob+xyz
                     AddPromptVariables();
                     AddPromptCategoryMembers(BuiltinTypes.GlobalType);
                     AddPromptCategoryMembers(graph.Type);
-                    
                     AddPromptFunctionParameters(OutsideFuncInfo);
-
                 }
                 else
                 {
@@ -391,7 +389,7 @@ abc + test(a,b).ob+xyz
                             promptType = PromptItemViewModel.PromptType.Property;
                         else if (member is Method method)
                         {
-                            promptType = method.Parameters.Count == 0 ? PromptItemViewModel.PromptType.Action : PromptItemViewModel.PromptType.Method;
+                            promptType = method.IsAction ? PromptItemViewModel.PromptType.Action : PromptItemViewModel.PromptType.Method;
                         }
                         
                         prompts.Add(new PromptItemViewModel(promptType, member.Name)
@@ -413,6 +411,31 @@ abc + test(a,b).ob+xyz
             _addPromptMember(type);
             _promptList.AddRange(prompts);
 
+            if(GraphVm != null)
+                AddPromptLocalSubGraphs(type, GraphVm.Graph);
+
+            return true;
+        }
+
+        private bool AddPromptLocalSubGraphs(FlowChart.Type.Type type, FlowChart.Core.Graph graph)
+        {
+            var folder = graph.Parent;
+            if (folder == null)
+                return false;
+            folder.LocalSubGraphs.ForEach(member =>
+            {
+                if (member.ObjectType == type)
+                {
+                    var promptType = member.IsAction ? PromptItemViewModel.PromptType.Action : PromptItemViewModel.PromptType.Method;
+                    _promptList.Add(new PromptItemViewModel(promptType, member.Name)
+                    {
+                        Description = member.Description,
+                        //IsFunction = !(member is Property),
+                        //ParameterCount = member.Parameters == null ? 0 : member.Parameters.Count,
+                        //UseCount = member.UseCount
+                    });
+                }
+            });
             return true;
         }
 

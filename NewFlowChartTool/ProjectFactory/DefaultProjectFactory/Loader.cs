@@ -80,6 +80,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public static YamlScalarNode YAML_ISPARAMETER = new YamlScalarNode("is_param");
         public static YamlScalarNode YAML_ISSUBCHART = new YamlScalarNode("is_subgraph");
+        public static YamlScalarNode YAML_ISGLOBALSUB = new YamlScalarNode("is_globalsub");
         public static YamlScalarNode YAML_RETURNTYPE = new YamlScalarNode("return_type");
 
         public Loader()
@@ -483,7 +484,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public void CustomLoadGraph(Graph graph, List<string> lines)
         {
             GroupDict.Clear();
-            bool isSubGraph = false;
+            var subGraph = Graph.SubGraphTypeEnum.NONE;
             int pos = 1;
             while (pos < lines.Count)
             {
@@ -519,8 +520,12 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
                 else if (key == "is_subgraph")
                 {
-                    isSubGraph = value == "true";
+                    subGraph = value == "true" ? Graph.SubGraphTypeEnum.LOCAL : Graph.SubGraphTypeEnum.NONE;
                     graph.ReturnType = BuiltinTypes.VoidType;
+                }
+                else if (key == "is_globalsub")
+                {
+                    subGraph = value == "true" ? Graph.SubGraphTypeEnum.GLOBAL : Graph.SubGraphTypeEnum.LOCAL;
                 }
                 else if (key == "return_type")
                 {
@@ -535,8 +540,8 @@ namespace ProjectFactory.DefaultProjectFactory
                     graph.Uid = Project.GenUUID();
             }
 
-            if(isSubGraph)
-                graph.SetSubGraph(isSubGraph);
+            if(subGraph != Graph.SubGraphTypeEnum.NONE)
+                graph.SetSubGraph(subGraph);
 
             foreach (var group in GroupDict.Values)
             {
@@ -804,7 +809,18 @@ namespace ProjectFactory.DefaultProjectFactory
             if (graphNode.Children.TryGetValue(YAML_ISSUBCHART, out node))
             {
                 var isSubchart = ((YamlScalarNode)node).Value;
-                graph.IsSubGraph = isSubchart != null && isSubchart == "true";
+                var isSubGraph = isSubchart != null && isSubchart == "true";
+                var isGlobalSub = false;
+
+                if (graphNode.Children.TryGetValue(YAML_ISGLOBALSUB, out node))
+                {
+                    var tmp = ((YamlScalarNode)node).Value;
+                    isGlobalSub = tmp != null && isSubchart == "true";
+                }
+
+                graph.SubGraphType = isSubGraph
+                    ? (isGlobalSub ? Graph.SubGraphTypeEnum.GLOBAL : Graph.SubGraphTypeEnum.LOCAL)
+                    : Graph.SubGraphTypeEnum.NONE;
             }
 
             if (graphNode.Children.TryGetValue(YAML_RETURNTYPE, out node))
@@ -862,7 +878,8 @@ namespace ProjectFactory.DefaultProjectFactory
             // if graph is subgraph ,add it as a method
             if (graph.IsSubGraph)
             {
-                graph.ToMethod();
+                var method = graph.ToMethod();
+                graph.Type?.AddMember(method);
             }
         }
 

@@ -11,8 +11,11 @@ namespace FlowChart.Type
         public Member(string name) : base(name)
         {
             SaveToFile = true;
+            _type = BuiltinTypes.VoidType;
         }
-        public Type Type { get; set; }
+
+        protected Type _type;
+        public virtual Type Type { get => _type; set => _type = value; }
         public string? Template { get; set; }
         public bool SaveToFile { get; set; }
     }

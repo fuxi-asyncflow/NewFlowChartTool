@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlowChart.Type;
 
 namespace FlowChart.Core
 {
@@ -14,10 +15,14 @@ namespace FlowChart.Core
         {
             Children = new List<TreeItem>();
             Items = new Dictionary<string, TreeItem>();
+            LocalSubGraphs = new List<SubGraphMethod>();
+            LocalSubGraphDict = new Dictionary<string, SubGraphMethod>();
         }
         
         public List<TreeItem> Children { get; set; }
         public Dictionary<string, TreeItem> Items { get; set; }
+        public List<SubGraphMethod> LocalSubGraphs { get; set; }
+        public Dictionary<string, SubGraphMethod> LocalSubGraphDict { get; set; }
         public Folder? GetOrCreateSubFolder(string subFolderName)
         {
             var child = Items.GetValueOrDefault(subFolderName);
@@ -48,6 +53,49 @@ namespace FlowChart.Core
             item.Parent = this;
             Items.Add(item.Name, item);
             Children.Add(item);
+            if (item is Graph graph && graph.IsLocalSubGraph)
+            {
+                AddLocalSubGraph(graph);
+            }
+        }
+
+        public void AddLocalSubGraph(Graph graph)
+        {
+            if (LocalSubGraphDict.ContainsKey(graph.Name))
+            {
+                var m = LocalSubGraphDict[graph.Name];
+                if (m.RelativeGraph == graph)
+                    return;
+                else
+                {
+                    LocalSubGraphDict.Remove(graph.Name);
+                    LocalSubGraphs.Remove(m);
+                }
+            }
+
+            var method = graph.ToMethod();
+            LocalSubGraphs.Add(method);
+            LocalSubGraphDict.Add(graph.Name, method);
+        }
+
+        public bool RemoveLocalSubGraph(Graph graph)
+        {
+            if (LocalSubGraphDict.ContainsKey(graph.Name))
+            {
+                var method = LocalSubGraphDict[graph.Name];
+                LocalSubGraphDict.Remove(graph.Name);
+                LocalSubGraphs.Remove(method);
+                return true;
+            }
+
+            return false;
+        }
+
+        public SubGraphMethod? FindSubGraphMethod(string name)
+        {
+            SubGraphMethod? method = null;
+            LocalSubGraphDict.TryGetValue(name, out method);
+            return method;
         }
 
         public bool ContainsChild(string name)
