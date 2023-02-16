@@ -3,11 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Printing;
-using System.Runtime.CompilerServices;
-using System.Security.Permissions;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using FlowChart.Core;
@@ -24,6 +19,7 @@ using NFCT.Common.Events;
 using Prism.Commands;
 using Prism.Events;
 using Sprache;
+using Logger = FlowChart.Common.Logger;
 using Type = FlowChart.Type.Type;
 
 namespace NewFlowChartTool.ViewModels
@@ -560,9 +556,15 @@ namespace NewFlowChartTool.ViewModels
                 return;
             var method = new Method(name);
             var memberVm = new TypeMemberViewModel(method);
-            Debug.Assert(SelectedType.Model.AddMember(method));
-            Members.Add(memberVm);
-            SelectedMember = memberVm;
+            if (SelectedType.Model.AddMember(method))
+            {
+                Members.Add(memberVm);
+                SelectedMember = memberVm;
+            }
+            else
+            {
+                Logger.WARN("add method failed!");
+            }
         }
 
         void AddNewEvent()
