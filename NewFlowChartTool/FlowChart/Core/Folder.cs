@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlowChart.Common;
 using FlowChart.Type;
 
 namespace FlowChart.Core
@@ -89,6 +90,24 @@ namespace FlowChart.Core
             }
 
             return false;
+        }
+
+        public bool RenameLocalSubGraph(Graph graph, string oldName)
+        {
+            var method = FindSubGraphMethod(oldName);
+            if (method != null && method.RelativeGraph == graph)
+            {
+                method.Name = graph.Name;
+                method.Update();
+                LocalSubGraphDict.Remove(oldName);
+                LocalSubGraphDict.Add(graph.Name, method);
+                return true;
+            }
+            else
+            {
+                Logger.WARN($"rename local subgraph failed: cannot find method in folder with name: {oldName}");
+                return false;
+            }
         }
 
         public SubGraphMethod? FindSubGraphMethod(string name)

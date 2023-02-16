@@ -35,5 +35,13 @@ namespace FlowChart.Type
         {
             get => RelativeGraph.ReturnType;
         }
+
+        public void Update()
+        {
+            if (Parameters.Count == 0)
+                Template = $"asyncflow.call_sub(\"{RelativeGraph.Path}\", $caller)";
+            else
+                Template = $"asyncflow.call_sub(\"{RelativeGraph.Path}\", $caller, $params)";
+        }
     }
 }

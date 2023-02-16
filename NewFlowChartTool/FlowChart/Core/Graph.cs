@@ -289,10 +289,7 @@ namespace FlowChart.Core
 
             //TODO when subgraph path changes, template should update
             method.IsAsync = true;
-            if (method.Parameters.Count == 0)
-                method.Template = $"asyncflow.call_sub(\"{Path}\", $caller)";
-            else
-                method.Template = $"asyncflow.call_sub(\"{Path}\", $caller, $params)";
+            method.Update();
             return method;
         }
 
@@ -721,11 +718,34 @@ namespace FlowChart.Core
         {
             var parentPath = Parent.JoinPath();
             Debug.Assert(Path == $"{parentPath}.{Name}");
-
+            var oldName = Name;
             Name = newName;
             var newPath = $"{parentPath}.{Name}";
             Path = newPath;
+            UpdateSubGraphInfo(oldName);
             RaiseRenameEvent(newName);
+        }
+
+        void UpdateSubGraphInfo(string oldName)
+        {
+            if (IsGlobalSubGraph)
+            {
+                var member = Type.FindMember(oldName, false);
+                if (member is SubGraphMethod method && method.RelativeGraph == this)
+                {
+                    method.Update();
+                    Type.RenameMember(oldName, Name);
+                }
+                else
+                {
+                    Logger.WARN("update method info failed: cannot find method when global subgraph rename");
+                }
+            }
+
+            if (IsLocalSubGraph)
+            {
+                Parent?.RenameLocalSubGraph(this, oldName);
+            }
         }
 
         public void SwitchChildNodeOrder_atom(Connector ca, Connector cb)
