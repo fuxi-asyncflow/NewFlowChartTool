@@ -295,6 +295,10 @@ namespace FlowChart.Core
                 return;
             }
 
+            if (graph.IsSubGraph)
+            {
+                graph.SetSubGraph(Graph.SubGraphTypeEnum.NONE);
+            }
             GraphDict.Remove(graph.Path);
             RemoveGraphEvent?.Invoke(graph);
         }
