@@ -46,6 +46,7 @@ namespace NFCT.Common.Localization
         public static readonly ComponentResourceKey Menu_SaveProjectKey = KEY("MainMenu_SaveProject");
         public static readonly ComponentResourceKey Menu_NewProjectKey = KEY("MainMenu_NewProject");
         public static readonly ComponentResourceKey Menu_CloseProjectKey = KEY("MainMenu_CloseProject");
+        public static readonly ComponentResourceKey Menu_ExplorerToProjectKey = KEY("MainMenu_ExplorerToProjectKey");
         public static readonly ComponentResourceKey Menu_TypeManagerKey = KEY("MainMenu_TypeManager");
 
         public static readonly ComponentResourceKey Menu_BuildKey = KEY("MainMenu_Build");

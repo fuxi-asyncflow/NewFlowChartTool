@@ -52,6 +52,7 @@
                     <Separator Style="{DynamicResource MenuItemSeparator}" />
                     <MenuItem Command="{Binding NewProjectCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_NewProjectKey}}" />
                     <MenuItem Command="{Binding CloseProjectCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_CloseProjectKey}}" />
+                    <MenuItem Command="{Binding ExplorerToProjectCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_ExplorerToProjectKey}}" />
                     <Separator Style="{DynamicResource MenuItemSeparator}" />
                     <MenuItem Command="{Binding TypeDialogCommand}" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Menu_TypeManagerKey}}" />
                 </MenuItem>

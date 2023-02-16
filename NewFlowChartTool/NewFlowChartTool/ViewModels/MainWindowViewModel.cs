@@ -11,6 +11,7 @@ using System.Windows;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using FlowChart.AST;
 using FlowChart.Debug;
 using FlowChart.LuaCodeGen;
@@ -49,6 +50,7 @@ namespace NewFlowChartTool.ViewModels
             SaveProjectCommand = new DelegateCommand(SaveProject, () => CurrentProject != null);
             NewProjectCommand = new DelegateCommand(NewProject, () => CurrentProject == null);
             CloseProjectCommand = new DelegateCommand(CloseProject, () => CurrentProject != null);
+            ExplorerToProjectCommand = new DelegateCommand(ExplorerToProject, () => CurrentProject != null);
             TypeDialogCommand = new DelegateCommand(ShowTypeDialog, () => CurrentProject != null);
             BuildAllCommand = new DelegateCommand(BuildAll, () => CurrentProject != null);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
@@ -136,6 +138,7 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand SaveProjectCommand { get; private set; }
         public DelegateCommand NewProjectCommand { get; private set; }
         public DelegateCommand CloseProjectCommand { get; private set; }
+        public DelegateCommand ExplorerToProjectCommand { get; private set; }
         public DelegateCommand TypeDialogCommand { get; private set; }
         public DelegateCommand SwitchThemeCommand { get; private set; }
         public DelegateCommand SwitchLangCommand { get; private set; }
@@ -312,6 +315,21 @@ namespace NewFlowChartTool.ViewModels
             EventHelper.Pub<ProjectCloseEvent, Project>(CurrentProject);
             CurrentProject = null;
             CloseProjectCommand.RaiseCanExecuteChanged();
+        }
+
+        void ExplorerToProject()
+        {
+            if (CurrentProject == null) return;
+            var folderPath = CurrentProject.Path;
+            if (Directory.Exists(folderPath))
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo()
+                {
+                    Arguments = folderPath,
+                    FileName = "explorer.exe"
+                };
+                Process.Start(startInfo);
+            }
         }
 
         public void BuildAll()
