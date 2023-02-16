@@ -234,7 +234,9 @@ namespace ProjectFactory.DefaultProjectFactory
             if (graph.IsSubGraph)
             {
                 lines.Add("is_subgraph: true");
-                if(graph.ReturnType != null)
+                if(graph.IsGlobalSubGraph)
+                    lines.Add("is_globalsub: true");
+                if (graph.ReturnType != null)
                     lines.Add($"return_type: {graph.ReturnType.Name}");
             }
 

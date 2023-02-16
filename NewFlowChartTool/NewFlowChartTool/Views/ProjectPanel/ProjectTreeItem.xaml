@@ -16,7 +16,7 @@
     </UserControl.Resources>
     <Grid Margin="2">
         <StackPanel Orientation="Horizontal">
-            <ContentControl Content="{Binding Converter={StaticResource ProjetTreeItemIconConverter}, Mode=OneTime}" />
+            <ContentControl Content="{Binding IconType, Converter={StaticResource ProjetTreeItemIconConverter}}" />
             <Border
                 Background="Chocolate"
                 CornerRadius="2"

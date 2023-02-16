@@ -49,6 +49,13 @@ namespace NewFlowChartTool.ViewModels
     }
     public class ProjectTreeItemViewModel : BindableBase
     {
+        public enum ItemIcon
+        {
+            Graph = 0,
+            Folder = 1,
+            SubGraphGlobal = 2,
+            SubGraphLocal = 3
+        }
         static ProjectTreeItemViewModel()
         {
             MenuItems = new ObservableCollection<MenuItemViewModel<ProjectTreeItemViewModel>>();
@@ -62,6 +69,9 @@ namespace NewFlowChartTool.ViewModels
             item.NameChangeEvent += OnRename;
             item.DescriptionChangeEvent += delegate { RaisePropertyChanged(nameof(Description)); };
             item.TypeChangeEvent += delegate { RaisePropertyChanged(nameof(Type)); };
+            if (_item is Graph graph)
+                graph.SubGraphChangeEvent += delegate { RaisePropertyChanged(nameof(IconType)); };
+
         }
         protected readonly TreeItem _item;
         public TreeItem Item => _item;
@@ -199,6 +209,26 @@ namespace NewFlowChartTool.ViewModels
             }
 
             return string.Join('.', pathList);
+        }
+
+        public ItemIcon IconType
+        {
+            get
+            {
+                if (_item is Graph graph)
+                {
+                    switch (graph.SubGraphType)
+                    {
+                        case Graph.SubGraphTypeEnum.GLOBAL:
+                            return ItemIcon.SubGraphGlobal;
+                        case Graph.SubGraphTypeEnum.LOCAL:
+                            return ItemIcon.SubGraphLocal;
+                        default:
+                            return ItemIcon.Graph;
+                    }
+                }
+                return ItemIcon.Folder;
+            }
         }
 
         public static ObservableCollection<MenuItemViewModel<ProjectTreeItemViewModel>> MenuItems { get; set; }

@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using FlowChart.Core;
 using FlowChart.Misc;
 using FlowChart.Type;
 using NewFlowChartTool.ViewModels;
@@ -92,13 +93,27 @@ namespace NewFlowChartTool.Utility.Converter
     public class ProjetTreeItemIconConverter : IValueConverter
     {
         public static Viewbox? GraphIcon => Application.Current.FindResource("Icon_CSClassFile") as Viewbox;
+        public static Viewbox? GraphIconGlobal => Application.Current.FindResource("Icon_CSClassFileGlobal") as Viewbox;
+        public static Viewbox? GraphIconLocal => Application.Current.FindResource("Icon_CSClassFileLocal") as Viewbox;
         public static Viewbox? FolderClosedIcon => Application.Current.FindResource("Icon_FolderClosed") as Viewbox;
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is ProjectTreeFolderViewModel)
-                return FolderClosedIcon;
-            return GraphIcon;
+            if (value is not ProjectTreeItemViewModel.ItemIcon icon)
+                return GraphIcon;
+            switch (icon)
+            {
+                case ProjectTreeItemViewModel.ItemIcon.Folder:
+                    return FolderClosedIcon;
+                case ProjectTreeItemViewModel.ItemIcon.SubGraphGlobal:
+                    return GraphIconGlobal;
+                case ProjectTreeItemViewModel.ItemIcon.SubGraphLocal:
+                    return GraphIconLocal;
+                case ProjectTreeItemViewModel.ItemIcon.Graph:
+                default:
+                    return GraphIcon;
+            }
+           
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

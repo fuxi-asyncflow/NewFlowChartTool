@@ -189,6 +189,7 @@ namespace FlowChart.Core
         }
         public string? SaveFilePath;
         public string? GenerateFilePath;
+        #endregion
 
         #region lazy load
         public bool IsLoaded { get; set; }
@@ -223,7 +224,9 @@ namespace FlowChart.Core
         public TaskCompletionSource? LazyLoadCompletionSource;
         #endregion
 
+        #region SubGraph Type
 
+        public Action<SubGraphTypeEnum>? SubGraphChangeEvent;
         public bool SetSubGraph(SubGraphTypeEnum subType)
         {
             var oldType = SubGraphType;
@@ -261,6 +264,7 @@ namespace FlowChart.Core
                 var method = ToMethod();
                 Type.AddMember(method);
             }
+            SubGraphChangeEvent?.Invoke(SubGraphType);
             return true;
         }
 
@@ -303,10 +307,11 @@ namespace FlowChart.Core
 
             return type.FindMember(name);
         }
-
         #endregion
 
         
+
+
 
         public void Build(ParserConfig? cfg = null)
         {

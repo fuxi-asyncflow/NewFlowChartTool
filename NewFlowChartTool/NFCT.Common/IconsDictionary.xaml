@@ -13,6 +13,8 @@
         <ResourceDictionary Source="Icons/BuildSolution.xaml" />
 
         <ResourceDictionary Source="Icons/CSClassFile.xaml" />
+        <ResourceDictionary Source="Icons/CSClassFileGlobal.xaml" />
+        <ResourceDictionary Source="Icons/CSClassFileLocal.xaml" />
         <ResourceDictionary Source="Icons/FolderClosed.xaml" />
         <ResourceDictionary Source="Icons/Class.xaml" />
         <ResourceDictionary Source="Icons/Method.xaml" />
