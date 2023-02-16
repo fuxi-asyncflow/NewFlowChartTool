@@ -95,6 +95,7 @@ namespace NewFlowChartTool.ViewModels
                 SaveProjectCommand.RaiseCanExecuteChanged();
                 NewProjectCommand.RaiseCanExecuteChanged();
                 CloseProjectCommand.RaiseCanExecuteChanged();
+                ExplorerToProjectCommand.RaiseCanExecuteChanged();
                 BuildAllCommand.RaiseCanExecuteChanged();
                 TypeDialogCommand.RaiseCanExecuteChanged();
             }
