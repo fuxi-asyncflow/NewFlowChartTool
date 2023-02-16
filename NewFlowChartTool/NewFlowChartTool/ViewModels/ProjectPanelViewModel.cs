@@ -188,6 +188,7 @@ namespace NewFlowChartTool.ViewModels
             Debug.Assert(newName == Name);
             RaisePropertyChanged(nameof(Name));
             RaisePropertyChanged(nameof(Path));
+            Folder?.Sort();
         }
 
         public string GetPath()
@@ -336,7 +337,6 @@ namespace NewFlowChartTool.ViewModels
     {
         public ProjectTreeFolderViewModel(TreeItem item) : base(item)
         {
-            
             Children = new ObservableCollection<ProjectTreeItemViewModel>();
         }
         public ObservableCollection<ProjectTreeItemViewModel> Children { get; set; }
@@ -347,6 +347,7 @@ namespace NewFlowChartTool.ViewModels
             if (child == null) return;
             child.Folder = this;
             Children.Add(child);
+            Sort();
         }
 
         public void Remove(Graph graph)
@@ -427,6 +428,17 @@ namespace NewFlowChartTool.ViewModels
             var newFolder = folder.GetOrCreateSubFolder(newGraphName);
             if(newFolder != null)
                 AddChild(new ProjectTreeFolderViewModel(newFolder));
+        }
+
+        public void Sort()
+        {
+            var tempChildren = new List<ProjectTreeItemViewModel>(Children);
+            //var caseInsensitiveComparer = new CaseSensitiveComparer();
+            tempChildren.Sort((a, b) => a.IsFolder == b.IsFolder
+                ? string.Compare(a.Name, b.Name, StringComparison.Ordinal)
+                : b.IsFolder.CompareTo(a.IsFolder));
+            Children.Clear();
+            tempChildren.ForEach(Children.Add);
         }
     }
 
