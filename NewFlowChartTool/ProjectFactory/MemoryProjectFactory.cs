@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlowChart;
 using FlowChart.Core;
 using FlowChart.Type;
 using ProjectFactory.DefaultProjectFactory;
@@ -42,11 +43,11 @@ namespace ProjectFactory
         {
             var g = new FlowChart.Core.Graph("test_0") { Path = "MonsterAI.test_0", Type = tp, Uid = Project.GenUUID()};
             g.AddNode(new StartNode());
-            g.AddNode(new TextNode() {Text = "Say(\"hello\")"});
-            g.AddNode(new TextNode() { Text = "Say(1)" });
-            g.AddNode(new TextNode() {Text = "$a = 1"});
-            g.AddNode(new TextNode() {Text = "self.age = 1"});
-            g.AddNode(new TextNode() { Text = "$tbl = {1, 2}" });
+            g.AddNode(new TextNode() {Text = "Say(\"hello\")", Uid = Project.GenUUID() });
+            g.AddNode(new TextNode() { Text = "Say(1)", Uid = Project.GenUUID() });
+            g.AddNode(new TextNode() {Text = "$a = 1", Uid = Project.GenUUID() });
+            g.AddNode(new TextNode() {Text = "self.age = 1", Uid = Project.GenUUID() });
+            g.AddNode(new TextNode() { Text = "$tbl = {1, 2}", Uid = Project.GenUUID() });
             for(int i=0; i<g.Nodes.Count -1 ; i++)
                 g.Connect(g.Nodes[i], g.Nodes[i+1], Connector.ConnectorType.ALWAYS);
             return g;
@@ -64,7 +65,7 @@ namespace ProjectFactory
             g.AddNode(startNode);
             for (int i = 0; i < nodeCount; i++)
             {
-                nodes.Add(new TextNode() { Text = $"Say(\"hello world abc {i}\")" });
+                nodes.Add(new TextNode() { Text = $"Say(\"hello world abc {i}\")", Uid = Project.GenUUID() });
             }
             nodes.ForEach(g.AddNode);
             for (int i = 0; i < nodeCount; i++)
@@ -81,6 +82,16 @@ namespace ProjectFactory
 
         public void Create(Project project)
         {
+            if (project.Config == null)
+            {
+                project.Config = ProjectConfig.CreateDefaultConfig();
+                var config = project.Config;
+                var rootConfig = config.GraphRoots.Count > 0 ? config.GraphRoots[0].Clone() : new GraphRootConfig();
+                rootConfig.Name = "MonsterAI";
+                config.GraphRoots.Add(rootConfig);
+                config.GetGraphRoot(rootConfig.Name);
+            }
+
             var monsterType = CreateMonsterType();
             project.AddType(monsterType);
             AddEvents(project);
