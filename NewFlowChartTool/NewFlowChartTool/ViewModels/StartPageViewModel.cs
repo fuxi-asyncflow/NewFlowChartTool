@@ -149,10 +149,14 @@ namespace NewFlowChartTool.ViewModels
             var projects = HistoryData.RecentProjects;
             var projectHistory = projects.ToList().Find(p => p.ProjectPath == project.Path);
             if (projectHistory != null)
-                projects.Remove(projectHistory);
+            {
+                projects.Move(projects.IndexOf(projectHistory), 0);
+            }
             else
+            {
                 projectHistory = new ProjectHistory(project.Path);
-            projects.Insert(0, projectHistory);
+                projects.Insert(0, projectHistory);
+            }
         }
 
         void OnProjectClose(Project project)
