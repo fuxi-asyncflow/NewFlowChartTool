@@ -37,6 +37,8 @@
         <ResourceDictionary Source="Icons/StopNoColor.xaml" />
         <ResourceDictionary Source="Icons/Next.xaml" />
 
+        <ResourceDictionary Source="Icons/ResizeGrip.xaml" />
+
 
 
     </ResourceDictionary.MergedDictionaries>
