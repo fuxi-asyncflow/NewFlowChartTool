@@ -66,12 +66,13 @@ namespace NewFlowChartTool.ViewModels
             var graphInfo = RecentOpenedGraphs.ToList().Find(g => g.FullPath == graph.Path);
             if (graphInfo != null)
             {
-                RecentOpenedGraphs.Remove(graphInfo);
+                RecentOpenedGraphs.Move(RecentOpenedGraphs.IndexOf(graphInfo), 0);
             }
-
-            graphInfo = new ProjectHistory.GraphInfo() { FullPath = graph.Path, Description = graph.Description };
-            RecentOpenedGraphs.Insert(0, graphInfo);
-            
+            else
+            {
+                graphInfo = new GraphInfo() { FullPath = graph.Path, Description = graph.Description };
+                RecentOpenedGraphs.Insert(0, graphInfo);
+            }
         }
     }
 
