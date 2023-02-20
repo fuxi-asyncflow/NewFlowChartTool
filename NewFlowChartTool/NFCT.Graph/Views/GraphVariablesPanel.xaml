@@ -59,20 +59,26 @@
                                 Grid.Row="1"
                                 Grid.Column="0"
                                 Text="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Type}}" />
-                            <TextBox
+                            <ComboBox
                                 Grid.Row="1"
                                 Grid.Column="1"
+                                IsEditable="True"
+                                ItemsSource="{Binding TypeNames}"
                                 Text="{Binding TmpTypeName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <TextBlock
                                 Grid.Row="2"
                                 Grid.Column="0"
                                 Text="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Default}}" />
                             <TextBox Grid.Row="2" Grid.Column="1" />
-                            <TextBlock Grid.Row="3" Grid.Column="0">variadic</TextBlock>
+                            <TextBlock
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Text="{DynamicResource {x:Static localreskeys:ResourceKeys.Graph_IsParameter}}" />
                             <CheckBox
                                 Grid.Row="3"
                                 Grid.Column="1"
-                                HorizontalAlignment="Center" />
+                                HorizontalAlignment="Center"
+                                IsChecked="{Binding TmpIsParameter}" />
                         </Grid>
                     </Border>
                     <StackPanel Orientation="Horizontal">
@@ -90,6 +96,7 @@
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     SelectedItem="{Binding SelectedItem}">
                     <DataGrid.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="#8054A8FC" />
                         <Style TargetType="DataGridRow">
                             <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
                         </Style>
@@ -109,13 +116,14 @@
                         </Style>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
                         </Style>
                     </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTextColumn
+                        <!--<DataGridTextColumn
                             MinWidth="32"
                             Binding="{Binding Id, Mode=OneWay}"
-                            Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Id}}" />
+                            Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Id}}" />-->
                         <DataGridTextColumn
                             MinWidth="48"
                             Binding="{Binding Name, Mode=OneWay}"
@@ -124,6 +132,17 @@
                             MinWidth="48"
                             Binding="{Binding Type, Mode=OneWay}"
                             Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Type}}" />
+                        <DataGridCheckBoxColumn
+                            MinWidth="16"
+                            Binding="{Binding IsParameter, Mode=OneWay}"
+                            Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Parameter}}" />
+                        <!--<DataGridTemplateColumn MinWidth="48" Header="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Type}}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate DataType="vm:GraphVariableViewModel">
+                                    <ComboBox Text="{Binding Type}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>-->
                         <DataGridTextColumn
                             MinWidth="32"
                             Binding="{Binding Value, Mode=OneWay}"

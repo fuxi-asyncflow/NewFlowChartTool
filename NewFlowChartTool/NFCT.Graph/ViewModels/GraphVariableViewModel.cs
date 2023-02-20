@@ -38,6 +38,7 @@ namespace NFCT.Graph.ViewModels
             Value = _variable.DefaultValue;
         }
         public string? Description => _variable.Description;
+        public bool IsParameter => _variable.IsParameter;
 
         public void OnVariableChange(Variable v)
         {

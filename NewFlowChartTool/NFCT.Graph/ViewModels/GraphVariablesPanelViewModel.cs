@@ -15,6 +15,11 @@ namespace NFCT.Graph.ViewModels
 {
     public class GraphVariablesPanelViewModel : BindableBase
     {
+        static GraphVariablesPanelViewModel()
+        {
+            TypeNames = new ObservableCollection<string>();
+        }
+
         public GraphVariablesPanelViewModel(GraphPaneViewModel graphVm)
         {
             _graphVm = graphVm;
@@ -32,11 +37,14 @@ namespace NFCT.Graph.ViewModels
             CancelCommand = new DelegateCommand(Cancel);
 
             _varDict = new Dictionary<string, GraphVariableViewModel>();
+
+            PrepareTypeNames();
         }
 
         public GraphPaneViewModel _graphVm;
 
         public GraphVariableViewModel? SelectedItem { get; set; }
+        public static ObservableCollection<string> TypeNames { get; set; }
 
         #region Modifying
 
@@ -54,6 +62,21 @@ namespace NFCT.Graph.ViewModels
             set => SetProperty(ref _tmpTypeName, value);
         }
 
+        //private bool _tmpVariadic;
+
+        //public bool TmpIsVariadic
+        //{
+        //    get => _tmpVariadic;
+        //    set => SetProperty(ref _tmpVariadic, value);
+        //}
+
+        private bool _tmpIsParameter;
+        public bool TmpIsParameter
+        {
+            get => _tmpIsParameter;
+            set => SetProperty(ref _tmpIsParameter, value);
+        }
+
         public bool _isEditing;
         public bool IsEditing
         {
@@ -62,8 +85,6 @@ namespace NFCT.Graph.ViewModels
         }
 
         public bool IsAdding { get; set; }
-
-
 
         #endregion
 
@@ -82,6 +103,20 @@ namespace NFCT.Graph.ViewModels
         {
             Debug.Assert(_graphVm.Graph == graph);
             Variables.Add(new GraphVariableViewModel(variable));
+            SortVariables();
+        }
+
+        void SortVariables()
+        {
+            var variables = Variables.ToList();
+            variables.Sort((a, b) =>
+            {
+                if(a.IsParameter == b.IsParameter)
+                    return String.Compare(a.Name, b.Name, StringComparison.Ordinal);
+                return a.IsParameter.CompareTo(b.IsParameter);
+            });
+            Variables.Clear();
+            variables.ForEach(Variables.Add);
         }
 
         public DelegateCommand ModifyVariableCommand { get; set; }
@@ -130,8 +165,13 @@ namespace NFCT.Graph.ViewModels
             {
                 if (SelectedItem == null)
                     return;
-                if(SelectedItem.Name != TmpName)
+                if (SelectedItem.Name != TmpName)
+                {
                     SelectedItem.Variable.Name = TmpName;
+                    SortVariables();
+                    _graphVm.Build();
+                }
+
                 if (SelectedItem.Type != TmpTypeName)
                 {
                     var tp = _graphVm.Graph.Project.GetType(TmpTypeName);
@@ -142,6 +182,13 @@ namespace NFCT.Graph.ViewModels
                     }
 
                     SelectedItem.Variable.Type = tp;
+                    _graphVm.Build();
+                }
+
+                if (SelectedItem.IsParameter != TmpIsParameter)
+                {
+                    SelectedItem.Variable.IsParameter = TmpIsParameter;
+                    SortVariables();
                 }
 
                 IsEditing = false;
@@ -188,6 +235,17 @@ namespace NFCT.Graph.ViewModels
 
         #endregion
 
+        void PrepareTypeNames()
+        {
+            var project = _graphVm.Graph.Project;
+            var names = new List<string>();
+            foreach (var kv in project.TypeDict)
+            {
+                names.Add(kv.Key);
+            }
 
+            TypeNames.Clear();
+            names.ForEach(TypeNames.Add);
+        }
     }
 }

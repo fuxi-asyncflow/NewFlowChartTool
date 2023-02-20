@@ -19,6 +19,7 @@ using FlowChart.Misc;
 using FlowChart.Parser;
 using FlowChart.Common;
 using FlowChart.Common.Report;
+using Microsoft.Win32;
 using NewFlowChartTool.Event;
 using NewFlowChartTool.Utility;
 using NFCT.Common;
@@ -180,9 +181,29 @@ namespace NewFlowChartTool.ViewModels
                 return;
             }
 
-            var folderPath = Dialogs.ChooseFolder();
-            if (folderPath == null)
+            var dlg = new OpenFileDialog();
+            dlg.FileName = "project.json";
+            dlg.DefaultExt = ".json";
+            dlg.Filter = "AsyncFlow Project|project.json";
+            var result = dlg.ShowDialog();
+            if (result != true)
                 return;
+            var fi = new FileInfo(dlg.FileName);
+            if (fi.Name != "project.json")
+            {
+                MessageBox.Show("please choose file: `project.json`");
+                return;
+            }
+
+            var folderPath = new FileInfo(dlg.FileName).DirectoryName;
+            if (folderPath == null)
+            {
+                MessageBox.Show($"open project failed: folder of {dlg.FileName} not exist");
+                return;
+            }
+            //var folderPath = Dialogs.ChooseFolder();
+            //if (folderPath == null)
+            //    return;
             OpenProject(folderPath);
         }
 

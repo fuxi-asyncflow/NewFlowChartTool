@@ -75,4 +75,8 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_MemberInfo}">成员详情</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_TypeName}">类型名称</system:String>
 
+    <!-- Graph Pane-->
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Graph_IsParameter}">传入参数</system:String>
+
+
 </ResourceDictionary>

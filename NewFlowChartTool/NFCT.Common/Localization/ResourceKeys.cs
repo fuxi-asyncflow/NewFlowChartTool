@@ -103,5 +103,11 @@ namespace NFCT.Common.Localization
 
         #endregion
 
+        #region Graph Pane
+        public static readonly ComponentResourceKey Graph_IsParameter = KEY(nameof(Graph_IsParameter));
+
+
+        #endregion
+
     }
 }
