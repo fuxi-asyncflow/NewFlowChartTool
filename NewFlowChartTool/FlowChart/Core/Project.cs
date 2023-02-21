@@ -118,8 +118,10 @@ namespace FlowChart.Core
             return true;
         }
 
-        public virtual Type.Type? GetType(string typeName)
+        public virtual Type.Type? GetType(string? typeName)
         {
+            if (typeName == null)
+                return null;
             Type.Type? type = null;
             TypeDict.TryGetValue(typeName, out type);
             if (type == null && typeName.Contains('<'))

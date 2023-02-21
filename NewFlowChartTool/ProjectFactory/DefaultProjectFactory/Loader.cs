@@ -237,7 +237,7 @@ namespace ProjectFactory.DefaultProjectFactory
             var prop = new Property(nameNode.Value);
 
             var typeNode = root.Children[YAML_TYPE] as YamlScalarNode;
-            prop.Type = Project.GetType(typeNode.Value);
+            prop.Type = Project.GetType(typeNode.Value) ?? BuiltinTypes.AnyType;
 
             if (root.Children.ContainsKey(YAML_DESCRIPTION) && root.Children[YAML_DESCRIPTION] is YamlScalarNode descriptionNode)
                 prop.Description = descriptionNode.Value;
@@ -264,7 +264,7 @@ namespace ProjectFactory.DefaultProjectFactory
             if ( root.Children.TryGetValue(YAML_TYPE, out node))
             {
                 var typeNode = node as YamlScalarNode;
-                method.Type = Project.GetType(typeNode.Value);
+                method.Type = Project.GetType(typeNode.Value) ?? BuiltinTypes.AnyType;
             }
 
             if (root.Children.ContainsKey(YAML_DESCRIPTION) && root.Children[YAML_DESCRIPTION] is YamlScalarNode descriptionNode)
@@ -290,7 +290,7 @@ namespace ProjectFactory.DefaultProjectFactory
                     nameNode = paraNode.Children[YAML_NAME] as YamlScalarNode;
                     var para = new Parameter(nameNode.Value);
                     var typeNode = paraNode.Children[YAML_TYPE] as YamlScalarNode;
-                    para.Type = Project.GetType(typeNode.Value);
+                    para.Type = Project.GetType(typeNode.Value) ?? BuiltinTypes.AnyType;
                     method.Parameters.Add(para);
 
                     if(paraNode.Children.ContainsKey(YAML_DESCRIPTION) && paraNode.Children[YAML_DESCRIPTION] is YamlScalarNode paraDescripNode)
@@ -345,7 +345,7 @@ namespace ProjectFactory.DefaultProjectFactory
                             var para = new Parameter(pName);
                             para.Description = pNode.Get(YAML_DESCRIPTION);
                             var paraTypeName = pNode.Get(YAML_TYPE);
-                            para.Type = Project.GetType(paraTypeName);
+                            para.Type = Project.GetType(paraTypeName) ?? BuiltinTypes.AnyType;
                             evType.AddParameter(para);
                         }
                     }
