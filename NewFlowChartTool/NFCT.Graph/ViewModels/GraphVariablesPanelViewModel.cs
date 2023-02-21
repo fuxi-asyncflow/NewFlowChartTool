@@ -7,9 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using FlowChart.Core;
+using FlowChart.Type;
 using Microsoft.Msagl.Core.DataStructures;
 using Prism.Commands;
 using Prism.Mvvm;
+using Type = FlowChart.Type.Type;
 
 namespace NFCT.Graph.ViewModels
 {
@@ -17,7 +19,7 @@ namespace NFCT.Graph.ViewModels
     {
         static GraphVariablesPanelViewModel()
         {
-            TypeNames = new ObservableCollection<string>();
+            TypeNames = new ObservableCollection<Type>();
         }
 
         public GraphVariablesPanelViewModel(GraphPaneViewModel graphVm)
@@ -44,7 +46,7 @@ namespace NFCT.Graph.ViewModels
         public GraphPaneViewModel _graphVm;
 
         public GraphVariableViewModel? SelectedItem { get; set; }
-        public static ObservableCollection<string> TypeNames { get; set; }
+        public static ObservableCollection<Type> TypeNames { get; set; }
 
         #region Modifying
 
@@ -238,13 +240,28 @@ namespace NFCT.Graph.ViewModels
         void PrepareTypeNames()
         {
             var project = _graphVm.Graph.Project;
-            var names = new List<string>();
+            var names = new List<Type>();
             foreach (var kv in project.TypeDict)
             {
-                names.Add(kv.Key);
+                names.Add(kv.Value);
             }
 
             TypeNames.Clear();
+            names.Sort((a, b) =>
+            {
+                var aIsInst = a is InstanceType;
+                var bIsInst = b is InstanceType;
+                if (aIsInst == bIsInst)
+                {
+                    if (a.IsBuiltinType == b.IsBuiltinType)
+                    {
+                        return String.Compare(a.Name, b.Name, StringComparison.Ordinal);
+                    }
+                    return b.IsBuiltinType.CompareTo(a.IsBuiltinType);
+                }
+
+                return aIsInst.CompareTo(bIsInst);
+            });
             names.ForEach(TypeNames.Add);
         }
     }

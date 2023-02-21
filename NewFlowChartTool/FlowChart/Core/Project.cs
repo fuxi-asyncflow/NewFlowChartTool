@@ -39,6 +39,10 @@ namespace FlowChart.Core
                     gt.Project = this;
                 AddType(tp);
             });
+            BuiltinTypes.ArrayType.GetInstance(new List<Type.Type?>(){BuiltinTypes.AnyType});
+            BuiltinTypes.ArrayType.GetInstance(new List<Type.Type?>() { BuiltinTypes.NumberType });
+            BuiltinTypes.ArrayType.GetInstance(new List<Type.Type?>() { BuiltinTypes.BoolType });
+            BuiltinTypes.ArrayType.GetInstance(new List<Type.Type?>() { BuiltinTypes.StringType });
 
             EnumTypeDict = new Dictionary<string, EnumType>();
         }
