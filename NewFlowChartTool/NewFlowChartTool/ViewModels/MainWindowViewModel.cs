@@ -209,6 +209,14 @@ namespace NewFlowChartTool.ViewModels
 
         public async void OpenProject(string projectPath)
         {
+            if (CurrentProject != null)
+            {
+                if (CurrentProject.Path == projectPath)
+                    return;
+                MessageBox.Show("another project is opened, please close it");
+                return;
+            }
+
             var p = new Project(new DefaultProjectFactory());
             p.Path = projectPath;
             p.IsAsyncLoad = true;
