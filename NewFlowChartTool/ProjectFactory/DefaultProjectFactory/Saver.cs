@@ -189,7 +189,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 foreach (var item in kv.Value)
                 {
                     lines.Add("--- ");
-                    if(item is Graph graph)
+                    if (item is Graph graph)
                         SaveGraph(graph, lines, genLines);
                     else
                         SaveFolder(item as Folder, lines);

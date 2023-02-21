@@ -157,6 +157,9 @@ namespace ProjectFactory.DefaultProjectFactory
         public string SaveGenerateFile(string belongRoot, string outputFile, List<string> yamlLines,
             List<string> codeLines)
         {
+            if(codeLines.Count == 0)
+                codeLines.Add("import asyncflow");
+
             codeLines.Add("");
             codeLines.Add("str = r'''");
             codeLines.AddRange(yamlLines);
