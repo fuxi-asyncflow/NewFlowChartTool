@@ -58,7 +58,10 @@ namespace NewFlowChartTool
 
             //var test = Application.Current.TryFindResource(SystemColors.WindowBrushKey);
             //Console.WriteLine(test);
-
+            if (!Directory.Exists("tmp"))
+            {
+                Directory.CreateDirectory("tmp");
+            }
             return Container.Resolve<Views.MainWindow>();
         }
 
@@ -75,6 +78,8 @@ namespace NewFlowChartTool
 
             containerRegistry.RegisterSingleton<IDebugService, DebugDialogViewModel>();
             containerRegistry.RegisterDialog<DebugDialog, DebugDialogViewModel>(DebugDialogViewModel.NAME);
+
+            containerRegistry.RegisterDialog<DocumentationDialog, DocumentationDialogViewModel>(DocumentationDialogViewModel.NAME);
 
             //containerRegistry.RegisterSingleton<IDebugService, DebugDialogViewModel>();
             containerRegistry.RegisterDialog<TypeDialog, TypeDialogViewModel>(TypeDialogViewModel.NAME);

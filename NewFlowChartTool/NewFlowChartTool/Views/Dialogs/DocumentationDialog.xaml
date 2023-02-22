@@ -1,0 +1,45 @@
+﻿<UserControl
+    x:Class="NewFlowChartTool.Views.Dialogs.DocumentationDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:NewFlowChartTool.Views.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+    MinWidth="1366"
+    MinHeight="768"
+    d:DesignHeight="1024"
+    d:DesignWidth="768"
+    mc:Ignorable="d">
+    <Grid>
+        <DockPanel x:Name="DlgDockPanel">
+            <ToolBar DockPanel.Dock="Top">
+                <Button Command="NavigationCommands.BrowseBack">
+                    <Image
+                        Width="16"
+                        Height="16"
+                        Source="/WpfTutorialSamples;component/Images/arrow_left.png" />
+                </Button>
+                <Button Command="NavigationCommands.BrowseForward">
+                    <Image
+                        Width="16"
+                        Height="16"
+                        Source="/WpfTutorialSamples;component/Images/arrow_right.png" />
+                </Button>
+                <Separator />
+                <TextBox
+                    Name="txtUrl"
+                    Width="300"
+                    KeyUp="txtUrl_KeyUp" />
+                <Button Command="NavigationCommands.GoToPage">
+                    <Image
+                        Width="16"
+                        Height="16"
+                        Source="/WpfTutorialSamples;component/Images/world_go.png" />
+                </Button>
+            </ToolBar>
+            <!--<wv2:WebView2 Name="wbSample" />-->
+        </DockPanel>
+
+    </Grid>
+</UserControl>

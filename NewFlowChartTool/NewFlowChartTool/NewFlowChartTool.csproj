@@ -20,6 +20,7 @@
     <PackageReference Include="Dirkster.AvalonDock" Version="4.70.1" />
     <PackageReference Include="Dirkster.AvalonDock.Themes.VS2013" Version="4.70.1" />
     <PackageReference Include="Dirkster.HL" Version="1.0.4" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1671-prerelease" />
     <PackageReference Include="NLog" Version="4.7.15" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />

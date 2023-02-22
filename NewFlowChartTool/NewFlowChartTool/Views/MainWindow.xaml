@@ -215,6 +215,13 @@
                     <TextBlock Height="16" Text="Diff" />
                 </StackPanel>
             </Button>
+
+            <Button Command="{Binding ShowDocumentationDialogCommand}">
+                <StackPanel>
+                    <!--<Viewbox Child="{StaticResource Icon_WindowScreenshot}" />-->
+                    <TextBlock Height="16" Text="Help" />
+                </StackPanel>
+            </Button>
         </StackPanel>
         <DockingManager
             Grid.Row="2"

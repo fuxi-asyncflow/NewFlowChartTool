@@ -65,6 +65,7 @@ namespace NewFlowChartTool.ViewModels
             ScreenShotCommand = new DelegateCommand(ScreenShot);
             SearchNodeCommand = new DelegateCommand(SearchNode);
             DiffCommand = new DelegateCommand(Diff);
+            ShowDocumentationDialogCommand = new DelegateCommand(ShowDocumentationDialog);
 
             SelectedLang = Lang.Chinese;
             SelectedTheme = Theme.Dark;
@@ -157,6 +158,8 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand ScreenShotCommand { get; set; }
         public DelegateCommand SearchNodeCommand { get; set; }
         public DelegateCommand DiffCommand { get; set; }
+
+        public DelegateCommand ShowDocumentationDialogCommand { get; set; }
 
         public void TestOpenProject()
         {
@@ -472,6 +475,11 @@ namespace NewFlowChartTool.ViewModels
                 vcpVm.OpenProject(CurrentProject);
                 ActiveDoc = vcpVm;
             }
+        }
+
+        void ShowDocumentationDialog()
+        {
+            _dialogService.Show(DocumentationDialogViewModel.NAME);
         }
 
         public async void OpenGraph(string path)
