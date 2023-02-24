@@ -60,8 +60,8 @@
 
         <StackPanel Orientation="Horizontal">
             <StackPanel Visibility="{Binding IsDebugMode, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <TextBlock Text="{Binding SuccessCount}" />
-                <TextBlock Text="{Binding FailureCount}" />
+                <TextBlock Foreground="Green" Text="{Binding SuccessCount}" />
+                <TextBlock Foreground="Red" Text="{Binding FailureCount}" />
             </StackPanel>
             <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource GraphNodesTemplateSelector}" />
         </StackPanel>
