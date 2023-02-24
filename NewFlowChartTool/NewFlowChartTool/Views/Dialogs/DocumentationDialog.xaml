@@ -13,7 +13,7 @@
     mc:Ignorable="d">
     <Grid>
         <DockPanel x:Name="DlgDockPanel">
-            <ToolBar DockPanel.Dock="Top">
+            <ToolBar DockPanel.Dock="Top" Visibility="Collapsed">
                 <Button Command="NavigationCommands.BrowseBack">
                     <Image
                         Width="16"

@@ -107,6 +107,7 @@ namespace FlowChart.Debug.WebSocket
 
         public void HandleMessage(INetClient client, string msg)
         {
+            Logger.DBG($"[ws] recv {msg}");
             var data = _protocal.Deserialize(msg);
             if (data is List<GraphInfo> graphInfos)
             {

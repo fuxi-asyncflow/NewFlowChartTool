@@ -52,7 +52,7 @@ namespace NewFlowChartTool.Views.Dialogs
             webView.Loaded += async (sender, e) =>
             {
                 await webView.EnsureCoreWebView2Async(_wv2Env).ConfigureAwait(true);
-                webView.Source = new System.Uri("http://127.0.0.1:8000");
+                webView.Source = new System.Uri("http://10.240.161.169/nfc_doc/index.html");
             };
             _wv2 = webView;
             DlgDockPanel.Children.Add(webView);

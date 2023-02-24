@@ -218,7 +218,7 @@
 
             <Button Command="{Binding ShowDocumentationDialogCommand}">
                 <StackPanel>
-                    <!--<Viewbox Child="{StaticResource Icon_WindowScreenshot}" />-->
+                    <Viewbox Child="{StaticResource Icon_CompiledHelpFile}" />
                     <TextBlock Height="16" Text="Help" />
                 </StackPanel>
             </Button>

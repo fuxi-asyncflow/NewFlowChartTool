@@ -27,6 +27,7 @@
         <ResourceDictionary Source="Icons/HotReload.xaml" />
 
         <ResourceDictionary Source="Icons/WindowScreenshot.xaml" />
+        <ResourceDictionary Source="Icons/CompiledHelpFile.xaml" />
 
         <ResourceDictionary Source="Icons/Search.xaml" />
 

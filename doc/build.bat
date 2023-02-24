@@ -1,0 +1,1 @@
+mkdocs build -d ../../newflowcharttool-doc
