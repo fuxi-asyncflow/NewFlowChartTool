@@ -99,17 +99,17 @@ namespace NFCT.Graph.Views
                 switch (status)
                 {
                     case DebugNodeStatus.SUCCESS:
-                        NodeBorder.Background = SuccessBrush;
+                        NodeBorder.Background = SuccessBrush.Clone();
                         anim = new ColorAnimation(Colors.Transparent, new Duration(TimeSpan.FromMilliseconds(200)));
                         NodeBorder.Background.BeginAnimation(SolidColorBrush.ColorProperty, anim);
                         break;
                     case DebugNodeStatus.FAILURE:
-                        NodeBorder.Background = FailBrush;
+                        NodeBorder.Background = FailBrush.Clone();
                         anim = new ColorAnimation(Colors.Transparent, new Duration(TimeSpan.FromMilliseconds(200)));
                         NodeBorder.Background.BeginAnimation(SolidColorBrush.ColorProperty, anim);
                         break;
                     case DebugNodeStatus.RUNNING:
-                        NodeBorder.Background = RunningBrush;
+                        NodeBorder.Background = RunningBrush.Clone();
                         break;
                 }
             });
