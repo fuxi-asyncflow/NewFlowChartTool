@@ -209,8 +209,8 @@ namespace FlowChart.Core
             if (ev == null)
                 return false;
             ev.Name = newName;
-            TypeDict.Remove(oldName);
-            TypeDict.Add(newName, ev);
+            EventDict.Remove(oldName);
+            EventDict.Add(newName, ev);
             return true;
         }
 
