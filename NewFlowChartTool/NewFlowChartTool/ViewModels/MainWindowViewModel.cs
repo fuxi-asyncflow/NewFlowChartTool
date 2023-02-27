@@ -449,7 +449,7 @@ namespace NewFlowChartTool.ViewModels
                     {
                         if (node is TextNode textNode)
                         {
-                            if (textNode.Text.Contains(text))
+                            if (textNode.Text.ToLower().Contains(text))
                                 output.Output(textNode.Text, OutputMessageType.Default, node);
                         }
                     });
