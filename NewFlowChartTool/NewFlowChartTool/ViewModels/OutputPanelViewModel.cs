@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Interop;
 using FlowChart.Common;
 using FlowChart.Core;
 using FlowChart.Misc;
@@ -65,8 +66,8 @@ namespace NewFlowChartTool.ViewModels
             }, ThreadOption.UIThread);
 
             OutputMessage.Inst = this;
-            Logger.OnWarnEvent += msg => Output(msg, OutputMessageType.Warning);
-            Logger.OnErrEvent += msg => Output(msg, OutputMessageType.Error);
+            Logger.OnWarnEvent += msg => SafeOutput(msg, OutputMessageType.Warning);
+            Logger.OnErrEvent += msg => SafeOutput(msg, OutputMessageType.Error);
         }
 
         public ObservableCollection<OutputItemViewModel> Outputs { get; set; }
@@ -81,6 +82,17 @@ namespace NewFlowChartTool.ViewModels
                 MessageType = msgType,
                 Node = node,
                 Graph = graph
+            });
+        }
+
+        // used outside UI thread
+        public void SafeOutput(string msg, OutputMessageType msgType =
+                OutputMessageType.Default
+            , Node? node = null, Graph? graph = null)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Output(msg, msgType, node, graph);
             });
         }
 
