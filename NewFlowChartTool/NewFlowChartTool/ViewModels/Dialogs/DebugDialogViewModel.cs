@@ -168,8 +168,13 @@ namespace NewFlowChartTool.ViewModels
                 _agents.Add(agent.GraphName, new List<DebugAgent>());
             }
             var list = _agents[agent.GraphName];
-            Debug.Assert(list.Find(a => a.GraphGuid == agent.GraphGuid) == null);
-            list.Add(agent);
+            
+            // in replay mode, user may debug one chart twice or more, in this situation, don't add
+            if (list.Find(a => a.GraphGuid == agent.GraphGuid) == null)
+            {
+                list.Add(agent);
+            }
+            
         }
 
         public void StartDebugGraph(GraphInfo graphInfo)
