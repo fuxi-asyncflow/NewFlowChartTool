@@ -322,6 +322,8 @@ namespace NewFlowChartTool.ViewModels
 
         public DelegateCommand SaveCommand { get; set; }
 
+        public bool IsEditingEvent => SelectedType != null && SelectedType.Name == "Event";
+
         void OnCloseProject(Project project)
         {
             CurrentProject = null;
@@ -598,7 +600,15 @@ namespace NewFlowChartTool.ViewModels
                 return;
             if (SelectedMember == null)
                 return;
-            if (SelectedType.Model.RemoveMember(SelectedMember.Name))
+            if (IsEditingEvent)
+            {
+                if (CurrentProject.RemoveEvent(SelectedMember.Name))
+                {
+                    Members.Remove(SelectedMember);
+                    SelectedMember = null;
+                }
+            }
+            else if (SelectedType.Model.RemoveMember(SelectedMember.Name))
             {
                 Members.Remove(SelectedMember);
                 SelectedMember = null;

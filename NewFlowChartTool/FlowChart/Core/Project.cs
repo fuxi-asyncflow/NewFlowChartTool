@@ -214,6 +214,23 @@ namespace FlowChart.Core
             return true;
         }
 
+        public bool RemoveEvent(string evName)
+        {
+            var ev = GetEvent(evName);
+            if (ev == null)
+                return false;
+            var evId = ev.EventId;
+            if (evId < 3)
+                return false;
+            EventDict.Remove(evName);
+            foreach (var e in EventDict.Values)
+            {
+                if (e.EventId > evId)
+                    e.EventId--;
+            }
+            return true;
+        }
+
         public void AddGraph(Graph graph)
         {
             if (GraphDict.ContainsKey(graph.Path))
