@@ -10,7 +10,6 @@ using FlowChart.Misc;
 using FlowChart.Parser;
 using FlowChart.Type;
 using FlowChart.Common;
-using XLua;
 
 namespace FlowChart.Core
 {
@@ -23,7 +22,6 @@ namespace FlowChart.Core
         IProjectFactory Clone();
     }
 
-    [LuaCallCSharp]
     public class Project
     {
         public Project(IProjectFactory factory)

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using XLua;
 
 namespace FlowChart.Type
 {
-    [LuaCallCSharp]
+   
     public class EnumValue
     {
         public string Value { get; set; }
@@ -16,7 +15,6 @@ namespace FlowChart.Type
         public static Dictionary<int, string> EnumValueDict = new Dictionary<int, string>();
     }
 
-    [LuaCallCSharp]
     public class EnumType
     {
         public EnumType()
