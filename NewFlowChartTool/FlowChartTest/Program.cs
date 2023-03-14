@@ -7,15 +7,17 @@ using FlowChart.Parser.NodeParser;
 using FlowChart.Parser.ASTGenerator;
 using FlowChart.AST;
 using FlowChart.AST.Nodes;
-using FlowChart.Core;
 using FlowChart.Debug;
 using FlowChart.Diff;
+using FlowChart.Lua;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
 using ProjectFactory;
 using ProjectFactory.DefaultProjectFactory;
 using WebSocketSharp;
+using XLua;
 using LogLevel = NLog.LogLevel;
+using Project = FlowChart.Core.Project;
 
 namespace FlowChartTest // Note: actual namespace depends on the project name.
 {
@@ -60,6 +62,24 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             {
                 ConvertProject(args[1]);
             }
+            else if (args[0] == "lua")
+            {
+                var p = OpenProject(args[1]);
+                RunLuaFile(p, args[2]);
+            }
+
+        }
+
+        static Project OpenProject(string path)
+        {
+            CodeGenFactory.Register("lua", typeof(LuaCodeGenerator));
+            CodeGenFactory.Register("python", typeof(PyCodeGenerator));
+            var p = new Project(new DefaultProjectFactory());
+            p.Path = path;
+            p.Builder = new Builder(new FlowChart.Parser.Parser());
+            p.Load();
+            p.Build();
+            return p;
         }
 
         static void OpenProjectTest()
@@ -193,6 +213,17 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             diff.Compare();
             diff.Print();
 
+        }
+
+        static void RunLuaFile(Project p, string luaFile)
+        {
+            var L = FlowChart.Lua.Lua.Inst;
+            var str = File.ReadAllText(luaFile);
+            FlowChart.Lua.Lua.DoString(str);
+
+            var luaP = new FlowChart.Lua.Project(p);
+            var mainFunc = L.GetGlobal<LuaFunction>("main");
+            mainFunc.Call(luaP);
         }
     }
 }

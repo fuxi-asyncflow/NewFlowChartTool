@@ -17,6 +17,7 @@
     <ProjectReference Include="..\FlowChart.AST\FlowChart.AST.csproj" />
     <ProjectReference Include="..\FlowChart.Debug\FlowChart.Debug.csproj" />
     <ProjectReference Include="..\FlowChart.LuaCodeGen\FlowChart.LuaCodeGen.csproj" />
+    <ProjectReference Include="..\FlowChart.Lua\FlowChart.Lua.csproj" />
     <ProjectReference Include="..\FlowChart.Parser\FlowChart.Parser.csproj" />
     <ProjectReference Include="..\FlowChart\FlowChart.csproj" />
     <ProjectReference Include="..\ProjectFactory\ProjectFactory.csproj" />

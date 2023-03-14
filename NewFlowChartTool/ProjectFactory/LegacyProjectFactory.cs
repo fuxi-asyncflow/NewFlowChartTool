@@ -8,10 +8,9 @@ using FlowChart.Core;
 using FlowChart.Type;
 using Type = System.Type;
 using System.Text.Json;
-using FlowChart.Lua;
+//using FlowChart.Lua;
 using FlowChart.Common;
 using ProjectFactory.DefaultProjectFactory;
-using XLua;
 
 namespace ProjectFactory
 {
@@ -133,18 +132,18 @@ namespace ProjectFactory
                     luaCodes.Add(luaCode);
                 }
             }
-            packagePathList.ForEach(Lua.AddRequirePath);
-            requireFileList.ForEach(filePath =>
-            {
-                Lua.DoString(string.Format("require('{0}')", filePath));
-            });
-            luaCodes.ForEach(code => Lua.DoString(code));
+            //packagePathList.ForEach(Lua.AddRequirePath);
+            //requireFileList.ForEach(filePath =>
+            //{
+            //    Lua.DoString(string.Format("require('{0}')", filePath));
+            //});
+            //luaCodes.ForEach(code => Lua.DoString(code));
 
-            LuaFunction importEnumFunc = Lua.Inst.GetGlobal<LuaFunction>("OnOpenProjectBegin");
-            if (importEnumFunc != null)
-            {
-                importEnumFunc.Call(new object[] { Current });
-            }
+            //LuaFunction importEnumFunc = Lua.Inst.GetGlobal<LuaFunction>("OnOpenProjectBegin");
+            //if (importEnumFunc != null)
+            //{
+            //    importEnumFunc.Call(new object[] { Current });
+            //}
 
         }
 
@@ -327,11 +326,11 @@ namespace ProjectFactory
             //    father.CustomAssignmentPredict = child => children.Contains(child);
             //}
 
-            LuaFunction importEnumFunc = Lua.Inst.GetGlobal<LuaFunction>("OnClassFileReadEnd");
-            if (importEnumFunc != null)
-            {
-                importEnumFunc.Call(new object[] { Current });
-            }
+            //LuaFunction importEnumFunc = Lua.Inst.GetGlobal<LuaFunction>("OnClassFileReadEnd");
+            //if (importEnumFunc != null)
+            //{
+            //    importEnumFunc.Call(new object[] { Current });
+            //}
 
             
         }
