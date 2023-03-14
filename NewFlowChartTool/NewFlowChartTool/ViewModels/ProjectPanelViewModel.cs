@@ -85,6 +85,8 @@ namespace NewFlowChartTool.ViewModels
             {
                 if (_types == null)
                     _types = new Dictionary<FlowChart.Type.Type, TypeViewModel>();
+                if(_item.Type == null)
+                    Logger.ERR("error type in null");
                 if (_types.ContainsKey(_item.Type))
                     return _types[_item.Type];
                 var vm = new TypeViewModel(_item.Type);

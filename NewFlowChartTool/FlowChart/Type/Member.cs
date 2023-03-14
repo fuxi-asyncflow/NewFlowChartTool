@@ -17,6 +17,7 @@ namespace FlowChart.Type
         protected Type _type;
         public virtual Type Type { get => _type; set => _type = value; }
         public string? Template { get; set; }
+        public string? Source { get; set; } // record where the member come from, subchart? import? file?
         public bool SaveToFile { get; set; }
     }
 }

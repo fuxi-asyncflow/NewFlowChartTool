@@ -423,11 +423,16 @@ namespace ProjectFactory.DefaultProjectFactory
                     if(folder != null)
                         folder.Description = value;
                 }
-
-                if (key == "path")
+                else if (key == "path")
                 {
                     folder = Project.GetFolder(value);
                 }
+                else if (key == "type")
+                {
+                    if(folder != null)
+                        folder.Type = Project.GetType(value);
+                }
+
             }
             return folder;
         }
@@ -582,6 +587,8 @@ namespace ProjectFactory.DefaultProjectFactory
                     {
                         v.IsParameter = true;
                     }
+                    else if (key == "default")
+                        v.DefaultValue = value;
                 }
                 else
                 {

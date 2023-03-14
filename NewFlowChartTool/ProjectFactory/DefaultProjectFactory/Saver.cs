@@ -219,7 +219,7 @@ namespace ProjectFactory.DefaultProjectFactory
             lines.Add($"path: {folder.Path}");
             if (!string.IsNullOrEmpty(folder.Description))
                 lines.Add($"description: {folder.Description}");
-
+            lines.Add($"type: {folder.Type.Name}");
         }
 
         public void SaveGraph(Graph graph, List<string> lines, List<string> genLines)
@@ -252,6 +252,8 @@ namespace ProjectFactory.DefaultProjectFactory
                     lines.Add($"  type: {variable.Type.Name}");
                     if(variable.IsParameter)
                         lines.Add($"  is_param: true");
+                    if(!string.IsNullOrEmpty(variable.DefaultValue))
+                        lines.Add($"  default: {variable.DefaultValue}");
                 }
             }
 
