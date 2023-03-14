@@ -29,6 +29,10 @@ namespace FlowChart.Lua
             try
             {
                 Inst = new Lua();
+                Core.Project.CreateProjectEvent += project =>
+                {
+                    project.LoadProjectConfigEvent += Inst.Init;
+                };
             }
             catch (Exception e)
             {
@@ -53,6 +57,28 @@ namespace FlowChart.Lua
 
             // 设置自定义的loader供require使用
             L.AddLoader(LuaFileLoader);
+            
+        }
+
+        public void Init(Core.Project project)
+        {
+            var luaConfig = project.Config.LuaConfig;
+            if (luaConfig == null)
+                return;
+            luaConfig.PackagePaths.ForEach(path =>
+            {
+                path = path.Replace("${ProjectDir}", project.Path);
+                AddRequirePath(path);
+            });
+
+            luaConfig.RequireFiles.ForEach(file =>
+            {
+                DoString($"require(\"{file}\")");
+            });
+            
+            var mainFunc = GetGlobal<LuaFunction>("main");
+            if (mainFunc != null)
+                mainFunc.Call(new Project(project));
             
         }
 
@@ -93,7 +119,7 @@ namespace FlowChart.Lua
 
         public delegate void PrintDelegate(string str);
 
-        public static PrintDelegate PrintCallback;
+        public static PrintDelegate? PrintCallback;
 
         [MonoPInvokeCallback(typeof(LuaCSFunction))]
         internal static int Print(RealStatePtr L)

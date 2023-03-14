@@ -114,6 +114,20 @@ namespace FlowChart
         }
     }
 
+    public class LuaConfig
+    {
+        public LuaConfig()
+        {
+            PackagePaths = new List<string>();
+            RequireFiles = new List<string>();
+        }
+        [JsonPropertyName("path")]
+        public List<string> PackagePaths { get; set; }
+
+        [JsonPropertyName("files")]
+        public List<string> RequireFiles { get; set; }
+    }
+
     public class ProjectConfig
     {
         public ProjectConfig()
@@ -134,6 +148,8 @@ namespace FlowChart
         public bool StandaloneGenerateFile { get; set; }
         [JsonPropertyName("code_generator")]
         public string CodeGenerator { get; set; }
+        [JsonPropertyName("lua")]
+        public LuaConfig? LuaConfig { get; set; }
 
         public string CodeLang;
 

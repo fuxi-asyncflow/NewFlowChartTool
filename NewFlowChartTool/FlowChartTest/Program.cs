@@ -64,8 +64,10 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             }
             else if (args[0] == "lua")
             {
+                var lua = Lua.Inst;
                 var p = OpenProject(args[1]);
-                RunLuaFile(p, args[2]);
+                
+                //RunLuaFile(p, args[2]);
             }
 
         }
@@ -78,7 +80,7 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             p.Path = path;
             p.Builder = new Builder(new FlowChart.Parser.Parser());
             p.Load();
-            p.Build();
+            //p.Build();
             return p;
         }
 

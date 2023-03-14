@@ -103,9 +103,12 @@ namespace ProjectFactory.DefaultProjectFactory
                 Project.Config = config;
             }
 
+            Project.RaiseProjectConfigEvent();
+
             GroupDict = new Dictionary<string, Group>();
             var sw = Stopwatch.StartNew();
             LoadTypes();
+            Project.RaiseLoadTypesEndEvent();
             Logger.LOG($"load types time: {sw.ElapsedMilliseconds}");
             sw.Restart();
             LoadGraphs();

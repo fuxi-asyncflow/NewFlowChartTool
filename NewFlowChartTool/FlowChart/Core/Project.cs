@@ -43,6 +43,8 @@ namespace FlowChart.Core
             BuiltinTypes.ArrayType.GetInstance(new List<Type.Type?>() { BuiltinTypes.StringType });
 
             EnumTypeDict = new Dictionary<string, EnumType>();
+
+            CreateProjectEvent?.Invoke(this);
         }
 
         public static Guid GenUUID()
@@ -68,6 +70,20 @@ namespace FlowChart.Core
         public delegate void GraphEventDelegate(Graph graph);
         public event GraphEventDelegate? AddGraphEvent;
         public event GraphEventDelegate? RemoveGraphEvent;
+
+        public static Action<Project>? CreateProjectEvent;
+        public event Action<Project>? LoadProjectConfigEvent;
+        public event Action<Project>? LoadTypesEndEvent;
+
+        public void RaiseProjectConfigEvent()
+        {
+            LoadProjectConfigEvent?.Invoke(this);
+        }
+
+        public void RaiseLoadTypesEndEvent()
+        {
+            LoadTypesEndEvent?.Invoke(this);
+        }
 
         #endregion
 
