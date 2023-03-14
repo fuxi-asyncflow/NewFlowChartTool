@@ -110,7 +110,8 @@ namespace FlowChart.Core
 
         public void AddType(string alias, Type.Type type)
         {
-            TypeDict.Add(alias, type);
+            if(!TypeDict.ContainsKey(alias))
+                TypeDict.Add(alias, type);
         }
 
         public void RemoveType(string name)

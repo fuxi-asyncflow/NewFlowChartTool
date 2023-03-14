@@ -30,6 +30,12 @@ namespace FlowChart.Lua
             return dicts;
         }
 
+        public Member? GetMember(string name)
+        {
+            var member = _type.FindMember(name);
+            return member == null ? null : new Member(member);
+        }
+
         public Method? AddMethod(string name)
         {
             if (_type.FindMember(name) != null)
@@ -65,6 +71,8 @@ namespace FlowChart.Lua
         {
             get => _member.Template; set => _member.Template = value;
         }
+
+        public Type? Type { get => new Type(_member.Type); set => _member.Type = value.Tp; }
 
         public bool IsProperty() { return _member is Property; }
         public bool IsMethod() { return _member is FlowChart.Type.Method; }

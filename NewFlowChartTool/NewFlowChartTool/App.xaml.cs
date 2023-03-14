@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using FlowChart.Common;
+using FlowChart.Lua;
 using FlowChart.Misc;
 using NewFlowChartTool.Utility;
 using NewFlowChartTool.ViewModels;
@@ -55,6 +56,8 @@ namespace NewFlowChartTool
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += new System.UnhandledExceptionEventHandler(MyExceptionHandler);
             Logger.FCLogger.Info("application startup");
+
+            var lua = Lua.Inst;
 
             //var test = Application.Current.TryFindResource(SystemColors.WindowBrushKey);
             //Console.WriteLine(test);

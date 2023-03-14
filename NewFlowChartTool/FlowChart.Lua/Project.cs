@@ -24,6 +24,11 @@ namespace FlowChart.Lua
             return new Type(t);
         }
 
+        public void AddTypeAlias(string alias, Type tp)
+        {
+            _project.AddType(alias, tp.Tp);
+        }
+
         public bool RegisterCallback(string name, LuaFunction func)
         {
             if (name == "OnLoadTypes")

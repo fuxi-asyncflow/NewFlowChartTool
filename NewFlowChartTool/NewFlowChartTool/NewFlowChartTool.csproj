@@ -31,6 +31,7 @@
     <ProjectReference Include="..\FlowChart.Debug\FlowChart.Debug.csproj" />
     <ProjectReference Include="..\FlowChart.LuaCodeGen\FlowChart.LuaCodeGen.csproj" />
     <ProjectReference Include="..\FlowChart.Common\FlowChart.Common.csproj" />
+    <ProjectReference Include="..\FlowChart.Lua\FlowChart.Lua.csproj" />
     <ProjectReference Include="..\FlowChartTest\FlowChartTest.csproj" />
     <ProjectReference Include="..\FlowChart\FlowChart.csproj" />
     <ProjectReference Include="..\NFCT.Common\NFCT.Common.csproj" />
