@@ -50,7 +50,14 @@ namespace FlowChart.Lua
                 throw new Exception("call xlua_setglobal fail!");
             }
 
+            LuaAPI.lua_pushstdcallcfunction(L.L, PrintError);
+            if (0 != LuaAPI.xlua_setglobal(L.L, "print_error"))
+            {
+                throw new Exception("call xlua_setglobal fail!");
+            }
+
             PrintCallback = s => Logger.LOG("[LUA] " + s);
+            ErrorCallback = s => Logger.ERR("[LUA] " + s);
 
             // 设置 lpairs
             L.DoString(lpairs);
@@ -120,40 +127,70 @@ namespace FlowChart.Lua
         public delegate void PrintDelegate(string str);
 
         public static PrintDelegate? PrintCallback;
+        public static PrintDelegate? ErrorCallback;
+
+        internal static string _print(RealStatePtr L)
+        {
+            int n = LuaAPI.lua_gettop(L);
+            string s = String.Empty;
+
+            if (0 != LuaAPI.xlua_getglobal(L, "tostring"))
+            {
+                throw new LuaException("can not get tostring in print:");
+                //return LuaAPI.luaL_error(L, "can not get tostring in print:");
+            }
+
+            for (int i = 1; i <= n; i++)
+            {
+                LuaAPI.lua_pushvalue(L, -1);  /* function to be called */
+                LuaAPI.lua_pushvalue(L, i);   /* value to print */
+                if (0 != LuaAPI.lua_pcall(L, 1, 1, 0))
+                {
+                    throw new LuaException("error in tostring in print:");
+                    //return LuaAPI.lua_error(L);
+                }
+                s += LuaAPI.lua_tostring(L, -1);
+
+                if (i != n) s += "\t";
+
+                LuaAPI.lua_pop(L, 1);  /* pop result */
+            }
+
+            return s;
+        }
 
         [MonoPInvokeCallback(typeof(LuaCSFunction))]
         internal static int Print(RealStatePtr L)
         {
             try
             {
-                int n = LuaAPI.lua_gettop(L);
-                string s = String.Empty;
-
-                if (0 != LuaAPI.xlua_getglobal(L, "tostring"))
-                {
-                    return LuaAPI.luaL_error(L, "can not get tostring in print:");
-                }
-
-                for (int i = 1; i <= n; i++)
-                {
-                    LuaAPI.lua_pushvalue(L, -1);  /* function to be called */
-                    LuaAPI.lua_pushvalue(L, i);   /* value to print */
-                    if (0 != LuaAPI.lua_pcall(L, 1, 1, 0))
-                    {
-                        return LuaAPI.lua_error(L);
-                    }
-                    s += LuaAPI.lua_tostring(L, -1);
-
-                    if (i != n) s += "\t";
-
-                    LuaAPI.lua_pop(L, 1);  /* pop result */
-                }
-                if (PrintCallback != null)
-                {
-                    PrintCallback.Invoke(s);
-                }
+                var s = _print(L);
+                PrintCallback?.Invoke(s);
                 
                 return 0;
+            }
+            catch (LuaException e)
+            {
+                return LuaAPI.luaL_error(L, "c# exception in print:" + e.Message);
+            }
+            catch (System.Exception e)
+            {
+                return LuaAPI.luaL_error(L, "c# exception in print:" + e);
+            }
+        }
+
+        [MonoPInvokeCallback(typeof(LuaCSFunction))]
+        internal static int PrintError(RealStatePtr L)
+        {
+            try
+            {
+                var s = _print(L);
+                ErrorCallback?.Invoke(s);
+                return 0;
+            }
+            catch (LuaException e)
+            {
+                return LuaAPI.luaL_error(L, "c# exception in print:" + e.Message);
             }
             catch (System.Exception e)
             {
