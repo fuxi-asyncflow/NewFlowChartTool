@@ -143,11 +143,24 @@ namespace FlowChart.Core
                 return null;
             Type.Type? type = null;
             TypeDict.TryGetValue(typeName, out type);
-            if (type == null && typeName.Contains('<'))
+            if (type != null)
+                return type;
+
+            
+            typeName = typeName.Replace(" ", "");
+            TypeDict.TryGetValue(typeName, out type);
+            if (type != null)
+                return type;
+            if (typeName.Contains('<'))
             {
                 return AddGenericTypeInstance(typeName);
             }
-            return type;
+            else if (typeName.Contains(','))
+            {
+                return AddTupleType(typeName);
+            }
+
+            return null;
         }
 
         public List<string> GetCustomTypeNames()
@@ -178,6 +191,11 @@ namespace FlowChart.Core
             var tmplStr = typeName.Substring(idx + 1, typeName.Length - idx - 2);
             var tmpls = tmplStr.Split(',').ToList().ConvertAll(s => GetType(s.Trim()));
             return genType.GetInstance(tmpls);
+        }
+
+        public Type.Type? AddTupleType(string typeName)
+        {
+            return AddGenericTypeInstance($"Tuple<{typeName}>");
         }
 
         public Type.Type GetGlobalType()

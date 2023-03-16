@@ -41,6 +41,9 @@ namespace FlowChart.Type
             GlobalType = new Type("Global");
             Types.Add(GlobalType);
 
+            TupleType = new GenericType("Tuple") { IsBuiltinType = true };
+            Types.Add(TupleType);
+
         }
 
         public static Type NumberType;
@@ -51,6 +54,7 @@ namespace FlowChart.Type
         public static Type UndefinedType;
         public static GenericType ArrayType;
         public static Type GlobalType;
+        public static GenericType TupleType;
 
         public static List<Type> Types;
     }
