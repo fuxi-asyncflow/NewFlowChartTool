@@ -43,7 +43,7 @@ namespace FlowChart.Plugin
         private Dictionary<string, System.Type> _plugins;
     }
 
-    public class PluginManager
+    public class PluginManager : IPluginManager
     {
         static PluginManager()
         {

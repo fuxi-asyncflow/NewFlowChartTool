@@ -49,13 +49,22 @@ namespace NewFlowChartTool.Utility
                             continue;
                         }
 
-                        if (!pluginInstance.Register(this))
+                        if (!pluginInstance.Register(PluginManager.Inst))
                         {
-                            Logger.WARN($"register plugin {type.FullName} failed!");
+                            Logger.WARN($"register plugin {type.FullName} to Core failed!");
                         }
                         else
                         {
-                            Logger.LOG($"register plugin {type.FullName} success!");
+                            Logger.LOG($"register plugin {type.FullName} to Core success!");
+                        }
+
+                        if (!pluginInstance.Register(this))
+                        {
+                            Logger.WARN($"register plugin {type.FullName} to WPF failed!");
+                        }
+                        else
+                        {
+                            Logger.LOG($"register plugin {type.FullName} to WPF success!");
                         }
                     }
                 }
