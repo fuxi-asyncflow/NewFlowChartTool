@@ -10,6 +10,7 @@ using FlowChart.Misc;
 using FlowChart.Parser;
 using FlowChart.Type;
 using FlowChart.Common;
+using FlowChart.Plugin;
 
 namespace FlowChart.Core
 {
@@ -24,9 +25,10 @@ namespace FlowChart.Core
 
     public class Project
     {
-        public Project(IProjectFactory factory)
+        public Project(IProjectFactory? factory = null)
         {
-            Factory = factory;
+            if(factory != null)
+                Factory = factory;
             Root = new Folder("") {Project = this};
             TypeDict = new Dictionary<string, Type.Type>();
             GraphDict = new Dictionary<string, TreeItem>();
@@ -89,6 +91,20 @@ namespace FlowChart.Core
 
         public bool Load()
         {
+            var configPath = Path;
+            if (Directory.Exists(Path))
+            {
+                configPath = System.IO.Path.Combine(Path, "project.json");
+            }
+            if (!File.Exists(configPath))
+                return false;
+
+            Config = ProjectConfig.LoadConfig(configPath);
+            var loaderName = Config.Loader ?? "default";
+            var factory = PluginManager.Inst.GetProjectFactory(loaderName);
+            if (factory == null)
+                return false;
+            Factory = factory;
             Factory?.Create(this);
             return true;
         }

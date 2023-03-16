@@ -92,16 +92,7 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             Project = project;
             ProjectFolder = new DirectoryInfo(Project.Path);
-            if (Project.Config == null)
-            {
-                var config = ProjectConfig.LoadConfig(System.IO.Path.Combine(ProjectFolder.FullName, "project.json"));
-                if (config == null)
-                {
-                    Logger.ERR("load project config failed");
-                    return;
-                }
-                Project.Config = config;
-            }
+
 
             Project.RaiseProjectConfigEvent();
 

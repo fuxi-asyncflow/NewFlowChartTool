@@ -140,6 +140,9 @@ namespace FlowChart
 
         [JsonPropertyName("name")]
         public string Name;
+
+        [JsonPropertyName("loader")] 
+        public string? Loader { get; set; }
         [JsonPropertyName("graph_roots")]
         public List<GraphRootConfig> GraphRoots { get; set; }
         [JsonPropertyName("output")]

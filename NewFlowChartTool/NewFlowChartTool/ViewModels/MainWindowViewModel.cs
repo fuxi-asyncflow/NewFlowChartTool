@@ -220,7 +220,7 @@ namespace NewFlowChartTool.ViewModels
                 return;
             }
 
-            var p = new Project(new DefaultProjectFactory());
+            var p = new Project();
             p.Path = projectPath;
             p.IsAsyncLoad = true;
 #if DEBUG
@@ -238,7 +238,7 @@ namespace NewFlowChartTool.ViewModels
             CurrentProject = p;
             p.Builder = new Builder(new FlowChart.Parser.Parser());
             EventHelper.Pub<ProjectOpenEvent, Project>(p);
-            PluginManager.Inst.Report(new OpenProjectEvent(p.Path));
+            WPFPluginManager.Inst.Report(new OpenProjectEvent(p.Path));
 
             if (p.IsAsyncLoad)
             {
@@ -500,7 +500,7 @@ namespace NewFlowChartTool.ViewModels
         public async void OnOpenGraph(Graph graph, Node? centerNode)
         {
             EventHelper.Pub<GraphOpenEvent, Graph>(graph);
-            PluginManager.Inst.Report(new OpenGraphEvent(graph.Path));
+            WPFPluginManager.Inst.Report(new OpenGraphEvent(graph.Path));
             bool isOpened = false;
             ForEachOpenedGraphs(gvm =>
             {
