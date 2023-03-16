@@ -378,6 +378,7 @@ namespace FlowChart.LuaCodeGen
         {
             if (node.Left is VariableNode varNode)
             {
+                varNode.IsLeft = true;
                 var varNodeInfo = varNode.OnVisit(this);
                 var exprNodeInfo = node.Right.OnVisit(this);
                 var v = G.GetOrAddVariable(varNode.Text);

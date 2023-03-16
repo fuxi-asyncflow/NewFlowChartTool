@@ -118,6 +118,7 @@ namespace FlowChart.AST.Nodes
 
     public class VariableNode : LiteralNode
     {
+        public bool IsLeft { get; set; }
         public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
     }
 
@@ -134,6 +135,7 @@ namespace FlowChart.AST.Nodes
     public class NameNode : ASTNode
     {
         public string Text;
+        public bool IsParameterName;
         public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
     }
 
