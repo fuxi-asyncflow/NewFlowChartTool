@@ -12,12 +12,25 @@ using FlowChart.Diff;
 using FlowChart.Lua;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
+using FlowChart.Plugin;
 using ProjectFactory;
 using ProjectFactory.DefaultProjectFactory;
 using WebSocketSharp;
 using XLua;
 using LogLevel = NLog.LogLevel;
 using Project = FlowChart.Core.Project;
+
+namespace FlowChart
+{
+    public class Program
+    {
+        public static void Initialize()
+        {
+            PluginManager.Inst.RegisterProjectFactory<DefaultProjectFactory>("default");
+            PluginManager.Inst.RegisterProjectFactory<MemoryProjectFactory>("memory");
+        }
+    }
+}
 
 namespace FlowChartTest // Note: actual namespace depends on the project name.
 {
@@ -76,7 +89,7 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
         {
             CodeGenFactory.Register("lua", typeof(LuaCodeGenerator));
             CodeGenFactory.Register("python", typeof(PyCodeGenerator));
-            var p = new Project(new DefaultProjectFactory());
+            var p = new Project();
             p.Path = path;
             p.Builder = new Builder(new FlowChart.Parser.Parser());
             p.Load();

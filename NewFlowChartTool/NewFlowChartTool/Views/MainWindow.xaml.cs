@@ -37,7 +37,7 @@ namespace NewFlowChartTool.Views
 
         void OnInitialized(object? sender, EventArgs args)
         {
-            PluginManager.Inst.LoadPlugins();
+            WPFPluginManager.Inst.LoadPlugins();
         }
 
         protected override void OnClosing(CancelEventArgs e)

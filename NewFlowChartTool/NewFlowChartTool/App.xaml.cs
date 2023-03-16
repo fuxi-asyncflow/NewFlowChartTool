@@ -58,6 +58,7 @@ namespace NewFlowChartTool
             Logger.FCLogger.Info("application startup");
 
             var lua = Lua.Inst;
+            FlowChart.Program.Initialize();
 
             //var test = Application.Current.TryFindResource(SystemColors.WindowBrushKey);
             //Console.WriteLine(test);
@@ -116,8 +117,8 @@ namespace NewFlowChartTool
             dumpMsg += CrashDump.GetExceptionString(e, false);
             File.WriteAllText("crash.txt", dumpMsg);
 
-            if(PluginManager.Inst.UnhandledExceptionHandler != null)
-                PluginManager.Inst.UnhandledExceptionHandler.Invoke(sender, args);
+            if(WPFPluginManager.Inst.UnhandledExceptionHandler != null)
+                WPFPluginManager.Inst.UnhandledExceptionHandler.Invoke(sender, args);
         }
 
         //private void Application_Startup(object sender, StartupEventArgs e)
