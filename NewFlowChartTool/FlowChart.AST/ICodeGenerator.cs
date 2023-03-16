@@ -46,12 +46,13 @@ namespace FlowChart.AST
         public bool IsWait => !string.IsNullOrEmpty(EventName);
         public bool IsAction;
         public bool IsError => !string.IsNullOrEmpty(ErrorMessage);
-        public string ErrorMessage { get; set; }
-        public string EventName { get; set; }
+        public string? ErrorMessage { get; set; }
+        public string? EventName { get; set; }
         public GenerateContent Content { get; set; }
         public List<TextToken>? Tokens { get; set; }
         public object? Type { get; set; }
         public bool IsAsync { get; set; }
+        public string SubGraphName { get; set; }
     }
 
     public class TextToken
