@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FlowChart.Common
+namespace FlowChart.Plugin
 {
     public interface IPlugin
     {

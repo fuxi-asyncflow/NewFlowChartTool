@@ -9,6 +9,7 @@ using FlowChart.Common;
 using FlowChart.Common.Report;
 using FlowChart.LuaCodeGen;
 using FlowChart.Parser;
+using FlowChart.Plugin;
 
 namespace NewFlowChartTool.Utility
 {
