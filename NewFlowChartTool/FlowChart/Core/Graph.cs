@@ -30,7 +30,24 @@ namespace FlowChart.Core
         private Type.Type _type;
         public Type.Type Type
         {
-            get => _type;
+            get
+            {
+                if(_type != null)
+                    return _type;
+                if (this is Folder folder)
+                {
+                    foreach (var child in folder.Children)
+                    {
+                        if (child.Type != null)
+                        {
+                            _type = child.Type;
+                            return _type;
+                        }
+                    }
+                }
+                return null;
+
+            }
             set
             {
                 if (_type == value)
