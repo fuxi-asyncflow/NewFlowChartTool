@@ -237,7 +237,7 @@ namespace FlowChart.Type
             if (tmpls.Count != 1)
             {
                 Logger.ERR($"GenericType `{Name}` only receive 1 template type");
-                return GetInstance(new List<Type?>() {BuiltinTypes.UndefinedType});
+                return GetInstance(new List<Type?>() { BuiltinTypes.UndefinedType });
             }
 
             InstanceType ret;
@@ -253,6 +253,18 @@ namespace FlowChart.Type
             ret.IsBuiltinType = true;
             Project.AddType(ret);
             return ret;
+        }
+
+        public override bool CanAccept(Type inType)
+        {
+            if (inType == this)
+                return true;
+            if (inType is InstanceType instType)
+            {
+                if (instType.GenType == this)
+                    return true;
+            }
+            return false;
         }
     }
 
