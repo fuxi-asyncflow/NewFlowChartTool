@@ -95,24 +95,32 @@ namespace FlowChart.Type
         public List<Type> CompatibleTypes;
         public bool IsBuiltinType { get; set; }
 
+        public Project? Project { get; set; }
+
         public bool AddMember(Member member, bool replace = true)
         {
-            if (MemberDict.ContainsKey(member.Name))
+            var memberName = member.Name;
+            if(Project != null && Project.Config.CaseInsensitive)
+                memberName = memberName.ToLower();
+            if (MemberDict.ContainsKey(memberName))
             {
                 if (!replace)
                     return false;
-                MemberDict[member.Name] = member;
+                MemberDict[memberName] = member;
             }
             else
             {
-                MemberDict.Add(member.Name, member);
+                MemberDict.Add(memberName, member);
             }
             return true;
         }
 
         public Member? FindMember(string name, bool findInBaseType = true)
         {
-            if(MemberDict.TryGetValue(name, out var member))
+            if (Project != null && Project.Config.CaseInsensitive)
+                name = name.ToLower();
+
+            if (MemberDict.TryGetValue(name, out var member))
             {
                 return member;
             }

@@ -151,6 +151,7 @@ namespace FlowChart.Core
         public void AddType(Type.Type type)
         {
             TypeDict.Add(type.Name, type);
+            type.Project = this;
         }
 
         public void AddType(string alias, Type.Type type)
