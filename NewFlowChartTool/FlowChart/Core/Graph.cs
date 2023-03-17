@@ -296,10 +296,16 @@ namespace FlowChart.Core
             foreach (var v in Variables)
             {
                 if (v.IsParameter)
-                    method.Parameters.Add(new Parameter(v.Name)
+                {
+                    var para = new Parameter(v.Name)
                     {
-                        Type = v.Type
-                    });
+                        Type = v.Type,
+                        Description = v.Description,
+                        Default = v.DefaultValue
+                    };
+                    method.Parameters.Add(para);
+                }
+                    
             }
 
             method.Type = Type;
