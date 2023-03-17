@@ -1,12 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System;
+using System.Reflection;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using FlowChart.Parser.NodeParser;
 using FlowChart.Parser.ASTGenerator;
 using FlowChart.AST;
 using FlowChart.AST.Nodes;
+using FlowChart.Common;
 using FlowChart.Debug;
 using FlowChart.Diff;
 using FlowChart.Lua;
@@ -15,8 +17,8 @@ using FlowChart.Parser;
 using FlowChart.Plugin;
 using ProjectFactory;
 using ProjectFactory.DefaultProjectFactory;
-using WebSocketSharp;
 using XLua;
+using Logger = FlowChart.Common.Logger;
 using LogLevel = NLog.LogLevel;
 using Project = FlowChart.Core.Project;
 
@@ -34,6 +36,59 @@ namespace FlowChart
             pluginManager.RegisterCodeGenerator<PyCodeGenerator>("python");
 
             pluginManager.RegisterParser<DefaultParser>("default");
+
+            LoadPlugins(pluginManager);
+        }
+
+        public static void LoadPlugins(IPluginManager pluginManager)
+        {
+            var exeFolder = new DirectoryInfo(FileHelper.GetExeFolder());
+            var pluginFolder = new DirectoryInfo(System.IO.Path.Combine(exeFolder.FullName, "plugins"));
+            if (!pluginFolder.Exists)
+            {
+                Logger.WARN("[plugin] no plugin folder");
+                return;
+            }
+
+            var pluginInterface = typeof(IPlugin);
+
+            foreach (var dllFile in pluginFolder.EnumerateFiles("*.dll"))
+            {
+                var dll = Assembly.LoadFrom(dllFile.FullName);
+                foreach (var type in dll.GetTypes())
+                {
+                    if (type.GetInterfaces().Contains(pluginInterface))
+                    {
+                        Logger.LOG($"find plugin {type.FullName}");
+                        var pluginInstance = System.Activator.CreateInstance(type) as IPlugin;
+                        if (pluginInstance == null)
+                        {
+                            Logger.WARN($"create plugin {type.FullName} failed!");
+                            continue;
+                        }
+
+                        if (!pluginInstance.Register(PluginManager.Inst))
+                        {
+                            Logger.WARN($"register plugin {type.FullName} to Core failed!");
+                        }
+                        else
+                        {
+                            Logger.LOG($"register plugin {type.FullName} to Core success!");
+                        }
+
+                        if (!pluginInstance.Register(pluginManager))
+                        {
+                            Logger.WARN($"register plugin {type.FullName} to WPF failed!");
+                        }
+                        else
+                        {
+                            Logger.LOG($"register plugin {type.FullName} to WPF success!");
+                        }
+                    }
+                }
+            }
+
+            //throw new Exception("crash report test");
         }
     }
 }
@@ -69,6 +124,7 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
         static void Main(string[] args)
         {
             Logger.MyLogger.Info("hello");
+            FlowChart.Program.Initialize();
             //ConvertProject(@"F:\asyncflow\asyncflow_new\test\flowchart");
             //OpenProjectTest();
             //ParserTest();            
@@ -96,7 +152,7 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             var p = new Project();
             p.Path = path;
             p.Load();
-            //p.Build();
+            p.Build();
             return p;
         }
 
