@@ -44,7 +44,7 @@ namespace ProjectFactory.DefaultProjectFactory
             // test = new TestProjectFactory();
             // test.Create(project);
             loader.Load(project);
-            saver.SetLang(CodeGenFactory.GetLang(project.Config.CodeGenerator));
+            saver.SetLang(project.Lang);
         }
 
         public void Save(Project project)
@@ -94,7 +94,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public void SetLang(string? lang)
         {
-            if (lang == "lua")
+            if (string.IsNullOrEmpty(lang) || lang == "lua")
             {
                 _saveForLang = new SaveForLua();
                 DefaultProjectFactory.GenerateFileExt = ".lua";

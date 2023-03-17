@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlowChart.AST;
 using FlowChart.Core;
-using NLog.LayoutRenderers.Wrappers;
+using FlowChart.Parser;
 
 namespace FlowChart.Plugin
 {
@@ -55,7 +56,11 @@ namespace FlowChart.Plugin
         public PluginManager()
         {
             _projectFactoryContainer = new PluginContainer<IProjectFactory>();
+            _codeGeneratorContainer = new PluginContainer<ICodeGenerator>();
+            _parserContainer = new PluginContainer<IParser>();
         }
+
+        #region Project Factory
         public bool RegisterProjectFactory<T>(string name) where T : IProjectFactory
         {
             return _projectFactoryContainer.Add<T>(name);
@@ -67,5 +72,42 @@ namespace FlowChart.Plugin
         }
 
         private PluginContainer<IProjectFactory> _projectFactoryContainer;
+
+        #endregion
+
+        #region Code Generator
+
+        public bool RegisterCodeGenerator<T>(string name) where T : ICodeGenerator
+        {
+            return _codeGeneratorContainer.Add<T>(name);
+        }
+
+        public ICodeGenerator? GetCodeGenerator(string name)
+        {
+            return _codeGeneratorContainer.Create(name);
+        }
+
+        private PluginContainer<ICodeGenerator> _codeGeneratorContainer;
+
+        #endregion
+
+        #region Parser
+
+        public bool RegisterParser<T>(string name) where T : IParser
+        {
+            return _parserContainer.Add<T>(name);
+        }
+
+        public IParser? GetParser(string name)
+        {
+            return _parserContainer.Create(name);
+        }
+
+        private PluginContainer<IParser> _parserContainer;
+
+        #endregion
+
+
+
     }
 }

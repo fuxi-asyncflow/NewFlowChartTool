@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FlowChart.AST;
 using FlowChart.AST.Nodes;
 using FlowChart.Core;
+using FlowChart.Plugin;
 
 namespace FlowChart.Parser
 {
@@ -17,60 +18,20 @@ namespace FlowChart.Parser
         public string Lang { get; }
     }
 
-
-    public static class CodeGenFactory
-    {
-        static CodeGenFactory()
-        {
-            CodeGeneratorMap = new Dictionary<string, System.Type>();
-            //CodeGeneratorMap.Add("lua", typeof(LuaCodeGenerator));
-            //CodeGeneratorMap.Add("python", typeof(PyCodeGenerator));
-        }
-
-        private static Dictionary<string, System.Type> CodeGeneratorMap;
-
-        public static void Register(string name, System.Type tp)
-        {
-            CodeGeneratorMap.Add(name, tp);
-        }
-        public static ICodeGenerator CreateCodeGenerator(Project p, Graph g)
-        {
-            if (CodeGeneratorMap.TryGetValue(p.Config.CodeGenerator, out var tp))
-            {
-                var gen = (ICodeGenerator)Activator.CreateInstance(tp);
-                gen.G = g;
-                gen.P = p;
-                p.Config.CodeLang = gen.Lang;
-                return gen;
-            }
-            else
-            {
-                throw new NotSupportedException($"no code generator named {p.Config.CodeGenerator}");
-            }
-        }
-
-        public static string? GetLang(string generatorName)
-        {
-            if (CodeGeneratorMap.TryGetValue(generatorName, out var tp))
-            {
-                var gen = (ICodeGenerator)Activator.CreateInstance(tp);
-                return gen.Lang;
-            }
-
-            return null;
-        }
-    }
     // Build = Parse + TypeCheck + CodeGen
     public class Builder
     {
-        public Builder(IParser p)
+        public Builder(IParser p, ICodeGenerator gen)
         {
             parser = p;
+            generator = gen;
         }
 
         private IParser parser;
+        private ICodeGenerator generator;
         public void Build(Project p)
         {
+            generator.P = p;
             ParserConfig cfg = new ParserConfig();
             foreach (var graphKV in p.GraphDict)
             {
@@ -83,7 +44,8 @@ namespace FlowChart.Parser
         {
             if(cfg == null)
                 cfg = new ParserConfig();
-            var generator = CodeGenFactory.CreateCodeGenerator(g.Project, g);
+            generator.P = g.Project;
+            generator.G = g;
             foreach (var node in g.Nodes)
             {
                 if (node is TextNode textNode)
@@ -128,7 +90,6 @@ namespace FlowChart.Parser
             var ast = parser.Parse(text, cfg);
             if (ast != null)
             {
-                var generator = CodeGenFactory.CreateCodeGenerator(g.Project, g);
                 var pr = generator.GenerateCode(ast, cfg);
                 return pr.Type as FlowChart.Type.Type;
             }

@@ -30,7 +30,7 @@ namespace FlowChart.Parser
 
         public bool HasError => Error != null;
     }
-    public class Parser : IParser
+    public class DefaultParser : IParser
     {
         public List<TextToken>? Tokens { get; set; }
         public ParserError? Error { get; set; }

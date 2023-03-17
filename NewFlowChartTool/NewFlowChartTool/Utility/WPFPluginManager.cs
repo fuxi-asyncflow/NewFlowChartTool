@@ -18,8 +18,6 @@ namespace NewFlowChartTool.Utility
         static WPFPluginManager()
         {
             Inst = new WPFPluginManager();
-            CodeGenFactory.Register("lua", typeof(LuaCodeGenerator));
-            CodeGenFactory.Register("python", typeof(PyCodeGenerator));
         }
 
         public void LoadPlugins()

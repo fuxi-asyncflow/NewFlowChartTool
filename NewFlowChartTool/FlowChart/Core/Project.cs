@@ -65,6 +65,7 @@ namespace FlowChart.Core
         public bool IsAsyncLoad { get; set; }
         public Dictionary<string, TreeItem> GraphDict { get; set; }
         public Builder Builder { get; set; }
+        public string? Lang { get; set; }
         #endregion
 
         #region Event
@@ -91,15 +92,38 @@ namespace FlowChart.Core
 
         public bool Load()
         {
-            var configPath = Path;
-            if (Directory.Exists(Path))
+            var pluginManager = PluginManager.Inst;
+            if (Config == null)
             {
-                configPath = System.IO.Path.Combine(Path, "project.json");
-            }
-            if (!File.Exists(configPath))
-                return false;
+                var configPath = Path;
+                if (Directory.Exists(Path))
+                {
+                    configPath = System.IO.Path.Combine(Path, "project.json");
+                }
 
-            Config = ProjectConfig.LoadConfig(configPath);
+                if (!File.Exists(configPath))
+                {
+                    return false;
+                }
+
+                Config = ProjectConfig.LoadConfig(configPath);
+            }
+            
+
+            // create builder
+            var parserName = Config.ParserName ?? "default";
+            var parser = pluginManager.GetParser(parserName);
+
+            
+            var generatorName = Config.CodeGenerator;
+            var codeGen = pluginManager.GetCodeGenerator(generatorName);
+            if (parser != null && codeGen != null)
+            {
+                Builder = new Builder(parser, codeGen);
+                Lang = codeGen.Lang;
+            }
+
+            // create Factory
             var loaderName = Config.Loader ?? "default";
             var factory = PluginManager.Inst.GetProjectFactory(loaderName);
             if (factory == null)

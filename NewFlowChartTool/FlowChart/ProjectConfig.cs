@@ -149,8 +149,13 @@ namespace FlowChart
         public string Output { get; set; }
         [JsonPropertyName("standalone_generate_file")]
         public bool StandaloneGenerateFile { get; set; }
+
+        [JsonPropertyName("parser")]
+        public string? ParserName { get; set; }
+
         [JsonPropertyName("code_generator")]
         public string CodeGenerator { get; set; }
+
         [JsonPropertyName("lua")]
         public LuaConfig? LuaConfig { get; set; }
 

@@ -26,8 +26,14 @@ namespace FlowChart
     {
         public static void Initialize()
         {
-            PluginManager.Inst.RegisterProjectFactory<DefaultProjectFactory>("default");
-            PluginManager.Inst.RegisterProjectFactory<MemoryProjectFactory>("memory");
+            var pluginManager = PluginManager.Inst;
+            pluginManager.RegisterProjectFactory<DefaultProjectFactory>("default");
+            pluginManager.RegisterProjectFactory<MemoryProjectFactory>("memory");
+
+            pluginManager.RegisterCodeGenerator<LuaCodeGenerator>("lua");
+            pluginManager.RegisterCodeGenerator<PyCodeGenerator>("python");
+
+            pluginManager.RegisterParser<DefaultParser>("default");
         }
     }
 }
@@ -87,11 +93,8 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
 
         static Project OpenProject(string path)
         {
-            CodeGenFactory.Register("lua", typeof(LuaCodeGenerator));
-            CodeGenFactory.Register("python", typeof(PyCodeGenerator));
             var p = new Project();
             p.Path = path;
-            p.Builder = new Builder(new FlowChart.Parser.Parser());
             p.Load();
             //p.Build();
             return p;
@@ -104,9 +107,7 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             var p = new FlowChart.Core.Project(new ProjectFactory.LegacyProjectFactory());
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
-
-            var builder = new Builder(new FlowChart.Parser.Parser());
-            builder.Build(p);
+            p.Build();
         }
 
         public static ASTNode Parse(string text)

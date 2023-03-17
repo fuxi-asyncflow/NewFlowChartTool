@@ -169,7 +169,6 @@ namespace NewFlowChartTool.ViewModels
             //var p = new FlowChart.Core.Project(new DefaultProjectFactory());
             p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
             p.Load();
-            p.Builder = new Builder(new FlowChart.Parser.Parser());
             EventHelper.Pub<ProjectOpenEvent, Project>(p);
             p.Save();
             CurrentProject = p;
@@ -236,7 +235,6 @@ namespace NewFlowChartTool.ViewModels
             }
 #endif
             CurrentProject = p;
-            p.Builder = new Builder(new FlowChart.Parser.Parser());
             EventHelper.Pub<ProjectOpenEvent, Project>(p);
             WPFPluginManager.Inst.Report(new OpenProjectEvent(p.Path));
 
@@ -268,7 +266,6 @@ namespace NewFlowChartTool.ViewModels
 
             var p = DefaultProjectFactory.CreateNewProject(folderPath);
             CurrentProject = p;
-            p.Builder = new Builder(new FlowChart.Parser.Parser());
             EventHelper.Pub<ProjectOpenEvent, Project>(p);
             p.Save();
         }
