@@ -41,7 +41,7 @@ namespace FlowChart.Type
             GlobalType = new Type("Global");
             Types.Add(GlobalType);
 
-            TupleType = new GenericType("Tuple") { IsBuiltinType = true };
+            TupleType = new TupleType("Tuple") { IsBuiltinType = true };
             Types.Add(TupleType);
 
         }
@@ -242,6 +242,33 @@ namespace FlowChart.Type
             ret.templateTypes.AddRange(tmpls);
             ret.Name = $"{Name}<{tmpl.Name}>";
             InstanceTypes.Add(tmpl, ret);
+            ret.IsBuiltinType = true;
+            Project.AddType(ret);
+            return ret;
+        }
+    }
+
+    public class TupleType : GenericType
+    {
+        public TupleType(string name) : base(name)
+        {
+            InstanceTypes = new Dictionary<string, InstanceType>();
+        }
+
+        public override int TemplateTypeCount => 1;
+        public Dictionary<string, InstanceType> InstanceTypes;
+
+        public override InstanceType? GetInstance(List<Type?> tmpls)
+        {
+            InstanceType ret;
+            var typeString = string.Join(',', tmpls.ConvertAll(tp => tp.Name));
+            
+            if (InstanceTypes.TryGetValue(typeString, out ret))
+                return ret;
+            ret = new InstanceType(Name) { GenType = this };
+            ret.templateTypes.AddRange(tmpls);
+            ret.Name = $"{Name}<{typeString}>";
+            InstanceTypes.Add(typeString, ret);
             ret.IsBuiltinType = true;
             Project.AddType(ret);
             return ret;
