@@ -103,6 +103,7 @@ namespace FlowChart.Core
 
                 if (!File.Exists(configPath))
                 {
+                    Logger.ERR($"cannot find project.json at `{configPath}`, project folder is valid");
                     return false;
                 }
 
@@ -127,7 +128,11 @@ namespace FlowChart.Core
             var loaderName = Config.Loader ?? "default";
             var factory = PluginManager.Inst.GetProjectFactory(loaderName);
             if (factory == null)
+            {
+                Logger.ERR($"cannot find loader `{loaderName}` to open project, may be plugin is missing");
                 return false;
+            }
+
             Factory = factory;
             Factory?.Create(this);
             return true;
