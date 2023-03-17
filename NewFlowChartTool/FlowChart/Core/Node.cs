@@ -38,7 +38,11 @@ namespace FlowChart.Core
         }
         public event Action<string?> DescriptionChangedEvent;
 
-        private Dictionary<string, string>? _extra; // extra information, may be used for plugins
+        #region extra info
+
+        public bool HasExtraInfo => _extra == null || _extra.Count == 0;
+
+        public SortedDictionary<string, string>? _extra; // extra information, may be used for plugins
 
         public string? GetExtraProp(string name)
         {
@@ -50,9 +54,13 @@ namespace FlowChart.Core
         public void SetExtraProp(string name, string value)
         {
             if (_extra == null)
-                _extra = new Dictionary<string, string>();
+                _extra = new SortedDictionary<string, string>();
             _extra[name] = value;
         }
+
+        #endregion
+
+
 
         #region REF PROPERTYIES
 

@@ -426,7 +426,22 @@ namespace ProjectFactory.DefaultProjectFactory
                     if(folder != null)
                         folder.Type = Project.GetType(value);
                 }
+                else if (key == "extra")
+                {
+                    do
+                    {
+                        var l = lines[pos++];
+                        Debug.Assert(l.StartsWith("  - "));
+                        int extPos = l.IndexOf(':');
+                        var extKey = l.Substring(4, extPos-4).Trim();
+                        var extValue = l.Substring(extPos + 1).Trim();
+                        if (extValue.StartsWith('"'))
+                            extValue = extValue.Trim('\"');
+                        folder.SetExtraProp(extKey, extValue);
 
+                    } while (line.Length > 2 && line[1] == ' ' && line[1] == ' ' && line[2] == '-');
+                    pos--;
+                }
             }
             return folder;
         }
@@ -660,6 +675,22 @@ namespace ProjectFactory.DefaultProjectFactory
                             line = lines[pos++];
                         } while (line.Length > 2 && line[1] == ' ' && line[1] == ' ' && line[2] == ' ');
                         pos--;
+                    }
+                    else if (key == "extra")
+                    {
+                        do
+                        {
+                            var l = lines[pos++];
+                            int extPos = l.IndexOf(':');
+                            var extKey = l.Substring(0, colonPos).Trim();
+                            var extValue = l.Substring(colonPos + 1).Trim();
+                            if (extValue.StartsWith('"'))
+                                extValue = extValue.Trim('\"');
+                            node.SetExtraProp(extKey, extValue);
+
+                        } while (line.Length > 2 && line[1] == ' ' && line[1] == ' ' && line[2] == ' ');
+                        pos--;
+
                     }
                 }
                 else

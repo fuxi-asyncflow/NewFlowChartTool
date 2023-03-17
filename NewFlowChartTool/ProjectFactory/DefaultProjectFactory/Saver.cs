@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using FlowChart;
 using FlowChart.AST;
@@ -118,7 +119,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public void SaveConfig(string path)
         {
-            var jsonSetting = new JsonSerializerOptions() {WriteIndented = true};
+            var jsonSetting = new JsonSerializerOptions() {WriteIndented = true, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault};
             FileHelper.Save(path, JsonSerializer.Serialize<ProjectConfig>(Project.Config, jsonSetting));
         }
 
@@ -220,6 +221,14 @@ namespace ProjectFactory.DefaultProjectFactory
             if (!string.IsNullOrEmpty(folder.Description))
                 lines.Add($"description: {folder.Description}");
             lines.Add($"type: {folder.Type.Name}");
+            if (folder.HasExtraInfo)
+            {
+                lines.Add($"extra: ");
+                foreach (var kv in folder._extra)
+                {
+                    lines.Add($"  - {kv.Key}: \"{kv.Value}\"");
+                }
+            }
         }
 
         public void SaveGraph(Graph graph, List<string> lines, List<string> genLines)
@@ -324,7 +333,16 @@ namespace ProjectFactory.DefaultProjectFactory
                             }
                         }
                     }
-                    
+
+                    if (node.HasExtraInfo)
+                    {
+                        lines.Add($"  extra: ");
+                        foreach (var kv in node._extra)
+                        {
+                            lines.Add($"    - {kv.Key}: \"{kv.Value}\"");
+                        }
+                    }
+
                 }
             }
 
