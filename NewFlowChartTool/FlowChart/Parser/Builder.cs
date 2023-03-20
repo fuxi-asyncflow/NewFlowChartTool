@@ -60,6 +60,20 @@ namespace FlowChart.Parser
             ASTNode? ast = null;
             ParseResult pr;
 
+            var text = node.Text;
+            if (text.Length > 1 && text[0] == '-' && text[1] == '-')
+            {
+                pr = new ParseResult();
+                pr.Tokens = new List<TextToken>() { new TextToken()
+                {
+                    Start = 0,
+                    End = text.Length,
+                    Type = TextToken.TokenType.Default
+                }};
+                node.OnParse(pr);
+                return;
+            }
+
             ast = parser.Parse(node.Text, cfg);
             
             if (ast == null)
