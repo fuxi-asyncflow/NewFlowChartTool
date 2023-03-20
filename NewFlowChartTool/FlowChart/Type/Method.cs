@@ -23,6 +23,10 @@ namespace FlowChart.Type
 
     public class SubGraphMethod : Method
     {
+        static SubGraphMethod()
+        {
+            SubGraphTemplate = DefaultSubGraphTemplate;
+        }
         public SubGraphMethod(string name)
             : base(name)
         {
@@ -36,12 +40,19 @@ namespace FlowChart.Type
             get => RelativeGraph.ReturnType;
         }
 
+        public static Func<string, bool, string> SubGraphTemplate;
+
+        public static string DefaultSubGraphTemplate(string path, bool hasParameter)
+        {
+            if (!hasParameter)
+                return $"asyncflow.call_sub(\"{path}\", $caller)";
+            else
+                return $"asyncflow.call_sub(\"{path}\", $caller, $params)";
+        }
+
         public void Update()
         {
-            if (Parameters.Count == 0)
-                Template = $"asyncflow.call_sub(\"{RelativeGraph.Path}\", $caller)";
-            else
-                Template = $"asyncflow.call_sub(\"{RelativeGraph.Path}\", $caller, $params)";
+            Template = SubGraphTemplate(RelativeGraph.Path, Parameters.Count > 0);
         }
     }
 }
