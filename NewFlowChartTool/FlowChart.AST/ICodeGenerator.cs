@@ -114,6 +114,7 @@ namespace FlowChart.AST
         T Visit(SubscriptNode node);
         T Visit(AssignmentNode node);
         T Visit(ContainerNode node);
+        T Visit(ParenthesisNode node);
 
     }
 

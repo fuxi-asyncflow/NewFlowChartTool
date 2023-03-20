@@ -458,6 +458,13 @@ namespace FlowChart.LuaCodeGen
             nodeInfo.Code = $"{{{string.Join(", ", nis.ConvertAll(n => n.Code))}}}";
             return nodeInfo;
         }
+
+        public NodeInfo Visit(ParenthesisNode node)
+        {
+            var nodeInfo = node.Content.OnVisit(this);
+            nodeInfo.Code = $"({nodeInfo.Code})";
+            return nodeInfo;
+        }
         #endregion
     }
 }

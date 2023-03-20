@@ -249,7 +249,10 @@ namespace FlowChart.Parser.ASTGenerator
 
         public override ASTNode VisitExpr_parenthesis(NodeParserParser.Expr_parenthesisContext context)
         {
-            return Visit(context.expr());
+            return new ParenthesisNode()
+            {
+                Content = Visit(context.expr())
+            };
         }
 
         #endregion

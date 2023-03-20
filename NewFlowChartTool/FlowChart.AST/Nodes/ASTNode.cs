@@ -274,4 +274,10 @@ namespace FlowChart.AST.Nodes
     {
         public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
     }
+
+    public class ParenthesisNode : ASTNode
+    {
+        public ASTNode Content;
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
+    }
 }
