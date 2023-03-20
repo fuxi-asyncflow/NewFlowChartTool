@@ -100,6 +100,11 @@ namespace FlowChart.Lua
             return para;
         }
 
+        public void SetVariadic(bool v)
+        {
+            _method.IsVariadic = true;
+        }
+
         private FlowChart.Type.Method _method;
     }
 
