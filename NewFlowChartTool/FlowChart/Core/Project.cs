@@ -251,7 +251,10 @@ namespace FlowChart.Core
 
         public bool AddEvent(Type.EventType ev)
         {
-            if (EventDict.ContainsKey(ev.Name))
+            var evName = ev.Name;
+            if (Config.CaseInsensitive)
+                evName = evName.ToLower();
+            if (EventDict.ContainsKey(evName))
             {
                 Console.WriteLine("event duplicated");
                 return false;
@@ -264,7 +267,7 @@ namespace FlowChart.Core
                 ev.EventId = EventDict.Count;
 
             if (ev.EventId == EventDict.Count)
-                EventDict.Add(ev.Name, ev);
+                EventDict.Add(evName, ev);
             else 
             {
                 OutputMessage.Inst?.Output($"add event {ev.Name} failed: event id mismatch order");
@@ -275,6 +278,8 @@ namespace FlowChart.Core
 
         public EventType? GetEvent(string evName)
         {
+            if (Config.CaseInsensitive)
+                evName = evName.ToLower();
             EventDict.TryGetValue(evName, out var ev);
             return ev;
         }
