@@ -156,7 +156,7 @@ namespace ProjectFactory
                 {
                     var baseType = Current.GetType(inherit.GetString());
                     if(baseType != null)
-                        type.BaseTypes.Add(baseType);
+                        type.AddBaseType(baseType);
                 }
             }
 

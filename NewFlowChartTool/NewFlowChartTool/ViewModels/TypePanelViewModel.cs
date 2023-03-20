@@ -79,10 +79,10 @@ namespace NewFlowChartTool.ViewModels
         public TypeMemberTreeFolderViewModel(Item item) : base(item)
         {
             Children = new ObservableCollection<TypeMemberTreeItemViewModel>();
-            if (item is Type type && type.BaseTypes.Count > 0)
+            if (item is Type type && type.HasBaseType)
             {
-                BaseType = string.Join(',', type.BaseTypes.ConvertAll(tp => tp.Name));
-                BaseType = $"({BaseType})";
+                
+                BaseType = $"({type.GetBaseTypesString()})";
             }
             
         }

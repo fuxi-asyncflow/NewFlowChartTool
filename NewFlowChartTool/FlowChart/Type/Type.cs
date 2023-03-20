@@ -65,7 +65,7 @@ namespace FlowChart.Type
         : base(name)
         {
             MemberDict = new SortedDictionary<string, Member>();
-            CompatibleTypes = new List<Type>();
+            CompatibleTypes = new HashSet<Type>();
             BaseTypes = new List<Type>();
             IsBuiltinType = false;
             if (name.Length >= 2)
@@ -92,7 +92,7 @@ namespace FlowChart.Type
         public SortedDictionary<string, Member> MemberDict;
         
 
-        public List<Type> CompatibleTypes;
+        public HashSet<Type> CompatibleTypes;
         public bool IsBuiltinType { get; set; }
 
         public Project? Project { get; set; }
@@ -161,17 +161,59 @@ namespace FlowChart.Type
             return true;
         }
 
+        public bool AddBaseType(Type type)
+        {
+            if (BaseTypes.Contains(type))
+                return false;
+            BaseTypes.Add(type);
+
+            var ancestorTypes = new Stack<Type>();
+            var handledTypes = new HashSet<Type>();
+            ancestorTypes.Push(type);
+            while (ancestorTypes.Count > 0)
+            {
+                var topType = ancestorTypes.Pop();
+                if(handledTypes.Contains(topType))
+                    continue;
+                handledTypes.Add(topType);
+                topType.CompatibleTypes.Add(this);
+                foreach (var compType in CompatibleTypes)
+                {
+                    topType.CompatibleTypes.Add(compType);
+                }
+                topType.BaseTypes.ForEach(ancestorTypes.Push);
+            }
+
+            return true;
+        }
+
+        public bool RemoveBaseType()
+        {
+            //TODO  remove base type and update compatibleTypes
+            return true;
+        }
+
+        public bool HasBaseType => BaseTypes.Count > 0;
+
+        public string GetBaseTypesString()
+        {
+            return string.Join(", ", BaseTypes.ConvertAll(tp => tp.Name));
+        }
+
         public delegate bool AcceptDelegate (Type type);
 
         public AcceptDelegate? AcceptFunc;
 
         public virtual bool CanAccept(Type inType)
         {
-            if (inType == this)
+            if (inType == this || inType == BuiltinTypes.AnyType)
                 return true;
+            if (CompatibleTypes.Contains(inType))
+                return true;
+            
             if (AcceptFunc != null)
                 return AcceptFunc(inType);
-           
+
             return false;
         }
     }

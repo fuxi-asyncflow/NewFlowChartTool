@@ -413,9 +413,9 @@ namespace ProjectFactory.DefaultProjectFactory
             lines.Add($"name: {type.Name}");
             lines.Add($"abbr: {type.Abbr}");
 
-            if (type.BaseTypes.Count > 0)
+            if (type.HasBaseType)
             {
-                var baseTypesStr = string.Join(", ", type.BaseTypes.ConvertAll(baseType => baseType.Name));
+                var baseTypesStr = type.GetBaseTypesString();
                 lines.Add($"base: [{baseTypesStr}]");
             }
 
