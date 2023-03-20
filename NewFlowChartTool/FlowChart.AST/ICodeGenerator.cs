@@ -104,6 +104,7 @@ namespace FlowChart.AST
         T Visit(VariableNode node);
         T Visit(BoolNode node);
         T Visit(SelfNode node);
+        T Visit(NullNode node);
         T Visit(NameNode node);
         T Visit(BinOpNode node);
         T Visit(ArgNode node);

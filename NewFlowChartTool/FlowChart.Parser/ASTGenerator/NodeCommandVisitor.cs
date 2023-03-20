@@ -68,7 +68,7 @@ namespace FlowChart.Parser.ASTGenerator
 
         public override ASTNode VisitAtom_nil(NodeParserParser.Atom_nilContext context)
         {
-            return new StringNode() { Text = context.NIL().GetText() };
+            return new NullNode() { Text = context.NIL().GetText() };
         }
 
         public override ASTNode VisitAtom_self(NodeParserParser.Atom_selfContext context)

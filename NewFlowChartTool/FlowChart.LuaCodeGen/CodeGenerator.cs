@@ -181,6 +181,11 @@ namespace FlowChart.LuaCodeGen
             return new NodeInfo() { Code = "self", Type = G.Type };
         }
 
+        public NodeInfo Visit(NullNode node)
+        {
+            return new NodeInfo() { Code = node.Text, Type = BuiltinTypes.AnyType };
+        }
+
         public NodeInfo Visit(BinOpNode node)
         {
             var nis = node.ChildNodes.ConvertAll(_node => _node.OnVisit(this));

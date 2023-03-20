@@ -132,6 +132,11 @@ namespace FlowChart.AST.Nodes
         public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
     }
 
+    public class NullNode : LiteralNode
+    {
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
+    }
+
     public class NameNode : ASTNode
     {
         public string Text;
