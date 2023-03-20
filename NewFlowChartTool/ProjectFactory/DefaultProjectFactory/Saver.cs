@@ -471,6 +471,8 @@ namespace ProjectFactory.DefaultProjectFactory
                         var tmp = $"name: {para.Name}, type: {para.Type.Name}";
                         if (!string.IsNullOrEmpty(para.Description))
                             tmp += $", description: {para.Description}";
+                        if(!string.IsNullOrEmpty(para.Default))
+                            tmp += $", default: {para.Default}";
                         lines.Add($"  - {{{tmp}}}");
                     }
                 }

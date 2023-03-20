@@ -76,6 +76,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public static YamlScalarNode YAML_PROPERTIES = new YamlScalarNode("properties");
         public static YamlScalarNode YAML_PARAMETERS = new YamlScalarNode("parameters");
         public static YamlScalarNode YAML_VARIADIC = new YamlScalarNode("variadic");
+        public static YamlScalarNode YAML_DEFAULT = new YamlScalarNode("default");
         public static YamlScalarNode YAML_CUSTOMGEN = new YamlScalarNode("custom_gen");
 
         public static YamlScalarNode YAML_ISPARAMETER = new YamlScalarNode("is_param");
@@ -179,13 +180,13 @@ namespace ProjectFactory.DefaultProjectFactory
             {
                 if (node is YamlScalarNode oneBaseNode)
                 {
-                    type.BaseTypes.Add(Project.GetType(oneBaseNode.Value));
+                    type.AddBaseType(Project.GetType(oneBaseNode.Value));
                 }
                 else if (node is YamlSequenceNode baseNodes)
                 {
                     foreach (var baseNode in baseNodes)
                     {
-                        type.BaseTypes.Add(Project.GetType((baseNode as YamlScalarNode).Value));
+                        type.AddBaseType(Project.GetType((baseNode as YamlScalarNode).Value));
                     }
                 }
             }
@@ -289,7 +290,9 @@ namespace ProjectFactory.DefaultProjectFactory
 
                     if(paraNode.Children.ContainsKey(YAML_DESCRIPTION) && paraNode.Children[YAML_DESCRIPTION] is YamlScalarNode paraDescripNode)
                         para.Description = paraDescripNode.Value;
-                    
+                    if (paraNode.Children.ContainsKey(YAML_DEFAULT) && paraNode.Children[YAML_DEFAULT] is YamlScalarNode paraDefaultNode)
+                        para.Default = paraDefaultNode.Value;
+
                 }
             }
             return method;
@@ -682,8 +685,8 @@ namespace ProjectFactory.DefaultProjectFactory
                         {
                             var l = lines[pos++];
                             int extPos = l.IndexOf(':');
-                            var extKey = l.Substring(0, colonPos).Trim();
-                            var extValue = l.Substring(colonPos + 1).Trim();
+                            var extKey = l.Substring(6, extPos - 6).Trim();
+                            var extValue = l.Substring(extPos + 1).Trim();
                             if (extValue.StartsWith('"'))
                                 extValue = extValue.Trim('\"');
                             node.SetExtraProp(extKey, extValue);
