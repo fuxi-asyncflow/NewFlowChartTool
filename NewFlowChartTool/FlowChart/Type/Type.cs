@@ -97,6 +97,28 @@ namespace FlowChart.Type
 
         public Project? Project { get; set; }
 
+        #region extra info
+
+        public bool HasExtraInfo => _extra == null || _extra.Count == 0;
+
+        public SortedDictionary<string, string>? _extra; // extra information, may be used for plugins
+
+        public string? GetExtraProp(string name)
+        {
+            string? v = null;
+            _extra?.TryGetValue(name, out v);
+            return v;
+        }
+
+        public void SetExtraProp(string name, string value)
+        {
+            if (_extra == null)
+                _extra = new SortedDictionary<string, string>();
+            _extra[name] = value;
+        }
+
+        #endregion
+
         public bool AddMember(Member member, bool replace = true)
         {
             var memberName = member.Name;
