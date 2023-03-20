@@ -84,6 +84,8 @@ namespace ProjectFactory.DefaultProjectFactory
         public static YamlScalarNode YAML_ISGLOBALSUB = new YamlScalarNode("is_globalsub");
         public static YamlScalarNode YAML_RETURNTYPE = new YamlScalarNode("return_type");
 
+        public static YamlScalarNode YAML_EXTRA = new YamlScalarNode("extra");
+
         public Loader()
         {
             GroupDict = new Dictionary<string, Group>();
@@ -214,6 +216,17 @@ namespace ProjectFactory.DefaultProjectFactory
                     {
                         type.AddMember(member);
                     }
+                }
+            }
+
+            if (root.Children.TryGetValue(YAML_EXTRA, out node))
+            {
+                var extraPropsNode = node as YamlMappingNode;
+                foreach (var propNode in extraPropsNode)
+                {
+                    var key = propNode.Key.ToString();
+                    var value = propNode.Value.ToString();
+                    type.SetExtraProp(key, value);
                 }
             }
         }
@@ -434,15 +447,14 @@ namespace ProjectFactory.DefaultProjectFactory
                     do
                     {
                         var l = lines[pos++];
-                        Debug.Assert(l.StartsWith("  - "));
                         int extPos = l.IndexOf(':');
-                        var extKey = l.Substring(4, extPos-4).Trim();
+                        var extKey = l.Substring(2, extPos-2).Trim();
                         var extValue = l.Substring(extPos + 1).Trim();
                         if (extValue.StartsWith('"'))
                             extValue = extValue.Trim('\"');
                         folder.SetExtraProp(extKey, extValue);
 
-                    } while (line.Length > 2 && line[1] == ' ' && line[1] == ' ' && line[2] == '-');
+                    } while (line.Length > 2 && line[1] == ' ' && line[1] == ' ');
                     pos--;
                 }
             }
@@ -685,13 +697,13 @@ namespace ProjectFactory.DefaultProjectFactory
                         {
                             var l = lines[pos++];
                             int extPos = l.IndexOf(':');
-                            var extKey = l.Substring(6, extPos - 6).Trim();
+                            var extKey = l.Substring(4, extPos - 4).Trim();
                             var extValue = l.Substring(extPos + 1).Trim();
                             if (extValue.StartsWith('"'))
                                 extValue = extValue.Trim('\"');
                             node.SetExtraProp(extKey, extValue);
 
-                        } while (line.Length > 2 && line[1] == ' ' && line[1] == ' ' && line[2] == ' ');
+                        } while (line.Length > 4 && line[1] == ' ' && line[1] == ' ' && line[2] == ' ');
                         pos--;
 
                     }
