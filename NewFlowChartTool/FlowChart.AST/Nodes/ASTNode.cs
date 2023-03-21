@@ -144,6 +144,13 @@ namespace FlowChart.AST.Nodes
         public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
     }
 
+    public class UnaryOpNode : ASTNode
+    {
+        public ASTNode Exp;
+        public Operator Op;
+        public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }
+    }
+
     public class BinOpNode : ASTNode
     {
         public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }

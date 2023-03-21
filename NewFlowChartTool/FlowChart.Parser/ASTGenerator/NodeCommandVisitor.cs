@@ -85,6 +85,13 @@ namespace FlowChart.Parser.ASTGenerator
 
         #region operator
 
+        public override ASTNode VisitExpr_unary(NodeParserParser.Expr_unaryContext context)
+        {
+            var node = new UnaryOpNode() { Op = Str2Op(context.operatorUnary().GetText()) };
+            node.Exp = Visit(context.expr());
+            return node;
+        }
+
         public override ASTNode VisitExpr_add_sub(NodeParserParser.Expr_add_subContext context)
         {
             var node = new BinOpNode() { Op = Str2Op(context.operatorAddSub().GetText()) };
