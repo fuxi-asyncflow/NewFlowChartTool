@@ -38,6 +38,11 @@ namespace NFCT.Common
                 uie.Focus(); // Don't care about false values.
                 Keyboard.Focus(uie);
             }
+            else
+            {
+                if(Keyboard.FocusedElement == uie)
+                    Keyboard.ClearFocus();
+            }
         }
     }
 
