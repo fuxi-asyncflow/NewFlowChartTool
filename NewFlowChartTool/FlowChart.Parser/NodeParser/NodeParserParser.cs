@@ -43,7 +43,7 @@ public partial class NodeParserParser : Parser {
 		NIL=26, SELF=27, ASSIGN=28, GT=29, LT=30, BANG=31, TILDE=32, QUESTION=33, 
 		COLON=34, EQUAL=35, LE=36, GE=37, NOTEQUAL=38, AND=39, OR=40, ADD=41, 
 		SUB=42, MUL=43, DIV=44, NAME=45, VARIABLE=46, STRING=47, NUMBER=48, DEC_INTEGER=49, 
-		HEX_INTEGER=50, FLOAT_NUMBER=51;
+		HEX_INTEGER=50, FLOAT_NUMBER=51, COMMENT=52, LINE_COMMENT=53, WS=54;
 	public const int
 		RULE_stat = 0, RULE_expr = 1, RULE_atom_expr = 2, RULE_container_expr = 3, 
 		RULE_assign_stat = 4, RULE_argument = 5, RULE_argumentlist = 6, RULE_operatorUnary = 7, 
@@ -70,7 +70,7 @@ public partial class NodeParserParser : Parser {
 		"TRUE", "FALSE", "NIL", "SELF", "ASSIGN", "GT", "LT", "BANG", "TILDE", 
 		"QUESTION", "COLON", "EQUAL", "LE", "GE", "NOTEQUAL", "AND", "OR", "ADD", 
 		"SUB", "MUL", "DIV", "NAME", "VARIABLE", "STRING", "NUMBER", "DEC_INTEGER", 
-		"HEX_INTEGER", "FLOAT_NUMBER"
+		"HEX_INTEGER", "FLOAT_NUMBER", "COMMENT", "LINE_COMMENT", "WS"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -1960,7 +1960,7 @@ public partial class NodeParserParser : Parser {
 	}
 
 	private static int[] _serializedATN = {
-		4,1,51,170,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		4,1,54,170,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
 		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,
 		1,0,1,0,3,0,33,8,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
 		1,1,1,1,1,1,3,1,51,8,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,

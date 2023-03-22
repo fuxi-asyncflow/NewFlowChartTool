@@ -94,3 +94,20 @@ fragment FRACTION
 fragment EXPONENT
  : [eE] [+-]? DIGIT+
  ;
+
+ 
+
+fragment SingleLineInputCharacter
+    : ~[\r\n\u0085\u2028\u2029]
+    ;
+
+COMMENT
+    : '--[' STRING ']' -> skip
+    ;
+LINE_COMMENT
+    : '--' SingleLineInputCharacter* -> skip
+    ;
+    
+WS  
+    : [ \t\u000C\r\n]+ -> skip
+    ;
