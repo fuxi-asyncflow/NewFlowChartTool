@@ -25,6 +25,10 @@ namespace FlowChart.Parser.ASTGenerator
             OpDict.Add("..", Operator.Strcat);
             OpDict.Add("&&", Operator.And);
             OpDict.Add("||", Operator.Or);
+            OpDict.Add("#", Operator.Sharp);
+            OpDict.Add("!", Operator.Not);
+            OpDict.Add("not", Operator.Not);
+            OpDict.Add("^", Operator.Caret);
         }
         #region statement
         // assignment statement

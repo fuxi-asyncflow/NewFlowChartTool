@@ -24,7 +24,10 @@ namespace FlowChart.AST.Nodes
             EQ = 11,
             STRCAT = 12,
             AND = 13,
-            OR = 14
+            OR = 14,
+            SHARP = 15,
+            NOT = 16,
+            CARET = 17
         }
 
         public Operator(OPERATOR op, string text)
@@ -53,6 +56,11 @@ namespace FlowChart.AST.Nodes
 
         public static Operator And = new Operator(OPERATOR.AND, "&&") { IsBoolOp = true };
         public static Operator Or = new Operator(OPERATOR.OR, "||") { IsBoolOp = true };
+
+        public static Operator Sharp = new Operator(OPERATOR.SHARP, "#");
+        public static Operator Not = new Operator(OPERATOR.NOT, "!");
+
+        public static Operator Caret = new Operator(OPERATOR.CARET, "^");
 
     }
 
