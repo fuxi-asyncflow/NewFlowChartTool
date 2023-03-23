@@ -466,6 +466,12 @@ namespace NewFlowChartTool.ViewModels
                 dialogService.ShowDialog(GraphRootConfigDialogViewModel.NAME, parameters, result => { });
             }
         }
+
+        public override void Remove()
+        {
+            Logger.WARN("root folder cannot be deleted");
+            return;
+        }
     }
 
     public class ProjectPanelViewModel : BindableBase
