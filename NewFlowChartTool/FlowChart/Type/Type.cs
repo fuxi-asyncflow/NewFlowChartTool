@@ -99,7 +99,7 @@ namespace FlowChart.Type
 
         #region extra info
 
-        public bool HasExtraInfo => _extra == null || _extra.Count == 0;
+        public bool HasExtraInfo => _extra != null && _extra.Count > 0;
 
         public SortedDictionary<string, string>? _extra; // extra information, may be used for plugins
 
