@@ -491,9 +491,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 {
                     if (graphLines.Count > 1 && graphLines[0] == "kind: folder")
                     {
-                        var folder = CustomCreateFolder(graphLines);
-                        if(folder != null)
-                            Project.AddFolder(folder);
+                        CustomCreateFolder(graphLines);
                     }
                     else
                     {

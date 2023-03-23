@@ -428,8 +428,11 @@ namespace NewFlowChartTool.ViewModels
             }
 
             var newFolder = folder.GetOrCreateSubFolder(newGraphName);
-            if(newFolder != null)
+            if (newFolder != null)
+            {
+                folder.Project.AddFolder(newFolder);
                 AddChild(new ProjectTreeFolderViewModel(newFolder));
+            }
         }
 
         public void Sort()

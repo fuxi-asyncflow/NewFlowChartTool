@@ -352,7 +352,11 @@ namespace FlowChart.Core
 
         public void AddFolder(Folder folder)
         {
-            
+            TreeItem? existItem;
+            GraphDict.TryGetValue(folder.Path, out existItem);
+            if (existItem == folder)
+                return;
+            GraphDict.Add(folder.Path, folder);
         }
 
         public Graph? GetGraph(string path)
