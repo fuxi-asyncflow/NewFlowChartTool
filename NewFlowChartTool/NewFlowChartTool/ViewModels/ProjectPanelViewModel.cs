@@ -427,12 +427,10 @@ namespace NewFlowChartTool.ViewModels
                 }
             }
 
-            var newFolder = folder.GetOrCreateSubFolder(newGraphName);
-            if (newFolder != null)
-            {
-                folder.Project.AddFolder(newFolder);
-                AddChild(new ProjectTreeFolderViewModel(newFolder));
-            }
+            var path = $"{folder.Path}.{newGraphName}";
+            var newFolder = folder.Project.GetFolder(path);
+            newFolder.Type = folder.Type;
+            AddChild(new ProjectTreeFolderViewModel(newFolder));
         }
 
         public void Sort()

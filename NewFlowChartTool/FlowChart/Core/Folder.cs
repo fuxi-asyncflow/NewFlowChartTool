@@ -47,30 +47,11 @@ namespace FlowChart.Core
 
         #endregion
 
-        public Folder? GetOrCreateSubFolder(string subFolderName)
-        {
-            var child = Items.GetValueOrDefault(subFolderName);
-            if(child == null)
-            {
-                var item = new Folder(subFolderName) {Project = Project, Type = Type, Path = Path + "." + subFolderName};
-                AddChild(item);
-                return item;
-
-            }
-            else if(child is Folder)
-            {
-                return (Folder)child;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         public void AddChild(TreeItem item)
         {
             if(Items.ContainsKey(item.Name))
             {
+                Logger.ERR($"item exist when try to add item `{item.Path}` to folder `{Path}`");
                 return;
             }
 
