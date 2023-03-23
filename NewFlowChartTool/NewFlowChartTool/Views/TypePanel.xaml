@@ -22,7 +22,19 @@
 
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Style="{DynamicResource GridStyle}">
+    <DockPanel Background="Transparent" LastChildFill="True">
+        <DockPanel DockPanel.Dock="Top">
+            <Viewbox
+                Height="16"
+                Child="{StaticResource Icon_Search}"
+                DockPanel.Dock="Left" />
+            <Grid>
+                <TextBox
+                    x:Name="SearchTextBox"
+                    DockPanel.Dock="Left"
+                    Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </DockPanel>
         <TreeView
             x:Name="TypeTree"
             Background="Transparent"
@@ -54,9 +66,10 @@
             </TreeView.Resources>
             <TreeView.ItemContainerStyle>
                 <Style BasedOn="{StaticResource CustomTreeViewItemStyle}" TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="Visibility" Value="{Binding IsVisibility, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <!--  EventSetter Event="MouseDoubleClick" Handler="ProjectTreeItem_MouseDoubleClick" /  -->
                 </Style>
             </TreeView.ItemContainerStyle>
         </TreeView>
-    </Grid>
+    </DockPanel>
 </UserControl>

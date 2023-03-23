@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms.Integration;
 using FlowChart.Core;
 using FlowChart.Type;
 using NewFlowChartTool.Event;
@@ -29,10 +30,12 @@ namespace NewFlowChartTool.ViewModels
         public TypeMemberTreeItemViewModel(Item item)
         {
             _item = item;
+            IsVisibility = true;
         }
         readonly Item _item;
         public string Name { get => _item.Name; }
         public string Description { get => _item.Description; }
+        public Item TreeItem { get => _item; }
         public TypeMemberType MemberType
         {
             get
@@ -60,6 +63,15 @@ namespace NewFlowChartTool.ViewModels
             get { return _isExpanded; }
             set { SetProperty(ref _isExpanded, value); }
         }
+
+        private bool _isVisible;
+
+        public bool IsVisibility
+        {
+            get { return _isVisible; }
+            set { SetProperty(ref _isVisible, value); }
+        }
+        public TypeMemberTreeItemViewModel ParentNode { get; set; }
     }
 
     internal class TypeMemberTreeFolderViewModel : TypeMemberTreeItemViewModel
@@ -76,9 +88,23 @@ namespace NewFlowChartTool.ViewModels
         }
         public ObservableCollection<TypeMemberTreeItemViewModel> Children { get; set; }
 
-        public void AddChild(TypeMemberTreeItemViewModel? child) { if (child != null) Children.Add(child); }
+        public void AddChild(TypeMemberTreeItemViewModel? child) 
+        { 
+            if (child != null)
+            {
+                Children.Add(child);
+                ChildsVisibleCount++;
+                child.ParentNode = this;
+            }               
+        }
 
         public string? BaseType { get; set; }
+
+        
+        public int ChildsVisibleCount
+        {
+            get; set;
+        }
     }
 
     public class TypePanelViewModel : BindableBase
@@ -86,6 +112,8 @@ namespace NewFlowChartTool.ViewModels
         public TypePanelViewModel()
         {
             Roots = new ObservableCollection<TypeMemberTreeItemViewModel>();
+            CurSearchChilds = new List<TypeMemberTreeItemViewModel>();
+            m_lastSeacherText = "";
             SubscribeEvents();
 
 #if DEBUG
@@ -152,8 +180,106 @@ namespace NewFlowChartTool.ViewModels
             Roots.Add(typeRoot);
             RaisePropertyChanged("Roots");
         }
+        void Search(string? text)
+        {
+            text = text.ToLower();
+            if (text.Length < 3)
+            {
+                if(!string.IsNullOrEmpty(m_lastSeacherText))
+                {
+                    ResetRootVisible();
+                }               
+                m_lastSeacherText = "";
+            }
+            else
+            {
+                if (text.Length < 3 && Encoding.UTF8.GetByteCount(text) < 6)
+                    return;
+                if (!string.IsNullOrEmpty(m_lastSeacherText) && text.Length >= m_lastSeacherText.Length && text.StartsWith(m_lastSeacherText))
+                {
+                    SearchLastData(text);
+                }
+                else
+                {
+                    CurSearchChilds.Clear();
+                    ResetRootVisible();
+                    SearchRootData(text);
+                }
+                RaisePropertyChanged("Roots");
+                m_lastSeacherText = text;
 
+            }
+        }
+        private void SearchRootData(string text)
+        {
+            foreach (var node in Roots)
+            {
+                var treeFolderNode = (node as TypeMemberTreeFolderViewModel);
+                if (treeFolderNode.ChildsVisibleCount == 0)
+                    node.IsVisibility = false;
+                else
+                {
+                    foreach (var child in treeFolderNode.Children)
+                    {
+                        if (child.Name.ToLower().Contains(text))
+                        {
+                            CurSearchChilds.Add(child);
+                        }
+                        else
+                        {
+                            SetParentVisibility(treeFolderNode);
+                            child.IsVisibility = false;
+                        }
+                    }
+                    node.IsExpanded = true;
+                }               
+            }
+        }
+        private void SetParentVisibility(TypeMemberTreeFolderViewModel node)
+        {
+            node.ChildsVisibleCount--;
+            if (node.ChildsVisibleCount == 0)
+                node.IsVisibility = false;
+        }
+        private void ResetRootVisible()
+        {
+            foreach (var node in Roots)
+            {
+                var treeFolderNode = (node as TypeMemberTreeFolderViewModel);
+                node.IsVisibility = true;
+                var children = treeFolderNode.Children;
+                foreach (var child in children)
+                {
+                    child.IsVisibility = true;
+                }
+                treeFolderNode.ChildsVisibleCount = children.Count();
+            }
+        }
+        private void SearchLastData(string text)
+        {
+            foreach (var node in CurSearchChilds)
+            {
+                if (!node.Name.ToLower().Contains(text))
+                {
+                    node.IsVisibility = false;                    
+                    SetParentVisibility(node.ParentNode as TypeMemberTreeFolderViewModel);
+                }
+            }
+            CurSearchChilds.RemoveAll(n=>{ return n.IsVisibility == false; });
+        }
         public TypeMemberTreeItemViewModel? TypeTreeRoot { get; set; }
         public ObservableCollection<TypeMemberTreeItemViewModel> Roots { get; set; }
+        private List<TypeMemberTreeItemViewModel> CurSearchChilds;
+        private string? m_lastSeacherText;
+        private string? _searchText;
+        public string? SearchText
+        {
+            get => _searchText;
+            set 
+            { 
+                SetProperty(ref _searchText, value); 
+                Search(_searchText); 
+            }
+        }
     }
 }
