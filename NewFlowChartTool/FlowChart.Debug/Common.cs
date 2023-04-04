@@ -1,6 +1,4 @@
-﻿using FlowChart.Debug.WebSocket;
-
-namespace FlowChart.Debug
+﻿namespace FlowChart.Debug
 {
     public interface IDebugMessage
     {
@@ -11,15 +9,16 @@ namespace FlowChart.Debug
     public interface IDebugProtocal<T>
     {
         public T Serialize(IDebugMessage msg);
-        public object? Deserialize(T msg);
+        public IDebugMessage? Deserialize(T msg);
     }
 
     public interface INetClient
     {
+        public void Init(INetManager manager, string host, int port);
         public string Host { get; }
         public int Port { get; }
-        public void Send(string message);
-        public void Send(byte[] data);
+        public Task<bool> Connect();
+        public void Send(IDebugMessage msg);
         public void Stop();
     }
 
@@ -30,22 +29,14 @@ namespace FlowChart.Debug
         public Task<INetClient?> Connect(string host, int port);
         public void BroadCast(string host, int startPort, int endPort, IDebugMessage msg);
         public void Send(string host, int port, IDebugMessage msg);
-        public void HandleMessage(INetClient client, string msg);
+        public void HandleMessage(INetClient client, IDebugMessage? msg);
         public void Stop();
 
         #region events
 
-        public delegate void RecvGraphListDelegate(string host, int port, List<GraphInfo> graphs);
-
-        public event RecvGraphListDelegate? RecvGraphListEvent;
-
-        public delegate void NewDebugAgentDelegate(DebugAgent agent);
-
-        public event NewDebugAgentDelegate? NewDebugAgentEvent;
-
-        public delegate void NewDebugGraphDelegate(GraphInfo graphInfo);
-
-        public event NewDebugGraphDelegate? NewDebugGraphEvent;
+        public event Action<string, int, List<GraphInfo>>? RecvGraphListEvent;
+        public event Action<DebugAgent>? NewDebugAgentEvent;
+        public event Action<GraphInfo>? NewDebugGraphEvent;
 
         #endregion
     }
@@ -151,7 +142,16 @@ namespace FlowChart.Debug
         }
     }
 
-    public class GraphInfo
+    public class RecvMessage : IDebugMessage
+    {
+        public virtual string Name => "RecvMessage";
+        public Dictionary<string, object> GetParams()
+        {
+            return new Dictionary<string, object>();
+        }
+    }
+
+    public class GraphInfo : RecvMessage
     {
         public int AgentId { get; set; }
         public ulong OwnerNodeAddr { get; set; }
@@ -212,7 +212,17 @@ namespace FlowChart.Debug
         }
     }
 
-    public class GraphDebugData
+    public class RecvGraphInfos : RecvMessage
+    {
+        public RecvGraphInfos()
+        {
+            GraphInfos = new List<GraphInfo>();
+        }
+
+        public List<GraphInfo> GraphInfos;
+    }
+
+    public class GraphDebugData : RecvMessage
     {
         public GraphDebugData()
         {

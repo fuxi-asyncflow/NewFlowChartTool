@@ -12,7 +12,7 @@ namespace FlowChart.Debug.WebSocket
 {
     public class Client : INetClient
     {
-        public Client(INetManager manager, string host, int port)
+        public void Init(INetManager manager, string host, int port)
         {
             _manager = manager;
             _host = host;
@@ -38,6 +38,8 @@ namespace FlowChart.Debug.WebSocket
         private string _addr;
         private List<string> _messages;
         private bool _isOpen;
+
+        private IDebugProtocal<string> _proto;
         #endregion
 
         public void Send(string message)
@@ -49,6 +51,11 @@ namespace FlowChart.Debug.WebSocket
                 Logger.DBG("[ws] send data while not open");
                 _messages.Add(message);
             }
+        }
+
+        public void Send(IDebugMessage msg)
+        {
+            Send(_proto.Serialize(msg));
         }
 
         public void Send(byte[] data)
@@ -85,7 +92,7 @@ namespace FlowChart.Debug.WebSocket
             if (args.IsBinary)
                 return;
             // Logger.DBG(args.Data);
-            _manager.HandleMessage(this, args.Data);
+            _manager.HandleMessage(this, _proto.Deserialize(args.Data) as IDebugMessage);
         }
 
         public void OnError(object? sender, EventArgs args)

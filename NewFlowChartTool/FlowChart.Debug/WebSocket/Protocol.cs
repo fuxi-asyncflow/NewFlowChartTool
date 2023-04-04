@@ -9,9 +9,6 @@ using FlowChart.Common;
 
 namespace FlowChart.Debug.WebSocket
 {
-    
-    
-
     public class JsonProtocol : IDebugProtocal<string>
     {
         public static string JsonConvert(object obj)
@@ -42,7 +39,7 @@ namespace FlowChart.Debug.WebSocket
             return sb.ToString();
         }
 
-        public object? Deserialize(string msg)
+        public IDebugMessage? Deserialize(string msg)
         {
             try
             {
@@ -96,10 +93,11 @@ namespace FlowChart.Debug.WebSocket
             }
         }
 
-        object DeserializeGraphList(JsonElement result)
+        RecvGraphInfos DeserializeGraphList(JsonElement result)
         {
+            var recv = new RecvGraphInfos();
             var chartInfo = result.GetProperty("chart_info");
-            var list = new List<GraphInfo>();
+            var list = recv.GraphInfos;
             foreach (var jObj in chartInfo.EnumerateArray())
             {
                 var gi = new GraphInfo();
@@ -114,10 +112,10 @@ namespace FlowChart.Debug.WebSocket
                 list.Add(gi);
             }
 
-            return list;
+            return recv;
         }
 
-        object DeserializeDebugData(JsonElement result)
+        GraphDebugData DeserializeDebugData(JsonElement result)
         {
             var ret = new GraphDebugData()
             {
