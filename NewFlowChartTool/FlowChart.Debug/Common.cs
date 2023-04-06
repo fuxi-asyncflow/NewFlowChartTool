@@ -155,7 +155,7 @@
 
     public class GraphInfo : RecvMessage
     {
-        public int AgentId { get; set; }
+        public ulong AgentId { get; set; }
         public ulong OwnerNodeAddr { get; set; }
         public int OwnerNodeId { get; set; }
         public string OwnerNodeUid { get; set; }
@@ -187,7 +187,7 @@
 
         public void Deserialize(BinaryReader br)
         {
-            AgentId = br.ReadInt32();
+            AgentId = br.ReadUInt64();
             OwnerNodeAddr = br.ReadUInt64();
             OwnerNodeId = br.ReadInt32();
             OwnerNodeUid = br.ReadString();

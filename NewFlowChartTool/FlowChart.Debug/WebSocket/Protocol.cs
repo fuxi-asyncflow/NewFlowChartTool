@@ -70,7 +70,7 @@ namespace FlowChart.Debug.WebSocket
                     if (methodStr == "quick_debug")
                     {
                         var gi = new GraphInfo();
-                        gi.AgentId = tmpObj.GetProperty("agent_id").GetInt32();
+                        gi.AgentId = tmpObj.GetProperty("agent_id").GetUInt64();
                         gi.OwnerNodeAddr = tmpObj.GetProperty("owner_node_addr").GetUInt64();
                         //gi.OwnerNodeId = jObj.GetProperty("owner_node_id").GetInt32();
                         //gi.OwnerNodeUid = jObj.GetProperty("owner_node_uid").GetString();
@@ -101,7 +101,7 @@ namespace FlowChart.Debug.WebSocket
             foreach (var jObj in chartInfo.EnumerateArray())
             {
                 var gi = new GraphInfo();
-                gi.AgentId = jObj.GetProperty("agent_id").GetInt32();
+                gi.AgentId = jObj.GetProperty("agent_id").GetUInt64();
                 gi.OwnerNodeAddr = jObj.GetProperty("owner_node_addr").GetUInt64();
                 gi.OwnerNodeId = jObj.GetProperty("owner_node_id").GetInt32();
                 gi.OwnerNodeUid = jObj.GetProperty("owner_node_uid").GetString();
