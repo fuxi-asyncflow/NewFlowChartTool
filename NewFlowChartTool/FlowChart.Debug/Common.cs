@@ -39,6 +39,8 @@
         public event Action<GraphInfo>? NewDebugGraphEvent;
 
         #endregion
+
+        public static INetManager? Inst;
     }
 
     public class GetChartListMessage : IDebugMessage

@@ -65,7 +65,7 @@ namespace NewFlowChartTool.ViewModels
             ObjectNameFilter = "";
             Host = "127.0.0.1";
 
-            _netManager = new FlowChart.Debug.WebSocket.Manager();
+            _netManager = INetManager.Inst ?? new FlowChart.Debug.WebSocket.Manager();
             _agents = new Dictionary<string, List<DebugAgent>>();
 
             _netManager.RecvGraphListEvent += (host, ip, graphList) =>
