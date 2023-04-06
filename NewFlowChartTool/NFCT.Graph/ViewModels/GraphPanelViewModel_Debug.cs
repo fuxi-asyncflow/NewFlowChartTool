@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Debug;
 using FlowChart.Common;
+using FlowChart.Core;
 using Microsoft.Msagl.Core.DataStructures;
 using NFCT.Common;
 using NFCT.Common.Events;
@@ -28,6 +29,7 @@ namespace NFCT.Graph.ViewModels
         public void GraphPanelViewModel_Debug_Init()
         {
             _debugNodesCacheDict = new Dictionary<Guid, BaseNodeViewModel>();
+            _debugNodesCacheDictForLegacyProject = new Dictionary<int, BaseNodeViewModel>();
             ReplayNextCommand = new DelegateCommand(ReplayNext);
             ReplayNextFrameCommand = new DelegateCommand(ReplayNextFrame);
             ReplayStartCommand = new DelegateCommand(ReplayStart);
@@ -103,6 +105,7 @@ namespace NFCT.Graph.ViewModels
         private DebugAgent? _currentDebugAgent { get; set; }
         private List<DebugAgent>? _agents;
         private Dictionary<Guid, BaseNodeViewModel> _debugNodesCacheDict;
+        private Dictionary<int, BaseNodeViewModel> _debugNodesCacheDictForLegacyProject;
         private GraphInfo? _graphInfo;
 
         public void UpdateAgents(List<DebugAgent>? agents)
@@ -138,11 +141,45 @@ namespace NFCT.Graph.ViewModels
             return nodeVm;
         }
 
+        BaseNodeViewModel? _getDebugNodeViewModelForLegacy(int uid)
+        {
+            if (_debugNodesCacheDictForLegacyProject.TryGetValue(uid, out var nodeVm))
+                return nodeVm;
+            Node? node = null;
+            if (uid < 100000)
+            {
+                if (uid < Graph.Nodes.Count)
+                    node = Graph.Nodes[uid];
+                else
+                    return null;
+            }
+            else
+            {
+                var uidString = uid.ToString();
+                node = Graph.Nodes.Find(n => n.GetExtraProp("uid") == uidString);
+                if (node == null)
+                    return null;
+            }
+            
+            nodeVm = GetNodeVm(node);
+            _debugNodesCacheDictForLegacyProject.Add(uid, nodeVm);
+            return nodeVm;
+        }
+
         void OnNodeStatusChange(NodeStatusData nsd)
         {
             var nodeVm = _getDebugNodeViewModel(nsd.NodeUid);
             if (nodeVm == null)
+            {
+                #region TEMP SUPPORT FOR LEGACY PROJECT
+
+                //TODO refactor
+                nodeVm = _getDebugNodeViewModelForLegacy(nsd.NodeId);
+                if(nodeVm == null)
+                #endregion
                 return;
+            }
+
             if (nsd.NewStatus == 2) // 2 is endrun
             {
                 nodeVm.ChangeDebugStatus(nsd.result ? DebugNodeStatus.SUCCESS : DebugNodeStatus.FAILURE, IsQuickMode);
