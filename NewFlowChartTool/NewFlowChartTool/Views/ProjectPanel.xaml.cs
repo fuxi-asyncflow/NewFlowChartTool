@@ -41,18 +41,17 @@ namespace NewFlowChartTool.Views
 
         private void ProjectTreeItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (!(sender is TreeViewItem)) return;
+            if (sender is not TreeViewItem treeViewItem) return;
 
-            if (!((TreeViewItem)sender).IsSelected) return;
+            if (!treeViewItem.IsSelected) return;
 
             var dc = WPFHelper.GetDataContext<ProjectTreeItemViewModel>(sender);
             if (dc == null) return;
-
-            dc.Open();
-            
-            //ContainerLocator.Current.Resolve<IEventAggregator>().GetEvent<EventType.GraphOpenEvent>().Publish(dc.)
-
-            e.Handled = true;
+            if (dc is not ProjectTreeFolderViewModel)
+            {
+                dc.Open();
+                e.Handled = true;
+            }
         }
 
         private void OnAddTreeItem(ProjectTreeItemViewModel item)
