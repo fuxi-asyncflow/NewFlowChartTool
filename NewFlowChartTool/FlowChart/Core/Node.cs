@@ -108,16 +108,16 @@ namespace FlowChart.Core
             return new StartNode() {Uid = Project.GenUUID()};
         }
 
-        public override bool Equals(object? obj)
-        {
-            if (obj == null)
-                return false;
-            if (obj is not StartNode node)
-            {
-                return false;
-            }
-            return true;
-        }
+        //public override bool Equals(object? obj)
+        //{
+        //    if (obj == null)
+        //        return false;
+        //    if (obj is not StartNode node)
+        //    {
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
         public override string DisplayString => "start";
     }
@@ -139,19 +139,19 @@ namespace FlowChart.Core
             return $"`[TextNode] {Text}`";
         }
 
-        public override bool Equals(object? obj)
-        {
-            if (obj == null)
-                return false;
-            if (obj is not TextNode node)
-            {
-                return false;
-            }
+        //public override bool Equals(object? obj)
+        //{
+        //    if (obj == null)
+        //        return false;
+        //    if (obj is not TextNode node)
+        //    {
+        //        return false;
+        //    }
 
-            if (Text != node.Text)
-                return false;
-            return true;
-        }
+        //    if (Text != node.Text)
+        //        return false;
+        //    return true;
+        //}
 
         public override string DisplayString => Text;
     }
