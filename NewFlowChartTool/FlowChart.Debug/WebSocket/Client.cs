@@ -25,6 +25,8 @@ namespace FlowChart.Debug.WebSocket
             _ws.OnMessage += OnMessage;
             _ws.OnError += OnError;
             _ws.OnClose += OnClose;
+
+            _proto = new JsonProtocol();
         }
 
         public string Host => _host;
