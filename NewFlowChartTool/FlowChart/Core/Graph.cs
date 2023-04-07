@@ -435,6 +435,8 @@ namespace FlowChart.Core
 
         public void RemoveNode(Node node)
         {
+            if (node is StartNode)
+                return;
             var idxMap = new Dictionary<Node, int>();
             // remove connectors
             var parents = node.Parents.ConvertAll(conn => conn.Start);
