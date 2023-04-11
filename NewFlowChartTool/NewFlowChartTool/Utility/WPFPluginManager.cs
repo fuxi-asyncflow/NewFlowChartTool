@@ -5,11 +5,14 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using FlowChart.Common;
 using FlowChart.Common.Report;
-using FlowChart.LuaCodeGen;
-using FlowChart.Parser;
 using FlowChart.Plugin;
+using NewFlowChartTool.ViewModels;
+using Prism.Ioc;
+using Prism.Mvvm;
+using Prism.Services.Dialogs;
 
 namespace NewFlowChartTool.Utility
 {
@@ -18,6 +21,8 @@ namespace NewFlowChartTool.Utility
         static WPFPluginManager()
         {
             Inst = new WPFPluginManager();
+            CustomViews = new Dictionary<string, Type>();
+            CustomViewModels = new Dictionary<string, Type>();
         }
 
         public void LoadPlugins()
@@ -90,6 +95,50 @@ namespace NewFlowChartTool.Utility
                 return "unkown-build-time";
             return v;
         }
+
+        #region USER CONTROL
+
+        private static Dictionary<string, Type> CustomViews;
+        private static Dictionary<string, Type> CustomViewModels;
+        public bool RegisterUserControl<TView, TViewModel>(string name)
+            where TView : UserControl
+            where TViewModel : BindableBase
+        {
+            CustomViews.Add(name, typeof(TView));
+            CustomViewModels.Add(name, typeof(TViewModel));
+            return true;
+        }
+
+        public UserControl? GetCustomView(string name)
+        {
+            if (!CustomViews.ContainsKey(name))
+            {
+                Logger.ERR($"cannot find usercontrol named {name}, please check plugin");
+                return null;
+            }
+
+            var view = System.Activator.CreateInstance(CustomViews[name]) as UserControl;
+            if (view == null)
+            {
+                Logger.ERR($"usercontrol `{name}` is not a UserControl, please check plugin register function");
+                return null;
+            }
+
+            view.DataContext = System.Activator.CreateInstance(CustomViewModels[name]) as BindableBase;
+            return view;
+        }
+
+        public bool ShowDialog(string name)
+        {
+            var dlgService = ContainerLocator.Current.Resolve<IDialogService>();
+            var parameters = new DialogParameters();
+            parameters.Add("name", name);
+            dlgService.ShowDialog(CustomDialogViewModel.NAME, parameters, result => { });
+            return true;
+        }
+        #endregion
+
+
 
         public static WPFPluginManager Inst { get; set; }
 
