@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,19 +11,36 @@ using FlowChart.Common;
 using FlowChart.Common.Report;
 using FlowChart.Plugin;
 using NewFlowChartTool.ViewModels;
+using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 
 namespace NewFlowChartTool.Utility
 {
+    public class CustomMenuItemViewModel : BindableBase
+    {
+        public CustomMenuItemViewModel(string text, DelegateCommand cmd)
+        {
+            Text = text;
+            Command = cmd;
+        }
+        public string Text { get; set; }
+        public DelegateCommand Command { get; set; }
+    }
     public class WPFPluginManager: IPluginManager
     {
         static WPFPluginManager()
         {
             Inst = new WPFPluginManager();
+            
+        }
+
+        public WPFPluginManager()
+        {
             CustomViews = new Dictionary<string, Type>();
             CustomViewModels = new Dictionary<string, Type>();
+            Menus = new ObservableCollection<CustomMenuItemViewModel>();
         }
 
         public void LoadPlugins()
@@ -98,8 +116,8 @@ namespace NewFlowChartTool.Utility
 
         #region USER CONTROL
 
-        private static Dictionary<string, Type> CustomViews;
-        private static Dictionary<string, Type> CustomViewModels;
+        private Dictionary<string, Type> CustomViews;
+        private Dictionary<string, Type> CustomViewModels;
         public bool RegisterUserControl<TView, TViewModel>(string name)
             where TView : UserControl
             where TViewModel : BindableBase
@@ -136,6 +154,18 @@ namespace NewFlowChartTool.Utility
             dlgService.ShowDialog(CustomDialogViewModel.NAME, parameters, result => { });
             return true;
         }
+        #endregion
+
+        #region Menu
+
+        public ObservableCollection<CustomMenuItemViewModel> Menus { get; set; }
+
+        public bool RegisterMenu(string name, DelegateCommand cmd, UserControl? icon = null)
+        {
+            Menus.Add(new CustomMenuItemViewModel(name, cmd));
+            return true;
+        }
+
         #endregion
 
 

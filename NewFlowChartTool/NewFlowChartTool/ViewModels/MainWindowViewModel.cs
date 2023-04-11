@@ -66,6 +66,7 @@ namespace NewFlowChartTool.ViewModels
             SearchNodeCommand = new DelegateCommand(SearchNode);
             DiffCommand = new DelegateCommand(Diff);
             ShowDocumentationDialogCommand = new DelegateCommand(ShowDocumentationDialog);
+            TestCommand = new DelegateCommand(Test);
 
             SelectedLang = Lang.Chinese;
             SelectedTheme = Theme.Dark;
@@ -160,6 +161,9 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand DiffCommand { get; set; }
 
         public DelegateCommand ShowDocumentationDialogCommand { get; set; }
+
+        public DelegateCommand TestCommand { get; set; }
+        public ObservableCollection<CustomMenuItemViewModel> CustomMenuItems => WPFPluginManager.Inst.Menus;
 
         public void TestOpenProject()
         {
@@ -477,6 +481,11 @@ namespace NewFlowChartTool.ViewModels
         void ShowDocumentationDialog()
         {
             _dialogService.Show(DocumentationDialogViewModel.NAME);
+        }
+
+        void Test()
+        {
+            
         }
 
         public async void OpenGraph(string path)

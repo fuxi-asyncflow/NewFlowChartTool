@@ -222,6 +222,30 @@
                     <TextBlock Height="16" Text="Help" />
                 </StackPanel>
             </Button>
+            <d:Button Command="{Binding TestCommand}">
+                <StackPanel>
+                    <TextBlock Height="16" Text="Test" />
+                </StackPanel>
+            </d:Button>
+            <ItemsControl ItemsSource="{Binding CustomMenuItems}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Button Command="{Binding Command}">
+                                <StackPanel>
+                                    <Viewbox />
+                                    <TextBlock Height="16" Text="{Binding Text}" />
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </StackPanel>
         <DockingManager
             Grid.Row="2"
