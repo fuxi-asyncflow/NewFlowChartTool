@@ -59,6 +59,7 @@ namespace NFCT.Graph.ViewModels
         {
             Node = node;
             Tokens = new ObservableCollection<TextTokenViewModel>();
+            Tokens.Add(new TextTokenViewModel(node.Text) {Type = TextToken.TokenType.Default});
         }
 
         public override void ExitEditingMode(NodeAutoCompleteViewModel acVm, bool save)
