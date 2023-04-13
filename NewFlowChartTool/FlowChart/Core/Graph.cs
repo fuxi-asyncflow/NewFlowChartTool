@@ -363,10 +363,11 @@ namespace FlowChart.Core
             GraphAddNodeEvent?.Invoke(node);
         }
 
-        public void AddNodes(Node parent, List<Node> nodes)
+        public Dictionary<Node, Node> AddNodes(Node parent, List<Node> nodes)
         {
+            Dictionary<Node, Node> nodesMap = new Dictionary<Node, Node>();
             if (nodes.Count == 0)
-                return;
+                return nodesMap;
             var startNodes = new List<Node>();
             nodes.ForEach(node =>
             {
@@ -389,7 +390,7 @@ namespace FlowChart.Core
             if(startNodes.Count == 0)
                 startNodes.Add(nodes[0]);
 
-            Dictionary<Node, Node> nodesMap = new Dictionary<Node, Node>();
+            
 
             
             Action<Node> addNodeFunc = null;
@@ -419,6 +420,8 @@ namespace FlowChart.Core
                 addNodeFunc(node);
                 Connect_atom(parent, nodesMap[node], Connector.ConnectorType.ALWAYS);
             }
+
+            return nodesMap;
         }
 
         public void RemoveNode_atom(Node? node)
@@ -600,7 +603,8 @@ namespace FlowChart.Core
             Node node;
             if (NodeDict.TryGetValue(uid, out node))
                 return node;
-            Logger.WARN($"invalid uid {uid}");
+            if(uid != Guid.Empty)
+                Logger.WARN($"invalid uid {uid}");
             return null;
         }
 

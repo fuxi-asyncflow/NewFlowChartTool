@@ -58,10 +58,10 @@ namespace NFCT.Graph.ViewModels
             UndoRedoManager.End();
         }
 
-        public void PasteNodesOperation(Node parent, List<Node> nodes, bool isClip)
+        public Dictionary<Node, Node> PasteNodesOperation(Node parent, List<Node> nodes, bool isClip)
         {
             UndoRedoManager.Begin("Paste Nodes");
-            Graph.AddNodes(parent, nodes);
+            var nodesMap = Graph.AddNodes(parent, nodes);
             if (isClip)
             {
                 nodes.ForEach(Graph.RemoveNode);
@@ -69,6 +69,7 @@ namespace NFCT.Graph.ViewModels
             NeedLayout = true;
             IsDirty = true;
             UndoRedoManager.End();
+            return nodesMap;
         }
 
         public void OnAddNode(Node node)
