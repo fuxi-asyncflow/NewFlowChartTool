@@ -34,6 +34,7 @@ namespace NFCT.Graph.ViewModels
             _graphVm.Graph.GraphAddVariableEvent += OnAddVariable;
 
             AddVariableCommand = new DelegateCommand(AddVariable);
+            DelVariableCommand = new DelegateCommand(DelVariable);
             ModifyVariableCommand = new DelegateCommand(ModifyVariable);
             ConfirmCommand = new DelegateCommand(Confirm);
             CancelCommand = new DelegateCommand(Cancel);
@@ -62,6 +63,13 @@ namespace NFCT.Graph.ViewModels
         {
             get => _tmpTypeName;
             set => SetProperty(ref _tmpTypeName, value);
+        }
+
+        private string _tmpDefaultVal;
+        public string TmpDefaultVal
+        {
+            get => _tmpDefaultVal;
+            set => SetProperty(ref _tmpDefaultVal, value);
         }
 
         //private bool _tmpVariadic;
@@ -99,6 +107,7 @@ namespace NFCT.Graph.ViewModels
         {
             IsAdding = true;
             IsEditing = true;
+            ResetPara();
         }
 
         public void OnAddVariable(FlowChart.Core.Graph graph, Variable variable)
@@ -117,8 +126,26 @@ namespace NFCT.Graph.ViewModels
                     return String.Compare(a.Name, b.Name, StringComparison.Ordinal);
                 return a.IsParameter.CompareTo(b.IsParameter);
             });
+            var tempSelectItem = SelectedItem;
             Variables.Clear();
+            SelectedItem = tempSelectItem;
             variables.ForEach(Variables.Add);
+        }
+
+        public DelegateCommand DelVariableCommand { get; set; }
+
+        public void DelVariable()
+        {
+            if (SelectedItem == null)
+            {
+                MessageBox.Show("please select a variable");
+                return;
+            }
+            _graphVm.Graph.DelVariable(SelectedItem.Name);
+            Variables.Remove(SelectedItem);
+            SelectedItem = null;
+            IsAdding = false;
+            IsEditing = false;
         }
 
         public DelegateCommand ModifyVariableCommand { get; set; }
@@ -131,9 +158,11 @@ namespace NFCT.Graph.ViewModels
                 return;
             }
 
+            IsAdding = false;
             IsEditing = true;
             TmpName = SelectedItem.Name;
             TmpTypeName = SelectedItem.Type;
+            TmpDefaultVal = SelectedItem.Variable.DefaultValue;
         }
 
         public DelegateCommand ConfirmCommand { get; set; }
@@ -158,8 +187,9 @@ namespace NFCT.Graph.ViewModels
                 }
 
                 var variable = _graphVm.Graph.GetOrAddVariable(TmpName);
+                variable.DefaultValue = TmpDefaultVal;
                 variable.Type = type;
-                
+
                 IsAdding = false;
                 IsEditing = false;
             }
@@ -187,6 +217,12 @@ namespace NFCT.Graph.ViewModels
                     _graphVm.Build();
                 }
 
+                if (SelectedItem.Value != TmpDefaultVal)
+                {
+                    SelectedItem.Variable.DefaultValue = TmpDefaultVal;
+                    _graphVm.Build();
+                }
+
                 if (SelectedItem.IsParameter != TmpIsParameter)
                 {
                     SelectedItem.Variable.IsParameter = TmpIsParameter;
@@ -200,7 +236,16 @@ namespace NFCT.Graph.ViewModels
 
         public void Cancel()
         {
+            IsAdding = false;
             IsEditing = false;
+        }
+
+        void ResetPara()
+        {
+            TmpName = "";
+            TmpTypeName = "";
+            TmpDefaultVal = "";
+            TmpIsParameter = false;
         }
 
         #region DEBUG

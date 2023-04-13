@@ -714,6 +714,15 @@ namespace FlowChart.Core
             }
         }
 
+        public void DelVariable(string name)
+        {
+            var v = GetVar(name);
+            if (v != null)
+            {
+                Variables.Remove(v);
+            }
+        }
+
         public Group? CreateGroup(List<Node> nodes)
         {
             var group = new Group("--");

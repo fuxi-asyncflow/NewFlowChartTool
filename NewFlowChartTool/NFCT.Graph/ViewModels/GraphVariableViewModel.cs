@@ -29,7 +29,7 @@ namespace NFCT.Graph.ViewModels
 
         public string? Value
         {
-            get => _value;
+            get => _variable.DefaultValue == null ? "" : _variable.DefaultValue;
             set => SetProperty(ref _value, value);
         }
 
@@ -45,7 +45,7 @@ namespace NFCT.Graph.ViewModels
             Debug.Assert(v == _variable);
             RaisePropertyChanged(nameof(Name));
             RaisePropertyChanged(nameof(Type));
-            _value = _variable.DefaultValue;
+            RaisePropertyChanged(nameof(Value));
             RaisePropertyChanged(nameof(Description));
         }
     }

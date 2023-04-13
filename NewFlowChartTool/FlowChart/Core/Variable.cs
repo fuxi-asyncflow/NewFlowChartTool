@@ -49,7 +49,18 @@ namespace FlowChart.Core
             }
         }
 
-        public string? DefaultValue { get; set; }
+        public string _defaultValue;
+        public string? DefaultValue
+        {
+            get => _defaultValue;
+            set
+            {
+                if (_defaultValue == value) return;
+                _defaultValue = value;
+                VariableChangeEvent?.Invoke(this);
+            }
+        }
+
         public bool IsVariadic { get; set; }
 
         public static Variable Default { get; set; }
