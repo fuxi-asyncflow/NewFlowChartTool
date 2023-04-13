@@ -151,7 +151,7 @@ namespace NewFlowChartTool.Utility
             var dlgService = ContainerLocator.Current.Resolve<IDialogService>();
             var parameters = new DialogParameters();
             parameters.Add("name", name);
-            dlgService.ShowDialog(CustomDialogViewModel.NAME, parameters, result => { });
+            dlgService.Show(CustomDialogViewModel.NAME, parameters, result => { });
             return true;
         }
         #endregion
