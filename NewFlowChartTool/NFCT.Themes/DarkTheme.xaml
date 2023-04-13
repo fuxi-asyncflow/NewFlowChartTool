@@ -85,7 +85,7 @@
 
     <!--  canvas colors  -->
     <SolidColorBrush x:Key="GraphBackGround" Color="Black" />
-    <SolidColorBrush x:Key="NodeBackGround" Color="Red" />
+    <SolidColorBrush x:Key="NodeBackGround" Color="#A0404040" />
     <SolidColorBrush x:Key="NodeActionBackGround" Color="#A02020A0" />
     <SolidColorBrush x:Key="NodeConditionBackGround" Color="#A0006400" />
     <SolidColorBrush x:Key="NodeWaitBackGround" Color="DarkGoldenrod" />
