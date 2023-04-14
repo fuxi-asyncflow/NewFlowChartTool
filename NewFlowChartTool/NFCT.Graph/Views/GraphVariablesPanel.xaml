@@ -78,6 +78,7 @@
                             <TextBox
                                 Grid.Row="2"
                                 Grid.Column="1"
+                                IsReadOnly="{Binding IsReadOnlyDefVal}"
                                 Text="{Binding TmpDefaultVal, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <TextBlock
                                 Grid.Row="3"

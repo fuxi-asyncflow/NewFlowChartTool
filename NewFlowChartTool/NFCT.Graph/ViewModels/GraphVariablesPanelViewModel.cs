@@ -34,7 +34,7 @@ namespace NFCT.Graph.ViewModels
             _graphVm.Graph.GraphAddVariableEvent += OnAddVariable;
 
             AddVariableCommand = new DelegateCommand(AddVariable);
-            DelVariableCommand = new DelegateCommand(DelVariable);
+            RemoveVariableCommand = new DelegateCommand(RemoveVariable);
             ModifyVariableCommand = new DelegateCommand(ModifyVariable);
             ConfirmCommand = new DelegateCommand(Confirm);
             CancelCommand = new DelegateCommand(Cancel);
@@ -72,6 +72,13 @@ namespace NFCT.Graph.ViewModels
             set => SetProperty(ref _tmpDefaultVal, value);
         }
 
+        private bool _isReadOnlyDefVal;
+        public bool IsReadOnlyDefVal
+        {
+            get => _isReadOnlyDefVal;
+            set => SetProperty(ref _isReadOnlyDefVal, value);
+        }
+
         //private bool _tmpVariadic;
 
         //public bool TmpIsVariadic
@@ -84,8 +91,20 @@ namespace NFCT.Graph.ViewModels
         public bool TmpIsParameter
         {
             get => _tmpIsParameter;
-            set => SetProperty(ref _tmpIsParameter, value);
+            set 
+            { 
+                SetProperty(ref _tmpIsParameter, value);
+                if (_tmpIsParameter == true)
+                    IsReadOnlyDefVal = false;
+                else
+                {
+                    TmpDefaultVal = "";
+                    IsReadOnlyDefVal = true;
+                }
+                    
+            }
         }
+
 
         public bool _isEditing;
         public bool IsEditing
@@ -132,16 +151,16 @@ namespace NFCT.Graph.ViewModels
             variables.ForEach(Variables.Add);
         }
 
-        public DelegateCommand DelVariableCommand { get; set; }
+        public DelegateCommand RemoveVariableCommand { get; set; }
 
-        public void DelVariable()
+        public void RemoveVariable()
         {
             if (SelectedItem == null)
             {
                 MessageBox.Show("please select a variable");
                 return;
             }
-            _graphVm.Graph.DelVariable(SelectedItem.Name);
+            _graphVm.Graph.RemoveVariable(SelectedItem.Name);
             Variables.Remove(SelectedItem);
             SelectedItem = null;
             IsAdding = false;
@@ -163,6 +182,7 @@ namespace NFCT.Graph.ViewModels
             TmpName = SelectedItem.Name;
             TmpTypeName = SelectedItem.Type;
             TmpDefaultVal = SelectedItem.Variable.DefaultValue;
+            TmpIsParameter = SelectedItem.IsParameter;
         }
 
         public DelegateCommand ConfirmCommand { get; set; }
@@ -189,6 +209,7 @@ namespace NFCT.Graph.ViewModels
                 var variable = _graphVm.Graph.GetOrAddVariable(TmpName);
                 variable.DefaultValue = TmpDefaultVal;
                 variable.Type = type;
+                variable.IsParameter = TmpIsParameter;
 
                 IsAdding = false;
                 IsEditing = false;
@@ -246,6 +267,7 @@ namespace NFCT.Graph.ViewModels
             TmpTypeName = "";
             TmpDefaultVal = "";
             TmpIsParameter = false;
+            IsReadOnlyDefVal = true;
         }
 
         #region DEBUG

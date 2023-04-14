@@ -345,7 +345,8 @@ namespace NewFlowChartTool.ViewModels
             {
                 foreach (var kv in SelectedType.Model.MemberDict)
                 {
-                    Members.Add(new TypeMemberViewModel(kv.Value));
+                    if(kv.Value.SaveToFile)
+                        Members.Add(new TypeMemberViewModel(kv.Value));
                 }
             }
         }
