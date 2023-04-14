@@ -411,8 +411,10 @@ namespace NewFlowChartTool.ViewModels
                 return;
             var lines = new List<string>();
             var codes = new List<string>();
-            CurrentProject?.SaveGraph(ActiveGraph.Graph, lines, codes);
-            ContainerLocator.Current.Resolve<IDebugService>().Hotfix(lines, codes);
+            var graphs = new List<Graph>() { ActiveGraph.Graph };
+            var hotfixStr = CurrentProject?.Factory.HotFix(graphs);
+            if(hotfixStr != null)
+                ContainerLocator.Current.Resolve<IDebugService>().Hotfix(hotfixStr);
 
         }
 

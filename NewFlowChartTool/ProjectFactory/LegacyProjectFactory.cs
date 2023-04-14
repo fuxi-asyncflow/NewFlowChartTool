@@ -41,6 +41,11 @@ namespace ProjectFactory
         {
         }
 
+        public string HotFix(List<Graph> graphs)
+        {
+            return string.Empty;
+        }
+
         public IProjectFactory Clone()
         {
             return new LegacyProjectFactory();

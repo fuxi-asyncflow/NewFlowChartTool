@@ -28,6 +28,28 @@ namespace ProjectFactory.DefaultProjectFactory
         private Saver saver;
         private Loader loader;
 
+        public string HotFix(List<Graph> graphs)
+        {
+            var outputs = new List<string>();
+            var lines = new List<string>();
+            graphs.ForEach(graph =>
+            {
+                saver.SaveGraph(graph, lines, outputs);
+            });
+            
+
+            //lines.Insert(0, "---");
+            //lines.Add("...");
+            //var chartData = string.Join('\n', lines);
+            //var chartDataBytes = System.Text.Encoding.UTF8.GetBytes(chartData);
+            //chartData = System.Convert.ToBase64String(chartDataBytes);
+
+            var codesData = string.Join('\n', outputs);
+            var codeDataBytes = System.Text.Encoding.UTF8.GetBytes(codesData);
+            codesData = System.Convert.ToBase64String(codeDataBytes);
+            return codesData;
+        }
+
         public IProjectFactory Clone()
         {
             return new DefaultProjectFactory();
