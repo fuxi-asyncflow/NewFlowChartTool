@@ -714,7 +714,7 @@ namespace FlowChart.Core
             }
         }
 
-        public void DelVariable(string name)
+        public void RemoveVariable(string name)
         {
             var v = GetVar(name);
             if (v != null)

@@ -36,7 +36,7 @@
             <StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding AddVariableCommand}" Content="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Add}}" />
-                    <Button Command="{Binding DelVariableCommand}" Content="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Delete}}" />
+                    <Button Command="{Binding RemoveVariableCommand}" Content="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Delete}}" />
                     <Button Command="{Binding ModifyVariableCommand}" Content="{DynamicResource {x:Static localreskeys:ResourceKeys.Common_Modify}}" />
                 </StackPanel>
                 <!--  add varialbes  -->
