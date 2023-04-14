@@ -879,6 +879,7 @@ namespace NewFlowChartTool.ViewModels
         {
             Update();
             CurrentProject?.Save();
+            EventHelper.Pub<UpdateTypePanelDataEvent, Project>(CurrentProject);
         }
     }
 

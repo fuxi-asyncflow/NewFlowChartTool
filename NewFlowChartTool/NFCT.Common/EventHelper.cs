@@ -72,4 +72,5 @@ namespace NFCT.Common.Events
     public class StatusBarProgressEnableEvent : PubSubEvent<Tuple<int, string>> { }
     public class StatusBarProgressUpdateEvent : PubSubEvent<int> { }
 
+    public class UpdateTypePanelDataEvent : PubSubEvent<Project> { }
 }

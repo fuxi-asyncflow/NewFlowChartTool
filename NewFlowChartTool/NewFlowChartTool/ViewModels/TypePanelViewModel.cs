@@ -131,6 +131,7 @@ namespace NewFlowChartTool.ViewModels
         {
             EventHelper.Sub<ProjectOpenEvent, Project>(OnOpenProject, ThreadOption.UIThread);
             EventHelper.Sub<ProjectCloseEvent, Project>(OnCloseProject, ThreadOption.UIThread);
+            EventHelper.Sub<UpdateTypePanelDataEvent, Project>(UpdateRoot, ThreadOption.UIThread);
         }
 
         public void OnOpenProject(Project project)
@@ -155,6 +156,12 @@ namespace NewFlowChartTool.ViewModels
         public void OnCloseProject(Project project)
         {
             Roots.Clear();
+        }
+
+        void UpdateRoot(Project project)
+        {
+            Roots.Clear();
+            OnOpenProject(project);
         }
 
         public void AddType(FlowChart.Type.Type tp)
