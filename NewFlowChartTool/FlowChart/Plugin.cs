@@ -41,6 +41,11 @@ namespace FlowChart.Plugin
             return (I)Activator.CreateInstance(type);
         }
 
+        public List<string> GetKeys()
+        {
+            return _plugins.Keys.ToList();
+        }
+
         private Dictionary<string, System.Type> _plugins;
     }
 
@@ -85,6 +90,11 @@ namespace FlowChart.Plugin
         public ICodeGenerator? GetCodeGenerator(string name)
         {
             return _codeGeneratorContainer.Create(name);
+        }
+
+        public List<string> GetAllCodeGenerators()
+        {
+            return _codeGeneratorContainer.GetKeys();
         }
 
         private PluginContainer<ICodeGenerator> _codeGeneratorContainer;

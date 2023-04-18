@@ -90,6 +90,7 @@ namespace NewFlowChartTool
             containerRegistry.RegisterDialog<InputDialog, InputDialogViewModel>(InputDialogViewModel.NAME);
             containerRegistry.RegisterDialog<GraphRootConfigDialog, GraphRootConfigDialogViewModel>(GraphRootConfigDialogViewModel.NAME);
             containerRegistry.RegisterDialog<CustomDialog, CustomDialogViewModel>(CustomDialogViewModel.NAME);
+            containerRegistry.RegisterDialog<ProjectConfigDialog, ProjectConfigDialogViewModel>(ProjectConfigDialogViewModel.NAME);
 
             containerRegistry.RegisterSingleton<OutputPanelViewModel>();
             containerRegistry.RegisterSingleton<IOutputMessage, OutputPanelViewModel>();

@@ -33,6 +33,7 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewProjectKey}">新建项目</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_CloseProjectKey}">关闭项目</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_ExplorerToProjectKey}">打开项目位置</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_ConfigProjectKey}">项目设置...</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_TypeManagerKey}">类型管理...</system:String>
 
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BuildKey}">生成</system:String>

@@ -1,0 +1,56 @@
+﻿<UserControl
+    x:Class="NewFlowChartTool.Views.ProjectConfigDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dialogs="http://prismlibrary.com/"
+    xmlns:local="clr-namespace:NewFlowChartTool.Views.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
+    d:DataContext="{d:DesignInstance vm:ProjectConfigDialogViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    dialogs:Dialog.WindowStyle="{DynamicResource CustomWindowStyle}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <DataTemplate x:Key="GraphRootTemplate" DataType="vm:GraphRootConfigViewModel">
+            <StackPanel>
+                <StackPanel Margin="10" Orientation="Horizontal">
+                    <TextBlock Width="80" Text="Name" />
+                    <TextBox MinWidth="120" Text="{Binding Name}" />
+                    <TextBlock Margin="20,0,20,0" Text="DefaultType" />
+                    <!--<TextBox MinWidth="120" Text="{Binding TypeName}" />-->
+                    <ComboBox
+                        x:Name="TypeBox"
+                        MinWidth="120"
+                        ItemsSource="{Binding TypeNames}"
+                        Text="{Binding DefaultType}" />
+                </StackPanel>
+                <StackPanel Margin="10" Orientation="Horizontal">
+                    <TextBlock Width="80" Text="Path" />
+                    <TextBox MinWidth="220" Text="{Binding Path}" />
+                </StackPanel>
+                <StackPanel Margin="10" Orientation="Horizontal">
+                    <TextBlock Width="80" Text="OutputPath" />
+                    <TextBox MinWidth="220" Text="{Binding OutputPath}" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Grid>
+        <StackPanel>
+            <StackPanel Margin="10" Orientation="Horizontal">
+                <TextBlock Width="80" Text="OutputPath" />
+                <TextBox MinWidth="220" Text="{Binding Output}" />
+            </StackPanel>
+
+            <ItemsControl ItemTemplate="{StaticResource GraphRootTemplate}" ItemsSource="{Binding GraphRoots}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
+</UserControl>

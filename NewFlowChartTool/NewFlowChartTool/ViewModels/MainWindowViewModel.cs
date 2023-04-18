@@ -52,6 +52,7 @@ namespace NewFlowChartTool.ViewModels
             NewProjectCommand = new DelegateCommand(NewProject, () => CurrentProject == null);
             CloseProjectCommand = new DelegateCommand(CloseProject, () => CurrentProject != null);
             ExplorerToProjectCommand = new DelegateCommand(ExplorerToProject, () => CurrentProject != null);
+            ConfigProjectCommand = new DelegateCommand(ConfigProject, () => CurrentProject != null);
             TypeDialogCommand = new DelegateCommand(ShowTypeDialog, () => CurrentProject != null);
             BuildAllCommand = new DelegateCommand(BuildAll, () => CurrentProject != null);
             SwitchThemeCommand = new DelegateCommand(SwitchTheme, () => true);
@@ -99,6 +100,7 @@ namespace NewFlowChartTool.ViewModels
                 NewProjectCommand.RaiseCanExecuteChanged();
                 CloseProjectCommand.RaiseCanExecuteChanged();
                 ExplorerToProjectCommand.RaiseCanExecuteChanged();
+                ConfigProjectCommand.RaiseCanExecuteChanged();
                 BuildAllCommand.RaiseCanExecuteChanged();
                 TypeDialogCommand.RaiseCanExecuteChanged();
             }
@@ -143,6 +145,7 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand NewProjectCommand { get; private set; }
         public DelegateCommand CloseProjectCommand { get; private set; }
         public DelegateCommand ExplorerToProjectCommand { get; private set; }
+        public DelegateCommand ConfigProjectCommand { get; private set; }
         public DelegateCommand TypeDialogCommand { get; private set; }
         public DelegateCommand SwitchThemeCommand { get; private set; }
         public DelegateCommand SwitchLangCommand { get; private set; }
@@ -364,6 +367,14 @@ namespace NewFlowChartTool.ViewModels
                 };
                 Process.Start(startInfo);
             }
+        }
+
+        void ConfigProject()
+        {
+            if (CurrentProject == null) return;
+            var dialogParameters = new DialogParameters();
+            dialogParameters.Add(nameof(CurrentProject), CurrentProject);
+            _dialogService.Show(ProjectConfigDialogViewModel.NAME, dialogParameters, result => { });
         }
 
         public void BuildAll()
