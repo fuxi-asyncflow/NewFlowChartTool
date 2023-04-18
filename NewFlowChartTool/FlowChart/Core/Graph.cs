@@ -854,12 +854,7 @@ namespace FlowChart.Core
             });
             //ring node
             if (roots.Count == 0)
-            {
-                if (outerParentNodes.Count > 1)
-                    roots.Add(outerParentNodes[0]);
-                else if(outerParentNodes.Count == 1)
-                    roots.Add(nodes[0]);
-            }
+                roots.Add(outerParentNodes[0]);
 
             return roots;
         }
