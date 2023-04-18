@@ -832,9 +832,9 @@ namespace FlowChart.Core
 
         public List<Node> GetRoots(List<Node> nodes)
         {
-            if (nodes.Count == 0)
-                return null;
             var roots = new List<Node>();
+            if (nodes.Count == 0)
+                return roots;
             var outerParentNodes = new List<Node>();
             nodes.ForEach(node =>
             {
