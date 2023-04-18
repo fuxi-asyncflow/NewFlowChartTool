@@ -67,11 +67,12 @@ namespace ProjectFactory.DefaultProjectFactory
             // test = new TestProjectFactory();
             // test.Create(project);
             loader.Load(project);
-            saver.SetLang(project.Lang);
+            
         }
 
         public void Save(Project project)
         {
+            saver.SetLang(project.Lang);
             saver.SaveProject(project);
         }
 
@@ -85,6 +86,7 @@ namespace ProjectFactory.DefaultProjectFactory
             var p = new Project(new DefaultProjectFactory()) {Path = path};
             var factory = new MemoryProjectFactory();
             factory.Create(p);
+            p.SetBuilder(p.Config.ParserName, p.Config.CodeGenerator);
             return p;
         }
 

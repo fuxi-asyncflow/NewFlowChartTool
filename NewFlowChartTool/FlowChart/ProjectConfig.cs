@@ -136,6 +136,7 @@ namespace FlowChart
             _graphRootsDict = new Dictionary<string, GraphRootConfig>();
             Output = ".";
             CodeGenerator = "lua";
+            StandaloneGenerateFile = true;
         }
 
         [JsonPropertyName("name")]

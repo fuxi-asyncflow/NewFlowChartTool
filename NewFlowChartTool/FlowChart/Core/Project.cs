@@ -110,20 +110,9 @@ namespace FlowChart.Core
 
                 Config = ProjectConfig.LoadConfig(configPath);
             }
-            
 
             // create builder
-            var parserName = Config.ParserName ?? "default";
-            var parser = pluginManager.GetParser(parserName);
-
-            
-            var generatorName = Config.CodeGenerator;
-            var codeGen = pluginManager.GetCodeGenerator(generatorName);
-            if (parser != null && codeGen != null)
-            {
-                Builder = new Builder(parser, codeGen);
-                Lang = codeGen.Lang;
-            }
+            SetBuilder(Config.ParserName, Config.CodeGenerator);
 
             // create Factory
             var loaderName = Config.Loader ?? "default";
@@ -137,6 +126,20 @@ namespace FlowChart.Core
             Factory = factory;
             Factory?.Create(this);
             return true;
+        }
+
+        public void SetBuilder(string? parserName, string generatorName)
+        {
+            var pluginManager = PluginManager.Inst;
+            parserName ??= "default";
+            var parser = pluginManager.GetParser(parserName);
+
+            var codeGen = pluginManager.GetCodeGenerator(generatorName);
+            if (parser != null && codeGen != null)
+            {
+                Builder = new Builder(parser, codeGen);
+                Lang = codeGen.Lang;
+            }
         }
 
         public void Save()
