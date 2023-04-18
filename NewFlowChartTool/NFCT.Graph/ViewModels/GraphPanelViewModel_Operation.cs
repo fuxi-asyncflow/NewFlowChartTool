@@ -331,12 +331,12 @@ namespace NFCT.Graph.ViewModels
             var nodes = new List<Node>();
             SelectedNodes.ForEach(node => nodes.Add(node.Node));
 
-            var outerParentNodes = Graph.GetHasOuterParentNodes(nodes);
+            var outerParentNodes = Graph.GetRoots(nodes);
             if (outerParentNodes.Count != 1) return;
 
             foreach (var node in nodes)
             {
-                if (IsExitGroups(node))
+                if(node.OwnerGroup != null)
                     return;
             }
 
@@ -358,17 +358,5 @@ namespace NFCT.Graph.ViewModels
             Groups.Add(groupVm);
         }
 
-        public bool IsExitGroups(Node node)
-        {
-            foreach (var nodeVm in Groups)
-            {
-                foreach (var n in nodeVm.Nodes)
-                {
-                    if (n.Node == node)
-                        return true;
-                }
-            }
-            return false;
-        }
     }
 }

@@ -368,7 +368,7 @@ namespace FlowChart.Core
             Dictionary<Node, Node> nodesMap = new Dictionary<Node, Node>();
             if (nodes.Count == 0)
                 return nodesMap;
-            var startNodes = GetHasOuterParentNodes(nodes);
+            var startNodes = GetRoots(nodes);
 
             Action<Node> addNodeFunc = null;
             addNodeFunc = node =>
@@ -830,12 +830,12 @@ namespace FlowChart.Core
             });
         }
 
-        public List<Node> GetHasOuterParentNodes(List<Node> nodes)
+        public List<Node> GetRoots(List<Node> nodes)
         {
             if (nodes.Count == 0)
                 return null;
+            var roots = new List<Node>();
             var outerParentNodes = new List<Node>();
-
             nodes.ForEach(node =>
             {
                 var hasInnerParent = false;
@@ -844,22 +844,24 @@ namespace FlowChart.Core
                     if (line.Start != node)
                     {
                         if (nodes.Contains(line.Start))
-                        {
                             hasInnerParent = true;
-                            break;
-                        }
+                        else
+                            outerParentNodes.Add(node);
                     }
                 }
                 if (!hasInnerParent)
-                    outerParentNodes.Add(node);
+                    roots.Add(node);
             });
-            if (outerParentNodes.Count == 0)
+            //ring node
+            if (roots.Count == 0)
             {
-                nodes.Sort(new NodeIdComparer());
-                outerParentNodes.Add(nodes[0]);
+                if (outerParentNodes.Count > 1)
+                    roots.Add(outerParentNodes[0]);
+                else if(outerParentNodes.Count == 1)
+                    roots.Add(nodes[0]);
             }
 
-            return outerParentNodes;
+            return roots;
         }
     }
 }
