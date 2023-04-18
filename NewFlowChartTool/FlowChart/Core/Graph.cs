@@ -368,31 +368,8 @@ namespace FlowChart.Core
             Dictionary<Node, Node> nodesMap = new Dictionary<Node, Node>();
             if (nodes.Count == 0)
                 return nodesMap;
-            var startNodes = new List<Node>();
-            nodes.ForEach(node =>
-            {
-                var hasInnerParent = false;
-                var hasOuterParent = false;
-                foreach (var line in node.Parents)
-                {
-                    if (line.Start != node)
-                    {
-                        if (nodes.Contains(line.Start))
-                            hasInnerParent = true;
-                        else
-                            hasOuterParent = true;
-                    }
-                }
-                if (!hasInnerParent || hasOuterParent)
-                    startNodes.Add(node);
-            });
+            var startNodes = GetHasOuterParentNodes(nodes);
 
-            if(startNodes.Count == 0)
-                startNodes.Add(nodes[0]);
-
-            
-
-            
             Action<Node> addNodeFunc = null;
             addNodeFunc = node =>
             {
@@ -851,6 +828,38 @@ namespace FlowChart.Core
             {
                 Connectors.AddRange(node.Children);
             });
+        }
+
+        public List<Node> GetHasOuterParentNodes(List<Node> nodes)
+        {
+            if (nodes.Count == 0)
+                return null;
+            var outerParentNodes = new List<Node>();
+
+            nodes.ForEach(node =>
+            {
+                var hasInnerParent = false;
+                foreach (var line in node.Parents)
+                {
+                    if (line.Start != node)
+                    {
+                        if (nodes.Contains(line.Start))
+                        {
+                            hasInnerParent = true;
+                            break;
+                        }
+                    }
+                }
+                if (!hasInnerParent)
+                    outerParentNodes.Add(node);
+            });
+            if (outerParentNodes.Count == 0)
+            {
+                nodes.Sort(new NodeIdComparer());
+                outerParentNodes.Add(nodes[0]);
+            }
+
+            return outerParentNodes;
         }
     }
 }

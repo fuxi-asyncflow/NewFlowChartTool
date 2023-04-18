@@ -282,7 +282,8 @@ namespace NFCT.Graph.ViewModels
             }
 
             nodeVm.IsSelect = true;
-            SelectedNodes.Add(nodeVm);
+            if (!SelectedNodes.Contains(nodeVm))
+                SelectedNodes.Add(nodeVm);
         }
 
         //public void SelectConnector(GraphConnectorViewModel connectorVm, bool clearOthers = true)

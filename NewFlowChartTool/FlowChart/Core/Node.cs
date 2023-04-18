@@ -155,4 +155,12 @@ namespace FlowChart.Core
 
         public override string DisplayString => Text;
     }
+
+    public class NodeIdComparer : IComparer<Node>
+    {
+        public int Compare(Node node1, Node node2)
+        {
+            return node1.Id.CompareTo(node2.Id);
+        }
+    }
 }

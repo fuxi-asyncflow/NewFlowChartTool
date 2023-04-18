@@ -326,16 +326,29 @@ namespace NFCT.Graph.ViewModels
 
         public void CreateGroupFromSelectedNodes()
         {
+            if (SelectedNodes.Count == 0) return;
+
             var nodes = new List<Node>();
             SelectedNodes.ForEach(node => nodes.Add(node.Node));
+
+            var outerParentNodes = Graph.GetHasOuterParentNodes(nodes);
+            if (outerParentNodes.Count != 1) return;
+
+            foreach (var node in nodes)
+            {
+                if (IsExitGroups(node))
+                    return;
+            }
+
             var group = Graph.CreateGroup(nodes);
             if (group != null)
             {
                 var groupVm = new GroupBoxViewModel(group, this);
-                groupVm.Nodes = SelectedNodes;
+                SelectedNodes.ForEach(node => groupVm.Nodes.Add(node));
                 Groups.Add(groupVm);
                 groupVm.Resize();
             }
+            NeedLayout = true;
         }
 
         void _addGroupViewModel(Group group)
@@ -343,6 +356,19 @@ namespace NFCT.Graph.ViewModels
             var groupVm = new GroupBoxViewModel(group, this);
             groupVm.Nodes.AddRange(group.Nodes.ConvertAll(GetNodeVm));
             Groups.Add(groupVm);
+        }
+
+        public bool IsExitGroups(Node node)
+        {
+            foreach (var nodeVm in Groups)
+            {
+                foreach (var n in nodeVm.Nodes)
+                {
+                    if (n.Node == node)
+                        return true;
+                }
+            }
+            return false;
         }
     }
 }

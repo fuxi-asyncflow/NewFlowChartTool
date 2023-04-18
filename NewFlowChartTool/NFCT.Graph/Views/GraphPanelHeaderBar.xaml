@@ -21,8 +21,8 @@
     <StackPanel>
         <DockPanel LastChildFill="True">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                <d:Button Command="{Binding ChangeLayoutCommand}" Content="layout" />
-                <d:Button Command="{Binding CreateGroupCommand}" Content="group" />
+                <Button Command="{Binding ChangeLayoutCommand}" Content="layout" />
+                <Button Command="{Binding CreateGroupCommand}" Content="group" />
                 <TextBlock VerticalAlignment="Center" Text="子图类型" />
                 <ComboBox
                     x:Name="SubGraphComboBox"
