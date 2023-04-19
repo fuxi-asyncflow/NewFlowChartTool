@@ -250,7 +250,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 lines.Add($"extra: ");
                 foreach (var kv in folder._extra)
                 {
-                    lines.Add($"  - {kv.Key}: \"{kv.Value}\"");
+                    lines.Add($"  {kv.Key}: \"{kv.Value}\"");
                 }
             }
         }
@@ -363,7 +363,7 @@ namespace ProjectFactory.DefaultProjectFactory
                         lines.Add($"  extra: ");
                         foreach (var kv in node._extra)
                         {
-                            lines.Add($"    - {kv.Key}: \"{kv.Value}\"");
+                            lines.Add($"  {kv.Key}: \"{kv.Value}\"");
                         }
                     }
 
