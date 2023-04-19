@@ -123,10 +123,15 @@ namespace NFCT.Graph.ViewModels
                 Tokens.Clear();
                 pr.Tokens.ForEach(token =>
                 {
-                    Tokens.Add(new TextTokenViewModel(Text.Substring(token.Start, token.End - token.Start))
+                    if(token.End > Text.Length)
+                        Logger.WARN($"invalid token {token.Start}:{token.End} in node {Text} ");
+                    else
                     {
-                        Type = token.Type
-                    });
+                        Tokens.Add(new TextTokenViewModel(Text.Substring(token.Start, token.End - token.Start))
+                        {
+                            Type = token.Type
+                        });
+                    }
                 });
             }
 
