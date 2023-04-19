@@ -158,6 +158,8 @@ namespace FlowChart
         public string CodeGenerator { get; set; }
         [JsonPropertyName("case_insensitive")]
         public bool CaseInsensitive { get; set; }
+        [JsonPropertyName("encoding")]
+        public string? Encoding { get; set; }
 
         [JsonPropertyName("lua")]
         public LuaConfig? LuaConfig { get; set; }

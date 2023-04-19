@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="NLog" Version="4.7.15" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>

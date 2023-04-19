@@ -81,9 +81,14 @@ namespace FlowChart.Common
 
         public static void Save(string path, string content)
         {
+            Save(path, content, Encoding.UTF8);
+        }
+
+        public static void Save(string path, string content, Encoding encode)
+        {
             if (System.IO.File.Exists(path))
             {
-                var oldContent = File.ReadAllText(path);
+                var oldContent = File.ReadAllText(path, encode);
                 if (oldContent == content)
                     return;
             }
@@ -98,12 +103,17 @@ namespace FlowChart.Common
                     System.IO.Directory.CreateDirectory(di.FullName);
 
             }
-            System.IO.File.WriteAllText(path, content);
+            System.IO.File.WriteAllText(path, content, encode);
         }
 
         public static void Save(string path, List<string> lines)
         {
             Save(path, string.Join("\r\n", lines));
+        }
+
+        public static void Save(string path, List<string> lines, Encoding encode)
+        {
+            Save(path, string.Join("\r\n", lines), encode);
         }
     }
 }

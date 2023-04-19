@@ -26,8 +26,14 @@ namespace FlowChart.Core
 
     public class Project
     {
+        static Project()
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
         public Project(IProjectFactory? factory = null)
         {
+            Encoding = Encoding.UTF8;
             if(factory != null)
                 Factory = factory;
             Root = new Folder("") {Project = this};
@@ -67,6 +73,7 @@ namespace FlowChart.Core
         public Dictionary<string, TreeItem> GraphDict { get; set; }
         public Builder Builder { get; set; }
         public string? Lang { get; set; }
+        public Encoding Encoding { get; set; }
         #endregion
 
         #region Event
@@ -113,6 +120,22 @@ namespace FlowChart.Core
 
             // create builder
             SetBuilder(Config.ParserName, Config.CodeGenerator);
+
+            // set output encoding
+            if (!string.IsNullOrEmpty(Config.Encoding))
+            {
+                try
+                {
+                    if (int.TryParse(Config.Encoding, out int codePage))
+                        Encoding = Encoding.GetEncoding(codePage);
+                    else
+                        Encoding = Encoding.GetEncoding(Config.Encoding);
+                }
+                catch (Exception e)
+                {
+                    Logger.ERR($"cannot find encoding {Config.Encoding}: {e.Message}");
+                }
+            }
 
             // create Factory
             var loaderName = Config.Loader ?? "default";
