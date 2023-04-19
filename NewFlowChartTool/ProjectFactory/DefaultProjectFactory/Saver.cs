@@ -494,9 +494,9 @@ namespace ProjectFactory.DefaultProjectFactory
                     {
                         var tmp = $"name: {para.Name}, type: {para.Type.Name}";
                         if (!string.IsNullOrEmpty(para.Description))
-                            tmp += $", description: {para.Description}";
+                            tmp += $", description: {QuoteString(para.Description)}";
                         if(!string.IsNullOrEmpty(para.Default))
-                            tmp += $", default: {para.Default}";
+                            tmp += $", default: {QuoteString(para.Default)}";
                         lines.Add($"  - {{{tmp}}}");
                     }
                 }
@@ -530,7 +530,7 @@ namespace ProjectFactory.DefaultProjectFactory
                         if (string.IsNullOrEmpty(para.Description))
                             lines.Add($"  - {{name: {para.Name}, type: {para.Type.Name}}}");
                         else
-                            lines.Add($"  - {{name: {para.Name}, description: {para.Description}, type: {para.Type.Name}}}");
+                            lines.Add($"  - {{name: {para.Name}, description: {QuoteString(para.Description)}, type: {para.Type.Name}}}");
                     }
                 }
             }
@@ -544,6 +544,12 @@ namespace ProjectFactory.DefaultProjectFactory
             if (str.Contains('#'))
                 return $"\"{str}\"";
             return str;
+        }
+
+        public static string QuoteString(string s)
+        {
+            var result = s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+            return $"\"{result}\"";
         }
     }
 }
