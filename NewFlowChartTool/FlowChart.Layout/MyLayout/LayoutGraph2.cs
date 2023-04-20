@@ -215,6 +215,9 @@ namespace FlowChart.Layout.MyLayout
                     height = node.Y + node.Height;
             }
 
+            width += Setting.NodeSpace;         // x of node is start with NodeSpace, so here only add NodeSpace for right padding
+            height += 2.0 * Setting.RankSpace;  // add both padding for head and bottom
+
             if (width < Setting.MinWidth)
             {
                 var offsetX = (Setting.MinWidth - width) / 2;
