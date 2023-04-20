@@ -16,7 +16,7 @@ namespace FlowChart.Layout.MyLayout
             GroupNodes = new List<LayoutNode>();
             GroupEdges = new List<LayoutEdge>();
             CrossEdges = new List<LayoutEdge>();
-            RootNodes = new Dictionary<LayoutNode, LayoutNode>();
+            RootNodes = new Dictionary<LayoutNode, Tuple<LayoutNode, int>>();
             NodeDict = new Dictionary<INode, LayoutNode>();
             EdgeDict = new Dictionary<IEdge, LayoutEdge>();
             VirtualNodes = new List<LayoutNode>();
@@ -47,7 +47,7 @@ namespace FlowChart.Layout.MyLayout
         public List<LayoutNode> GroupNodes { get; set; }
         public List<LayoutEdge> GroupEdges { get; set; }
         public List<LayoutEdge> CrossEdges { get; set; }
-        public Dictionary<LayoutNode, LayoutNode> RootNodes { get; set; } // <Root, Parent>
+        public Dictionary<LayoutNode, Tuple<LayoutNode, int>> RootNodes { get; set; } // <Root, Parent>
         public Set<LayoutNode> _nodeSet;
         public Dictionary<INode, LayoutNode> NodeDict { get; set; }
         public Dictionary<IEdge, LayoutEdge> EdgeDict { get; set; }
@@ -121,7 +121,8 @@ namespace FlowChart.Layout.MyLayout
             });
             foreach (var node in set)
             {
-                RootNodes.Add(node, node.InEdges[0].StartNode);
+                var parentNode = node.InEdges[0].StartNode;
+                RootNodes.Add(node, new Tuple<LayoutNode, int>( parentNode, parentNode.OutEdges.IndexOf(node.InEdges[0])) );
             }
 
             // if all group nodes has input edges, then find a node with input edge as root node
@@ -132,7 +133,7 @@ namespace FlowChart.Layout.MyLayout
                 {
                     if (_nodeSet.Contains(edge.EndNode))
                     {
-                        RootNodes.Add(edge.EndNode, edge.StartNode);
+                        RootNodes.Add(edge.EndNode, new Tuple<LayoutNode, int>(edge.StartNode, edge.StartNode.OutEdges.IndexOf(edge)));
                         break;
                     }
                 }
@@ -157,8 +158,9 @@ namespace FlowChart.Layout.MyLayout
             Logger.DBG($"layout group {Width} {Height}");
         }
 
-        void AddVirtualEdge(LayoutEdge edge)
+        void AddVirtualEdge(LayoutNode startNode, LayoutNode endNode, int index = -1)
         {
+            var edge = new VirtualLayoutEdge(startNode, endNode, index);
             Graph.EdgeDict.Add(edge, edge);
             VirtualEdges.Add(edge);
         }
@@ -183,11 +185,11 @@ namespace FlowChart.Layout.MyLayout
             // add edge inside virtual nodes
             for (int i = 0; i < nodeCount - 1; i++)
             {
-                AddVirtualEdge(new LayoutEdge(VirtualNodes[i], VirtualNodes[i + 1]));
+                AddVirtualEdge(VirtualNodes[i], VirtualNodes[i + 1]);
             }
 
             // add edge between virtual nodes and outside nodes
-            AddVirtualEdge(new LayoutEdge(RootNodes.First().Value, VirtualNodes[0]));
+            AddVirtualEdge(RootNodes.First().Value.Item1, VirtualNodes[0], RootNodes.First().Value.Item2);
 
             // find children nodes : nodes don't belong group, but all its parent nodes are in group
             var handledNodes = new Set<LayoutNode>();
@@ -201,7 +203,7 @@ namespace FlowChart.Layout.MyLayout
                 handledNodes.Insert(node);
                 if (node.InEdges.All(inEdge => NodeInsideGroup(inEdge.StartNode)))
                 {
-                    AddVirtualEdge(new LayoutEdge(VirtualNodes.Last(), node));
+                    AddVirtualEdge(VirtualNodes.Last(), node);
                 }
             });
         }
