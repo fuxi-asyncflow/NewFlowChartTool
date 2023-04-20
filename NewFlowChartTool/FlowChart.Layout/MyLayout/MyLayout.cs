@@ -98,25 +98,20 @@ namespace FlowChart.Layout.MyLayout
 
     public class LayoutEdge : IEdge
     {
-        public LayoutEdge(IEdge edge, LayoutNode startNode, LayoutNode endNode)
-        {
-            _edge = edge;
-            StartNode = startNode;
-            EndNode = endNode;
-
-            StartNode.OutEdges.Add(this);
-            EndNode.InEdges.Add(this);
-        }
-
         public LayoutEdge(LayoutNode startNode, LayoutNode endNode)
         {
-            _edge = this;
             StartNode = startNode;
             EndNode = endNode;
-            Connect();
         }
 
-        private IEdge _edge;
+        public LayoutEdge(IEdge edge, LayoutNode startNode, LayoutNode endNode)
+            : this(startNode, endNode)
+        {
+            _edge = edge;
+            Connect(-1);
+        }
+
+        protected IEdge _edge;
         public IEdge Edge => _edge;
         public LayoutNode StartNode;
         public LayoutNode EndNode;
@@ -124,14 +119,17 @@ namespace FlowChart.Layout.MyLayout
 
         public INode Start => StartNode;
         public INode End => EndNode;
-        public List<Curve> Curves
+        public virtual List<Curve> Curves
         {
             set { _edge.Curves = value; }
         }
 
-        public void Connect()
+        public void Connect(int index = -1)
         {
-            StartNode.OutEdges.Add(this);
+            if(index < 0)
+                StartNode.OutEdges.Add(this);
+            else
+                StartNode.OutEdges.Insert(index, this);
             EndNode.InEdges.Add(this);
         }
 
@@ -181,6 +179,21 @@ namespace FlowChart.Layout.MyLayout
             curve.Points.Add(new Position(endX, EndNode.Y - L));
             curve.Points.Add(new Position(endX, EndNode.Y));
             _edge.Curves = new List<Curve>() { curve };
+        }
+    }
+
+    public class VirtualLayoutEdge : LayoutEdge
+    {
+        public VirtualLayoutEdge(LayoutNode startNode, LayoutNode endNode, int index)
+            : base(startNode, endNode)
+        {
+            _edge = this;
+            Connect(index);
+        }
+
+        public override List<Curve> Curves
+        {
+            set {  }
         }
     }
 
