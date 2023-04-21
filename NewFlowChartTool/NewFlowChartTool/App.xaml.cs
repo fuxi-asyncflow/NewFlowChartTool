@@ -12,7 +12,10 @@ using System.Windows;
 using System.Windows.Input;
 using FlowChart.Common;
 using FlowChart.Lua;
+using FlowChart.LuaCodeGen;
 using FlowChart.Misc;
+using FlowChart.Parser;
+using FlowChart.Plugin;
 using NewFlowChartTool.Utility;
 using NewFlowChartTool.ViewModels;
 using NewFlowChartTool.Views;
@@ -26,6 +29,8 @@ using Prism.Unity;
 using Prism.Events;
 using NFCT.Graph.Views;
 using NFCT.Diff.ViewModels;
+using ProjectFactory;
+using ProjectFactory.DefaultProjectFactory;
 
 
 namespace NewFlowChartTool
@@ -58,7 +63,7 @@ namespace NewFlowChartTool
             Logger.FCLogger.Info("application startup");
 
             var lua = Lua.Inst;
-            FlowChart.Program.Initialize();
+            RegisterInternalPlugin();
 
             //var test = Application.Current.TryFindResource(SystemColors.WindowBrushKey);
             //Console.WriteLine(test);
@@ -67,6 +72,18 @@ namespace NewFlowChartTool
                 Directory.CreateDirectory("tmp");
             }
             return Container.Resolve<Views.MainWindow>();
+        }
+
+        void RegisterInternalPlugin()
+        {
+            var pluginManager = PluginManager.Inst;
+            pluginManager.RegisterProjectFactory<DefaultProjectFactory>("default");
+            pluginManager.RegisterProjectFactory<MemoryProjectFactory>("memory");
+
+            pluginManager.RegisterCodeGenerator<LuaCodeGenerator>("lua");
+            pluginManager.RegisterCodeGenerator<PyCodeGenerator>("python");
+
+            pluginManager.RegisterParser<DefaultParser>("default");
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
