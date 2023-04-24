@@ -44,6 +44,9 @@ namespace FlowChart.Type
             TupleType = new TupleType("Tuple") { IsBuiltinType = true };
             Types.Add(TupleType);
 
+            UnionType = new UnionType("Union") { IsBuiltinType = true };
+            Types.Add(UnionType);
+
         }
 
         public static Type NumberType;
@@ -55,6 +58,7 @@ namespace FlowChart.Type
         public static GenericType ArrayType;
         public static Type GlobalType;
         public static GenericType TupleType;
+        public static GenericType UnionType;
 
         public static List<Type> Types;
     }
@@ -339,7 +343,6 @@ namespace FlowChart.Type
             InstanceTypes = new Dictionary<string, InstanceType>();
         }
 
-        public override int TemplateTypeCount => 1;
         public Dictionary<string, InstanceType> InstanceTypes;
 
         public override InstanceType? GetInstance(List<Type?> tmpls)
@@ -359,6 +362,54 @@ namespace FlowChart.Type
         }
     }
 
+    public class UnionType : GenericType
+    {
+        public UnionType(string name) : base(name)
+        {
+            InstanceTypes = new Dictionary<string, InstanceType>();
+        }
+
+        public Dictionary<string, InstanceType> InstanceTypes;
+
+        public override InstanceType? GetInstance(List<Type?> tmpls)
+        {
+            InstanceType ret;
+            var typeString = string.Join(',', tmpls.ConvertAll(tp => tp.Name));
+
+            if (InstanceTypes.TryGetValue(typeString, out ret))
+                return ret;
+            ret = new InstanceType(Name) { GenType = this };
+            ret.AcceptFunc = type => AcceptRule(ret, type);
+            ret.templateTypes.AddRange(tmpls);
+            ret.Name = $"{Name}<{typeString}>";
+            InstanceTypes.Add(typeString, ret);
+            ret.IsBuiltinType = true;
+            Project.AddType(ret);
+            return ret;
+        }
+
+        public static bool AcceptRule(InstanceType self, Type inType)
+        {
+            foreach (var type in self.templateTypes)
+            {
+                if (type.CanAccept(inType))
+                    return true;
+            }
+
+            if (inType is InstanceType instType && instType.GenType is UnionType inUnionType)
+            {
+                foreach (var tp in instType.templateTypes)
+                {
+                    if (!self.CanAccept(tp))
+                        return false;
+                }
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     public class InstanceType : Type
     {
         public GenericType GenType;
@@ -375,8 +426,12 @@ namespace FlowChart.Type
             return base.ToString();
         }
 
+        
+
         public override bool CanAccept(Type inType)
         {
+            if(AcceptFunc != null)
+                return AcceptFunc(inType);
             if (inType == this)
                 return true;
             if (inType is not InstanceType instType)
@@ -399,7 +454,4 @@ namespace FlowChart.Type
             return true;
         }
     }
-
-
-
 }
