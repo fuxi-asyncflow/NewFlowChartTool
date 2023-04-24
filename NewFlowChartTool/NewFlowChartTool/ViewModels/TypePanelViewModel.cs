@@ -136,10 +136,12 @@ namespace NewFlowChartTool.ViewModels
 
         public void OnOpenProject(Project project)
         {
-            foreach (var kv in project.TypeDict)
+            // lazy load graph may run at same time and change type dict
+            // so first get types to a list and user later
+            var types = project.TypeDict.Values.ToList();
+            foreach (var tp in types)
             {
-                var tp = kv.Value;
-                if (!kv.Value.IsBuiltinType)
+                if (!tp.IsBuiltinType)
                 {
                     AddType(tp);
                 }
