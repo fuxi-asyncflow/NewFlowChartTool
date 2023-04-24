@@ -38,6 +38,9 @@ namespace FlowChart.Type
             ArrayType = new GenericTypeOne("Array") { IsBuiltinType = true };
             Types.Add(ArrayType);
 
+            MapType = new MapType("Map") { IsBuiltinType = true };
+            Types.Add(MapType);
+
             GlobalType = new Type("Global");
             Types.Add(GlobalType);
 
@@ -59,6 +62,7 @@ namespace FlowChart.Type
         public static Type GlobalType;
         public static GenericType TupleType;
         public static GenericType UnionType;
+        public static GenericType MapType;
 
         public static List<Type> Types;
     }
@@ -336,6 +340,65 @@ namespace FlowChart.Type
         }
     }
 
+    public class MapType : GenericType
+    {
+        public MapType(string name) : base(name)
+        {
+            InstanceTypes = new Dictionary<string, InstanceType>();
+        }
+
+        public Dictionary<string, InstanceType> InstanceTypes;
+
+        public override InstanceType? GetInstance(List<Type?> tmpls)
+        {
+            if (tmpls.Count == 0)
+            {
+                tmpls.Add(BuiltinTypes.AnyType);
+                tmpls.Add(BuiltinTypes.AnyType);
+            }
+            else if (tmpls.Count == 1)
+            {
+                tmpls.Add(BuiltinTypes.AnyType);
+            }
+            else if (tmpls.Count > 2)
+            {
+                tmpls.RemoveRange(2, tmpls.Count - 2);
+            }
+            
+            InstanceType? ret;
+            var typeString = string.Join(',', tmpls.ConvertAll(tp => tp.Name));
+
+            if (InstanceTypes.TryGetValue(typeString, out ret))
+                return ret;
+            ret = new InstanceType(Name) { GenType = this };
+            ret.templateTypes.AddRange(tmpls);
+            ret.Name = $"{Name}<{typeString}>";
+            InstanceTypes.Add(typeString, ret);
+            ret.IsBuiltinType = true;
+            Project.AddType(ret);
+            return ret;
+        }
+
+        public static bool AcceptRule(InstanceType self, Type inType)
+        {
+            if (inType == BuiltinTypes.MapType)
+                return true;
+
+            if (inType is InstanceType instType && instType.GenType is MapType)
+            {
+                if (instType.templateTypes.Count != 2 || self.templateTypes.Count != 2)
+                    return false;
+                if (!self.templateTypes[0].CanAccept(instType.templateTypes[0]))
+                    return false;
+                if (!self.templateTypes[1].CanAccept(instType.templateTypes[1]))
+                    return false;
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     public class TupleType : GenericType
     {
         public TupleType(string name) : base(name)
@@ -396,7 +459,7 @@ namespace FlowChart.Type
                     return true;
             }
 
-            if (inType is InstanceType instType && instType.GenType is UnionType inUnionType)
+            if (inType is InstanceType instType && instType.GenType is UnionType)
             {
                 foreach (var tp in instType.templateTypes)
                 {

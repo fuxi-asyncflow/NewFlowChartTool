@@ -371,11 +371,19 @@ namespace FlowChart.LuaCodeGen
             }
             else if(ownerInfo.Type is InstanceType instType)
             {
+                var keyType = BuiltinTypes.NumberType;
                 if (instType.GenType == BuiltinTypes.ArrayType)
                     ownerInfo.Type = instType.templateTypes.First();
-                else
+                else if(instType.GenType == BuiltinTypes.MapType)
                 {
-                    throw new NotImplementedException("not supported generic type");
+                    keyType = instType.templateTypes[0];
+                    ownerInfo.Type = instType.templateTypes[1];
+                }
+
+                if (!keyType.CanAccept(keyInfo.Type))
+                {
+                    Error($"index of {instType.GenType} require {keyType} but received {keyInfo.Type}");
+                    return null;
                 }
             }
             else
