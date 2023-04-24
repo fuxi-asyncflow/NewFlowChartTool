@@ -103,6 +103,7 @@ namespace ProjectFactory.DefaultProjectFactory
             var sw = Stopwatch.StartNew();
             LoadTypes();
             Project.RaiseLoadTypesEndEvent();
+            AddTypeCastMethod(Project);
             Logger.LOG($"load types time: {sw.ElapsedMilliseconds}");
             sw.Restart();
             LoadGraphs();
@@ -228,6 +229,29 @@ namespace ProjectFactory.DefaultProjectFactory
                     var value = propNode.Value.ToString();
                     type.SetExtraProp(key, value);
                 }
+            }
+        }
+
+        void AddTypeCastMethod(Project? p)
+        {
+            var typeList = new List<Type>();
+            var globalType = BuiltinTypes.GlobalType;
+            foreach (var kv in p.TypeDict)
+            {
+                var name = kv.Key;
+                if(kv.Value == globalType)
+                    continue;
+                if (name.Contains('<'))
+                    continue;
+                if (globalType.FindMember(name) != null)
+                {
+                    Logger.LOG($"not add cast function for type {name} because method with same name exist in Global");
+                    continue;
+                }
+
+                var method = new Method(name) {Type = kv.Value, Template = "$params"};
+                method.Parameters.Add(new Parameter("value") {Type = BuiltinTypes.AnyType});
+                globalType.AddMember(method);
             }
         }
 

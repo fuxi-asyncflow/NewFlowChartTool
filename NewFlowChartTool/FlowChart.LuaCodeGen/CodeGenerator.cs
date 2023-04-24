@@ -311,7 +311,10 @@ namespace FlowChart.LuaCodeGen
 
             if (funcName.Contains('$'))
             {
-                var codeStr = funcName.Replace("$caller", code.Substring(0, code.Length - 1));
+                var tmp = code;
+                if (code.Length > 0)
+                    tmp = code.Substring(0, code.Length - 1);
+                var codeStr = funcName.Replace("$caller", tmp);
                 codeStr = codeStr.Replace("$params", argsString);
                 return new NodeInfo()
                 {
