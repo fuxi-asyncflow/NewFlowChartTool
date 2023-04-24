@@ -236,10 +236,11 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             var typeList = new List<Type>();
             var globalType = BuiltinTypes.GlobalType;
+            var excludeTypes = new HashSet<Type>() { BuiltinTypes.GlobalType, BuiltinTypes.UndefinedType, BuiltinTypes.VoidType };
             foreach (var kv in p.TypeDict)
             {
                 var name = kv.Key;
-                if(kv.Value == globalType)
+                if(excludeTypes.Contains(kv.Value))
                     continue;
                 if (name.Contains('<'))
                     continue;
@@ -249,7 +250,7 @@ namespace ProjectFactory.DefaultProjectFactory
                     continue;
                 }
 
-                var method = new Method(name) {Type = kv.Value, Template = "$params"};
+                var method = new Method(name) {Type = kv.Value, Template = "$params", Description = $"cast to {name} type"};
                 method.Parameters.Add(new Parameter("value") {Type = BuiltinTypes.AnyType});
                 globalType.AddMember(method);
             }

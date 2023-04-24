@@ -34,7 +34,7 @@ namespace NewFlowChartTool.ViewModels
         }
         readonly Item _item;
         public string Name { get => _item.Name; }
-        public string Description { get => _item.Description; }
+        public string? Description { get => _item.Description; }
         public Item TreeItem { get => _item; }
         public TypeMemberType MemberType
         {
