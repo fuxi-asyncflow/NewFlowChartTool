@@ -63,6 +63,11 @@ namespace NFCT.Graph.ViewModels
         {
 
         }
+
+        public virtual void Ellipsis(bool ellipsis)
+        {
+
+        }
     }
 
     public class TextNodeViewModel : NodeContent
@@ -89,10 +94,12 @@ namespace NFCT.Graph.ViewModels
         public new TextNode Node { get; set; }
         public string Text { get => Node.Text; }
         public ObservableCollection<TextTokenViewModel> Tokens { get; set; }
+        private List<TextTokenViewModel> _allTokens;
         public GraphPaneViewModel Owner => BaseNode.Owner;
         public TextNodeViewModel(BaseNodeViewModel baseNode, TextNode node) :base(baseNode)
         {
             Node = node;
+            _allTokens = new List<TextTokenViewModel>();
             Tokens = new ObservableCollection<TextTokenViewModel>();
             Tokens.Add(new TextTokenViewModel(Node.Text) {Type = TextToken.TokenType.Default});
         }
@@ -156,22 +163,72 @@ namespace NFCT.Graph.ViewModels
             if (pr.Tokens != null)
             {
                 Tokens.Clear();
+                _allTokens.Clear();
                 pr.Tokens.ForEach(token =>
                 {
                     if(token.End > Text.Length)
                         Logger.WARN($"invalid token {token.Start}:{token.End} in node {Text} ");
                     else
                     {
-                        Tokens.Add(new TextTokenViewModel(Text.Substring(token.Start, token.End - token.Start))
+                        var tk = new TextTokenViewModel(Text.Substring(token.Start, token.End - token.Start))
                         {
                             Type = token.Type
-                        });
+                        };
+                        _allTokens.Add(tk);
+                        Tokens.Add(tk);
                     }
                 });
             }
 
             BaseNode.ErrorMessage = pr.IsError ? pr.ErrorMessage : null;
             Owner.NeedLayout = true;
+        }
+
+        public override void Ellipsis(bool ellipsis)
+        {
+            const int MAX_LENGTH = 20;
+            var queue = new Queue<TextTokenViewModel>();
+            var stack = new Stack<TextTokenViewModel>();
+            int length = 0;
+            if (ellipsis == true && Text.Length > MAX_LENGTH)
+            {
+                for (int i = 0; i < _allTokens.Count; i++)
+                {
+                    int index = i >> 1;
+                    if (i % 2 == 0)
+                    {
+                        var token = _allTokens[index];
+                        length += token.Text.Length;
+                        if (length > MAX_LENGTH)
+                            break;
+                        queue.Enqueue(token);
+                        
+                    }
+                    else
+                    {
+                        var token = _allTokens[_allTokens.Count - 1 - index];
+                        length += token.Text.Length;
+                        if (length > MAX_LENGTH)
+                            break;
+                        stack.Push(token);
+                    }
+                }
+                Tokens.Clear();
+                foreach (var token in queue)
+                {
+                    Tokens.Add(token);
+                }
+                Tokens.Add(new TextTokenViewModel(" ... "));
+                foreach (var token in stack)
+                {
+                    Tokens.Add(token);
+                }
+            }
+            else
+            {
+                Tokens.Clear();
+                _allTokens.ForEach(Tokens.Add);
+            }
         }
     }
 

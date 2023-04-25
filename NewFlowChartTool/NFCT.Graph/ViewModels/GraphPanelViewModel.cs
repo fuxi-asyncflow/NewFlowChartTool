@@ -80,6 +80,7 @@ namespace NFCT.Graph.ViewModels
 
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             CreateGroupCommand = new DelegateCommand(CreateGroupFromSelectedNodes);
+            EllipsisCommand = new DelegateCommand(Ellipsis);
             OnCloseCommand = new DelegateCommand(OnClose);
             OnPreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnPreviewKeyDown);
 
@@ -212,6 +213,8 @@ namespace NFCT.Graph.ViewModels
         public DelegateCommand OnCloseCommand { get; set; }
 
         public DelegateCommand SubgraphCommand { get; set; }
+
+        public DelegateCommand EllipsisCommand { get; set; }
 
         
         public void Build()
@@ -636,6 +639,18 @@ namespace NFCT.Graph.ViewModels
             var handledSet = new HashSet<BaseNodeViewModel>();
             var result =  _recursive(startNode, endNode, handledSet);
             return result;
+        }
+
+        private bool _isEllipsis;
+        public void Ellipsis()
+        {
+            _isEllipsis = !_isEllipsis;
+            foreach (var nodeVm in Nodes)
+            {
+                nodeVm.IsEllipsis = _isEllipsis;
+            }
+
+            NeedLayout = true;
         }
 
         //public void ReplaceNodeViewModel(Node node, BaseNodeViewModel newVm)

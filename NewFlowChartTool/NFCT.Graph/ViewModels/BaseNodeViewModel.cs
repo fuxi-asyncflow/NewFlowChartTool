@@ -211,6 +211,19 @@ namespace NFCT.Graph.ViewModels
         public int FailureCount { get; set; }
         private bool _isRunning { get; set; }
 
+        private bool _isEllipsis;
+        public bool IsEllipsis
+        {
+            get => _isEllipsis;
+            set
+            {
+                if (value == _isEllipsis)
+                    return;
+                _isEllipsis = value;
+                Content.Ellipsis(value);
+            }
+        }
+
         public void EnterDebugMode()
         {
             _originBgType = BgType;

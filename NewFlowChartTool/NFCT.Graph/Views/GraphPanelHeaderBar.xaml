@@ -41,6 +41,7 @@
                     Margin="5,0"
                     SelectionChanged="LayoutComboBox_OnSelectionChanged"
                     Visibility="Collapsed" />
+                <Button Command="{Binding EllipsisCommand}" Content=" ... " />
                 <!--<TextBlock
                 Margin="5,0"
                 VerticalAlignment="Center"
