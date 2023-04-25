@@ -24,9 +24,9 @@
     <Grid>
         <Border
             x:Name="NodeBorder"
-            Background="{Binding BgType, Converter={StaticResource BgColorConverter}, Mode=OneWay}"
-            BorderBrush="{Binding BgType, Converter={StaticResource BorderColorConverter}, Mode=OneWay}"
-            BorderThickness="{Binding IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}"
+            Background="{Binding BaseNode.BgType, Converter={StaticResource BgColorConverter}, Mode=OneWay}"
+            BorderBrush="{Binding BaseNode.BgType, Converter={StaticResource BorderColorConverter}, Mode=OneWay}"
+            BorderThickness="{Binding BaseNode.IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}"
             CornerRadius="3">
 
             <StackPanel
@@ -44,9 +44,9 @@
                     <TextBlock
                         HorizontalAlignment="Center"
                         FontSize="14"
-                        Text="{Binding Id}" />
+                        Text="{Binding BaseNode.Id}" />
                 </Border>
-                <StackPanel x:Name="NodeTexts" Visibility="{Binding IsEditing, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
+                <StackPanel x:Name="NodeTexts" Visibility="{Binding BaseNode.IsEditing, Converter={StaticResource InvertBooleanToVisibilityConverter}}">
                     <ItemsControl ItemsSource="{Binding Tokens}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -82,9 +82,9 @@
             Orientation="Horizontal">
             <TextBlock
                 Foreground="Red"
-                Text="{Binding ErrorMessage}"
-                Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
-            <TextBlock Text="{Binding Description}" Visibility="{Binding Description, Converter={StaticResource NullToVisibilityConverter}}" />
+                Text="{Binding BaseNode.ErrorMessage}"
+                Visibility="{Binding BaseNode.ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}" />
+            <TextBlock Text="{Binding BaseNode.Description}" Visibility="{Binding BaseNode.Description, Converter={StaticResource NullToVisibilityConverter}}" />
         </StackPanel>
     </Grid>
 

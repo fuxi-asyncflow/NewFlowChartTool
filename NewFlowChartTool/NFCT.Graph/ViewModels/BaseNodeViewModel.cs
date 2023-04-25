@@ -85,6 +85,12 @@ namespace NFCT.Graph.ViewModels
     public class BaseNodeViewModel : BindableBase, INode
     {
         public Node Node;
+        private NodeContent _coutent;
+        public NodeContent Content
+        {
+            get => _coutent;
+            set => SetProperty(ref _coutent, value);
+        }
 
 #if DEBUG
         public BaseNodeViewModel():this(new Node() { Uid = Project.GenUUID() }, new GraphPaneViewModel(new FlowChart.Core.Graph("design")))
@@ -166,13 +172,12 @@ namespace NFCT.Graph.ViewModels
 
         public static BaseNodeViewModel? CreateNodeViewModel(Node node, GraphPaneViewModel graphVm)
         {
+            var nodeVm = new BaseNodeViewModel(node, graphVm);
             if (node is TextNode textNode)
-            {
-                return new TextNodeViewModel(textNode, graphVm);
-            }
+                nodeVm.Content = new TextNodeViewModel(nodeVm, textNode);
             else if (node is StartNode startNode)
-                return new StartNodeViewModel(startNode, graphVm);
-            return null;
+                nodeVm.Content = new StartNodeViewModel(nodeVm, startNode);
+            return nodeVm;
         }
 
         private bool _isSelect;
@@ -284,9 +289,10 @@ namespace NFCT.Graph.ViewModels
         private NodeBgType _bgType;
         public NodeBgType BgType { get => _bgType; set => SetProperty(ref _bgType, value, nameof(BgType)); }
 
-        public virtual void OnThemeSwitch()
+        public void OnThemeSwitch()
         {
             //TODO some graph theme take effect after close and open again
+            Content.OnThemeSwitch();
             RaisePropertyChanged(nameof(BgType));
         }
 
@@ -309,8 +315,9 @@ namespace NFCT.Graph.ViewModels
             OnParseEnd(pr);
         }
 
-        public virtual void OnParseEnd(ParseResult pr)
+        public void OnParseEnd(ParseResult pr)
         {
+            Content.OnParseEnd(pr);
         }
 
         protected void OnDescriptionChanged(string? v)
@@ -381,16 +388,17 @@ namespace NFCT.Graph.ViewModels
             }
         }
 
-        public virtual void EnterEditingMode()
+        public void EnterEditingMode()
         {
             if (IsEditing) return;
+            Content.EnterEditingMode();
             Logger.DBG($"[{nameof(BaseNodeViewModel)}] EnterEditingMode");
             IsEditing = true;
         }
 
-        public virtual void ExitEditingMode(NodeAutoCompleteViewModel acVm, bool save)
+        public void ExitEditingMode(NodeAutoCompleteViewModel acVm, bool save)
         {
-
+            Content.ExitEditingMode(acVm, save);
         }
 
         void EditDescription()
@@ -436,6 +444,11 @@ namespace NFCT.Graph.ViewModels
 
         private int _id;
         public int Id { get => _id; set => SetProperty(ref _id, value); }
+
+        public void ReplaceContent(NodeContent content)
+        {
+            Content = content;
+        }
 
         #region MENU COMMAND
         public DelegateCommand BeginConnectCommand { get; set; }

@@ -22,10 +22,10 @@ namespace NFCT.Graph.Utility
         {
             if (item is TextNodeViewModel)
                 return TextNodeTemplate;
-            else if (item is StartNodeViewModel)
+            if (item is StartNodeViewModel)
                 return StartNodeTemplate;
-            else if(item is ControlNodeViewModel)
-            return ControlNodeTemplate;
+            if(item is ControlNodeViewModel)
+                return ControlNodeTemplate;
             return base.SelectTemplate(item, container);
         }
     }

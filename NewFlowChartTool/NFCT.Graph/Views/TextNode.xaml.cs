@@ -40,9 +40,9 @@ namespace NFCT.Graph.Views
         {
             var nodeVm = DataContext as TextNodeViewModel;
             if (nodeVm == null) return;
-            nodeVm.DebugStatusChangeEvent += OnNodeDebugStatusChange;
-            nodeVm.StopDebugEvent += OnStopDebug;
-            nodeVm.EditingModeChangeEvent += OnEditingModeChange;
+            nodeVm.BaseNode.DebugStatusChangeEvent += OnNodeDebugStatusChange;
+            nodeVm.BaseNode.StopDebugEvent += OnStopDebug;
+            nodeVm.BaseNode.EditingModeChangeEvent += OnEditingModeChange;
         }
 
         private void NodeGrid_OnMouseMove(object sender, MouseEventArgs e)
@@ -81,7 +81,7 @@ namespace NFCT.Graph.Views
                     // show autocomplete
                     if (ac.DataContext is NodeAutoCompleteViewModel acVm)
                     {
-                        acVm.Node = nodeVm;
+                        acVm.Node = nodeVm.BaseNode;
                         acVm.Text = nodeVm.Text;
                     }
 

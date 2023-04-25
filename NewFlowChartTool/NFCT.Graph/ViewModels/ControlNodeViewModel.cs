@@ -11,7 +11,7 @@ using FlowChart.Common;
 
 namespace NFCT.Graph.ViewModels
 {
-    internal class ControlNodeViewModel : BaseNodeViewModel
+    internal class ControlNodeViewModel : NodeContent
     {
         static ControlNodeViewModel()
         {
@@ -21,7 +21,7 @@ namespace NFCT.Graph.ViewModels
             };
             
         }
-        public ControlNodeViewModel(Node node, GraphPaneViewModel g) : base(node, g)
+        public ControlNodeViewModel(BaseNodeViewModel baseNode) : base(baseNode)
         {
             ParamNodes = new ObservableCollection<BaseNodeViewModel>();
         }
@@ -29,6 +29,8 @@ namespace NFCT.Graph.ViewModels
         public string EditingText { get; set; }
 
         public static HashSet<string> ControlFuncNames;
+
+        private GraphPaneViewModel Owner => BaseNode.Owner;
 
         public string? ControlFuncName { get; set; }
         public ObservableCollection<BaseNodeViewModel> ParamNodes { get; set; }
@@ -55,16 +57,16 @@ namespace NFCT.Graph.ViewModels
         {
             var paramStr = string.Join(", ", ParamNodes.ToList().ConvertAll(node => node.Id.ToString()));
             EditingText = $"{ControlFuncName}({paramStr})";
-            base.EnterEditingMode();
+            //BaseNode.EnterEditingMode();
         }
 
         public override void ExitEditingMode(NodeAutoCompleteViewModel acVm, bool save)
         {
             // avoid func is called twice: first called by Key.Esc, then called by LostFocus
-            if (IsEditing == false)
+            if (BaseNode.IsEditing == false)
                 return;
             Logger.DBG($"[{nameof(ControlNodeViewModel)}] ExitEditingMode");
-            if (save && Node is TextNode textNode)
+            if (save && BaseNode.Node is TextNode textNode)
             {
                 var inputText = acVm.Text;
                 if (MaybeControlNodeViewModel(inputText) && ParseText(inputText)) 
@@ -80,11 +82,12 @@ namespace NFCT.Graph.ViewModels
                 Owner.Build();
             }
 
-            IsEditing = false;
+            BaseNode.IsEditing = false;
         }
 
         public void HandleRepeatNode(ParseResult pr)
         {
+            var Node = BaseNode.Node;
             var graph = Node.OwnerGraph;
             var subNodes = graph.FindSubGraph(Node);
 
@@ -101,12 +104,13 @@ namespace NFCT.Graph.ViewModels
 
         public override void OnParseEnd(ParseResult pr)
         {
+            var Node = BaseNode.Node;
             if (Node is not TextNode textNode)
                 return;
             if (!MaybeControlNodeViewModel(textNode.Text))
             {
-                var textNodeVm = new TextNodeViewModel(textNode, Owner);
-                Owner.ReplaceNodeViewModel(Node, textNodeVm);
+                var textNodeVm = new TextNodeViewModel(BaseNode, textNode);
+                BaseNode.ReplaceContent(textNodeVm);
                 textNodeVm.OnParseEnd(pr);
                 return;
             }
@@ -117,12 +121,12 @@ namespace NFCT.Graph.ViewModels
             }
 
             if (pr.IsError)
-                BgType = NodeBgType.ERROR;
+                BaseNode.BgType = BaseNodeViewModel.NodeBgType.ERROR;
             else if (ControlFuncName == "waitall")
-                BgType = NodeBgType.WAIT;
+                BaseNode.BgType = BaseNodeViewModel.NodeBgType.WAIT;
             else
-                BgType = NodeBgType.ACTION;
-            RaisePropertyChanged(nameof(BgType));
+                BaseNode.BgType = BaseNodeViewModel.NodeBgType.ACTION;
+            RaisePropertyChanged(nameof(BaseNode.BgType));
         }
 
         public static string? ReplaceText(string text, GraphPaneViewModel graphVm)
@@ -181,7 +185,7 @@ namespace NFCT.Graph.ViewModels
 
         public bool ParseText(string? text)
         {
-            text ??= ((TextNode)(Node)).Text;
+            text ??= ((TextNode)(BaseNode.Node)).Text;
             var left = text.IndexOf('(');
             var right = text.IndexOf(')');
             if (left == -1 || right == -1 || left > right)

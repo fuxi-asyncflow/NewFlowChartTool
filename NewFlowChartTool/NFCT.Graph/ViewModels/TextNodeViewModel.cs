@@ -31,7 +31,41 @@ namespace NFCT.Graph.ViewModels
         }
     }
 
-    public class TextNodeViewModel : BaseNodeViewModel
+    public class NodeContent : BindableBase
+    {
+#if DEBUG
+        public NodeContent()
+        {
+
+        }
+#endif
+        public NodeContent(BaseNodeViewModel baseNode)
+        {
+            BaseNode = baseNode;
+        }
+
+        public BaseNodeViewModel BaseNode { get; set; }
+
+        public virtual void OnThemeSwitch()
+        {
+        }
+
+        public virtual void OnParseEnd(ParseResult pr)
+        {
+
+        }
+        public virtual void EnterEditingMode()
+        {
+
+        }
+
+        public virtual void ExitEditingMode(NodeAutoCompleteViewModel acVm, bool save)
+        {
+
+        }
+    }
+
+    public class TextNodeViewModel : NodeContent
     {
 #if DEBUG
         public TextNodeViewModel()
@@ -39,8 +73,8 @@ namespace NFCT.Graph.ViewModels
             var graph = new FlowChart.Core.Graph("design");
             graph.AddNode(new StartNode());
             Node = new TextNode() { Text = "hello" };
-            Owner = new GraphPaneViewModel(graph);
-            BgType = NodeBgType.CONDITION;
+            BaseNode.Owner = new GraphPaneViewModel(graph);
+            BaseNode.BgType = BaseNodeViewModel.NodeBgType.CONDITION;
             Tokens = new ObservableCollection<TextTokenViewModel>();
             Tokens.Add(new TextTokenViewModel("$a") { Type = TextToken.TokenType.Variable });
             Tokens.Add(new TextTokenViewModel(" = ") { Type = TextToken.TokenType.Default });
@@ -55,17 +89,18 @@ namespace NFCT.Graph.ViewModels
         public new TextNode Node { get; set; }
         public string Text { get => Node.Text; }
         public ObservableCollection<TextTokenViewModel> Tokens { get; set; }
-        public TextNodeViewModel(TextNode node, GraphPaneViewModel g) :base(node, g)
+        public GraphPaneViewModel Owner => BaseNode.Owner;
+        public TextNodeViewModel(BaseNodeViewModel baseNode, TextNode node) :base(baseNode)
         {
             Node = node;
             Tokens = new ObservableCollection<TextTokenViewModel>();
-            Tokens.Add(new TextTokenViewModel(node.Text) {Type = TextToken.TokenType.Default});
+            Tokens.Add(new TextTokenViewModel(Node.Text) {Type = TextToken.TokenType.Default});
         }
 
         public override void ExitEditingMode(NodeAutoCompleteViewModel acVm, bool save)
         {
             // avoid func is called twice: first called by Key.Esc, then called by LostFocus
-            if (IsEditing == false)
+            if (BaseNode.IsEditing == false)
                 return;
             Logger.DBG($"[{nameof(TextNodeViewModel)}] ExitEditingMode");
             if (save && Node is TextNode textNode)
@@ -86,7 +121,7 @@ namespace NFCT.Graph.ViewModels
                 Owner.Build();
             }
 
-            IsEditing = false;
+            BaseNode.IsEditing = false;
         }
 
         public override string ToString()
@@ -96,7 +131,7 @@ namespace NFCT.Graph.ViewModels
 
         public override void OnThemeSwitch()
         {
-            RaisePropertyChanged(nameof(BgType));
+            RaisePropertyChanged(nameof(BaseNode.BgType));
             //TODO some graph theme take effect after close and open again
             foreach (var textTokenViewModel in Tokens)
             {
@@ -108,9 +143,9 @@ namespace NFCT.Graph.ViewModels
         {
             if (ControlNodeViewModel.MaybeControlNodeViewModel(Text))
             {
-                var controlNodeVm = new ControlNodeViewModel(Node, Owner);
+                var controlNodeVm = new ControlNodeViewModel(BaseNode);
                 controlNodeVm.ParseText(Node.Text);
-                Owner.ReplaceNodeViewModel(Node, controlNodeVm);
+                BaseNode.ReplaceContent(controlNodeVm);
                 if (controlNodeVm.ControlFuncName == "repeat")
                 {
                     controlNodeVm.HandleRepeatNode(pr);
@@ -135,15 +170,15 @@ namespace NFCT.Graph.ViewModels
                 });
             }
 
-            ErrorMessage = pr.IsError ? pr.ErrorMessage : null;
+            BaseNode.ErrorMessage = pr.IsError ? pr.ErrorMessage : null;
             Owner.NeedLayout = true;
         }
     }
 
-    public class StartNodeViewModel : BaseNodeViewModel
+    public class StartNodeViewModel : NodeContent
     {
         public new StartNode Node { get; set; }
-        public StartNodeViewModel(StartNode node, GraphPaneViewModel g) : base(node, g)
+        public StartNodeViewModel(BaseNodeViewModel baseNode, StartNode node) : base(baseNode)
         {
             Node = node;
         }

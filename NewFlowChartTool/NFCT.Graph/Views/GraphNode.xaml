@@ -63,7 +63,7 @@
                 <TextBlock Foreground="Green" Text="{Binding SuccessCount}" />
                 <TextBlock Foreground="Red" Text="{Binding FailureCount}" />
             </StackPanel>
-            <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource GraphNodesTemplateSelector}" />
+            <ContentControl Content="{Binding Content}" ContentTemplateSelector="{StaticResource GraphNodesTemplateSelector}" />
         </StackPanel>
         <Polygon
             Fill="Red"

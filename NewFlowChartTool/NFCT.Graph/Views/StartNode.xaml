@@ -17,7 +17,7 @@
     </UserControl.Resources>
 
     <Grid Background="DarkGray">
-        <Border BorderBrush="{Binding Id, Converter={StaticResource BorderColorConverter}}" BorderThickness="{Binding IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}">
+        <Border BorderBrush="{Binding BaseNode.Id, Converter={StaticResource BorderColorConverter}}" BorderThickness="{Binding BaseNode.IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}">
             <Label Content="Start" />
         </Border>
     </Grid>

@@ -103,7 +103,7 @@ namespace NFCT.Graph.ViewModels
 
             foreach (var nodeVm in Nodes)
             {
-                if (nodeVm is ControlNodeViewModel controlVm)
+                if (nodeVm.Content is ControlNodeViewModel controlVm)
                     controlVm.ParseText(null);
             }
 
@@ -594,21 +594,21 @@ namespace NFCT.Graph.ViewModels
             }
         }
 
-        public void ReplaceNodeViewModel(Node node, BaseNodeViewModel newVm)
-        {
-            var oldVm = GetNodeVm(node);
-            oldVm.RemoveEventCallback();
-            newVm.ActualHeight = oldVm.ActualHeight;
-            newVm.ActualWidth = oldVm.ActualWidth;
-            newVm.BgType = oldVm.BgType;
-            var idx = Nodes.IndexOf(oldVm);
-            Debug.Assert(idx >= 0);
-            oldVm.ParentLines.ForEach(conn => conn.EndNode = newVm);
-            oldVm.ChildLines.ForEach(conn => conn.StartNode = newVm);
+        //public void ReplaceNodeViewModel(Node node, BaseNodeViewModel newVm)
+        //{
+        //    var oldVm = GetNodeVm(node);
+        //    oldVm.RemoveEventCallback();
+        //    newVm.ActualHeight = oldVm.ActualHeight;
+        //    newVm.ActualWidth = oldVm.ActualWidth;
+        //    newVm.BgType = oldVm.BgType;
+        //    var idx = Nodes.IndexOf(oldVm);
+        //    Debug.Assert(idx >= 0);
+        //    oldVm.ParentLines.ForEach(conn => conn.EndNode = newVm);
+        //    oldVm.ChildLines.ForEach(conn => conn.StartNode = newVm);
 
-            Nodes[idx] = newVm;
-            NodeDict[node] = newVm;
-        }
+        //    Nodes[idx] = newVm;
+        //    NodeDict[node] = newVm;
+        //}
 
         #region View Methods
 
