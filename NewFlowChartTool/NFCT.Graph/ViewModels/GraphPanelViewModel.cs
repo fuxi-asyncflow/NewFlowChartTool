@@ -286,6 +286,23 @@ namespace NFCT.Graph.ViewModels
                 SelectedNodes.Add(nodeVm);
         }
 
+        public void SelectNodes(IEnumerable<BaseNodeViewModel> nodeVms, bool clearOthers = true)
+        {
+            if (clearOthers)
+            {
+                ClearSelectedItems();
+            }
+
+            foreach (var nodeVm in nodeVms)
+            {
+                if(nodeVm.IsSelect)
+                    continue;
+                nodeVm.IsSelect = true;
+                if (!SelectedNodes.Contains(nodeVm))
+                    SelectedNodes.Add(nodeVm);
+            }
+        }
+
         //public void SelectConnector(GraphConnectorViewModel connectorVm, bool clearOthers = true)
         //{
         //    if (connectorVm.IsSelect)
@@ -592,6 +609,33 @@ namespace NFCT.Graph.ViewModels
                 if (originGraphVm != this)
                     originGraphVm.RemoveNodesOperation(GraphClipboard);
             }
+        }
+
+        public List<BaseNodeViewModel>? FindPathBetweenNodes(BaseNodeViewModel startNode, BaseNodeViewModel endNode)
+        {
+            List<BaseNodeViewModel>? _recursive(BaseNodeViewModel s, BaseNodeViewModel e, HashSet<BaseNodeViewModel> set)
+            {
+                if (set.Contains(s))
+                    return null;
+                set.Add(s);
+                if (s == e)
+                    return new List<BaseNodeViewModel>() {e};
+                foreach (var line in s.ChildLines)
+                {
+                    var child = line.EndNode;
+                    var r = _recursive(child, e, set);
+                    if (r != null)
+                    {
+                        r.Add(s);
+                        return r;
+                    }
+                }
+                return null;
+            }
+            
+            var handledSet = new HashSet<BaseNodeViewModel>();
+            var result =  _recursive(startNode, endNode, handledSet);
+            return result;
         }
 
         //public void ReplaceNodeViewModel(Node node, BaseNodeViewModel newVm)
