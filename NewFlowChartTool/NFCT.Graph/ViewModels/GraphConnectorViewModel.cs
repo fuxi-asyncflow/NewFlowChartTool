@@ -79,6 +79,12 @@ namespace NFCT.Graph.ViewModels
             double dy = p2.y - p1.y;
 
             double l = Math.Sqrt(dx * dx + dy * dy);
+            if (l < 0.01)
+            {
+                Logger.WARN($"line error");
+                l = 1.0;
+            }
+
             double offsetX = -dy * w / l;
             double offsetY = dx * w / l;
 
