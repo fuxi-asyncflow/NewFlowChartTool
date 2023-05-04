@@ -288,7 +288,7 @@ namespace NFCT.Graph.ViewModels
                     break;
                 case Key.Delete:
                     Owner.RemoveConnectorOperation(this);
-                    Owner.ClearSelectedItems();
+                    args.Handled = true;
                     break;
                 case Key.Down:
                 case Key.Up:

@@ -260,6 +260,7 @@ namespace NFCT.Graph.ViewModels
                 () => { _graph.RemoveConnector_atom(conn.Start, conn.End); },
                 () => { _graph.Connect_atom(conn.Start, conn.End, conn.ConnType, startIdx, endIdx); });
             NeedLayout = true;
+            SetCurrentNode(vm.StartNode);
             IsDirty = true;
         }
         #endregion
@@ -324,6 +325,7 @@ namespace NFCT.Graph.ViewModels
 
         #endregion
 
+        #region Group Operation
         public void CreateGroupFromSelectedNodes()
         {
             if (SelectedNodes.Count == 0) return;
@@ -357,6 +359,6 @@ namespace NFCT.Graph.ViewModels
             groupVm.Nodes.AddRange(group.Nodes.ConvertAll(GetNodeVm));
             Groups.Add(groupVm);
         }
-
+        #endregion
     }
 }

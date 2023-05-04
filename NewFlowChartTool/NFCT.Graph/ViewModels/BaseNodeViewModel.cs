@@ -357,7 +357,8 @@ namespace NFCT.Graph.ViewModels
                     args.Handled = true;
                     break;
                 case Key.Delete:
-                    Owner.RemoveNodesOperation(Owner.SelectedNodes);
+                    var nodes = new List<BaseNodeViewModel>(Owner.SelectedNodes);
+                    Owner.RemoveNodesOperation(nodes);
                     args.Handled = true;
                     break;
                 case Key.Down:
