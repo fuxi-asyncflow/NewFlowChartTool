@@ -76,6 +76,13 @@
                 </StackPanel>
                 <StackPanel Margin="0,4" Orientation="Horizontal">
                     <TextBlock Text="服务器" />
+                    <ComboBox
+                        x:Name="ServerComboBox"
+                        MinWidth="100"
+                        Margin="5,0"
+                        ItemsSource="{Binding DebugServers}"
+                        SelectionChanged="OnServerConfigChanged" />
+                    <TextBlock Text="IP" />
                     <TextBox
                         MinWidth="100"
                         Margin="8,0"

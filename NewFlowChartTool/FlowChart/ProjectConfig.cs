@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FlowChart.Core;
 using FlowChart.Misc;
@@ -128,6 +127,26 @@ namespace FlowChart
         public List<string> RequireFiles { get; set; }
     }
 
+    public class DebugServerConfig
+    {
+        public DebugServerConfig()
+        {
+            Name = "default";
+            Host = "127.0.0.1";
+            StartPort = 9000;
+            EndPort = 9003;
+        }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+        [JsonPropertyName("host")]
+        public string Host { get; set; }
+        [JsonPropertyName("start")]
+        public int StartPort { get; set; }
+        [JsonPropertyName("end")]
+        public int EndPort { get; set; }
+    }
+
     public class ProjectConfig
     {
         public ProjectConfig()
@@ -163,6 +182,8 @@ namespace FlowChart
 
         [JsonPropertyName("lua")]
         public LuaConfig? LuaConfig { get; set; }
+        [JsonPropertyName("debug_servers")]
+        public List<DebugServerConfig>? DebugServers { get; set; }
 
         public string CodeLang;
 

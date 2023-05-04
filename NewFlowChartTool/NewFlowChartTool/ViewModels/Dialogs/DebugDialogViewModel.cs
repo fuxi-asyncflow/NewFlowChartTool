@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using FlowChart;
 using FlowChart.Core;
 using FlowChart.Debug;
 using FlowChart.Misc;
@@ -42,6 +43,40 @@ namespace NewFlowChartTool.ViewModels
             : $"{GraphInfo.OwnerGraphName}[{GraphInfo.OwnerNodeId}]";
     }
 
+    class ServerConfigViewModel : BindableBase
+    {
+        public ServerConfigViewModel()
+        {
+            Host = "127.0.0.1";
+            StartPort = 9000;
+            EndPort = 9003;
+        }
+
+        public ServerConfigViewModel(DebugServerConfig config)
+        {
+            Name = config.Name;
+            Host = config.Host;
+            StartPort = config.StartPort;
+            EndPort = config.EndPort;
+        }
+
+        public string? _name;
+        public string Name
+        {
+            get => ToString();
+            set => SetProperty(ref _name, value);
+        }
+
+        public string Host;
+        public int StartPort;
+        public int EndPort;
+
+        public override string ToString()
+        {
+            return _name ?? $"{Host}:{StartPort}-{EndPort}";
+        }
+    }
+
     class DebugDialogViewModel : BindableBase, IDialogAware, IDebugService
     {
         public DebugDialogViewModel(IDialogService dialogService, IOutputMessage outputService)
@@ -64,6 +99,7 @@ namespace NewFlowChartTool.ViewModels
             ChartNameFilter = "";
             ObjectNameFilter = "";
             Host = "127.0.0.1";
+            DebugServers = new ObservableCollection<ServerConfigViewModel>();
 
             _netManager = INetManager.Inst ?? new FlowChart.Debug.WebSocket.Manager();
             _agents = new Dictionary<string, List<DebugAgent>>();
@@ -109,6 +145,7 @@ namespace NewFlowChartTool.ViewModels
         public void OnDialogOpened(IDialogParameters parameters)
         {
             IsOpened = true;
+            GetDebugServerConfig();
         }
 
         public string Title => "Debug Dialog";
@@ -140,6 +177,20 @@ namespace NewFlowChartTool.ViewModels
         private string _objectNameFilter;
         public string ObjectNameFilter { get => _objectNameFilter; set => SetProperty(ref _objectNameFilter, value); }
         public bool IsReplay => ReplayFile.Inst.IsLoadFromFile;
+
+        public ObservableCollection<ServerConfigViewModel> DebugServers { get; set; }
+
+        void GetDebugServerConfig()
+        {
+            var project = MainWindowViewModel.Inst.CurrentProject;
+            if (project == null || project.Config == null)
+                return;
+            DebugServers.Clear();
+            project.Config.DebugServers.ForEach(server =>
+            {
+                DebugServers.Add(new ServerConfigViewModel(server));
+            });
+        }
 
         public void GetGraphList()
         {

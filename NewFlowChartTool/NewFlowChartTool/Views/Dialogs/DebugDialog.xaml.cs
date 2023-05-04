@@ -52,5 +52,16 @@ namespace NewFlowChartTool.Views
             var win = Window.GetWindow(move);
             win.DragMove();
         }
+
+        private void OnServerConfigChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var vm = WPFHelper.GetDataContext<DebugDialogViewModel>(this);
+            if (vm == null) return;
+            var item = ServerComboBox.SelectedItem as ServerConfigViewModel;
+            if (item == null) return;
+            vm.StartPort = item.StartPort;
+            vm.EndPort = item.EndPort;
+            vm.Host = item.Host;
+        }
     }
 }
