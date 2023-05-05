@@ -155,6 +155,12 @@
 
     public class GraphInfo : RecvMessage
     {
+        public GraphInfo()
+        {
+            OwnerNodeUid = String.Empty;
+            ObjectName = String.Empty;
+            OwnerGraphName = string.Empty;
+        }
         public ulong AgentId { get; set; }
         public ulong OwnerNodeAddr { get; set; }
         public int OwnerNodeId { get; set; }

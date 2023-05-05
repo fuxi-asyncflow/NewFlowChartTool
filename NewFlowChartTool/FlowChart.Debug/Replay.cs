@@ -185,7 +185,11 @@ namespace FlowChart.Debug
         public void AddGraphInfo(GraphInfo? gi)
         {
             if (gi == null)
+            {
+                Logger.WARN("graphInfo is null when AddGraphInfo");
                 return;
+            }
+
             var uid = Guid.Parse(gi.GraphUid);
             if(!GraphInfoDict.ContainsKey(uid))
                 GraphInfoDict.Add(uid, gi);

@@ -125,7 +125,18 @@ namespace FlowChart.Debug
                 if (!_agents.TryGetValue(graphDebugData.ChartUid, out var agent))
                 {
                     GraphInfo? graphInfo;
-                    _graphInfos.TryGetValue(graphDebugData.ChartUid, out graphInfo);
+                    if (!_graphInfos.TryGetValue(graphDebugData.ChartUid, out graphInfo))
+                    {
+                        // if graph begin after quick debug, _graphInfo is empty, so graphInfo will be null
+                        // create an fake graphInfo here
+                        graphInfo = new GraphInfo()
+                        {
+                            GraphName = graphDebugData.ChartName,
+                            GraphUid = graphDebugData.ChartUid.ToString(),
+                            Host = "127.0.0.1",
+                            Port = 8888
+                        };
+                    }
                     agent = new DebugAgent()
                     {
                         GraphGuid = graphDebugData.ChartUid,

@@ -269,12 +269,13 @@ namespace NewFlowChartTool.ViewModels
 
             if (GraphList.Count > 0)
             {
+                Output($"find running graph");
                 StartDebugGraph(GraphList.First().GraphInfo);
                 return;
             }
 
             // if no running graph, then wait for running graph
-            _syncContext.Post(o => { _outputService.Output("quick debug recv no running graph, waiting graph start running"); }, null);
+            Output("quick debug recv no running graph, waiting graph start running");
             _netManager.BroadCast(Host, StartPort, EndPort, new QuickDebugMessage() { ChartName = graph.Path });
             EventHelper.Pub<StartDebugGraphEvent, GraphInfo?>(null);
         }
@@ -283,6 +284,11 @@ namespace NewFlowChartTool.ViewModels
         {
             
             _netManager.BroadCast(Host, StartPort, EndPort, new HotfixMessage() {ChartsData = string.Empty, ChartsFunc = hotFixString });
+        }
+
+        private void Output(string msg)
+        {
+            _syncContext?.Post(o => { _outputService.Output(msg); }, null);
         }
 
         #region REPLAY
