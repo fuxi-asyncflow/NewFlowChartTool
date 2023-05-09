@@ -24,6 +24,7 @@ class GraphDebugInfo:
             id = br.read_uint16()
             self.node_uid_map[id] = uid
             self.node_map[uid] = id
+            #print('node id - uid:', id, uid)
 
         count = br.read_int32()
         for i in range(count):
@@ -74,12 +75,12 @@ class NodeStatusData:
         self.result = False
 
     def deserialize(self, br: BinaryReader):
-        self.node_id = br.read_uint16()
-        print(self.node_id)
+        self.node_id = br.read_uint16()        
         self.old_status = br.read_int8()
         self.new_status = br.read_int8()
         self.result = br.read_int8() != 0
         self.node_uid = self.graph_debug_info.get_node_uid(self.node_id)
+        #print("node_id", self.node_id, self.node_uid)
 
 
 class VariablesStatusData:
@@ -151,7 +152,7 @@ class ReplayFile:
             graph_debug_info = GraphDebugInfo()
             graph_debug_info.deserialize(reader)
             graph_debug_info_dict[graph_name] = graph_debug_info
-            print(graph_name, graph_debug_info)
+            #print(graph_name, graph_debug_info)
 
         count = reader.read_int32()
         for i in range(count):
@@ -159,7 +160,7 @@ class ReplayFile:
             graph_info = GraphInfo()
             graph_info.deserialize(reader)
             graph_info_dict[uid] = graph_info
-            print(uid, graph_info)
+            #print(uid, graph_info)
 
         while True:
             try:
@@ -175,4 +176,4 @@ class ReplayFile:
             elif flag == Flag.GraphDebugData:
                 gdd = GraphDebugData(graph_debug_info_dict, graph_info_dict)
                 gdd.deserialize(reader)
-                print(len(gdd.data))
+                #print(len(gdd.data))

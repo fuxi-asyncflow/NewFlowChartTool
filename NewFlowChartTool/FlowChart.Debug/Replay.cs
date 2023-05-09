@@ -90,7 +90,7 @@ namespace FlowChart.Debug
             for (int i = 0; i < count; i++)
             {
                 var nodeUid = new Guid(br.ReadBytes(16));
-                var nodeId = br.ReadInt16();
+                var nodeId = br.ReadUInt16();
                 AddNode(nodeUid, nodeId);
             }
 
@@ -174,6 +174,7 @@ namespace FlowChart.Debug
                 if (d is NodeStatusData nsd)
                 {
                     gdi.AddNode(nsd.NodeUid, nsd.NodeId);
+                    Console.WriteLine($"nsd: {nsd.NodeId} {nsd.NodeUid}");
                 }
                 else if (d is VariablesStatusData vsd)
                 {
@@ -249,25 +250,30 @@ namespace FlowChart.Debug
 
         public void Load(BinaryReader br)
         {
+            Logger.DBG("begin read replay file");
             int header = br.ReadInt32();
 
             // read static info
             int count = br.ReadInt32();
+            Logger.DBG($"find {count} graph info");
             for (int i = 0; i < count; i++)
             {
                 var chartName = br.ReadString();
                 var gdi = new GraphDebugInfo();
                 gdi.Deserialize(br);
                 GraphDebugInfoDict.Add(chartName, gdi);
+                Logger.DBG($"{i} \t {chartName}");
             }
 
             count = br.ReadInt32();
+            Logger.DBG($"find {count} graph debug info");
             for (int i = 0; i < count; i++)
             {
                 var graphUid = new Guid(br.ReadBytes(16));
                 var gd = new GraphInfo();
                 gd.Deserialize(br);
                 GraphInfoDict.Add(graphUid, gd);
+                Logger.DBG($"{i} \t {graphUid} \t {gd.GraphName}");
             }
 
             // read frame
@@ -281,6 +287,7 @@ namespace FlowChart.Debug
                 {
                     frame = br.ReadInt64();
                     time = br.ReadInt64();
+                    Logger.DBG($"load data frame {frame} time {time}");
                 }
                 else if (flag == (byte)Flag.GraphDebugData)
                 {
@@ -290,6 +297,8 @@ namespace FlowChart.Debug
                     Data.Add(graphDebugData);
                 }
             }
+            Logger.DBG($"load debug data count {Data.Count}");
+            
         }
 
         int WriteGraphDebugData(BinaryWriter bw, GraphDebugData data)
