@@ -181,7 +181,14 @@ namespace NewFlowChartTool.ViewModels
             var graph = _item as Graph;
             if (graph == null)
                 return;
-            graph.Project.Remove(graph);
+            if (MainWindowViewModel.Inst.IsOpened(graph))
+            {
+                MessageBox.Show($"graph {graph.Path} is opened, close it before remove");
+            }
+            else
+            {
+                graph.Project.Remove(graph);
+            }
         }
 
         public void OnRename(TreeItem item, string newName)

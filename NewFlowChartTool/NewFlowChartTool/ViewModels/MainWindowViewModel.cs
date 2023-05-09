@@ -514,6 +514,19 @@ namespace NewFlowChartTool.ViewModels
             OnOpenGraph(graph);
         }
 
+        public bool IsOpened(Graph graph)
+        {
+            foreach (var vm in OpenedGraphs)
+            {
+                if (vm is GraphPaneViewModel graphVm)
+                {
+                    if (graphVm.Graph == graph)
+                        return true;
+                }
+            }
+            return false;
+        }
+
         public async void OnOpenGraph(Graph graph)
         {
             OnOpenGraph(graph, null);
