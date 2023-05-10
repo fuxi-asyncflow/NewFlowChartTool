@@ -285,6 +285,7 @@ namespace NFCT.Graph.ViewModels
                 () => { Graph.ChangeConnectorType_atom(conn, newValue); },
                 () => { Graph.ChangeConnectorType_atom(conn, oldValue); }
             );
+            IsDirty = true;
         }
         #endregion
 
@@ -317,6 +318,7 @@ namespace NFCT.Graph.ViewModels
                 () => { Graph.SwitchChildNodeOrder_atom(ca.Connector, cb.Connector); },
                 () => { Graph.SwitchChildNodeOrder_atom(cb.Connector, ca.Connector); }
             );
+            IsDirty = true;
         }
 
         #endregion
