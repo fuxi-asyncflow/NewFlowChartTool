@@ -77,7 +77,8 @@ namespace NFCT.Graph.ViewModels
         {
             var graph = new FlowChart.Core.Graph("design");
             graph.AddNode(new StartNode());
-            Node = new TextNode() { Text = "hello" };
+            Node = new TextNode();
+            Node.SetText("hello");
             BaseNode.Owner = new GraphPaneViewModel(graph);
             BaseNode.BgType = BaseNodeViewModel.NodeBgType.CONDITION;
             Tokens = new ObservableCollection<TextTokenViewModel>();
@@ -113,14 +114,15 @@ namespace NFCT.Graph.ViewModels
             if (save && Node is TextNode textNode)
             {
                 var inputText = acVm.Text;
-                textNode.Text = inputText;
-                
+
                 if (ControlNodeViewModel.MaybeControlNodeViewModel(inputText))
                 {
                     var str = ControlNodeViewModel.ReplaceText(inputText, Owner);
                     if(str != null)
-                        textNode.Text = str;
+                        inputText = str;
                 }
+
+                Owner.ChangeNodeContentOperation(textNode, inputText);
 
                 Logger.DBG($"node text is change to {Node.Text}");
                 RaisePropertyChanged(nameof(Text));

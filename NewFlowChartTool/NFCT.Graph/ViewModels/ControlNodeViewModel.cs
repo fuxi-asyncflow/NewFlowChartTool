@@ -72,10 +72,10 @@ namespace NFCT.Graph.ViewModels
                 if (MaybeControlNodeViewModel(inputText) && ParseText(inputText)) 
                 {
                     var paramStr = string.Join(", ", ParamNodes.ToList().ConvertAll(node => $"\"{node.Node.Uid.ToString()}\""));
-                    textNode.Text = $"{ControlFuncName}({paramStr})";
+                    inputText = $"{ControlFuncName}({paramStr})";
                 }
-                else
-                    textNode.Text = acVm.Text;
+                
+                textNode.SetText(inputText);
                 Logger.DBG($"node text is change to {textNode.Text}");
                 //RaisePropertyChanged(nameof(Text));
                 Owner.NeedLayout = true;

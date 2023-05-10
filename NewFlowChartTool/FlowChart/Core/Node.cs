@@ -98,6 +98,15 @@ namespace FlowChart.Core
 
         public static Node DefaultNode { get; set; }
 
+        public string Text { get; set; }
+
+        public void SetText(string text)
+        {
+            var oldText = Text;
+            Text = text;
+            OwnerGraph?.OnNodeChange(this, oldText, text);
+        }
+
         public virtual string DisplayString => string.Empty;
     }
 
@@ -124,7 +133,6 @@ namespace FlowChart.Core
 
     public class TextNode : Node
     {
-        public string Text { get; set; }
         public override Node Clone(Graph graph)
         {
             var node = new TextNode();

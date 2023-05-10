@@ -143,6 +143,12 @@ namespace FlowChart.Core
         public event GraphConnectorTypeChangeDelegate ConnectorTypeChangeEvent;
         public event GraphAddVariableDelegate? GraphAddVariableEvent;
         public event GraphSwitchChildNodeOrderDelegate? GraphSwitchChildNodeOrderEvent;
+        public event Action<Node, string, string>? GraphNodeChangeEvent;
+
+        public void OnNodeChange(Node node, string oldText, string newText)
+        {
+            GraphNodeChangeEvent?.Invoke(node, oldText, newText);
+        }
         #endregion
 
 

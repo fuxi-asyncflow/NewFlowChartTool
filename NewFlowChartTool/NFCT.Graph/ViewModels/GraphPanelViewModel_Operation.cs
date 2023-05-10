@@ -171,6 +171,25 @@ namespace NFCT.Graph.ViewModels
 
         #endregion
 
+        #region node change
+
+        public void ChangeNodeContentOperation(Node node, string content)
+        {
+            UndoRedoManager.Begin("node text change");
+            node.SetText(content);
+            UndoRedoManager.End();
+        }
+
+        void OnNodeContentChange(Node node, string oldText, string newText)
+        {
+            UndoRedoManager.AddAction(
+                () => { node.SetText(newText); },
+                () => { node.SetText(oldText); });
+            IsDirty = true;
+        }
+
+        #endregion
+
         #region connect
 
         private GraphConnectorViewModel? _tmpNewConnectorViewModel;

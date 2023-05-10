@@ -117,6 +117,7 @@ namespace NFCT.Graph.ViewModels
             _graph.GraphAddNodeEvent += OnAddNode;
             _graph.ConnectorTypeChangeEvent += OnConnectorTypeChange;
             _graph.GraphSwitchChildNodeOrderEvent += OnSwitchChildNodeOrder;
+            _graph.GraphNodeChangeEvent += OnNodeContentChange;
             IsDirty = false;
         }
 
