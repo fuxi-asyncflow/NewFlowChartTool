@@ -168,8 +168,11 @@ namespace NFCT.Graph.ViewModels
                 _allTokens.Clear();
                 pr.Tokens.ForEach(token =>
                 {
-                    if(token.End > Text.Length)
-                        Logger.WARN($"invalid token {token.Start}:{token.End} in node {Text} ");
+                    if (token.End > Text.Length)
+                    {
+                        if(Text.Length != 0)
+                            Logger.WARN($"invalid token {token.Start}:{token.End} in node {Text} ");
+                    }
                     else
                     {
                         var tk = new TextTokenViewModel(Text.Substring(token.Start, token.End - token.Start))
