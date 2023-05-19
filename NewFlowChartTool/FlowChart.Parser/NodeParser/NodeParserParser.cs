@@ -60,9 +60,9 @@ public partial class NodeParserParser : Parser {
 	private static readonly string[] _LiteralNames = {
 		null, "'('", "')'", "'.'", "'['", "']'", "'{'", "'}'", "','", "'not'", 
 		"'#'", "'^'", "'%'", "'..'", "'&'", "'|'", "'<<'", "'>>'", "'~='", "'!='", 
-		"'and'", "'&&'", "'or'", "'||'", "'true'", "'false'", "'nil'", "'self'", 
-		"'='", "'>'", "'<'", "'!'", "'~'", "'?'", "':'", "'=='", "'<='", "'>='", 
-		null, null, null, "'+'", "'-'", "'*'", "'/'"
+		"'and'", "'&&'", "'or'", "'||'", null, null, "'nil'", null, "'='", "'>'", 
+		"'<'", "'!'", "'~'", "'?'", "':'", "'=='", "'<='", "'>='", null, null, 
+		null, "'+'", "'-'", "'*'", "'/'"
 	};
 	private static readonly string[] _SymbolicNames = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 

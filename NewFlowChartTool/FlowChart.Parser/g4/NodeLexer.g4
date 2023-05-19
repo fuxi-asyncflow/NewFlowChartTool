@@ -1,10 +1,10 @@
 lexer grammar NodeLexer;
 
 // keywords
-TRUE : 'true';
-FALSE : 'false';
+TRUE : [tT] 'rue';
+FALSE : [fF] 'alse';
 NIL : 'nil';
-SELF : 'self';
+SELF : [sS] 'elf';
 
 
 

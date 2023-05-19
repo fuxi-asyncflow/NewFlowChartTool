@@ -23,10 +23,10 @@ null
 '&&'
 'or'
 '||'
-'true'
-'false'
+null
+null
 'nil'
-'self'
+null
 '='
 '>'
 '<'
