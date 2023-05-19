@@ -54,8 +54,8 @@ namespace FlowChart.AST.Nodes
         public static Operator Eq = new Operator(OPERATOR.EQ, "==") { IsBoolOp = true };
         public static Operator Strcat = new Operator(OPERATOR.STRCAT, "..") {};
 
-        public static Operator And = new Operator(OPERATOR.AND, "&&") { IsBoolOp = true };
-        public static Operator Or = new Operator(OPERATOR.OR, "||") { IsBoolOp = true };
+        public static Operator And = new Operator(OPERATOR.AND, "&&");
+        public static Operator Or = new Operator(OPERATOR.OR, "||");
 
         public static Operator Sharp = new Operator(OPERATOR.SHARP, "#");
         public static Operator Not = new Operator(OPERATOR.NOT, "!");
