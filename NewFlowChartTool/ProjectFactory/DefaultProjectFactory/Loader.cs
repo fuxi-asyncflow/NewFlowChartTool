@@ -124,7 +124,7 @@ namespace ProjectFactory.DefaultProjectFactory
                     evFileName = file.FullName;
                     continue;
                 }
-
+                Logger.LOG($"load type from {file.FullName} ...");
                 var yamlText = File.ReadAllText(file.FullName);
                 var input = new StringReader(yamlText);
                 var yaml = new YamlStream();
@@ -166,6 +166,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
             if (!string.IsNullOrEmpty(evFileName))
             {
+                Logger.LOG($"load event from {evFileName} ...");
                 LoadEvent(File.ReadAllText(evFileName));
             }
         }
