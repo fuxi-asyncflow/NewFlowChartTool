@@ -20,13 +20,15 @@ namespace FlowChart.LuaCodeGen
     {
         public Project P { get; set; }
         public Graph G { get; set; }
+        protected Node? _node;
         public ParseResult Pr;
         public bool OnlyGetType;
         public virtual char InvokeOperator => ':';
         public virtual string Lang => "unkown";
 
-        public ParseResult GenerateCode(ASTNode ast, ParserConfig cfg)
+        public ParseResult GenerateCode(ASTNode ast, ParserConfig cfg, Node? node)
         {
+            _node = node;
             OnlyGetType = cfg.OnlyGetType;
             Pr = new ParseResult();
             try
@@ -66,6 +68,10 @@ namespace FlowChart.LuaCodeGen
         public void Error(string msg)
         {
             Pr.ErrorMessage = msg;
+            if (_node != null)
+            {
+                msg = $"{msg} @{_node.OwnerGraph.Path}[{_node.Uid}]`{_node.Text}`";
+            }
             throw new ParseException(msg);
         }
 

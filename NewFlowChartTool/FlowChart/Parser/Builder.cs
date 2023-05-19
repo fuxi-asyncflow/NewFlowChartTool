@@ -12,7 +12,7 @@ namespace FlowChart.Parser
 {
     public interface ICodeGenerator
     {
-        public ParseResult GenerateCode(ASTNode ast, ParserConfig cfg);
+        public ParseResult GenerateCode(ASTNode ast, ParserConfig cfg, Core.Node? node);
         public Project P { get; set; }
         public Graph G { get; set; }
         public string Lang { get; }
@@ -81,7 +81,7 @@ namespace FlowChart.Parser
             //Console.WriteLine($"ast: {ast}");
             else
             {
-                pr = generator.GenerateCode(ast, cfg);
+                pr = generator.GenerateCode(ast, cfg, node);
                 pr.Tokens = parser.Tokens;
                 node.OnParse(pr);
             }
@@ -94,7 +94,7 @@ namespace FlowChart.Parser
             var ast = parser.Parse(text, cfg);
             if (ast != null)
             {
-                var pr = generator.GenerateCode(ast, cfg);
+                var pr = generator.GenerateCode(ast, cfg, null);
                 return pr.Type as FlowChart.Type.Type;
             }
 
