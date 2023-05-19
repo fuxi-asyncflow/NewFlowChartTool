@@ -262,7 +262,7 @@ namespace FlowChart.Core
                 return null;
             }
             var tmplStr = typeName.Substring(idx + 1, typeName.Length - idx - 2);
-            var tmpls = tmplStr.Split(',').ToList().ConvertAll(s => GetType(s.Trim()));
+            var tmpls = tmplStr.Split(',').ToList().ConvertAll(s => GetType(s.Trim()) ?? BuiltinTypes.AnyType);
             return genType.GetInstance(tmpls);
         }
 
