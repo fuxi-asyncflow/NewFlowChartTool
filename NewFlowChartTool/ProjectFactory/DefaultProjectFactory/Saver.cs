@@ -224,7 +224,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 if (Project.Config.StandaloneGenerateFile)
                 {
                     var fileInfo = generateFiles[kv.Key];
-                    codeFiles.Add(_saveForLang.SaveGenerateFile(fileInfo.Item1, fileInfo.Item2, lines, genLines));
+                    codeFiles.Add(_saveForLang.SaveGenerateFile(Project, fileInfo.Item1, fileInfo.Item2, lines, genLines));
                     FileHelper.Save(
                         Path.Combine(Project.Path, fileInfo.Item3 + DefaultProjectFactory.GenerateFileExt),
                         genLines);

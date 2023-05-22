@@ -184,6 +184,8 @@ namespace FlowChart
         public LuaConfig? LuaConfig { get; set; }
         [JsonPropertyName("debug_servers")]
         public List<DebugServerConfig>? DebugServers { get; set; }
+        [JsonPropertyName("custom_header")]
+        public List<string>? CustomHeader { get; set; }
 
         public string CodeLang;
 

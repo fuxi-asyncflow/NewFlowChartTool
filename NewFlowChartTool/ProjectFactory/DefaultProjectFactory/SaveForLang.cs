@@ -12,7 +12,7 @@ namespace ProjectFactory.DefaultProjectFactory
     {
         public void SaveEventDefine(Project Project, List<string> lines);
         public void SaveNodeFunc(TextNode textNode, List<string> lines);
-        public string SaveGenerateFile(string belongRoot, string outputFile, List<string> yamlLines,
+        public string SaveGenerateFile(Project project, string belongRoot, string outputFile, List<string> yamlLines,
             List<string> codeLines);
 
         public string SaveAllFlowChartsFile(List<string> lines);
@@ -30,7 +30,7 @@ namespace ProjectFactory.DefaultProjectFactory
             
         }
 
-        public string SaveGenerateFile(string belongRoot, string outputFile, List<string> yamlLines,
+        public string SaveGenerateFile(Project project, string belongRoot, string outputFile, List<string> yamlLines,
             List<string> codeLines)
         {
             return string.Empty;
@@ -84,7 +84,7 @@ namespace ProjectFactory.DefaultProjectFactory
             genLines.Add("");
         }
 
-        public string SaveGenerateFile(string belongRoot, string outputFile, List<string> yamlLines,
+        public string SaveGenerateFile(Project project, string belongRoot, string outputFile, List<string> yamlLines,
             List<string> codeLines)
         {
             codeLines.Add("");
@@ -135,10 +135,23 @@ namespace ProjectFactory.DefaultProjectFactory
             FileHelper.Save(Path.Combine(Project.Path, Project.Config.Output, "asyncflow_events.py"), pyLines);
         }
 
+        void WriteHeader(Project project, List<string> lines)
+        {
+            if (lines.Count > 0)
+                return;
+            var header = project.Config?.CustomHeader;
+            if (header != null)
+            {
+                lines.AddRange(header);
+                lines.Add("");
+            }
+
+            lines.Add("import asyncflow");
+        }
+
         public void SaveNodeFunc(TextNode textNode, List<string> genLines)
         {
-            if(genLines.Count == 0)
-                genLines.Add("import asyncflow");
+            WriteHeader(textNode.OwnerGraph.Project, genLines);
 
             var normalUidStr = textNode.Uid.ToString("N");
             genLines.Add($"# {textNode.Text}");
@@ -154,11 +167,10 @@ namespace ProjectFactory.DefaultProjectFactory
             genLines.Add("");
         }
 
-        public string SaveGenerateFile(string belongRoot, string outputFile, List<string> yamlLines,
+        public string SaveGenerateFile(Project project, string belongRoot, string outputFile, List<string> yamlLines,
             List<string> codeLines)
         {
-            if(codeLines.Count == 0)
-                codeLines.Add("import asyncflow");
+            WriteHeader(project, codeLines);
 
             codeLines.Add("");
             codeLines.Add("str = r'''");
