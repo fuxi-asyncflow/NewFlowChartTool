@@ -342,7 +342,7 @@
                     x:Name="BottomDock"
                     Grid.Row="2"
                     common:SizeObserver.ObservedHeight="{Binding ActualBottomHeight, Mode=OneWayToSource}">
-                    <views:OutputPanel x:Name="OutputPanelView" />
+                    <views:BottomPanel x:Name="BottomPanelView" />
                 </Grid>
             </Grid>
         </Grid>
