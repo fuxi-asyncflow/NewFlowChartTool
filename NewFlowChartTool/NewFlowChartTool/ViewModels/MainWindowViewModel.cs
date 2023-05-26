@@ -443,11 +443,17 @@ namespace NewFlowChartTool.ViewModels
             _dialogService.Show(ProjectConfigDialogViewModel.NAME, dialogParameters, result => { });
         }
 
-        public void BuildAll()
+        public async void BuildAll()
         {
             if(CurrentProject == null) return;
             ContainerLocator.Current.Resolve<OutputPanelViewModel>().Clear();
-            CurrentProject.Build();
+            _statusBarService.BeginProgress(CurrentProject.GraphDict.Count, "build project");
+            int count = 0;
+            Action<Item> updateProgressBar = (item) => _statusBarService.UpdateProgress(++count);
+            CurrentProject.OnGraphBuildEvent += updateProgressBar;
+            await Task.Factory.StartNew(delegate { CurrentProject.Build(); });
+            CurrentProject.OnGraphBuildEvent -= updateProgressBar;
+            _statusBarService.EndProgress();
             CurrentProject.Save();
         }
 

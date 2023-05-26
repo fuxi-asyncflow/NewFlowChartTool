@@ -458,6 +458,13 @@ namespace FlowChart.Core
             Builder.BuildGraph(graph, cfg);
         }
 
+        public event Action<Item>? OnGraphBuildEvent;
+
+        public void RaiseGraphBuildEvent(Item item)
+        {
+            OnGraphBuildEvent?.Invoke(item);
+        }
+
         #endregion
 
         private Dictionary<string, EnumType> EnumTypeDict { get; set; }

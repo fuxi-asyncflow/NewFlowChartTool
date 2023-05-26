@@ -38,6 +38,7 @@ namespace FlowChart.Parser
             {
                 if(graphKV.Value is Graph graph)
                     BuildGraph(graph, cfg);
+                p.RaiseGraphBuildEvent(graphKV.Value);
             }
         }
 

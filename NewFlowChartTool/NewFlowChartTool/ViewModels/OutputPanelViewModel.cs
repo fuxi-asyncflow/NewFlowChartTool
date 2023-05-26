@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
@@ -66,8 +67,8 @@ namespace NewFlowChartTool.ViewModels
             }, ThreadOption.UIThread);
 
             OutputMessage.Inst = this;
-            Logger.OnWarnEvent += msg => SafeOutput(msg, OutputMessageType.Warning);
-            Logger.OnErrEvent += msg => SafeOutput(msg, OutputMessageType.Error);
+            Logger.OnWarnEvent += msg => Output(msg, OutputMessageType.Warning);
+            Logger.OnErrEvent += msg => Output(msg, OutputMessageType.Error);
         }
 
         public ObservableCollection<OutputItemViewModel> Outputs { get; set; }
@@ -76,29 +77,29 @@ namespace NewFlowChartTool.ViewModels
                 OutputMessageType.Default
             , Node? node = null, Graph? graph = null)
         {
-            Outputs.Add(new OutputItemViewModel()
+            var message = new OutputItemViewModel()
             {
                 Message = msg,
                 MessageType = msgType,
                 Node = node,
                 Graph = graph
-            });
-        }
-
-        // used outside UI thread
-        public void SafeOutput(string msg, OutputMessageType msgType =
-                OutputMessageType.Default
-            , Node? node = null, Graph? graph = null)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                Output(msg, msgType, node, graph);
-            });
+            };
+            InvokeIfNecessary(delegate { Outputs.Add(message); });
         }
 
         public void Clear()
         {
-            Outputs.Clear();
+            InvokeIfNecessary(delegate { Outputs.Clear(); });
+        }
+
+        public static void InvokeIfNecessary(Action action)
+        {
+            if (Thread.CurrentThread == Application.Current.Dispatcher.Thread)
+                action();
+            else
+            {
+                Application.Current.Dispatcher.Invoke(action);
+            }
         }
     }
 }
