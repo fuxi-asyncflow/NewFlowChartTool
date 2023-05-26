@@ -6,6 +6,7 @@
     xmlns:converter="clr-namespace:NewFlowChartTool.Utility.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:NewFlowChartTool.Views"
+    xmlns:localization="clr-namespace:NFCT.Common.Localization;assembly=NFCT.Common"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvvm="http://prismlibrary.com/"
     xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
@@ -26,10 +27,11 @@
     </UserControl.Resources>
     <DockPanel Background="Transparent" LastChildFill="True">
         <DockPanel DockPanel.Dock="Top">
+            <TextBlock Text="{DynamicResource {x:Static localization:ResourceKeys.Pane_TypeKey}}" />
             <Viewbox
                 Height="16"
                 Child="{StaticResource Icon_Search}"
-                DockPanel.Dock="Left" />
+                DockPanel.Dock="Right" />
             <Grid>
                 <TextBox
                     x:Name="SearchTextBox"

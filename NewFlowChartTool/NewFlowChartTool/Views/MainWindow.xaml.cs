@@ -31,8 +31,6 @@ namespace NewFlowChartTool.Views
             InitializeComponent();
             TitleBar.MainWindow = this;
             Loaded += OnInitialized;
-
-            EventHelper.Sub<LangSwitchEvent, Lang>(OnLangSwitch);
         }
 
         void OnInitialized(object? sender, EventArgs args)
@@ -49,13 +47,6 @@ namespace NewFlowChartTool.Views
                 e.Cancel = true;
             else
                 base.OnClosing(e);
-        }
-
-        void OnLangSwitch(Lang lang)
-        {
-            //LayoutProject.Title = Application.Current.FindResource(ResourceKeys.Pane_ProjectKey) as string;
-            //LayoutType.Title = Application.Current.FindResource(ResourceKeys.Pane_TypeKey) as string;
-            //LayoutOutput.Title = Application.Current.FindResource(ResourceKeys.Pane_OutputKey) as string;
         }
     }
 }
