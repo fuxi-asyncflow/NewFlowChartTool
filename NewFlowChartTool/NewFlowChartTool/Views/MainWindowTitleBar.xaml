@@ -23,6 +23,8 @@
                     <Setter Property="Width" Value="48" />
                 </Style>
             </StackPanel.Resources>
+            <Button Command="{Binding SwitchLeftDockVisibilityCommand}" Content="左边栏" />
+            <Button Command="{Binding SwitchBottomDockVisibilityCommand}" Content="下边栏" />
             <Button
                 Click="ButtonMinimize_OnClick"
                 Content="{StaticResource Icon_MinimizeWindow}"

@@ -53,9 +53,9 @@ namespace NewFlowChartTool.Views
 
         void OnLangSwitch(Lang lang)
         {
-            LayoutProject.Title = Application.Current.FindResource(ResourceKeys.Pane_ProjectKey) as string;
-            LayoutType.Title = Application.Current.FindResource(ResourceKeys.Pane_TypeKey) as string;
-            LayoutOutput.Title = Application.Current.FindResource(ResourceKeys.Pane_OutputKey) as string;
+            //LayoutProject.Title = Application.Current.FindResource(ResourceKeys.Pane_ProjectKey) as string;
+            //LayoutType.Title = Application.Current.FindResource(ResourceKeys.Pane_TypeKey) as string;
+            //LayoutOutput.Title = Application.Current.FindResource(ResourceKeys.Pane_OutputKey) as string;
         }
     }
 }

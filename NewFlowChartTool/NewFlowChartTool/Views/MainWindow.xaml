@@ -2,6 +2,7 @@
     x:Class="NewFlowChartTool.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="clr-namespace:NFCT.Common;assembly=NFCT.Common"
     xmlns:conv="clr-namespace:NewFlowChartTool.Utility.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:diff_views="clr-namespace:NFCT.Diff.Views;assembly=NFCT.Diff"
@@ -20,6 +21,7 @@
     mc:Ignorable="d">
     <Window.Resources>
         <conv:ActiveGraphConverter x:Key="ActiveGraphConverter" />
+        <common:DoubleGridLengthConverter x:Key="DoubleGridLengthConverter" />
     </Window.Resources>
 
     <WindowChrome.WindowChrome>
@@ -247,70 +249,106 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </StackPanel>
-        <DockingManager
-            Grid.Row="2"
-            ActiveContent="{Binding ActiveDoc, Mode=TwoWay, Converter={StaticResource ActiveGraphConverter}}"
-            DocumentsSource="{Binding OpenedGraphs}">
+        <Grid Grid.Row="2">
+            <Grid.Resources>
+                <Style x:Key="VerticalSplitterStyle" TargetType="GridSplitter">
+                    <Setter Property="Width" Value="5" />
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                    <Setter Property="VerticalAlignment" Value="Stretch" />
+                    <Setter Property="ShowsPreview" Value="True" />
+                    <Setter Property="Background" Value="Black" />
+                </Style>
+                <Style x:Key="HorizontalSplitterStyle" TargetType="GridSplitter">
+                    <Setter Property="Height" Value="5" />
+                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="ShowsPreview" Value="True" />
+                    <Setter Property="Background" Value="Black" />
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{Binding LeftDockWidth, Mode=TwoWay, Converter={StaticResource DoubleGridLengthConverter}}" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid
+                x:Name="LeftDock"
+                Grid.Column="0"
+                common:SizeObserver.ObservedWidth="{Binding ActualLeftDockWidth, Mode=OneWayToSource}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="245" />
+                </Grid.RowDefinitions>
+                <views:ProjectPanel x:Name="ProjectPanelView" Grid.Row="0" />
+                <GridSplitter Grid.Row="1" Style="{StaticResource HorizontalSplitterStyle}" />
+                <views:TypePanel x:Name="TypePanelView" Grid.Row="2" />
 
-            <!--  layout container style selector  -->
-            <DockingManager.LayoutItemTemplateSelector>
-                <pane:PanesTemplateSelector>
-                    <pane:PanesTemplateSelector.GraphViewTemplate>
-                        <DataTemplate>
-                            <graph_views:GraphPanel />
-                        </DataTemplate>
-                    </pane:PanesTemplateSelector.GraphViewTemplate>
-                    <pane:PanesTemplateSelector.VersionControlPanelTemplate>
-                        <DataTemplate>
-                            <diff_views:VersionControlPanel />
-                        </DataTemplate>
-                    </pane:PanesTemplateSelector.VersionControlPanelTemplate>
-                </pane:PanesTemplateSelector>
-            </DockingManager.LayoutItemTemplateSelector>
-            <DockingManager.LayoutItemContainerStyleSelector>
-                <pane:PanesStyleSelector>
-                    <pane:PanesStyleSelector.GraphPaneStyle>
-                        <Style TargetType="{x:Type LayoutItem}">
-                            <Setter Property="Title" Value="{Binding Model.TabHeaderName}" />
-                            <Setter Property="CloseCommand" Value="{Binding Model.OnCloseCommand}" />
-                        </Style>
-                    </pane:PanesStyleSelector.GraphPaneStyle>
-                </pane:PanesStyleSelector>
-            </DockingManager.LayoutItemContainerStyleSelector>
-            <LayoutRoot>
-                <LayoutPanel x:Name="Root" Orientation="Horizontal">
-                    <LayoutPanel
-                        x:Name="LeftGroup"
-                        DockWidth="245"
-                        Orientation="Vertical">
-                        <LayoutAnchorablePane DockHeight="2*">
-                            <LayoutAnchorable x:Name="LayoutProject" Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_ProjectKey}}">
-                                <views:ProjectPanel x:Name="ProjectPanelView" />
-                            </LayoutAnchorable>
-                        </LayoutAnchorablePane>
-                        <LayoutAnchorablePane DockHeight="*">
-                            <LayoutAnchorable x:Name="LayoutType" Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_TypeKey}}">
-                                <views:TypePanel x:Name="TypePanelView" />
-                            </LayoutAnchorable>
-                        </LayoutAnchorablePane>
-                    </LayoutPanel>
-                    <LayoutPanel x:Name="MiddleContent" Orientation="Vertical">
-                        <LayoutDocumentPaneGroup>
-                            <LayoutDocumentPane>
-                                <LayoutDocument Title="Start Page">
-                                    <views:StartPage />
-                                </LayoutDocument>
-                            </LayoutDocumentPane>
-                        </LayoutDocumentPaneGroup>
-                        <LayoutAnchorablePane DockHeight="200">
-                            <LayoutAnchorable x:Name="LayoutOutput" Title="{DynamicResource {x:Static localization:ResourceKeys.Pane_OutputKey}}">
-                                <views:OutputPanel x:Name="OutputPanelView" />
-                            </LayoutAnchorable>
-                        </LayoutAnchorablePane>
-                    </LayoutPanel>
-                </LayoutPanel>
-            </LayoutRoot>
-        </DockingManager>
+            </Grid>
+            <GridSplitter Grid.Column="1" Style="{StaticResource VerticalSplitterStyle}" />
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="{Binding BottomDockHeight, Mode=TwoWay, Converter={StaticResource DoubleGridLengthConverter}}" />
+                </Grid.RowDefinitions>
+
+                <DockingManager
+                    Grid.Row="0"
+                    ActiveContent="{Binding ActiveDoc, Mode=TwoWay, Converter={StaticResource ActiveGraphConverter}}"
+                    DocumentsSource="{Binding OpenedGraphs}">
+
+                    <!--  layout container style selector  -->
+                    <DockingManager.LayoutItemTemplateSelector>
+                        <pane:PanesTemplateSelector>
+                            <pane:PanesTemplateSelector.GraphViewTemplate>
+                                <DataTemplate>
+                                    <graph_views:GraphPanel />
+                                </DataTemplate>
+                            </pane:PanesTemplateSelector.GraphViewTemplate>
+                            <pane:PanesTemplateSelector.VersionControlPanelTemplate>
+                                <DataTemplate>
+                                    <diff_views:VersionControlPanel />
+                                </DataTemplate>
+                            </pane:PanesTemplateSelector.VersionControlPanelTemplate>
+                        </pane:PanesTemplateSelector>
+                    </DockingManager.LayoutItemTemplateSelector>
+                    <DockingManager.LayoutItemContainerStyleSelector>
+                        <pane:PanesStyleSelector>
+                            <pane:PanesStyleSelector.GraphPaneStyle>
+                                <Style TargetType="{x:Type LayoutItem}">
+                                    <Setter Property="Title" Value="{Binding Model.TabHeaderName}" />
+                                    <Setter Property="CloseCommand" Value="{Binding Model.OnCloseCommand}" />
+                                </Style>
+                            </pane:PanesStyleSelector.GraphPaneStyle>
+                        </pane:PanesStyleSelector>
+                    </DockingManager.LayoutItemContainerStyleSelector>
+                    <LayoutRoot>
+                        <LayoutPanel x:Name="MiddleContent" Orientation="Vertical">
+                            <LayoutDocumentPaneGroup>
+                                <LayoutDocumentPane>
+                                    <LayoutDocument Title="Start Page">
+                                        <views:StartPage />
+                                    </LayoutDocument>
+                                </LayoutDocumentPane>
+                            </LayoutDocumentPaneGroup>
+                        </LayoutPanel>
+                    </LayoutRoot>
+                </DockingManager>
+
+                <GridSplitter Grid.Row="1" Style="{StaticResource HorizontalSplitterStyle}" />
+
+                <Grid
+                    x:Name="BottomDock"
+                    Grid.Row="2"
+                    common:SizeObserver.ObservedHeight="{Binding ActualBottomHeight, Mode=OneWayToSource}">
+                    <views:OutputPanel x:Name="OutputPanelView" />
+                </Grid>
+            </Grid>
+        </Grid>
+
+
+
         <views:MainWindowStatusBar Grid.Row="3" />
 
     </Grid>

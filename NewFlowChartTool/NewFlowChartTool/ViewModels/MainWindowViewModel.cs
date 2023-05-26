@@ -47,6 +47,12 @@ namespace NewFlowChartTool.ViewModels
             _openedGraphs = new ObservableCollection<BindableBase>();
             CurrentProject = null;
 
+            ActualLeftDockWidth = 245;
+            ActualBottomHeight = 245;
+            IsLeftDockVisible = true;
+            IsBottomDockVisible = true;
+            
+
             OpenProjectCommand = new DelegateCommand(ChooseProjectPath, () => CurrentProject == null);
             SaveProjectCommand = new DelegateCommand(SaveProject, () => CurrentProject != null);
             NewProjectCommand = new DelegateCommand(NewProject, () => CurrentProject == null);
@@ -74,6 +80,9 @@ namespace NewFlowChartTool.ViewModels
 
             UndoCommand = new DelegateCommand(Undo);
             RedoCommand = new DelegateCommand(Redo);
+
+            SwitchLeftDockVisibilityCommand = new DelegateCommand(SwitchLeftDockVisibility);
+            SwitchBottomDockVisibilityCommand = new DelegateCommand(SwitchBottomDockVisibility);
 
             EventHelper.Sub<GraphCloseEvent, Graph>(OnCloseGraph);
             EventHelper.Sub<NewDebugAgentEvent, DebugAgent>(OnNewDebugAgentEvent, ThreadOption.UIThread);
@@ -138,6 +147,63 @@ namespace NewFlowChartTool.ViewModels
                     action.Invoke(gvm);
             }
         }
+
+        #region Layout
+        public double ActualLeftDockWidth { set { if (value > 1.0) _leftDockWidth = value; } }
+
+        private double _leftDockWidth;
+        public double LeftDockWidth
+        {
+            get => IsLeftDockVisible ? _leftDockWidth : 0.0;
+            set => ActualLeftDockWidth = value;
+        }
+
+        private bool _isLeftDockVisible;
+        public bool IsLeftDockVisible
+        {
+            get => _isLeftDockVisible;
+            set
+            {
+                SetProperty(ref _isLeftDockVisible, value);
+                RaisePropertyChanged(nameof(LeftDockWidth));
+            }
+        }
+
+        public double ActualBottomHeight { set { if (value > 1.0) _bottomDockHeight = value; } }
+
+        private double _bottomDockHeight;
+        public double BottomDockHeight
+        {
+            get => IsBottomDockVisible ? _bottomDockHeight : 0.0;
+            set => ActualBottomHeight = value;
+        }
+
+        private bool _isBottomDockVisible;
+        public bool IsBottomDockVisible
+        {
+            get => _isBottomDockVisible;
+            set
+            {
+                SetProperty(ref _isBottomDockVisible, value);
+                RaisePropertyChanged(nameof(BottomDockHeight));
+            }
+        }
+
+        private void SwitchLeftDockVisibility()
+        {
+            IsLeftDockVisible = !IsLeftDockVisible;
+        }
+
+        public DelegateCommand SwitchLeftDockVisibilityCommand { get; set; }
+
+        private void SwitchBottomDockVisibility()
+        {
+            IsBottomDockVisible = !IsBottomDockVisible;
+        }
+
+        public DelegateCommand SwitchBottomDockVisibilityCommand { get; set; }
+
+        #endregion
 
         #region COMMAND
         public DelegateCommand OpenProjectCommand { get; private set; }
