@@ -321,8 +321,8 @@ namespace NewFlowChartTool.ViewModels
                     if (item is Graph graph)
                     {
                         await Task.Run(graph.LazyLoad);
-                        _statusBarService.UpdateProgress(count++);
                     }
+                    _statusBarService.UpdateProgress(++count);
                 }
                 Logger.LOG($"lazy load graph : {sw.ElapsedMilliseconds}");
                 //var loadAllGraphTask = Task.WhenAll(p.GraphDict.Values.ToList().ConvertAll(graph => Task.Run(graph.LazyLoadFunc)));

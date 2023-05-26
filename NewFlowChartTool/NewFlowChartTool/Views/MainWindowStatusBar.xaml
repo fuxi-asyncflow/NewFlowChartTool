@@ -13,16 +13,18 @@
     mvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <StatusBar Height="24" Background="{DynamicResource HightlightBackGroundBrush}">
-        <StatusBarItem IsEnabled="{Binding EnableProgressBar}">
+        <StatusBarItem Visibility="{Binding EnableProgressBar, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock>
-                    Opening File...
-                </TextBlock>
-                <ProgressBar
-                    Width="100"
-                    Height="16"
-                    Maximum="{Binding ProgressBarMax}"
-                    Value="{Binding ProgressBarValue}" />
+                <TextBlock Text="{Binding ProgressBarDescription}" />
+                <Grid>
+                    <ProgressBar
+                        Width="100"
+                        Height="16"
+                        Maximum="{Binding ProgressBarMax}"
+                        Value="{Binding ProgressBarValue}" />
+                    <TextBlock HorizontalAlignment="Center" Text="{Binding ProgressBarText}" />
+                </Grid>
+
             </StackPanel>
         </StatusBarItem>
     </StatusBar>
