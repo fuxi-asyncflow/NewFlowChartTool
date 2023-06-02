@@ -108,6 +108,14 @@ namespace FlowChart.Core
         }
 
         public virtual string DisplayString => string.Empty;
+
+        // Equals function for diff
+        public virtual bool IsEqual(Node? that)
+        {
+            if (that == null)
+                return false;
+            return Text == that.Text;
+        }
     }
 
     public class StartNode : Node

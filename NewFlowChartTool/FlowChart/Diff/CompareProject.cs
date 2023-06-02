@@ -271,7 +271,7 @@ namespace FlowChart.Diff
             var oldType = oldNode.GetType();
             if (oldType != newNode.GetType())
                 return false;
-            return oldNode.Equals(newNode);
+            return oldNode.IsEqual(newNode);
         }
 
         bool CompareConnector(Connector newConn, Connector oldConn)
