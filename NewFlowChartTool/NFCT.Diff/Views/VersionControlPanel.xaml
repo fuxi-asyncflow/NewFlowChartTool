@@ -28,6 +28,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
@@ -62,13 +63,14 @@
                 </TreeView.ItemContainerStyle>
             </TreeView>
             <!--  Changed Nodes  -->
+            <TextBlock Text="Changed Nodes" />
             <ListBox
                 HorizontalContentAlignment="Stretch"
                 ItemsSource="{Binding DiffGraphVm.ChangedNodes, FallbackValue=null}"
                 Visibility="{Binding IsShowGraph, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Background="{Binding BgColor}">
+                        <Grid Background="{Binding BgColor}" ToolTip="{Binding ToolTip}">
                             <TextBlock Foreground="Black" Text="{Binding Content}" />
                         </Grid>
                     </DataTemplate>
@@ -80,13 +82,14 @@
                 </ListBox.ItemContainerStyle>
             </ListBox>
             <!--  Changed Connector  -->
+            <TextBlock Text="Changed Lines" />
             <ListBox
                 HorizontalContentAlignment="Stretch"
                 ItemsSource="{Binding DiffGraphVm.ChangedConnectors, FallbackValue=null}"
                 Visibility="{Binding IsShowGraph, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Grid Background="{Binding BgColor}">
+                        <Grid Background="{Binding BgColor}" ToolTip="{Binding ToolTip}">
                             <TextBlock Foreground="Black" Text="{Binding DisplayText}" />
                         </Grid>
                     </DataTemplate>
@@ -98,8 +101,15 @@
                 </ListBox.ItemContainerStyle>
             </ListBox>
         </StackPanel>
-        <DataGrid
+        <GridSplitter
             Grid.Column="1"
+            Width="5"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            Background="#40FFFFFF"
+            ShowsPreview="True" />
+        <DataGrid
+            Grid.Column="2"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
             ItemsSource="{Binding Versions}"
@@ -125,7 +135,7 @@
                 <DataGridTextColumn Binding="{Binding Message, Mode=OneWay}" Header="message" />
             </DataGrid.Columns>
         </DataGrid>
-        <Grid Grid.Column="1" Visibility="{Binding IsShowGraph, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Grid.Column="2" Visibility="{Binding IsShowGraph, Converter={StaticResource BooleanToVisibilityConverter}}">
             <local:DiffGraphPanel DataContext="{Binding DiffGraphVm}" />
         </Grid>
 

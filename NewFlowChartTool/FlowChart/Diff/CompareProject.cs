@@ -23,6 +23,18 @@ namespace FlowChart.Diff
         public DiffState State { get; set; }
         public Node? NewNode;
         public Node? OldNode;
+
+        private string _getNodeString(Node? node)
+        {
+            if (node == null)
+                return string.Empty;
+            return node.Text;
+        }
+
+        public string ShowDiff()
+        {
+            return $"{_getNodeString(OldNode)} -> {_getNodeString(NewNode)}";
+        }
     }
 
     public class DiffConnector
@@ -30,6 +42,17 @@ namespace FlowChart.Diff
         public DiffState State { get; set; }
         public Connector? NewConn;
         public Connector? OldConn;
+
+        private string _getConnTypeString(Connector? conn)
+        {
+            if (conn == null)
+                return string.Empty;
+            return conn.ConnType.ToString();
+        }
+        public string ShowDiff()
+        {
+            return $"{_getConnTypeString(OldConn)} -> {_getConnTypeString(NewConn)}";
+        }
     }
 
     public class DiffGraph
