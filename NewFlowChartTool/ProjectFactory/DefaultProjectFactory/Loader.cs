@@ -75,6 +75,7 @@ namespace ProjectFactory.DefaultProjectFactory
         public static YamlScalarNode YAML_METHODS = new YamlScalarNode("methods");
         public static YamlScalarNode YAML_PROPERTIES = new YamlScalarNode("properties");
         public static YamlScalarNode YAML_PARAMETERS = new YamlScalarNode("parameters");
+        public static YamlScalarNode YAML_ASYNC = new YamlScalarNode("async");
         public static YamlScalarNode YAML_VARIADIC = new YamlScalarNode("variadic");
         public static YamlScalarNode YAML_DEFAULT = new YamlScalarNode("default");
         public static YamlScalarNode YAML_CUSTOMGEN = new YamlScalarNode("custom_gen");
@@ -303,6 +304,9 @@ namespace ProjectFactory.DefaultProjectFactory
 
             if (root.Children.ContainsKey(YAML_DESCRIPTION) && root.Children[YAML_DESCRIPTION] is YamlScalarNode descriptionNode)
                 method.Description = descriptionNode.Value;
+
+            if (root.Children.ContainsKey(YAML_ASYNC) && root.Children[YAML_ASYNC] is YamlScalarNode asyncNode)
+                method.IsAsync = asyncNode.Value == "true";
 
             if (root.Children.ContainsKey(YAML_TEMPLATE) && root.Children[YAML_TEMPLATE] is YamlScalarNode templateNode)
                 method.Template = templateNode.Value;

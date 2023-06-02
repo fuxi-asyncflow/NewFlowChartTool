@@ -318,7 +318,7 @@ namespace NFCT.Graph.ViewModels
         {
             if (pr.IsError)
                 BgType = NodeBgType.ERROR;
-            else if (pr.IsWait)
+            else if (pr.IsWait || pr.IsAsync)
                 BgType = NodeBgType.WAIT;
             else if (pr.IsAction)
                 BgType = NodeBgType.ACTION;

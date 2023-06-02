@@ -482,6 +482,8 @@ namespace ProjectFactory.DefaultProjectFactory
                 lines.Add($"  type: {method.Type.Name}");
                 if (!string.IsNullOrEmpty(method.Template))
                     lines.Add($"  template: {method.Template}");
+                if (method.IsAsync)
+                    lines.Add($"  async: true");
                 if (method.IsCustomGen)
                     lines.Add($"  custom_gen: true");
                 if (method.IsVariadic)
