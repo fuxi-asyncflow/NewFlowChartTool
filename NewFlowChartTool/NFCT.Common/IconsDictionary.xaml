@@ -25,6 +25,8 @@
         <ResourceDictionary Source="Icons/Play.xaml" />
         <ResourceDictionary Source="Icons/Stop.xaml" />
         <ResourceDictionary Source="Icons/HotReload.xaml" />
+        <ResourceDictionary Source="Icons/ConvertPartition.xaml" />
+        <ResourceDictionary Source="Icons/ConvertWhole.xaml" />
 
         <ResourceDictionary Source="Icons/WindowScreenshot.xaml" />
         <ResourceDictionary Source="Icons/CompiledHelpFile.xaml" />

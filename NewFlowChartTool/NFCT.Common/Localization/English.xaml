@@ -48,6 +48,8 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_ContinueDebug}">Continue</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_StopDebug}">Stop</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_HotReload}">HotReload</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_PatchWhole}">Patch Graph</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_PatchPartition}">Patch Nodes</system:String>
 
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_ScreenShot}">ScreenShot</system:String>
 

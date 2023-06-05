@@ -68,6 +68,8 @@ namespace NewFlowChartTool.ViewModels
             ShowDebugDialogCommand = new DelegateCommand(ShowDebugDialog);
             StopDebugCommand = new DelegateCommand(StopDebug);
             HotfixCommand = new DelegateCommand(Hotfix);
+            PatchGraphCommand = new DelegateCommand(PatchGraph);
+            PatchNodesCommand = new DelegateCommand(PatchNodes);
 
             ScreenShotCommand = new DelegateCommand(ScreenShot);
             SearchNodeCommand = new DelegateCommand(SearchNode);
@@ -224,6 +226,8 @@ namespace NewFlowChartTool.ViewModels
         public DelegateCommand ShowDebugDialogCommand { get; private set; }
         public DelegateCommand StopDebugCommand { get; private set; }
         public DelegateCommand HotfixCommand { get; private set; }
+        public DelegateCommand PatchGraphCommand { get; private set; }
+        public DelegateCommand PatchNodesCommand { get; private set; }
 
         public DelegateCommand ScreenShotCommand { get; set; }
         public DelegateCommand SearchNodeCommand { get; set; }
@@ -501,6 +505,15 @@ namespace NewFlowChartTool.ViewModels
                 FileHelper.Save("./tmp/hotfix.txt", hotfixStr);
                 ContainerLocator.Current.Resolve<IDebugService>().Hotfix(hotfixStr);
             }
+        }
+
+        void PatchGraph()
+        {
+
+        }
+
+        void PatchNodes()
+        {
 
         }
 

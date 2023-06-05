@@ -5,7 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:localization="clr-namespace:NFCT.Common.Localization;assembly=NFCT.Common"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:views="clr-namespace:NewFlowChartTool.Views"
+    xmlns:vm="clr-namespace:NewFlowChartTool.ViewModels"
+    d:DataContext="{d:DesignInstance vm:MainWindowViewModel}"
     d:DesignHeight="48"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -135,6 +136,18 @@
             <StackPanel>
                 <Viewbox Child="{StaticResource Icon_HotReload}" />
                 <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_HotReload}}" />
+            </StackPanel>
+        </Button>
+        <Button Command="{Binding PatchGraphCommand}">
+            <StackPanel>
+                <Viewbox Child="{StaticResource Icon_ConvertWhole}" />
+                <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_PatchWhole}}" />
+            </StackPanel>
+        </Button>
+        <Button Command="{Binding PatchNodesCommand}">
+            <StackPanel>
+                <Viewbox Child="{StaticResource Icon_ConvertPartition}" />
+                <TextBlock Height="16" Text="{DynamicResource {x:Static localization:ResourceKeys.ToolBar_PatchPartition}}" />
             </StackPanel>
         </Button>
         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />

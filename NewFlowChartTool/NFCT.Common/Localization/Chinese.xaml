@@ -48,6 +48,8 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_ContinueDebug}">继续</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_StopDebug}">停止调试</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_HotReload}">热更新</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_PatchWhole}">全图补丁</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_PatchPartition}">节点补丁</system:String>
 
     <system:String x:Key="{x:Static reskeys:ResourceKeys.ToolBar_ScreenShot}">截图</system:String>
 
