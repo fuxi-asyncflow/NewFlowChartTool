@@ -29,6 +29,7 @@
         <ResourceDictionary Source="Icons/ConvertWhole.xaml" />
 
         <ResourceDictionary Source="Icons/WindowScreenshot.xaml" />
+        <ResourceDictionary Source="Icons/Diff.xaml" />
         <ResourceDictionary Source="Icons/CompiledHelpFile.xaml" />
 
         <ResourceDictionary Source="Icons/Search.xaml" />
