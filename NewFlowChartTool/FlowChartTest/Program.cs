@@ -133,10 +133,6 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             //DiffTest(@"F:\asyncflow\asyncflow_new\test\old", @"F:\asyncflow\asyncflow_new\test\flowchart");
             if (args.Length < 2)
                 return;
-            if (args[0] == "convert2")
-            {
-                ConvertProject(args[1]);
-            }
             else if (args[0] == "lua")
             {
                 var lua = Lua.Inst;
@@ -154,16 +150,6 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             p.Load();
             p.Build();
             return p;
-        }
-
-        static void OpenProjectTest()
-        {
-            //var p = new FlowChart.Core.Project(new ProjectFactory.TestProjectFactory());
-            //var p = new FlowChart.Core.Project(new ProjectFactory.MemoryProjectFactory());
-            var p = new FlowChart.Core.Project(new ProjectFactory.LegacyProjectFactory());
-            p.Path = @"F:\asyncflow\asyncflow_new\test\flowchart";
-            p.Load();
-            p.Build();
         }
 
         public static ASTNode Parse(string text)
@@ -242,27 +228,6 @@ namespace FlowChartTest // Note: actual namespace depends on the project name.
             node_10.Add(node_12);
 
             GenCode(node_10);
-        }
-
-        static void ConvertLegacyProject(string xmlPath, string outputPath)
-        {
-            var factory = new LegacyProjectFactory() {XmlPath = xmlPath};
-            var project = new Project(factory) { Path = outputPath };
-            project.Load();
-            project.Save();
-
-            //var p2 = new Project(new DefaultProjectFactory()) { Path = outputPath };
-            //p2.Load();
-        }
-
-        static void ConvertProject(string path)
-        {
-            var factory = new TestProjectFactory();
-            var project = new Project(factory) { Path = path };
-            project.Load();
-            project.Save();
-            //var p2 = new Project(new DefaultProjectFactory()) { Path = outputPath };
-            //p2.Load();
         }
 
         static void DebugTest()
