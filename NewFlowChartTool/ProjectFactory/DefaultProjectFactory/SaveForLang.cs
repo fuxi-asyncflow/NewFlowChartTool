@@ -16,6 +16,8 @@ namespace ProjectFactory.DefaultProjectFactory
             List<string> codeLines);
 
         public string SaveAllFlowChartsFile(List<string> lines);
+
+        public string LineComment { get; }
     }
 
     public class SaveForDefault : ISaveForLang
@@ -40,10 +42,13 @@ namespace ProjectFactory.DefaultProjectFactory
         {
             return string.Empty;
         }
+
+        public string LineComment => "//";
     }
 
     public class SaveForLua : ISaveForLang
     {
+        public string LineComment => "--";
         public void SaveEventDefine(Project Project, List<string> lines)
         {
             var luaLines = new List<string>();
@@ -107,6 +112,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
     public class SaveForPython : ISaveForLang
     {
+        public string LineComment => "#";
         public void SaveEventDefine(Project Project, List<string> lines)
         {
             var pyLines = new List<string>();

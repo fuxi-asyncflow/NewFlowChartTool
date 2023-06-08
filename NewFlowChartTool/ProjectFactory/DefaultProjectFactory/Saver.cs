@@ -82,11 +82,21 @@ namespace ProjectFactory.DefaultProjectFactory
             saver.SaveGraph(graph, outputs, genLines);
         }
         
-        public List<string> SaveNodesPatch(Graph graph, List<Node> nodes)
+        public List<string> NodesPatch(Graph graph, List<Node> nodes)
         {
             var outputs = new List<string>();
             var generates = new List<string>();
             saver.SaveNodes(graph, nodes, outputs, generates);
+            return generates;
+        }
+
+        public List<string> GraphPatch(Graph graph)
+        {
+            var outputs = new List<string>();
+            var generates = new List<string>();
+            saver.SaveGraph(graph, outputs, generates);
+            saver.SaveForLang.SaveGenerateFile(saver.Project, string.Empty, string.Empty, outputs, generates);
+            generates.Add($"{saver.SaveForLang.LineComment} asyncflow.restart(\"{graph.Path}\")");
             return generates;
         }
 
@@ -113,7 +123,8 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public Func<Graph, string>? GraphToFileRule;
 
-        public ISaveForLang _saveForLang;
+        private ISaveForLang _saveForLang;
+        public ISaveForLang SaveForLang => _saveForLang;
         //private bool SaveCode = true;
 
         public Saver()

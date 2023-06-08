@@ -111,7 +111,12 @@ namespace ProjectFactory
 
         }
 
-        public List<string> SaveNodesPatch(Graph graph, List<Node> nodes)
+        public List<string> NodesPatch(Graph graph, List<Node> nodes)
+        {
+            return new List<string>();
+        }
+
+        public List<string> GraphPatch(Graph graph)
         {
             return new List<string>();
         }

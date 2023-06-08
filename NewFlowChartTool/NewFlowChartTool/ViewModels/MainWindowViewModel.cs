@@ -511,10 +511,9 @@ namespace NewFlowChartTool.ViewModels
         {
             if (ActiveGraph == null)
                 return;
-            var lines = new List<string>();
-            var code_lines = new List<string>();
-            CurrentProject?.Factory.Save(ActiveGraph.Graph, lines, code_lines);
 
+            var codes = CurrentProject?.Factory.GraphPatch(ActiveGraph.Graph);
+            FileHelper.Save("tmp/patch.txt", codes);
         }
 
         void PatchNodes()
@@ -523,7 +522,7 @@ namespace NewFlowChartTool.ViewModels
                 return;
             ActiveGraph.Build();
             var nodes = ActiveGraph.SelectedNodes.ConvertAll(vm => vm.Node);
-            var codes = CurrentProject?.Factory.SaveNodesPatch(ActiveGraph.Graph, nodes);
+            var codes = CurrentProject?.Factory.NodesPatch(ActiveGraph.Graph, nodes);
             codes.ForEach(Console.WriteLine);
             FileHelper.Save("tmp/patch.txt", codes);
         }

@@ -18,8 +18,8 @@ namespace FlowChart.Core
     {
         void Create(Project project);
         void Save(Project project);
-        void Save(Graph graph, List<string> outputs, List<string> generates);
-        List<string> SaveNodesPatch(Graph graph, List<Node> nodes);    // used for generate patch
+        List<string> NodesPatch(Graph graph, List<Node> nodes);    // used for generate patch
+        List<string> GraphPatch(Graph graph);
         void LoadGraph(Project project, List<string> lines);
         string HotFix(List<Graph> graphs);
         IProjectFactory Clone();
@@ -169,11 +169,6 @@ namespace FlowChart.Core
         public void Save()
         {
             Factory?.Save(this);
-        }
-
-        public void SaveGraph(Graph graph, List<string> lines, List<string> genLines)
-        {
-            Factory?.Save(graph, lines, genLines);
         }
 
         public void AddType(Type.Type type)
