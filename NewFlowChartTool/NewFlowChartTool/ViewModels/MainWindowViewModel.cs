@@ -509,12 +509,23 @@ namespace NewFlowChartTool.ViewModels
 
         void PatchGraph()
         {
+            if (ActiveGraph == null)
+                return;
+            var lines = new List<string>();
+            var code_lines = new List<string>();
+            CurrentProject?.Factory.Save(ActiveGraph.Graph, lines, code_lines);
 
         }
 
         void PatchNodes()
         {
-
+            if (ActiveGraph == null)
+                return;
+            ActiveGraph.Build();
+            var nodes = ActiveGraph.SelectedNodes.ConvertAll(vm => vm.Node);
+            var codes = CurrentProject?.Factory.SaveNodesPatch(ActiveGraph.Graph, nodes);
+            codes.ForEach(Console.WriteLine);
+            FileHelper.Save("tmp/patch.txt", codes);
         }
 
         void ScreenShot()

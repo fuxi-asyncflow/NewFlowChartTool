@@ -19,6 +19,7 @@ namespace FlowChart.Core
         void Create(Project project);
         void Save(Project project);
         void Save(Graph graph, List<string> outputs, List<string> generates);
+        List<string> SaveNodesPatch(Graph graph, List<Node> nodes);    // used for generate patch
         void LoadGraph(Project project, List<string> lines);
         string HotFix(List<Graph> graphs);
         IProjectFactory Clone();

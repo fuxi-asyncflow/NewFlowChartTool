@@ -67,7 +67,8 @@ namespace ProjectFactory.DefaultProjectFactory
             // test = new TestProjectFactory();
             // test.Create(project);
             loader.Load(project);
-            
+            saver.SetLang(project.Lang);
+
         }
 
         public void Save(Project project)
@@ -79,6 +80,14 @@ namespace ProjectFactory.DefaultProjectFactory
         public void Save(Graph graph, List<string> outputs, List<string> genLines)
         {
             saver.SaveGraph(graph, outputs, genLines);
+        }
+        
+        public List<string> SaveNodesPatch(Graph graph, List<Node> nodes)
+        {
+            var outputs = new List<string>();
+            var generates = new List<string>();
+            saver.SaveNodes(graph, nodes, outputs, generates);
+            return generates;
         }
 
         public static Project CreateNewProject(string path)
@@ -255,6 +264,117 @@ namespace ProjectFactory.DefaultProjectFactory
             }
         }
 
+        private void SaveNode(Node node, List<string> lines, List<string> genLines, bool generate_standalone)
+        {
+            lines.Add("- ");
+            lines.Add($"  uid: {node.Uid}");
+            if (node is TextNode textNode)
+            {
+                var text = textNode.Text.Replace("\\", "\\\\").Replace("\"", "\\\"");
+                lines.Add($"  text: \"{text}\"");
+                if (!string.IsNullOrEmpty(textNode.Description))
+                {
+                    var description = textNode.Description.Replace("\\", "\\\\").Replace("\"", "\\\"");
+                    lines.Add($"  description: \"{description}\"");
+                }
+
+                if (node.OwnerGroup != null)
+                    lines.Add($"  group: {node.OwnerGroup.Uid}");
+
+                if (node.Content != null)
+                {
+                    lines.Add($"  code: ");
+                    var content = node.Content;
+                    lines.Add($"    type: {content.Type}");
+
+                    if (content.Contents.Count != 0)
+                    {
+                        if (content.Type == GenerateContent.ContentType.ERROR)
+                        {
+                            lines.Add($"    content: |");
+                            foreach (var c in content.Contents)
+                            {
+                                if (c is string s)
+                                    lines.Add($"      {c.ToString()}");
+                            }
+                        }
+                        else if (content.Type == GenerateContent.ContentType.FUNC
+                                 || content.Type == GenerateContent.ContentType.EVENT)
+                        {
+                            if (content.ReturnVarName != null)
+                                lines.Add($"    return_var_name: {content.ReturnVarName}");
+                            if (generate_standalone)
+                            {
+                                _saveForLang.SaveNodeFunc(textNode, genLines);
+                            }
+                            else
+                            {
+                                lines.Add($"    content: |");
+                                foreach (var c in content.Contents)
+                                {
+                                    if (c is string s)
+                                        lines.Add($"      {c.ToString()}");
+                                }
+                            }
+
+                        }
+                        else if (content.Type == GenerateContent.ContentType.CONTROL)
+                        {
+                            lines.Add($"    content: ");
+                            foreach (var c in content.Contents)
+                            {
+                                if (c is string s)
+                                    lines.Add($"    - {c.ToString()}");
+                            }
+                        }
+                    }
+                }
+
+                if (node.HasExtraInfo)
+                {
+                    lines.Add($"  extra: ");
+                    foreach (var kv in node._extra)
+                    {
+                        lines.Add($"  {kv.Key}: \"{kv.Value}\"");
+                    }
+                }
+            }
+        }
+
+        public void SaveNodes(Graph graph, List<Node> nodes, List<string> outputs, List<string> generates)
+        {
+            var generate_standalone = graph.Project.Config.StandaloneGenerateFile;
+            var connector_lines = new List<string>();
+            outputs.Add($"--- ");
+            outputs.Add($"path: {graph.Path}");
+            outputs.Add($"uid: {graph.Uid}");
+            outputs.Add($"type: {graph.Type.Name}");
+            outputs.Add("nodes: ");
+            foreach (var node in nodes)
+            {
+                SaveNode(node, outputs, generates, generate_standalone);
+                foreach (var connector in node.Children)
+                {
+                    connector_lines.Add("- ");
+                    connector_lines.Add($"  start: {connector.Start.Uid}");
+                    connector_lines.Add($"  end: {connector.End.Uid}");
+                    connector_lines.Add($"  type: {(int)connector.ConnType}");
+
+                }
+            }
+
+            if (connector_lines.Count > 0)
+            {
+                outputs.Add("connectors: ");
+                outputs.AddRange(connector_lines);
+            }
+
+            outputs.Add($"...");
+
+            _saveForLang.SaveGenerateFile(Project, string.Empty, string.Empty, outputs, generates);
+            generates[generates.Count - 1] = "asyncflow.patch(str, true)";
+        }
+
         public void SaveGraph(Graph graph, List<string> lines, List<string> genLines)
         {
             graph.ReorderConnectors();
@@ -294,80 +414,7 @@ namespace ProjectFactory.DefaultProjectFactory
             var generate_standalone = graph.Project.Config.StandaloneGenerateFile;
             foreach (var node in graph.Nodes)
             {
-                lines.Add("- ");
-                lines.Add($"  uid: {node.Uid}");
-                if (node is TextNode textNode)
-                {
-                    var text = textNode.Text.Replace("\\", "\\\\").Replace("\"", "\\\"");
-                    lines.Add($"  text: \"{text}\"");
-                    if (!string.IsNullOrEmpty(textNode.Description))
-                    {
-                        var description = textNode.Description.Replace("\\", "\\\\").Replace("\"", "\\\"");
-                        lines.Add($"  description: \"{description}\"");
-                    }
-                        
-                    if(node.OwnerGroup != null)
-                        lines.Add($"  group: {node.OwnerGroup.Uid}");
-                    
-                    if (node.Content != null)
-                    {
-                        lines.Add($"  code: ");
-                        var content = node.Content;
-                        lines.Add($"    type: {content.Type}");
-
-                        if (content.Contents.Count != 0)
-                        {
-                            if (content.Type == GenerateContent.ContentType.ERROR)
-                            {
-                                lines.Add($"    content: |");
-                                foreach (var c in content.Contents)
-                                {
-                                    if (c is string s)
-                                        lines.Add($"      {c.ToString()}");
-                                }
-                            }
-                            else if (content.Type == GenerateContent.ContentType.FUNC
-                                     || content.Type == GenerateContent.ContentType.EVENT)
-                            {
-                                if (content.ReturnVarName != null)
-                                    lines.Add($"    return_var_name: {content.ReturnVarName}");
-                                if (generate_standalone)
-                                {
-                                    _saveForLang.SaveNodeFunc(textNode, genLines);
-                                }
-                                else
-                                {
-                                    lines.Add($"    content: |");
-                                    foreach (var c in content.Contents)
-                                    {
-                                        if (c is string s)
-                                            lines.Add($"      {c.ToString()}");
-                                    }
-                                }
-                                
-                            }
-                            else if (content.Type == GenerateContent.ContentType.CONTROL)
-                            {
-                                lines.Add($"    content: ");
-                                foreach (var c in content.Contents)
-                                {
-                                    if (c is string s)
-                                        lines.Add($"    - {c.ToString()}");
-                                }
-                            }
-                        }
-                    }
-
-                    if (node.HasExtraInfo)
-                    {
-                        lines.Add($"  extra: ");
-                        foreach (var kv in node._extra)
-                        {
-                            lines.Add($"  {kv.Key}: \"{kv.Value}\"");
-                        }
-                    }
-
-                }
+                SaveNode(node, lines, genLines, generate_standalone);
             }
 
             if (graph.Groups.Count > 0)

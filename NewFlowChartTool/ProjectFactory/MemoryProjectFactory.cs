@@ -111,6 +111,11 @@ namespace ProjectFactory
 
         }
 
+        public List<string> SaveNodesPatch(Graph graph, List<Node> nodes)
+        {
+            return new List<string>();
+        }
+
         public void LoadGraph(Project project, List<string> lines)
         {
         }
