@@ -186,6 +186,8 @@ namespace FlowChart
         public List<DebugServerConfig>? DebugServers { get; set; }
         [JsonPropertyName("custom_header")]
         public List<string>? CustomHeader { get; set; }
+        [JsonPropertyName("extra")]
+        public Dictionary<string, string>? Extra { get; set; }
 
         public string CodeLang;
 
@@ -238,6 +240,15 @@ namespace FlowChart
                     return null;
                 }
             }
+        }
+
+        public string? GetExtraConfig(string key)
+        {
+            if (Extra == null)
+                return null;
+            if(Extra.ContainsKey(key))
+                return Extra[key];
+            return null;
         }
     }
 }
