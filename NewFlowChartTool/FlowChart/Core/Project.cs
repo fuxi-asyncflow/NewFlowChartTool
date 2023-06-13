@@ -163,7 +163,10 @@ namespace FlowChart.Core
             {
                 Builder = new Builder(parser, codeGen);
                 Lang = codeGen.Lang;
+                Logger.LOG($"use parser `{parserName}`, code generator `{generatorName}` ");
             }
+            else
+                Logger.ERR($"create parser failed: parser `{parserName}`, code generator `{generatorName}` ");
         }
 
         public void Save()

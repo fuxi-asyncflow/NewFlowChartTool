@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.AST;
+using FlowChart.Common;
 using FlowChart.Core;
 using FlowChart.Parser;
 
@@ -105,6 +106,7 @@ namespace FlowChart.Plugin
 
         public bool RegisterParser<T>(string name) where T : IParser
         {
+            Logger.LOG($"register parser `{name}`");
             return _parserContainer.Add<T>(name);
         }
 
