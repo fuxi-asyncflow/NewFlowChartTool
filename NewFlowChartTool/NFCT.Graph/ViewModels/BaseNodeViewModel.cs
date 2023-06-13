@@ -129,6 +129,8 @@ namespace NFCT.Graph.ViewModels
         public string? ToolTip { get => _toolTip; set => SetProperty(ref _toolTip, value); }
         private string? _errorMessage;
         public string? ErrorMessage { get => _errorMessage; set => SetProperty(ref _errorMessage, value); }
+        private string? _warningMessage;
+        public string? WarningMessage { get => _warningMessage; set => SetProperty(ref _warningMessage, value); }
         public GraphPaneViewModel Owner { get; set; }
         public GroupBoxViewModel? OwnerGroup { get; set; }
         public List<GraphConnectorViewModel> ParentLines => Node.Parents.ConvertAll(Owner.GetConnVm);
@@ -316,7 +318,7 @@ namespace NFCT.Graph.ViewModels
 
         public void OnParse(Node node, ParseResult pr)
         {
-            if (pr.IsError)
+            if (pr.IsError || pr.IsWarning)
                 BgType = NodeBgType.ERROR;
             else if (pr.IsWait || pr.IsAsync)
                 BgType = NodeBgType.WAIT;

@@ -46,7 +46,9 @@ namespace FlowChart.AST
         public bool IsWait => !string.IsNullOrEmpty(EventName);
         public bool IsAction;
         public bool IsError => !string.IsNullOrEmpty(ErrorMessage);
+        public bool IsWarning => !string.IsNullOrEmpty(WarningMessage);
         public string? ErrorMessage { get; set; }
+        public string? WarningMessage { get; set; }
         public string? EventName { get; set; }
         public GenerateContent Content { get; set; }
         public List<TextToken>? Tokens { get; set; }
@@ -85,9 +87,15 @@ namespace FlowChart.AST
 
     public class ParserError
     {
+        public ParserError(string msg)
+        {
+            Message = msg;
+        }
+
         public string Message;
         public int Position;
         public int Line;
+        public bool IsWarning;
     }
 
     public interface IParser

@@ -50,6 +50,7 @@ namespace FlowChart.Parser
 
         public bool HasError => Error != null;
     }
+
     public class DefaultParser : IParser
     {
         public List<TextToken>? Tokens { get; set; }
@@ -63,6 +64,7 @@ namespace FlowChart.Parser
             var errorListener = new ParserErrorListener();
             parser.AddErrorListener(errorListener);
             parser.Interpreter.PredictionMode = PredictionMode.SLL;
+            Error = null;
 
             // 使用二次解析，提高解析速度
             // 参见 https://github.com/antlr/antlr4/blob/master/doc/faq/general.md#why-is-my-expression-parser-slow

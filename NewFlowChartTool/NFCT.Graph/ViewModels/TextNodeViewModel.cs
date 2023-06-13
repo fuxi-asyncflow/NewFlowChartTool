@@ -186,6 +186,7 @@ namespace NFCT.Graph.ViewModels
             }
 
             BaseNode.ErrorMessage = pr.IsError ? pr.ErrorMessage : null;
+            BaseNode.WarningMessage = pr.IsWarning ? pr.WarningMessage : null;
             Owner.NeedLayout = true;
         }
 
