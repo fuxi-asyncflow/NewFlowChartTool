@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
+using Antlr4.Runtime.Dfa;
+using Antlr4.Runtime.Sharpen;
 using Antlr4.Runtime.Tree;
 using FlowChart.AST;
 using FlowChart.AST.Nodes;
@@ -9,7 +11,7 @@ using FlowChart.Parser.NodeParser;
 
 namespace FlowChart.Parser
 {
-    class ParserErrorListener : BaseErrorListener
+    public class ParserErrorListener : BaseErrorListener
     {
         public ParserErrorListener()
         {
@@ -20,7 +22,25 @@ namespace FlowChart.Parser
         public override void SyntaxError(TextWriter output, IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine,
             string msg, RecognitionException e)
         {
-            Error = new ParserError() { Line = line, Position = charPositionInLine, Message = msg };
+            Error = new ParserError(msg) { Line = line, Position = charPositionInLine };
+        }
+
+        public override void ReportAmbiguity(Antlr4.Runtime.Parser recognizer, DFA dfa, int startIndex, int stopIndex, bool exact, BitSet ambigAlts,
+            ATNConfigSet configs)
+        {
+            Error = new ParserError("ReportAmbiguity") { Line = 0, Position = 0 };
+        }
+
+        public override void ReportAttemptingFullContext(Antlr4.Runtime.Parser recognizer, DFA dfa, int startIndex, int stopIndex, BitSet conflictingAlts,
+            SimulatorState conflictState)
+        {
+            Error = new ParserError("ReportAmbiguity") { Line = 0, Position = 0 };
+        }
+
+        public override void ReportContextSensitivity(Antlr4.Runtime.Parser recognizer, DFA dfa, int startIndex, int stopIndex, int prediction,
+            SimulatorState acceptState)
+        {
+            Error = new ParserError("ReportAmbiguity") { Line = 0, Position = 0 };
         }
 
         public void Reset()
@@ -34,7 +54,7 @@ namespace FlowChart.Parser
     {
         public List<TextToken>? Tokens { get; set; }
         public ParserError? Error { get; set; }
-        public ASTNode? Parse(string text, ParserConfig cfg)
+        public virtual ASTNode? Parse(string text, ParserConfig cfg)
         {
             AntlrInputStream input = new AntlrInputStream(text);
             NodeParserLexer lexer = new NodeParserLexer(input);
@@ -120,6 +140,11 @@ namespace FlowChart.Parser
                 else if(child is TerminalNodeImpl term)
                 {
                     var symbol = term.Symbol;
+                    // when there is error, startIndex may be -1
+                    // EOF symbol startIndex > stopIndex
+                    if (symbol.StartIndex <= pos || symbol.StartIndex > symbol.StopIndex)
+                        return;
+
                     if (symbol.StartIndex > pos + 1)
                     {
                         Tokens.Add(new TextToken(){Start = pos+1, End = symbol.StartIndex, Type = TextToken.TokenType.Default});
