@@ -114,6 +114,12 @@ namespace FlowChart.AST.Nodes
         }
     }
 
+    //TODO check if it can inherit from LiteralNode
+    public class CommentNode : ASTNode
+    {
+        public string Text;
+    }
+
     public class NumberNode : LiteralNode
     {
         public override T OnVisit<T>(IASTNodeVisitor<T> visitor) { return visitor.Visit(this); }

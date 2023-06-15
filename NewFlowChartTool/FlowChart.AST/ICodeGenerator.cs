@@ -16,7 +16,8 @@ namespace FlowChart.AST
             FUNC = 1,
             TIMER = 2,
             EVENT = 3,
-            CONTROL = 4
+            CONTROL = 4,
+            COMMENT = 5,
         }
 
         public GenerateContent()
