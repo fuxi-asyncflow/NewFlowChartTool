@@ -375,6 +375,12 @@ namespace NFCT.Graph.ViewModels
             {
                 SelectNode(CurrentNode, clearOthers);
                 CurrentNode.IsFocused = true;
+#if DEBUG
+                if (CurrentNode.Node.Content != null)
+                {
+                    CurrentNode.Node.Content.Contents.ForEach(Console.WriteLine);
+                }
+#endif
             }
 
             Console.WriteLine("set current node");

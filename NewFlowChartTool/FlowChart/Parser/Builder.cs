@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FlowChart.AST;
 using FlowChart.AST.Nodes;
+using FlowChart.Common;
 using FlowChart.Core;
 using FlowChart.Plugin;
 
@@ -52,7 +53,18 @@ namespace FlowChart.Parser
             {
                 if (node is TextNode textNode)
                 {
-                    BuildNode(textNode, generator, cfg);
+                    try
+                    {
+                        BuildNode(textNode, generator, cfg);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.ERR($"exception in parse node {g.Path}[{textNode.Id}]: {textNode.Text}");
+#if DEBUG
+                        throw;
+#endif
+                    }
+                    
                 }
             }
         }
