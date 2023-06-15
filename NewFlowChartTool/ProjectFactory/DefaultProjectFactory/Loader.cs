@@ -716,22 +716,24 @@ namespace ProjectFactory.DefaultProjectFactory
                         do
                         {
                             line = lines[pos++];
-                        } while (line.Length > 2 && line[1] == ' ' && line[1] == ' ' && line[2] == ' ');
+                        } while (line.Length > 2 && line[0] == ' ' && line[1] == ' ' && line[2] == ' ');
                         pos--;
                     }
                     else if (key == "extra")
                     {
                         do
                         {
-                            var l = lines[pos++];
-                            int extPos = l.IndexOf(':');
-                            var extKey = l.Substring(4, extPos - 4).Trim();
-                            var extValue = l.Substring(extPos + 1).Trim();
+                            line = lines[pos++];
+                            int extPos = line.IndexOf(':');
+                            var extKey = line.Substring(4, extPos - 4).Trim();
+                            var extValue = line.Substring(extPos + 1).Trim();
                             if (extValue.StartsWith('"'))
                                 extValue = extValue.Trim('\"');
                             node.SetExtraProp(extKey, extValue);
-
-                        } while (line.Length > 4 && line[1] == ' ' && line[1] == ' ' && line[2] == ' ');
+                            if(pos >= lines.Count)
+                                break;
+                            line = lines[pos];
+                        } while (line.Length > 4 && line[0] == ' ' && line[1] == ' ' && line[2] == ' ');
                         pos--;
 
                     }
