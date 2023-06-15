@@ -388,6 +388,7 @@ namespace ProjectFactory.DefaultProjectFactory
 
         public void SaveGraph(Graph graph, List<string> lines, List<string> genLines)
         {
+            graph.SortNodes();
             graph.ReorderConnectors();
             lines.Add($"path: {graph.Path}");
             lines.Add($"uid: {graph.Uid}");

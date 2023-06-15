@@ -173,6 +173,7 @@ namespace NFCT.Graph.ViewModels
             {
                 Connectors.AddRange(nodeVm.ChildLines);
             }
+            Graph.SortNodes();
         }
 
         public void MoveNodeToCenter(Node? node)

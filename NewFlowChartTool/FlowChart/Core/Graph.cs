@@ -783,7 +783,7 @@ namespace FlowChart.Core
             GraphSwitchChildNodeOrderEvent?.Invoke(ca.Start, ida, idb);
         }
 
-        void SortNodes()
+        public void SortNodes()
         {
             if (Nodes.Count == 0)
                 return;
@@ -828,7 +828,6 @@ namespace FlowChart.Core
 
         public void ReorderConnectors()
         {
-            SortNodes();
             Connectors.Clear();
             Nodes.ForEach(node =>
             {
