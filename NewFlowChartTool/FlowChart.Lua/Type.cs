@@ -36,9 +36,15 @@ namespace FlowChart.Lua
             return member == null ? null : new Member(member);
         }
 
+        public Member? GetMember(string name, bool findInBase)
+        {
+            var member = _type.FindMember(name, findInBase);
+            return member == null ? null : new Member(member);
+        }
+
         public Method? AddMethod(string name)
         {
-            if (_type.FindMember(name) != null)
+            if (_type.FindMember(name, false) != null)
                 return null;
             var method = new FlowChart.Type.Method(name);
             _type.AddMember(method);
