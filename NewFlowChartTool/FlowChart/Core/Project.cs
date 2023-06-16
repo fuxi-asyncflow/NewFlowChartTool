@@ -346,8 +346,9 @@ namespace FlowChart.Core
             if (GraphDict.ContainsKey(graph.Path))
             {
                 var originPath = graph.Path;
-                graph.Path = originPath + "_dup" + graph.GetHashCode() % 10000;
+                // graph.Path = originPath + "_dup" + graph.GetHashCode() % 10000;
                 Logger.WARN($"exist same path when add graph: {originPath} rename to {graph.Path}");
+                return;
             }
             var path = graph.Path;
             var paths = path.Split(".");
