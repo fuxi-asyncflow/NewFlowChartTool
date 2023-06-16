@@ -58,7 +58,8 @@
                 x:Name="PromptsListBox"
                 MaxHeight="400"
                 ItemsSource="{Binding Prompts}"
-                VirtualizingPanel.IsVirtualizing="true">
+                VirtualizingPanel.IsVirtualizing="true"
+                VirtualizingPanel.VirtualizationMode="Recycling">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Vertical">

@@ -551,6 +551,7 @@ abc + test(a,b).ob+xyz
 
         public void SortPromptList(string head)
         {
+            const int MAX_PROMPTS = 100;
             //Console.WriteLine("size: " + _promptList.Count);
             head = head.ToLower();
             // 计数匹配度
@@ -602,10 +603,16 @@ abc + test(a,b).ob+xyz
             bool dashed = false;
             //_promptList.ForEach(p => Prompts.Add(p));
             // 输入字符串长度小于等于1时，输出排序后的全部结果
+            
             if (head.Length <= 1)
             {
                 Prompts.Clear();
-                _promptList.ForEach(p => Prompts.Add(p));
+                foreach (var _prompt in _promptList)
+                {
+                    Prompts.Add(_prompt);
+                    if (Prompts.Count > MAX_PROMPTS)
+                        return;
+                }
             }
             // 长度大于1时，只输出匹配度高的结果
             else
@@ -634,7 +641,12 @@ abc + test(a,b).ob+xyz
                 if (addList.Count > 0)
                 {
                     Prompts.Clear();
-                    addList.ForEach(p => Prompts.Add(p));
+                    foreach (var _prompt in addList)
+                    {
+                        Prompts.Add(_prompt);
+                        if (Prompts.Count > MAX_PROMPTS)
+                            return;
+                    }
                 }
             }
             // 如果默认提示匹配结果较差，比如输入的是接口的中文描述，则请求根据描述搜索接口
