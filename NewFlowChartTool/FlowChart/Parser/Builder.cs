@@ -94,7 +94,15 @@ namespace FlowChart.Parser
             //Console.WriteLine($"ast: {ast}");
             else
             {
-                pr = generator.GenerateCode(ast, cfg, node);
+                try
+                {
+                    pr = generator.GenerateCode(ast, cfg, node);
+                }
+                catch (Exception e)
+                {
+                    pr = new ParseResult();
+                }
+                
                 pr.Tokens = parser.Tokens;
                 var parserError = parser.Error;
                 if (parserError != null)
