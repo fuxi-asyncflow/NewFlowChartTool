@@ -497,6 +497,8 @@ namespace FlowChart.Type
                 return AcceptFunc(inType);
             if (inType == this)
                 return true;
+            if (inType == GenType)
+                return true;
             if (inType is not InstanceType instType)
                 return false;
             if (instType.GenType != GenType)
