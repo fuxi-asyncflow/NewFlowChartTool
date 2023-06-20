@@ -17,6 +17,12 @@
                 <Setter Property="Height" Value="24" />
                 <Setter Property="Stretch" Value="Fill" />
             </Style>
+            <Style TargetType="{x:Type Image}">
+                <Setter Property="Width" Value="24" />
+                <Setter Property="Height" Value="24" />
+                <Setter Property="Stretch" Value="Fill" />
+            </Style>
+
             <Style TargetType="{x:Type Button}">
                 <Setter Property="Background" Value="{DynamicResource BackGroundBrush}" />
                 <Setter Property="BorderThickness" Value="15" />
@@ -160,7 +166,7 @@
 
         <Button Command="{Binding DiffCommand}">
             <StackPanel>
-                <Viewbox Child="{StaticResource Icon_Diff}" />
+                <Image Source="{StaticResource Icon_Diff}" />
                 <TextBlock Height="16" Text="Diff" />
             </StackPanel>
         </Button>
@@ -187,7 +193,11 @@
                     <Grid>
                         <Button Command="{Binding Command}">
                             <StackPanel>
-                                <Viewbox />
+                                <Image
+                                    Width="24"
+                                    Height="24"
+                                    Source="{Binding ImageSource}"
+                                    Stretch="Fill" />
                                 <TextBlock Height="16" Text="{Binding Text}" />
                             </StackPanel>
                         </Button>

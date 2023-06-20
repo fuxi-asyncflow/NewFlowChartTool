@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Media;
 using FlowChart.Common;
 using FlowChart.Common.Report;
 using FlowChart.Plugin;
@@ -20,12 +21,19 @@ namespace NewFlowChartTool.Utility
 {
     public class CustomMenuItemViewModel : BindableBase
     {
-        public CustomMenuItemViewModel(string text, DelegateCommand cmd)
+        public CustomMenuItemViewModel(string text, DelegateCommand cmd, ImageSource? imageSource)
         {
             Text = text;
             Command = cmd;
+            ImageSource = imageSource;
         }
         public string Text { get; set; }
+        private ImageSource? _imageSource;
+        public ImageSource? ImageSource
+        {
+            get => _imageSource;
+            set => _imageSource = value;
+        }
         public DelegateCommand Command { get; set; }
     }
     public class WPFPluginManager: IPluginManager
@@ -160,9 +168,9 @@ namespace NewFlowChartTool.Utility
 
         public ObservableCollection<CustomMenuItemViewModel> Menus { get; set; }
 
-        public bool RegisterMenu(string name, DelegateCommand cmd, UserControl? icon = null)
+        public bool RegisterMenu(string name, DelegateCommand cmd, ImageSource? icon = null)
         {
-            Menus.Add(new CustomMenuItemViewModel(name, cmd));
+            Menus.Add(new CustomMenuItemViewModel(name, cmd, icon));
             return true;
         }
 
