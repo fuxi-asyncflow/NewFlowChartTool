@@ -78,7 +78,7 @@ namespace NewFlowChartTool.ViewModels
             TestCommand = new DelegateCommand(Test);
 
             SelectedLang = Lang.Chinese;
-            SelectedTheme = Theme.Dark;
+            SelectedTheme = AppConfig.Inst.LightTheme ? Theme.Light : Theme.Dark;
 
             UndoCommand = new DelegateCommand(Undo);
             RedoCommand = new DelegateCommand(Redo);
@@ -348,34 +348,23 @@ namespace NewFlowChartTool.ViewModels
         }
 
         public void SwitchTheme()
-        {            
+        {
+            var app = Application.Current as App;
+            if (app == null)
+                return;
             if(SelectedTheme == Theme.Dark)
             {
                 SelectedTheme = Theme.Light;
-                Application.Current.Resources.MergedDictionaries[0].Source 
-                    = new Uri("pack://application:,,,/AvalonDock.Themes.VS2013;component/LightTheme.xaml");
-                Application.Current.Resources.MergedDictionaries[1].Source
-                    = new Uri("pack://application:,,,/NFCT.Themes;component/LightTheme.xaml");
-                Application.Current.Resources.MergedDictionaries[5].Source
-                    = new Uri("pack://application:,,,/NFCT.Themes;component/WPFDarkTheme/LightTheme.xaml");
-                Application.Current.Resources.MergedDictionaries[6].Source
-                    = new Uri("pack://application:,,,/NFCT.Themes;component/AvalonEditTheme/LightBrushs.xaml");
+                app.SetTheme(true);
                 //Application.Current.Resources.MergedDictionaries[1].Source = new Uri("pack://application:,,,/VS2013Test;component/Themes/DarkBrushsExtended.xaml");
 
             }
             else if(SelectedTheme == Theme.Light)
             {
                 SelectedTheme = Theme.Dark;
-                Application.Current.Resources.MergedDictionaries[0].Source
-                    = new Uri("pack://application:,,,/AvalonDock.Themes.VS2013;component/DarkTheme.xaml");
-                Application.Current.Resources.MergedDictionaries[1].Source
-                    = new Uri("pack://application:,,,/NFCT.Themes;component/DarkTheme.xaml");
-                Application.Current.Resources.MergedDictionaries[5].Source
-                    = new Uri("pack://application:,,,/NFCT.Themes;component/WPFDarkTheme/DarkTheme.xaml");
-                Application.Current.Resources.MergedDictionaries[6].Source
-                    = new Uri("pack://application:,,,/NFCT.Themes;component/AvalonEditTheme/DarkBrushs.xaml");
+                app.SetTheme(false);
             }
-
+            
             EventHelper.Pub<ThemeSwitchEvent, Theme>(SelectedTheme);
         }
 

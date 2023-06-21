@@ -48,16 +48,56 @@ namespace NewFlowChartTool
         [DllImport("kernel32.dll")]
         public static extern Boolean FreeConsole();
 
+        public void SetTheme(bool light)
+        {
+            if (light)
+            {
+                Resources.MergedDictionaries[0].Source
+                    = new Uri("pack://application:,,,/AvalonDock.Themes.VS2013;component/LightTheme.xaml");
+                Resources.MergedDictionaries[1].Source
+                    = new Uri("pack://application:,,,/NFCT.Themes;component/LightTheme.xaml");
+                Resources.MergedDictionaries[5].Source
+                    = new Uri("pack://application:,,,/NFCT.Themes;component/WPFDarkTheme/LightTheme.xaml");
+                Resources.MergedDictionaries[6].Source
+                    = new Uri("pack://application:,,,/NFCT.Themes;component/AvalonEditTheme/LightBrushs.xaml");
+            }
+            else
+            {
+                Resources.MergedDictionaries[0].Source
+                    = new Uri("pack://application:,,,/AvalonDock.Themes.VS2013;component/DarkTheme.xaml");
+                Resources.MergedDictionaries[1].Source
+                    = new Uri("pack://application:,,,/NFCT.Themes;component/DarkTheme.xaml");
+                Resources.MergedDictionaries[5].Source
+                    = new Uri("pack://application:,,,/NFCT.Themes;component/WPFDarkTheme/DarkTheme.xaml");
+                Resources.MergedDictionaries[6].Source
+                    = new Uri("pack://application:,,,/NFCT.Themes;component/AvalonEditTheme/DarkBrushs.xaml");
+            }
+            AppConfig.Inst.LightTheme = light;
+            AppConfig.Save();
+        }
+
         protected override Window CreateShell()
         {
-#if DEBUG
-            AllocConsole();
-            EventManager.RegisterClassHandler(
-                typeof(UIElement),
-                Keyboard.PreviewGotKeyboardFocusEvent,
-                (KeyboardFocusChangedEventHandler)OnPreviewGotKeyboardFocus);
+            if (!Directory.Exists("tmp"))
+                Directory.CreateDirectory("tmp");
+            
+            SetTheme(AppConfig.Inst.LightTheme);
 
+            bool showConsole = AppConfig.Inst.ShowConsole;
+#if DEBUG
+            showConsole = true;
 #endif
+            if (showConsole)
+            {
+                AllocConsole();
+            }
+            
+            //EventManager.RegisterClassHandler(
+            //    typeof(UIElement),
+            //    Keyboard.PreviewGotKeyboardFocusEvent,
+            //    (KeyboardFocusChangedEventHandler)OnPreviewGotKeyboardFocus);
+
+
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += new System.UnhandledExceptionEventHandler(MyExceptionHandler);
             Logger.FCLogger.Info("application startup");
@@ -67,10 +107,7 @@ namespace NewFlowChartTool
 
             //var test = Application.Current.TryFindResource(SystemColors.WindowBrushKey);
             //Console.WriteLine(test);
-            if (!Directory.Exists("tmp"))
-            {
-                Directory.CreateDirectory("tmp");
-            }
+            
             return Container.Resolve<Views.MainWindow>();
         }
 
