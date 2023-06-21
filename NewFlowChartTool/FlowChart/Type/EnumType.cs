@@ -3,44 +3,74 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FlowChart.Common;
 
+// Enum type in this type only worked for number ID
 namespace FlowChart.Type
 {
-   
     public class EnumValue
     {
-        public string Value { get; set; }
-        public string Description { get; set; }
+        static EnumValue()
+        {
+            EnumValueDict = new Dictionary<long, EnumValue>();
+        }
 
-        public static Dictionary<int, string> EnumValueDict = new Dictionary<int, string>();
+        public EnumValue(EnumType type, long value, string? description = null)
+        {
+            Value = value;
+            Description = description;
+            Type = type;
+        }
+
+        public long Value { get; set; }
+        public string? Description { get; set; }
+        public EnumType Type { get; set; }
+
+        public static Dictionary<long, EnumValue> EnumValueDict;
+
+        public static string? GetAbbr(string v)
+        {
+            if (long.TryParse(v, out long id))
+            {
+                if (EnumValueDict.TryGetValue(id, out var enumValue))
+                {
+                    return enumValue.Type.Abbr;
+                }
+            }
+
+            return null;
+        }
     }
 
     public class EnumType
     {
-        public EnumType()
+        public EnumType(string enumName)
         {
-            Values = new List<EnumValue>();
+            Name = enumName;
         }
 
-        public void AddEnumValue(string value, string description)
+        public void AddEnumValue(string value, string? description)
         {
-            Values.Add(new EnumValue()
+            if (long.TryParse(value, out long id))
             {
-                Value = value,
-                Description = description,
-            });
-            int v;
-            if (int.TryParse(value, out v) && !EnumValue.EnumValueDict.ContainsKey(v))
+                if (EnumValue.EnumValueDict.ContainsKey(id))
+                {
+                    Logger.ERR($"duplicated enum id: {value}");
+                }
+                else
+                {
+                    var v = new EnumValue(this, id, description);
+                    EnumValue.EnumValueDict.Add(id, v);
+                }
+            }
+            else
             {
-                EnumValue.EnumValueDict.Add(v, description);
+                Logger.ERR($"enum value should be integer: {value}");
             }
         }
 
-
-        // 枚举类型名
         public string Name { get; set; }
-        // 枚举的实际类型名
-        public string Type { get; set; }
-        public List<EnumValue> Values { get; private set; }
+        //public string Type { get; set; }
+        public string? Abbr { get; set; }
     }
 }

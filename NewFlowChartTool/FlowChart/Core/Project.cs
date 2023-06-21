@@ -101,6 +101,7 @@ namespace FlowChart.Core
 
         public bool Load()
         {
+            EnumValue.EnumValueDict.Clear();
             var pluginManager = PluginManager.Inst;
             if (Config == null)
             {
@@ -469,15 +470,20 @@ namespace FlowChart.Core
 
         private Dictionary<string, EnumType> EnumTypeDict { get; set; }
 
-        public EnumType AddEnumType(string name, string type)
+        public EnumType AddEnumType(string name)
         {
-            var enumType = new EnumType()
-            {
-                Name = name,
-                Type = type,
-            };
+            if (EnumTypeDict.ContainsKey(name))
+                return EnumTypeDict[name];
+            var enumType = new EnumType(name);
             EnumTypeDict.Add(name, enumType);
             return enumType;
+        }
+
+        public EnumType? GetEnumType(string name)
+        {
+            if (EnumTypeDict.ContainsKey(name))
+                return EnumTypeDict[name];
+            return null;
         }
     }
 }

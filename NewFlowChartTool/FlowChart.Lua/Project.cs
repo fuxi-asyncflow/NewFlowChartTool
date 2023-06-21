@@ -24,6 +24,11 @@ namespace FlowChart.Lua
             return new Type(t);
         }
 
+        public EnumType GetEnumType(string name)
+        {
+            return new EnumType(_project.AddEnumType(name));
+        }
+
         public void AddTypeAlias(string alias, Type tp)
         {
             _project.AddType(alias, tp.Tp);
