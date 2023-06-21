@@ -366,6 +366,24 @@ namespace NewFlowChartTool.ViewModels
             }
             
             EventHelper.Pub<ThemeSwitchEvent, Theme>(SelectedTheme);
+
+            var buttons = new List<DialogButton>();
+            buttons.Add(new DialogButton("重启", ButtonResult.OK));
+            buttons.Add(new DialogButton("稍后", ButtonResult.Cancel));
+
+            var parameters = new DialogParameters();
+            parameters.Add("buttons", buttons);
+            parameters.Add("message", "部分图标与控件的颜色需要重启后才能生效，是否现在重启");
+
+            _dialogService.ShowDialog(CustomMessageDialogViewModel.NAME, parameters, result =>
+            {
+                if (result.Result == ButtonResult.OK)
+                {
+                    //Process.Start(Application.ResourceAssembly.Location);
+                    System.Windows.Forms.Application.Restart();
+                    app.Shutdown();
+                }
+            });
         }
 
         public void SwitchLang()
