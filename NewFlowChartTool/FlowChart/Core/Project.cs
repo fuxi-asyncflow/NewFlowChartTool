@@ -53,6 +53,8 @@ namespace FlowChart.Core
             BuiltinTypes.ArrayType.GetInstance(new List<Type.Type?>() { BuiltinTypes.StringType });
 
             EnumTypeDict = new Dictionary<string, EnumType>();
+            refIdDict = new Dictionary<long, IRefData>();
+            RefStringDict = new Dictionary<string, IRefData>();
 
             CreateProjectEvent?.Invoke(this);
         }
@@ -101,7 +103,6 @@ namespace FlowChart.Core
 
         public bool Load()
         {
-            EnumValue.EnumValueDict.Clear();
             var pluginManager = PluginManager.Inst;
             if (Config == null)
             {
@@ -474,7 +475,7 @@ namespace FlowChart.Core
         {
             if (EnumTypeDict.ContainsKey(name))
                 return EnumTypeDict[name];
-            var enumType = new EnumType(name);
+            var enumType = new EnumType(this, name);
             EnumTypeDict.Add(name, enumType);
             return enumType;
         }
@@ -484,6 +485,22 @@ namespace FlowChart.Core
             if (EnumTypeDict.ContainsKey(name))
                 return EnumTypeDict[name];
             return null;
+        }
+
+        public Dictionary<long, IRefData> refIdDict;
+        public Dictionary<string, IRefData> RefStringDict;
+
+        public IRefData? GetRefData(string s)
+        {
+            IRefData? refData = null;
+            if (long.TryParse(s, out var id))
+            {
+                if (refIdDict.TryGetValue(id, out refData))
+                    return refData;
+            }
+
+            RefStringDict.TryGetValue(s, out refData);
+            return refData;
         }
     }
 }

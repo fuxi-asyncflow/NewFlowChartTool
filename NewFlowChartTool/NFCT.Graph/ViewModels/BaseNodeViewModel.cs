@@ -79,6 +79,7 @@ namespace NFCT.Graph.ViewModels
             NodeTokenBrushes[2] = Application.Current.FindResource("NodeMemberForeGround") as SolidColorBrush ?? ErrorBrush;
             NodeTokenBrushes[3] = Application.Current.FindResource("NodeNumberForeGround") as SolidColorBrush ?? ErrorBrush;
             NodeTokenBrushes[4] = Application.Current.FindResource("NodeStringForeGround") as SolidColorBrush ?? ErrorBrush;
+            NodeTokenBrushes[5] = Application.Current.FindResource("NodeForeGround") as SolidColorBrush ?? ErrorBrush;
         }
     }
 

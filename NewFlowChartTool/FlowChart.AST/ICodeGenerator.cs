@@ -67,7 +67,8 @@ namespace FlowChart.AST
             Member = 2,
             Number = 3,
             String = 4,
-            End = 5
+            Superscript = 5,
+            End,
         }
         public int Start;
         public int End;

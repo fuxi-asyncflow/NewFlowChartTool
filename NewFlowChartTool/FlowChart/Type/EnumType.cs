@@ -4,17 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Common;
+using FlowChart.Core;
 
 // Enum type in this type only worked for number ID
 namespace FlowChart.Type
 {
-    public class EnumValue
+    public interface IRefData
     {
-        static EnumValue()
-        {
-            EnumValueDict = new Dictionary<long, EnumValue>();
-        }
+        public string Content { get; }
+        public string? Abbr { get; }
+        public string? Description { get; }
+        public object? Source { get; }
+        public void Open();
+    }
 
+    public class EnumValue : IRefData
+    {
         public EnumValue(EnumType type, long value, string? description = null)
         {
             Value = value;
@@ -23,44 +28,43 @@ namespace FlowChart.Type
         }
 
         public long Value { get; set; }
+
+        #region IRefData
+
+        public string Content => Value.ToString();
+        public string? Abbr => Type.Abbr;
         public string? Description { get; set; }
-        public EnumType Type { get; set; }
-
-        public static Dictionary<long, EnumValue> EnumValueDict;
-
-        public static string? GetAbbr(string v)
+        public object? Source { get; set; }
+        public void Open()
         {
-            if (long.TryParse(v, out long id))
-            {
-                if (EnumValueDict.TryGetValue(id, out var enumValue))
-                {
-                    return enumValue.Type.Abbr;
-                }
-            }
-
-            return null;
+            
         }
+        #endregion
+
+
+        public EnumType Type { get; set; }
     }
 
     public class EnumType
     {
-        public EnumType(string enumName)
+        public EnumType(Project p, string enumName)
         {
             Name = enumName;
+            _project = p;
         }
 
         public void AddEnumValue(string value, string? description)
         {
             if (long.TryParse(value, out long id))
             {
-                if (EnumValue.EnumValueDict.ContainsKey(id))
+                if (_project.refIdDict.ContainsKey(id))
                 {
                     Logger.ERR($"duplicated enum id: {value}");
                 }
                 else
                 {
                     var v = new EnumValue(this, id, description);
-                    EnumValue.EnumValueDict.Add(id, v);
+                    _project.refIdDict.Add(id, v);
                 }
             }
             else
@@ -72,5 +76,6 @@ namespace FlowChart.Type
         public string Name { get; set; }
         //public string Type { get; set; }
         public string? Abbr { get; set; }
+        private readonly Project _project;
     }
 }

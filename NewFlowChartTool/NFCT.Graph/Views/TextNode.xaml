@@ -20,6 +20,7 @@
         <common:InvertBooleanToVisibilityConverter x:Key="InvertBooleanToVisibilityConverter" />
         <common:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <common:EmptyStringVisibilityConverter x:Key="EmptyStringVisibilityConverter" />
     </UserControl.Resources>
     <Grid>
         <Border
@@ -56,9 +57,13 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock
-                                    FontSize="16"
+                                    FontSize="{Binding FontSize}"
                                     Foreground="{Binding Color}"
-                                    Text="{Binding Text}" />
+                                    Text="{Binding Text}">
+                                    <TextBlock.ToolTip>
+                                        <TextBlock Text="{Binding TipText}" Visibility="{Binding TipText, Converter={StaticResource EmptyStringVisibilityConverter}}" />
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
 

@@ -22,8 +22,14 @@ namespace NFCT.Graph.ViewModels
         }
         public string Text { get; set; }
         public TextToken.TokenType Type { get; set; }
-        public string? TipText { get; set; }
+        private string? _tipText;
+        public string? TipText
+        {
+            get => _tipText;
+            set => SetProperty(ref _tipText, value);
+        }
         public Brush Color => CanvasNodeResource.NodeTokenBrushes[(int)Type];
+        public int FontSize => Type == TextToken.TokenType.Superscript ? 8 : 16;
 
         public void OnThemeSwitch()
         {
@@ -164,6 +170,7 @@ namespace NFCT.Graph.ViewModels
 
             if (pr.Tokens != null)
             {
+                var project = Owner.Graph.Project;
                 Tokens.Clear();
                 _allTokens.Clear();
                 pr.Tokens.ForEach(token =>
@@ -181,6 +188,18 @@ namespace NFCT.Graph.ViewModels
                         };
                         _allTokens.Add(tk);
                         Tokens.Add(tk);
+
+                        // add superscript
+                        var refData = project.GetRefData(tk.Text);
+                        if (refData != null && !string.IsNullOrEmpty(refData.Abbr))
+                        {
+                            var refTk = new TextTokenViewModel(refData.Abbr) { Type = TextToken.TokenType.Superscript };
+                            _allTokens.Add(refTk);
+                            Tokens.Add(refTk);
+                            if (!string.IsNullOrEmpty(refData.Description))
+                                tk.TipText = refData.Description;
+                            Logger.DBG($"token {refData.Content} ref to {refData.Abbr} {refData.Description}");
+                        }
                     }
                 });
             }
