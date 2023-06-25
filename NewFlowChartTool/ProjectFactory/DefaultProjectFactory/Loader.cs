@@ -709,6 +709,7 @@ namespace ProjectFactory.DefaultProjectFactory
                             GroupDict.Add(value, group);
                         }
                         group.Nodes.Add(node);
+                        node.OwnerGroup = group;
                     }
                     else if (key == "code")
                     {

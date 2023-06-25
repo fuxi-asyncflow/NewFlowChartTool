@@ -23,5 +23,19 @@ namespace FlowChart.Core
         public string Uid { get; set; }
 
         public List<Node> Nodes { get; set; }
+
+        public void RemoveNode(Node node)
+        {
+            if (!Nodes.Contains(node))
+                return;
+            node.OwnerGroup = null;
+            Nodes.Remove(node);
+        }
+
+        public void RemoveAllNode()
+        {
+            Nodes.ForEach(node => node.OwnerGroup = null);
+            Nodes.Clear();
+        }
     }
 }

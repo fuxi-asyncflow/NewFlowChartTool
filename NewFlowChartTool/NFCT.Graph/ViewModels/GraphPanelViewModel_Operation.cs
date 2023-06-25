@@ -122,7 +122,7 @@ namespace NFCT.Graph.ViewModels
             var curNodeGroup = Node.OwnerGroup;
             if (curNodeGroup != null)
             {
-                Node.OwnerGroup.Nodes.Add(newBaseNode.Node);
+                curNodeGroup.Nodes.Add(newBaseNode.Node);
                 newBaseNode.Node.OwnerGroup = curNodeGroup;
                 foreach (var g in Groups)
                 {
@@ -166,6 +166,7 @@ namespace NFCT.Graph.ViewModels
                         if (Groups[i].Nodes.Count == 0)
                         {
                             Groups.RemoveAt(i);
+                            Graph.Groups.RemoveAt(i);
                         }
                     }
                 }
@@ -430,7 +431,7 @@ namespace NFCT.Graph.ViewModels
             if (SelectedNodes.Count != 1) return;
             var nodes = new List<Node>();
             SelectedNodes.ForEach(node => nodes.Add(node.Node));
-            Graph.RemoveGroup(nodes);
+            Graph.RemoveGroup(nodes[0]);
             for (int i = Groups.Count - 1; i >= 0; i--)
             {
                 if (Groups[i].Nodes.Contains(SelectedNodes[0]))
@@ -439,7 +440,6 @@ namespace NFCT.Graph.ViewModels
                 }
             }
             NeedLayout = true;
-
         }
 
         void _addGroupViewModel(Group group)
