@@ -80,6 +80,7 @@ namespace NFCT.Graph.ViewModels
 
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             CreateGroupCommand = new DelegateCommand(CreateGroupFromSelectedNodes);
+            RemoveGroupCommand = new DelegateCommand(RemoveGroupFromSelectedNodes);
             EllipsisCommand = new DelegateCommand(Ellipsis);
             OnCloseCommand = new DelegateCommand(OnClose);
             OnPreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnPreviewKeyDown);
@@ -211,6 +212,7 @@ namespace NFCT.Graph.ViewModels
 
         public DelegateCommand ChangeLayoutCommand { get; set; }
         public DelegateCommand CreateGroupCommand { get; set; }
+        public DelegateCommand RemoveGroupCommand { get; set; }
         public DelegateCommand OnCloseCommand { get; set; }
 
         public DelegateCommand SubgraphCommand { get; set; }
@@ -599,8 +601,18 @@ namespace NFCT.Graph.ViewModels
             if (SelectedNodes.Count == 0)
                 return;
             GraphClipboard.Clear();
-            GraphClipboard.AddRange(SelectedNodes);
-            SelectedNodes.ForEach(nodeVm => nodeVm.IsCut = isClip);
+            foreach (var node in SelectedNodes)
+            {
+                if (node.Node is StartNode)
+                    continue;
+                GraphClipboard.Add(node);
+            }
+            SelectedNodes.ForEach(nodeVm =>
+            {
+                if (nodeVm.Node is StartNode)
+                    return;
+                nodeVm.IsCut = isClip;
+            });
             IsClip = isClip;
         }
 

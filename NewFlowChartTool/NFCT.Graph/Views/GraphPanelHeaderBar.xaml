@@ -23,6 +23,7 @@
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
                 <Button Command="{Binding ChangeLayoutCommand}" Content="layout" />
                 <Button Command="{Binding CreateGroupCommand}" Content="group" />
+                <Button Command="{Binding RemoveGroupCommand}" Content="RemoveGroup" />
                 <TextBlock VerticalAlignment="Center" Text="子图类型" />
                 <ComboBox
                     x:Name="SubGraphComboBox"

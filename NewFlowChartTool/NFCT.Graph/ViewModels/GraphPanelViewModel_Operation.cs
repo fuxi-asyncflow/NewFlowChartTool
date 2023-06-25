@@ -50,6 +50,7 @@ namespace NFCT.Graph.ViewModels
                 return;
             //Connect(CurrentNode.Node, newNode);
             Graph.Connect_atom(CurrentNode.Node, newNode, Connector.ConnectorType.ALWAYS);
+            AddParentNodeGroup(CurrentNode.Node, vm);
             NeedLayout = true;
             IsDirty = true;
             // set newnode as currentnode
@@ -104,7 +105,9 @@ namespace NFCT.Graph.ViewModels
                 return;
             //Connect(CurrentNode.Node, newNode);
             var conn = CurrentConnector.Connector;
-            Graph.Connect_atom(conn.Start, newNode, conn.ConnType);
+            AddParentNodeGroup(conn.Start, vm);
+            int index = conn.Start.Children.IndexOf(conn);
+            Graph.Connect_atom(conn.Start, newNode, conn.ConnType, index);
             Graph.Connect_atom(newNode, conn.End, conn.ConnType);
             Graph.RemoveConnector_atom(conn.Start, conn.End);
             NeedLayout = true;
@@ -112,6 +115,25 @@ namespace NFCT.Graph.ViewModels
             SetCurrentNode(vm);
             Build();
             UndoRedoManager.End();
+        }
+
+        void AddParentNodeGroup(Node Node, BaseNodeViewModel newBaseNode)
+        {
+            var curNodeGroup = Node.OwnerGroup;
+            if (curNodeGroup != null)
+            {
+                Node.OwnerGroup.Nodes.Add(newBaseNode.Node);
+                newBaseNode.Node.OwnerGroup = curNodeGroup;
+                foreach (var g in Groups)
+                {
+                    if (g.Group == curNodeGroup)
+                    {
+                        g.Nodes.Add(newBaseNode);
+                        g.Resize();
+                        break;
+                    }
+                }
+            }
         }
         #endregion
 
@@ -128,6 +150,25 @@ namespace NFCT.Graph.ViewModels
             foreach (var nodeVm in nodeVms)
             {
                 var node = nodeVm.Node;
+                if (node.OwnerGroup != null)
+                {
+                    node.OwnerGroup.Nodes.Remove(node);
+                    foreach (var g in Groups)
+                    {
+                        var rn = g.Nodes.Find(n => n.Node == node);
+                        if (rn != null)
+                        {
+                            g.Nodes.Remove(rn);
+                        }
+                    }
+                    for (int i = Groups.Count - 1; i >= 0; i--)
+                    {
+                        if (Groups[i].Nodes.Count == 0)
+                        {
+                            Groups.RemoveAt(i);
+                        }
+                    }
+                }
                 Graph.RemoveNode(node);
             }
 
@@ -352,7 +393,12 @@ namespace NFCT.Graph.ViewModels
             if (SelectedNodes.Count == 0) return;
 
             var nodes = new List<Node>();
-            SelectedNodes.ForEach(node => nodes.Add(node.Node));
+            SelectedNodes.ForEach(node =>
+            {
+                if (node.Node is StartNode)
+                    return;
+                nodes.Add(node.Node);
+            });
 
             var outerParentNodes = Graph.GetRoots(nodes);
             if (outerParentNodes.Count != 1) return;
@@ -367,11 +413,33 @@ namespace NFCT.Graph.ViewModels
             if (group != null)
             {
                 var groupVm = new GroupBoxViewModel(group, this);
-                SelectedNodes.ForEach(node => groupVm.Nodes.Add(node));
+                SelectedNodes.ForEach(node =>
+                {
+                    if (node.Node is StartNode)
+                        return;
+                    groupVm.Nodes.Add(node);
+                });
                 Groups.Add(groupVm);
                 groupVm.Resize();
             }
             NeedLayout = true;
+        }
+
+        public void RemoveGroupFromSelectedNodes()
+        {
+            if (SelectedNodes.Count != 1) return;
+            var nodes = new List<Node>();
+            SelectedNodes.ForEach(node => nodes.Add(node.Node));
+            Graph.RemoveGroup(nodes);
+            for (int i = Groups.Count - 1; i >= 0; i--)
+            {
+                if (Groups[i].Nodes.Contains(SelectedNodes[0]))
+                {
+                    Groups.RemoveAt(i);
+                }
+            }
+            NeedLayout = true;
+
         }
 
         void _addGroupViewModel(Group group)

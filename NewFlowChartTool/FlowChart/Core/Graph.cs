@@ -715,6 +715,20 @@ namespace FlowChart.Core
             return group;
         }
 
+        public void RemoveGroup(List<Node> nodes)
+        {
+            foreach (var node in nodes)
+            {
+                var g = Groups.Find(n => { return n.Nodes.Contains(node); });
+                if (g != null)
+                {
+                    g.Nodes.ForEach(node => node.OwnerGroup = null);
+                    Groups.Remove(g);
+                }
+            }
+
+        }
+
         public static Graph EmptyGraph { get; set; }
 
         public virtual Graph Clone()

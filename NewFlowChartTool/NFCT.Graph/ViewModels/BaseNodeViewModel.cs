@@ -430,6 +430,7 @@ namespace NFCT.Graph.ViewModels
                 {
                     var v = result.Parameters.GetValue<string>("Value");
                     Node.Description = v;
+                    Owner.NeedLayout = true;
                 }
             });
         }
