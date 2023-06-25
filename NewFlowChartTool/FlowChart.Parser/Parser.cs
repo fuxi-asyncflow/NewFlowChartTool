@@ -111,7 +111,7 @@ namespace FlowChart.Parser
             return visitor.Visit(tree);
         }
 
-        public TextToken.TokenType GetTokenType(int symbolType)
+        public virtual TextToken.TokenType GetTokenType(int symbolType)
         {
             switch (symbolType)
             {
