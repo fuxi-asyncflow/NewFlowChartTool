@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using FlowChart.Core;
 using FlowChart.Common;
 
@@ -402,44 +403,38 @@ namespace NFCT.Graph.ViewModels
             });
 
             var outerParentNodes = Graph.GetRoots(nodes);
-            if (outerParentNodes.Count != 1) return;
-
-            foreach (var node in nodes)
+            if (outerParentNodes.Count != 1)
             {
-                if(node.OwnerGroup != null)
-                    return;
+                MessageBox.Show("创建group的节点，应该有公共的根节点");
+                return;
             }
 
-            var group = Graph.CreateGroup(nodes);
-            if (group != null)
-            {
-                var groupVm = new GroupBoxViewModel(group, this);
-                SelectedNodes.ForEach(node =>
-                {
-                    if (node.Node is StartNode)
-                        return;
-                    groupVm.Nodes.Add(node);
-                });
-                Groups.Add(groupVm);
-                groupVm.Resize();
-            }
+            UndoRedoManager.Begin("add group");
+            Graph.CreateGroup(nodes);
+            UndoRedoManager.End();
             NeedLayout = true;
         }
 
-        public void RemoveGroupFromSelectedNodes()
+        public void RemoveGroupOperation()
         {
-            if (SelectedNodes.Count != 1) return;
-            var nodes = new List<Node>();
-            SelectedNodes.ForEach(node => nodes.Add(node.Node));
-            Graph.RemoveGroup(nodes[0]);
-            for (int i = Groups.Count - 1; i >= 0; i--)
-            {
-                if (Groups[i].Nodes.Contains(SelectedNodes[0]))
-                {
-                    Groups.RemoveAt(i);
-                }
-            }
+            if (CurrentGroup == null)
+                return;
+
+            UndoRedoManager.Begin("remove group");
+            Graph.RemoveGroup(CurrentGroup.Group);
+            UndoRedoManager.End();
             NeedLayout = true;
+        }
+
+        void OnGroupRemove(Group group)
+        {
+            var vm = GetGroupVm(group);
+            if (vm == null)
+                return;
+            Groups.Remove(vm);
+            UndoRedoManager.AddAction(
+                () => { _graph.RemoveGroup_atom(group); },
+                () => { _graph.AddGroup_atom(group); });
         }
 
         void _addGroupViewModel(Group group)
@@ -448,6 +443,31 @@ namespace NFCT.Graph.ViewModels
             groupVm.Nodes.AddRange(group.Nodes.ConvertAll(GetNodeVm));
             Groups.Add(groupVm);
         }
+
+        void OnGroupAdd(Group group)
+        {
+            _addGroupViewModel(group);
+
+            UndoRedoManager.AddAction(
+                () => { _graph.AddGroup_atom(group); },
+                () => { _graph.RemoveGroup_atom(group); });
+        }
+
+        void OnNodeGroupChange(Node node, Group? oldGroup, Group? newGroup)
+        {
+            var nodeVm = GetNodeVm(node);
+            var groupVm = GetGroupVm(newGroup);
+            var oldGroupVm = GetGroupVm(oldGroup);
+            if(oldGroupVm != null)
+                oldGroupVm.RemoveNode(nodeVm);
+            nodeVm.OwnerGroup = groupVm;
+            if(groupVm != null)
+                groupVm.AddNode(nodeVm);
+            UndoRedoManager.AddAction(
+                () => { _graph.SetGroupForNode_atom(node, newGroup); },
+                () => { _graph.SetGroupForNode_atom(node, oldGroup); });
+        }
+
         #endregion
     }
 }

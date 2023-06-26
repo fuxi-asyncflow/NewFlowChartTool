@@ -80,7 +80,7 @@ namespace NFCT.Graph.ViewModels
 
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             CreateGroupCommand = new DelegateCommand(CreateGroupFromSelectedNodes);
-            RemoveGroupCommand = new DelegateCommand(RemoveGroupFromSelectedNodes);
+            RemoveGroupCommand = new DelegateCommand(RemoveGroupOperation);
             EllipsisCommand = new DelegateCommand(Ellipsis);
             OnCloseCommand = new DelegateCommand(OnClose);
             OnPreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnPreviewKeyDown);
@@ -119,6 +119,9 @@ namespace NFCT.Graph.ViewModels
             _graph.ConnectorTypeChangeEvent += OnConnectorTypeChange;
             _graph.GraphSwitchChildNodeOrderEvent += OnSwitchChildNodeOrder;
             _graph.GraphNodeChangeEvent += OnNodeContentChange;
+            _graph.GraphAddGroupEvent += OnGroupAdd;
+            _graph.GraphRemoveGroupEvent += OnGroupRemove;
+            _graph.GraphNodeGroupChangeEvent += OnNodeGroupChange;
             IsDirty = false;
         }
 
@@ -207,6 +210,19 @@ namespace NFCT.Graph.ViewModels
             Debug.Assert(ConnectorDict.ContainsKey(conn));
             return ConnectorDict[conn];
         }
+
+        public GroupBoxViewModel? GetGroupVm(Group? group)
+        {
+            if (group == null)
+                return null;
+
+            foreach (var groupBoxViewModel in Groups)
+            {
+                if(groupBoxViewModel.Group == group)
+                    return groupBoxViewModel;
+            }
+            return null;
+        }
         
         
 
@@ -275,6 +291,7 @@ namespace NFCT.Graph.ViewModels
         public List<GraphConnectorViewModel> SelectedConnectors { get; set; }
         public BaseNodeViewModel? CurrentNode { get; set; } // node will has keyboard focus
         public GraphConnectorViewModel? CurrentConnector { get; set; }
+        public GroupBoxViewModel? CurrentGroup { get; set; }
         public void SelectNode(BaseNodeViewModel nodeVm, bool clearOthers = true)
         {
             if (nodeVm.IsSelect)
@@ -337,6 +354,8 @@ namespace NFCT.Graph.ViewModels
                     conn.IsSelect = false;
             });
             SelectedConnectors.RemoveAll(conn => conn != exclude);
+
+            SetCurrentGroup(null);
         }
 
         public void MoveSelectedItems(double dx, double dy)
@@ -357,6 +376,12 @@ namespace NFCT.Graph.ViewModels
             {
                 CurrentConnector.IsFocused = false;
                 CurrentConnector.IsSelect = false;
+                CurrentConnector = null;
+            }
+
+            if (CurrentGroup != null)
+            {
+                CurrentGroup.IsSelected = false;
                 CurrentConnector = null;
             }
         }
@@ -402,6 +427,23 @@ namespace NFCT.Graph.ViewModels
                 CurrentConnector.IsSelect = true;
             }
             Console.WriteLine("set current connector");
+        }
+
+        public void SetCurrentGroup(GroupBoxViewModel? groupVm)
+        {
+            if (CurrentGroup == groupVm)
+                return;
+
+            //if(groupVm != null)
+            ClearCurrentItem();
+            CurrentGroup = groupVm;
+            if (CurrentGroup != null)
+            {
+                // CurrentGroup.IsFocused = true;
+                CurrentGroup.IsSelected = true;
+            }
+            Console.WriteLine("set current connector");
+
         }
 
         public void SelectNodeInBox(Rect box)

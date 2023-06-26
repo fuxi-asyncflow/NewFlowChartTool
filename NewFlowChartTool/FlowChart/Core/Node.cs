@@ -23,7 +23,8 @@ namespace FlowChart.Core
         public Guid Uid { get; set; }
         public int Id { get; set; } // be careful, only used for display
         public Graph OwnerGraph { get; set; }
-        public Group? OwnerGroup { get; set; }
+        public Group? OwnerGroup { get; set; } // be careful, should only set in Graph's SetGraphForNode
+
         private string? _description;
         public string? Description
         {

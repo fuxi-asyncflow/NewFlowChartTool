@@ -60,5 +60,24 @@ namespace NFCT.Graph.ViewModels
             RaisePropertyChanged(nameof(Height));
 
         }
+
+        private bool _isSelected;
+
+        public bool IsSelected
+        {
+            get => _isSelected;
+            set => SetProperty(ref _isSelected, value);
+        }
+
+        public void RemoveNode(BaseNodeViewModel nodeVm)
+        {
+            Nodes.Remove(nodeVm);
+        }
+
+        public void AddNode(BaseNodeViewModel nodeVm)
+        {
+            Nodes.Add(nodeVm);
+        }
+
     }
 }

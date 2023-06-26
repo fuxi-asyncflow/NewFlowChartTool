@@ -144,6 +144,9 @@ namespace FlowChart.Core
         public event GraphAddVariableDelegate? GraphAddVariableEvent;
         public event GraphSwitchChildNodeOrderDelegate? GraphSwitchChildNodeOrderEvent;
         public event Action<Node, string, string>? GraphNodeChangeEvent;
+        public event Action<Node, Group?, Group?>? GraphNodeGroupChangeEvent;
+        public event Action<Group>? GraphAddGroupEvent;
+        public event Action<Group>? GraphRemoveGroupEvent;
 
         public void OnNodeChange(Node node, string oldText, string newText)
         {
@@ -706,20 +709,59 @@ namespace FlowChart.Core
             }
         }
 
-        public Group? CreateGroup(List<Node> nodes)
+        #region Group Operations
+
+        public Group AddGroup_atom(Group group)
         {
-            var group = new Group("--");
-            group.Nodes.AddRange(nodes);
+            group.Name = $"group_{group.GetHashCode():X04}";
             Groups.Add(group);
-            nodes.ForEach(node => node.OwnerGroup = group);
+            GraphAddGroupEvent?.Invoke(group);
             return group;
         }
 
-        public void RemoveGroup(Node node)
+        public Group? CreateGroup(List<Node> nodes)
         {
-            Groups.Remove(node.OwnerGroup);
-            node.OwnerGroup.RemoveAllNode();
+            foreach (var node in nodes)
+            {
+                if (node.OwnerGroup != null)
+                {
+                    Logger.WARN($"create group failed, node `{node}` is in another group `{node.OwnerGroup.Name}`");
+                    return null;
+                }
+            }
+            var group = new Group("--");
+            AddGroup_atom(group);
+            nodes.ForEach(node => SetGroupForNode_atom(node, group));
+            return group;
         }
+
+        public void RemoveGroup_atom(Group group)
+        {
+            Groups.Remove(group);
+            GraphRemoveGroupEvent?.Invoke(group);
+        }
+
+        public void RemoveGroup(Group group)
+        {
+            group.Nodes.ForEach(node => SetGroupForNode_atom(node, group));
+            RemoveGroup_atom(group);
+        }
+
+        public void SetGroupForNode_atom(Node node, Group? group)
+        {
+            var oldGroup = node.OwnerGroup;
+            if (oldGroup == group)
+                return;
+            if(oldGroup != null)
+                oldGroup.RemoveNode(node);
+            node.OwnerGroup = group;
+            if(group != null)
+                group.Nodes.Add(node);
+            GraphNodeGroupChangeEvent?.Invoke(node, oldGroup, group);
+        }
+
+        #endregion
+
 
         public static Graph EmptyGraph { get; set; }
 

@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using FlowChart.Common;
+using NFCT.Common;
+using NFCT.Graph.ViewModels;
 
 namespace NFCT.Graph.Views
 {
@@ -23,6 +26,24 @@ namespace NFCT.Graph.Views
         public GroupBox()
         {
             InitializeComponent();
+        }
+
+        private void GroupBox_OnMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var groupVm = WPFHelper.GetDataContext<GroupBoxViewModel>(sender);
+            bool isCtrlDown = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
+            bool isShiftDown = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
+            if (groupVm == null) return;
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                groupVm.Owner.ClearSelectedItems();
+                groupVm.Owner.SetCurrentGroup(groupVm);
+                e.Handled = true;
+            }
+            else if (e.RightButton == MouseButtonState.Pressed)
+            {
+                
+            }
         }
     }
 }

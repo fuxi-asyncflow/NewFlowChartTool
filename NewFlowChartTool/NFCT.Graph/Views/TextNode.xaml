@@ -26,7 +26,7 @@
         <Border
             x:Name="NodeBorder"
             Background="{Binding BaseNode.BgType, Converter={StaticResource BgColorConverter}, Mode=OneWay}"
-            BorderBrush="{Binding BaseNode.BgType, Converter={StaticResource BorderColorConverter}, Mode=OneWay}"
+            BorderBrush="{Binding BaseNode.IsSelect, Converter={StaticResource BorderColorConverter}, Mode=OneWay}"
             BorderThickness="{Binding BaseNode.IsSelect, Converter={StaticResource BorderConverter}, Mode=OneWay}"
             CornerRadius="3">
 
