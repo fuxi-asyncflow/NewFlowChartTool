@@ -355,7 +355,15 @@ namespace NFCT.Graph.ViewModels
             });
             SelectedConnectors.RemoveAll(conn => conn != exclude);
 
-            SetCurrentGroup(null);
+            if (CurrentGroup != null)
+            {
+                // CurrentGroup.IsFocused = true;
+                if (CurrentGroup != exclude)
+                {
+                    CurrentGroup.IsSelected = false;
+                    CurrentGroup = null;
+                }
+            }
         }
 
         public void MoveSelectedItems(double dx, double dy)
@@ -382,7 +390,7 @@ namespace NFCT.Graph.ViewModels
             if (CurrentGroup != null)
             {
                 CurrentGroup.IsSelected = false;
-                CurrentConnector = null;
+                CurrentGroup = null;
             }
         }
 
@@ -442,7 +450,7 @@ namespace NFCT.Graph.ViewModels
                 // CurrentGroup.IsFocused = true;
                 CurrentGroup.IsSelected = true;
             }
-            Console.WriteLine("set current connector");
+            Console.WriteLine("set current group");
 
         }
 
