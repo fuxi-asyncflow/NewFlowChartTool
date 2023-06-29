@@ -743,7 +743,7 @@ namespace FlowChart.Core
 
         public void RemoveGroup(Group group)
         {
-            group.Nodes.ForEach(node => SetGroupForNode_atom(node, group));
+            group.Nodes.ForEach(node => SetGroupForNode_atom(node, null));
             RemoveGroup_atom(group);
         }
 
