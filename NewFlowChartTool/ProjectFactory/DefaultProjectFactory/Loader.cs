@@ -253,6 +253,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
 
                 var method = new Method(name) {Type = kv.Value, Template = "$params", Description = $"cast to {name} type"};
+                method.SaveToFile = false;
                 method.Parameters.Add(new Parameter("value") {Type = BuiltinTypes.AnyType});
                 globalType.AddMember(method);
             }
