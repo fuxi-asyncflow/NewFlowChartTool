@@ -186,7 +186,7 @@ namespace NewFlowChartTool.ViewModels
             if (project == null || project.Config == null)
                 return;
             DebugServers.Clear();
-            project.Config.DebugServers.ForEach(server =>
+            project.Config.DebugServers?.ForEach(server =>
             {
                 DebugServers.Add(new ServerConfigViewModel(server));
             });
