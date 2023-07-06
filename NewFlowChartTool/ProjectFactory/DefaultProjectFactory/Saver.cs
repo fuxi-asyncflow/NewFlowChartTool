@@ -34,15 +34,19 @@ namespace ProjectFactory.DefaultProjectFactory
             var lines = new List<string>();
             graphs.ForEach(graph =>
             {
+                lines.Add("--- ");
                 saver.SaveGraph(graph, lines, outputs);
             });
-            
+            lines.Add("...");
+
 
             //lines.Insert(0, "---");
             //lines.Add("...");
             //var chartData = string.Join('\n', lines);
             //var chartDataBytes = System.Text.Encoding.UTF8.GetBytes(chartData);
             //chartData = System.Convert.ToBase64String(chartDataBytes);
+            
+            saver.SaveForLang.SaveGenerateFile(saver.Project, "", "", lines, outputs);
 
             var codesData = string.Join('\n', outputs);
             var codeDataBytes = System.Text.Encoding.UTF8.GetBytes(codesData);
