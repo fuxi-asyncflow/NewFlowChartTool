@@ -163,6 +163,7 @@
                 <avalonEdit:TextEditor
                     xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
                     Name="textEditor"
+                    MinHeight="150"
                     Background="{DynamicResource {x:Static reskeys:ResourceKeys.EditorBackground}}"
                     Document="{Binding MethodCode}"
                     FontFamily="Consolas"
