@@ -811,15 +811,22 @@ namespace NewFlowChartTool.ViewModels
             if (IsCodeStyle && SelectedMember != null && SelectedType != null)
             {
                 var code = MethodCode.Text;
-                var methodResult = MethodStringParser.Method.Parse(code);
-                var m = methodResult.ToMember(CurrentProject);
-                if (m != null)
+                try
                 {
-                    var originModel = SelectedMember.Model;
-                    SelectedType.Model.RemoveMember(originModel.Name);
-                    SelectedMember.SetModel(m);
-                    SelectedType.Model.AddMember(m);
-                    OnSelectedMemberChange();
+                    var methodResult = MethodStringParser.Method.Parse(code);
+                    var m = methodResult.ToMember(CurrentProject);
+                    if (m != null)
+                    {
+                        var originModel = SelectedMember.Model;
+                        SelectedType.Model.RemoveMember(originModel.Name);
+                        SelectedMember.SetModel(m);
+                        SelectedType.Model.AddMember(m);
+                        OnSelectedMemberChange();
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show($"语法错误 {e.Message}");
                 }
             }
 
