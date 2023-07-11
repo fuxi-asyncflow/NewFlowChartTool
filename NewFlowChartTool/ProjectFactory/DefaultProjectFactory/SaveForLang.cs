@@ -152,7 +152,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 lines.Add("");
             }
 
-            lines.Add("import asyncflow");
+            // lines.Add("import asyncflow");
         }
 
         public void SaveNodeFunc(TextNode textNode, List<string> genLines)
