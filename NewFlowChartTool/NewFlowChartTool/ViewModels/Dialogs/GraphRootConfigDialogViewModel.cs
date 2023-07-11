@@ -87,7 +87,8 @@ namespace NewFlowChartTool.ViewModels
 
         private void Save()
         {
-            config.Name = Name.Trim();
+            var newName = Name.Trim();
+            project.RenameRoot(config.Name, newName);
             config.Path = Path.Trim();
             config.OutputPath = OutputPath.Trim();
             if(TypeName != null)

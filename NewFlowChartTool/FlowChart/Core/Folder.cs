@@ -25,6 +25,8 @@ namespace FlowChart.Core
         public List<SubGraphMethod> LocalSubGraphs { get; set; }
         public Dictionary<string, SubGraphMethod> LocalSubGraphDict { get; set; }
 
+        public bool IsRootFolder => Project.Root == Parent;
+
         #region extra info
 
         public bool HasExtraInfo => _extra != null && _extra.Count > 0;
@@ -130,9 +132,11 @@ namespace FlowChart.Core
         {
             var parentPath = Parent.JoinPath();
             //Debug.Assert(Path == $"{parentPath}.{Name}");
-
+            var oldPath = Path;
             Name = newName;
-            var newPath = $"{parentPath}.{Name}";
+            var newPath = IsRootFolder ? Name : $"{parentPath}.{Name}";
+            Path = newPath;
+            Project?.RenameItem(this, oldPath, newPath);
             RenameChildren(newPath);
 
             RaiseRenameEvent(newName);
@@ -145,7 +149,9 @@ namespace FlowChart.Core
                 var path = $"{parentPath}.{treeItem.Name}";
                 if (treeItem is Folder folder)
                 {
+                    var oldPath = folder.Path;
                     folder.Path = path;
+                    Project?.RenameItem(folder, oldPath, path);
                     folder.RenameChildren(path);
                 }
                 else if (treeItem is Graph graph)

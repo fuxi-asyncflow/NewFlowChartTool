@@ -448,6 +448,20 @@ namespace FlowChart.Core
             //TODO trigger event
         }
 
+        public void RenameRoot(string oldName, string newName)
+        {
+            var rootCfg = Config.GetGraphRoot(oldName);
+            if (rootCfg == null)
+                return;
+            rootCfg.Name = newName;
+            
+            var root = Root.Children.Find(r => r.Name == oldName);
+            if (root == null)
+                return;
+
+            root.Rename(newName);
+        }
+
         #region PARSER and BUILDER
 
         public void Build()
