@@ -12,9 +12,15 @@ namespace FlowChart.LuaCodeGen
     public class LuaCodeGenerator : CodeGenerator
     {
         public override string Lang => "lua";
+
         public LuaCodeGenerator()
         {
             Operator.Strcat.Text = "..";
+
+            KeyWordMap = new Dictionary<string, string>();
+            KeyWordMap.Add("true", "True");
+            KeyWordMap.Add("false", "False");
+            KeyWordMap.Add("nil", "None");
         }
         protected override void PrepareCode(NodeInfo info)
         {

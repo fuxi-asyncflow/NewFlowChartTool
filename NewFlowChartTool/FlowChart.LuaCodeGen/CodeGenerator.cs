@@ -26,10 +26,13 @@ namespace FlowChart.LuaCodeGen
         public virtual char InvokeOperator => ':';
         public virtual string Lang => "unkown";
 
+        public Dictionary<string, string>? KeyWordMap;
+
         public ParseResult GenerateCode(ASTNode ast, ParserConfig cfg, Node? node)
         {
             _node = node;
             OnlyGetType = cfg.OnlyGetType;
+            LiteralNode.TextMap = KeyWordMap;
             Pr = new ParseResult();
             try
             {

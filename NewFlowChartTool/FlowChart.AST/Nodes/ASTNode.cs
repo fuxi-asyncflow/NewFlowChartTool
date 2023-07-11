@@ -100,7 +100,19 @@ namespace FlowChart.AST.Nodes
 
     public class LiteralNode : ASTNode
     {
-        public string Text;
+        public string _text;
+        public string Text
+        {
+            get
+            {
+                if (TextMap != null && TextMap.TryGetValue(_text, out var result))
+                    return result;
+                return _text;
+            }
+            set => _text = value;
+        }
+
+        public static Dictionary<string, string>? TextMap;
 
         public override bool Equals(object? obj)
         {

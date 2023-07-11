@@ -19,6 +19,11 @@ namespace FlowChart.LuaCodeGen
             Operator.Strcat.Text = "+";
             Operator.And.Text = "and";
             Operator.Or.Text = "or";
+
+            KeyWordMap = new Dictionary<string, string>();
+            KeyWordMap.Add("true", "True");
+            KeyWordMap.Add("false", "False");
+            KeyWordMap.Add("nil", "None");
         }
 
         protected override void PrepareCode(NodeInfo info)
