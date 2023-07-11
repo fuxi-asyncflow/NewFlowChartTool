@@ -29,6 +29,7 @@ namespace NFCT.Common.Localization
         public static readonly ComponentResourceKey Common_Add = KEY(nameof(Common_Add));
         public static readonly ComponentResourceKey Common_Delete = KEY(nameof(Common_Delete));
         public static readonly ComponentResourceKey Common_Modify = KEY(nameof(Common_Modify));
+        public static readonly ComponentResourceKey Common_Edit = KEY(nameof(Common_Edit));
         public static readonly ComponentResourceKey Common_Confirm = KEY(nameof(Common_Confirm));
         public static readonly ComponentResourceKey Common_Cancel = KEY(nameof(Common_Cancel));
         public static readonly ComponentResourceKey Common_Copy = KEY(nameof(Common_Copy));
@@ -91,6 +92,7 @@ namespace NFCT.Common.Localization
 
         #region Node Menu
         public static readonly ComponentResourceKey Menu_ConnectNodes = KEY(nameof(Menu_ConnectNodes));
+        public static readonly ComponentResourceKey Menu_NewNode = KEY(nameof(Menu_NewNode));
         public static readonly ComponentResourceKey Menu_BreakPoint = KEY(nameof(Menu_BreakPoint));
         #endregion
 

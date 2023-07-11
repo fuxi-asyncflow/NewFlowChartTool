@@ -108,6 +108,12 @@ namespace NFCT.Graph.ViewModels
             OnKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnKeyDown);
             OnMouseDoubleClickCommand = new DelegateCommand<MouseEventArgs>(OnMouseDoubleClick);
             BeginConnectCommand = new DelegateCommand(() => Owner.BeginConnect());
+            EnterEditCommand = new DelegateCommand(EnterEditingMode);
+            NewNodeCommand = new DelegateCommand(() =>
+            {
+                if (!IsEditing)
+                    Owner.AddNewNodeOperation();
+            });
             CopyNodesCommand = new DelegateCommand(() => Owner.CopySelectedNodes());
             CutNodesCommand = new DelegateCommand(() => Owner.CopySelectedNodes(true));
             PasteNodesCommand = new DelegateCommand(() => Owner.PasteNodes(this));
@@ -477,6 +483,8 @@ namespace NFCT.Graph.ViewModels
         }
 
         #region MENU COMMAND
+        public DelegateCommand EnterEditCommand { get; set; }
+        public DelegateCommand NewNodeCommand { get; set; }
         public DelegateCommand BeginConnectCommand { get; set; }
         public DelegateCommand CopyNodesCommand { get; set; }
         public DelegateCommand PasteNodesCommand { get; set; }

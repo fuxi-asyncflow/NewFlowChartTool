@@ -17,6 +17,7 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Add}">添加</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Delete}">删除</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Modify}">修改</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Edit}">编辑</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Confirm}">确认</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Cancel}">取消</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Common_Copy}">复制</system:String>
@@ -67,6 +68,7 @@
 
     <!--  Node Menu  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_ConnectNodes}">连接节点</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewNode}">新建节点</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BreakPoint}">设置/取消断点</system:String>
 
     <!--  Type Manager  -->

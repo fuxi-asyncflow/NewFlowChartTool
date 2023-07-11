@@ -37,9 +37,26 @@
     <UserControl.ContextMenu>
         <ContextMenu>
             <MenuItem Command="{Binding BeginConnectCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Menu_ConnectNodes}}" />
-            <MenuItem Command="{Binding CutNodesCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Cut}}" />
-            <MenuItem Command="{Binding CopyNodesCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Copy}}" />
-            <MenuItem Command="{Binding PasteNodesCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Paste}}" />
+            <MenuItem
+                Command="{Binding EnterEditCommand}"
+                Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Edit}}"
+                InputGestureText="空格 or 双击" />
+            <MenuItem
+                Command="{Binding NewNodeCommand}"
+                Header="{DynamicResource {x:Static localization:ResourceKeys.Menu_NewNode}}"
+                InputGestureText="Enter" />
+            <MenuItem
+                Command="{Binding CutNodesCommand}"
+                Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Cut}}"
+                InputGestureText="Ctrl + X" />
+            <MenuItem
+                Command="{Binding CopyNodesCommand}"
+                Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Copy}}"
+                InputGestureText="Ctrl + C" />
+            <MenuItem
+                Command="{Binding PasteNodesCommand}"
+                Header="{DynamicResource {x:Static localization:ResourceKeys.Common_Paste}}"
+                InputGestureText="Ctrl + V" />
             <Separator />
             <MenuItem Command="{Binding EditDescriptionCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Menu_ModifyDescriptionKey}}" />
             <Separator />
