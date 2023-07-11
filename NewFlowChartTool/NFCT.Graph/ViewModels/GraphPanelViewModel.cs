@@ -397,7 +397,14 @@ namespace NFCT.Graph.ViewModels
         public void SetCurrentNode(BaseNodeViewModel? nodeVm, bool clearOthers = true)
         {
             if (CurrentNode == nodeVm)
+            {
+                if (CurrentNode != null)
+                {
+                    CurrentNode.IsFocused = false;
+                    CurrentNode.IsFocused = true;
+                }
                 return;
+            }
 
             // clear focus on CurrentNode
             var currentNode = CurrentNode;
