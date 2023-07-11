@@ -63,7 +63,13 @@
                 <TextBlock Foreground="Green" Text="{Binding SuccessCount}" />
                 <TextBlock Foreground="Red" Text="{Binding FailureCount}" />
             </StackPanel>
-            <ContentControl Content="{Binding Content}" ContentTemplateSelector="{StaticResource GraphNodesTemplateSelector}" />
+            <ContentControl Content="{Binding Content}" ContentTemplateSelector="{StaticResource GraphNodesTemplateSelector}">
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="MouseDoubleClick">
+                        <prism:InvokeCommandAction Command="{Binding OnMouseDoubleClickCommand}" />
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
+            </ContentControl>
         </StackPanel>
         <Polygon
             Fill="Red"

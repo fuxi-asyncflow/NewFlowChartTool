@@ -106,6 +106,7 @@ namespace NFCT.Graph.ViewModels
             Owner = g;
 
             OnKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnKeyDown);
+            OnMouseDoubleClickCommand = new DelegateCommand<MouseEventArgs>(OnMouseDoubleClick);
             BeginConnectCommand = new DelegateCommand(() => Owner.BeginConnect());
             CopyNodesCommand = new DelegateCommand(() => Owner.CopySelectedNodes());
             CutNodesCommand = new DelegateCommand(() => Owner.CopySelectedNodes(true));
@@ -343,6 +344,7 @@ namespace NFCT.Graph.ViewModels
 
         #region COMMANDS
         public DelegateCommand<KeyEventArgs> OnKeyDownCommand { get; set; }
+        public DelegateCommand<MouseEventArgs> OnMouseDoubleClickCommand { get; set; }
 
         public void OnKeyDown(KeyEventArgs args)
         {
@@ -389,6 +391,12 @@ namespace NFCT.Graph.ViewModels
                     break;
             }
 
+        }
+
+        public void OnMouseDoubleClick(MouseEventArgs args)
+        {
+            EnterEditingMode();
+            args.Handled = true;
         }
 
         #endregion
