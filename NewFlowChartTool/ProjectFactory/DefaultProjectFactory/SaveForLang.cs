@@ -113,14 +113,15 @@ namespace ProjectFactory.DefaultProjectFactory
     public class SaveForPython : ISaveForLang
     {
         public string LineComment => "#";
-        public void SaveEventDefine(Project Project, List<string> lines)
+        public void SaveEventDefine(Project project, List<string> lines)
         {
             var pyLines = new List<string>();
-            pyLines.Add("import asyncflow");
+            //pyLines.Add("import asyncflow");
+            WriteHeader(project, pyLines);
             pyLines.Add("");
 
             pyLines.Add("class EventId:");
-            foreach (var ev in Project.EventDict.Values.ToList())
+            foreach (var ev in project.EventDict.Values.ToList())
             {
                 if (ev.EventId == 0)
                     continue;
@@ -138,7 +139,7 @@ namespace ProjectFactory.DefaultProjectFactory
             pyLines.Add("'''");
             pyLines.Add("asyncflow.import_event(str)");
 
-            FileHelper.Save(Path.Combine(Project.Path, Project.Config.Output, "asyncflow_events.py"), pyLines);
+            FileHelper.Save(Path.Combine(project.Path, project.Config.Output, "asyncflow_events.py"), pyLines);
         }
 
         void WriteHeader(Project project, List<string> lines)
