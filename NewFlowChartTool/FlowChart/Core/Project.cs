@@ -80,10 +80,8 @@ namespace FlowChart.Core
         #endregion
 
         #region Event
-
-        public delegate void GraphEventDelegate(Graph graph);
-        public event GraphEventDelegate? AddGraphEvent;
-        public event GraphEventDelegate? RemoveGraphEvent;
+        public event Action<Graph>? AddGraphEvent;
+        public event Action<TreeItem>? RemoveGraphEvent;
 
         public static Action<Project>? CreateProjectEvent;
         public event Action<Project>? LoadProjectConfigEvent;
@@ -419,7 +417,15 @@ namespace FlowChart.Core
 
         }
 
-        public void Remove(Graph graph)
+        public void Remove(TreeItem item)
+        {
+            if(item is Graph graph)
+                _removeGraph(graph);
+            else if(item is Folder folder)
+                _removeFolder(folder);
+        }
+
+        void _removeGraph(Graph graph)
         {
             if (!GraphDict.ContainsKey(graph.Path))
             {
@@ -434,18 +440,19 @@ namespace FlowChart.Core
             RemoveGraphEvent?.Invoke(graph);
         }
 
-        public void Remove(Folder folder)
+        void _removeFolder(Folder folder)
         {
             folder.Children.ForEach(item =>
             {
                 if(item is Graph graph)
-                    Remove(graph);
+                    _removeGraph(graph);
                 else if (item is Folder f)
                 {
-                    Remove(f);
+                    _removeFolder(f);
                 }
             });
-            //TODO trigger event
+            GraphDict.Remove(folder.Path);
+            RemoveGraphEvent?.Invoke(folder);
         }
 
         public void RenameRoot(string oldName, string newName)

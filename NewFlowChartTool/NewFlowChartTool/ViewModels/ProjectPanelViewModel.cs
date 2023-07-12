@@ -359,11 +359,11 @@ namespace NewFlowChartTool.ViewModels
             Sort();
         }
 
-        public void Remove(Graph graph)
+        public void Remove(TreeItem item)
         {
             foreach (var child in Children)
             {
-                if (child.Item == graph)
+                if (child.Item == item)
                 {
                     Children.Remove(child);
                     return;
@@ -552,11 +552,11 @@ namespace NewFlowChartTool.ViewModels
             }
         }
 
-        public void OnRemoveGraph(Graph graph)
+        public void OnRemoveGraph(TreeItem item)
         {
-            if (GetTreeItemViewModel(graph.Parent) is ProjectTreeFolderViewModel folderVm)
+            if (GetTreeItemViewModel(item.Parent) is ProjectTreeFolderViewModel folderVm)
             {
-                folderVm.Remove(graph);
+                folderVm.Remove(item);
             }
         }
 
