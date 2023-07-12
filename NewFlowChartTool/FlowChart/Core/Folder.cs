@@ -128,6 +128,17 @@ namespace FlowChart.Core
             return Items.ContainsKey(name);
         }
 
+        public string GetUnusedName(string name)
+        {
+            var originName = name;
+            int idx = 1;
+            while (Items.ContainsKey(name))
+            {
+                name = $"{originName}_{idx++}";
+            }
+            return name;
+        }
+
         public override void Rename(string newName)
         {
             var parentPath = Parent.JoinPath();

@@ -28,6 +28,7 @@
                     <Style TargetType="{x:Type MenuItem}">
                         <Setter Property="Command" Value="{Binding Command}" />
                         <Setter Property="Header" Value="{Binding Text}" />
+                        <Setter Property="InputGestureText" Value="{Binding InputGestureText}" />
                         <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeViewItem}}, Path=DataContext}" />
                     </Style>
                 </ContextMenu.ItemContainerStyle>

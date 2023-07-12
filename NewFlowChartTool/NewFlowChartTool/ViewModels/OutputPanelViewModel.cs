@@ -67,11 +67,21 @@ namespace NewFlowChartTool.ViewModels
             }, ThreadOption.UIThread);
 
             OutputMessage.Inst = this;
+            _inst = this;
             Logger.OnWarnEvent += msg => Output(msg, OutputMessageType.Warning);
             Logger.OnErrEvent += msg => Output(msg, OutputMessageType.Error);
         }
 
+        private static OutputPanelViewModel? _inst;
+
         public ObservableCollection<OutputItemViewModel> Outputs { get; set; }
+
+        public static void OutputMsg(string msg, OutputMessageType msgType =
+                OutputMessageType.Default
+            , Node? node = null, Graph? graph = null)
+        {
+            _inst?.Output(msg, msgType, node, graph);
+        }
 
         public void Output(string msg, OutputMessageType msgType =
                 OutputMessageType.Default

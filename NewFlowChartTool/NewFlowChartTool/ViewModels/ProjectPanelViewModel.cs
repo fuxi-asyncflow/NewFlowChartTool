@@ -22,6 +22,7 @@ using Prism.Commands;
 using Prism.Ioc;
 using System.ComponentModel;
 using FlowChart;
+using FlowChart.Misc;
 using Prism.Services.Dialogs;
 using ProjectFactory;
 
@@ -30,9 +31,9 @@ namespace NewFlowChartTool.ViewModels
     [System.AttributeUsage(System.AttributeTargets.Method)]
     public class MenuItemAttribute : System.Attribute
     {
-        public string Name;
+        public object Name;
 
-        public MenuItemAttribute(string name)
+        public MenuItemAttribute(object name)
         {
             Name = name;
         }
@@ -46,6 +47,7 @@ namespace NewFlowChartTool.ViewModels
         }
         public string Text { get; set; }
         public DelegateCommand<T> Command { get; set; }
+        public string? InputGestureText { get; set; }
     }
     public class ProjectTreeItemViewModel : BindableBase
     {
@@ -304,6 +306,90 @@ namespace NewFlowChartTool.ViewModels
             item.Remove();
         }
 
+        public static void MenuCutGraph(ProjectTreeItemViewModel item)
+        {
+            OutputPanelViewModel.OutputMsg($"cut graph {item.Path}");
+            _clipBoard = item;
+            _isCut = true;
+        }
+
+        public static void MenuCopyGraph(ProjectTreeItemViewModel item)
+        {
+            OutputPanelViewModel.OutputMsg($"copy graph {item.Path}");
+            _clipBoard = item;
+            _isCut = false;
+        }
+
+        public static void MenuPasteGraph(ProjectTreeItemViewModel item)
+        {
+            if (_clipBoard == null)
+            {
+                OutputPanelViewModel.OutputMsg($"paste graph failed, clipboard is empty", OutputMessageType.Warning);
+                return;
+            }
+
+            var project = item.Item.Project;
+            var source = _clipBoard.Item;
+            var dstFolder = item as ProjectTreeFolderViewModel ?? item.Folder;
+            if (dstFolder == null)
+            {
+                OutputPanelViewModel.OutputMsg($"paste graph failed, cannot get folder", OutputMessageType.Warning);
+                return;
+            }
+
+            if (_isCut)
+            {
+                if (source.Parent == dstFolder.Item || source == dstFolder.Item)
+                {
+                    OutputPanelViewModel.OutputMsg($"paste graph failed, item is in same folder", OutputMessageType.Warning);
+                    return;
+                }
+                else
+                {
+                    project.Remove(source);
+                    _isCut = false;
+                    if (dstFolder.Item is Folder folder)
+                    {
+                        var name = folder.GetUnusedName(source.Name);
+                        source.Name = name;
+                        source.Path = folder.Path + "." + source.Name;
+                        folder.AddChild(source);
+                        if(source is Graph g)
+                            dstFolder.AddChild(new ProjectTreeItemViewModel(g));
+                        else if (source is Folder f)
+                        {
+                            f.Rename(source.Name);
+                            dstFolder.AddChild(new ProjectTreeFolderViewModel(f));
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (source is Folder)
+                {
+                    OutputPanelViewModel.OutputMsg($"目前不支持文件夹的粘贴", OutputMessageType.Error);
+                    return;
+                }
+
+                if (source is Graph graph)
+                {
+                    var clone = project.Factory.DeserializeGraph(project.Factory.SerializeGraph(graph));
+                    if (clone != null && dstFolder.Item is Folder folder)
+                    {
+                        var name = folder.GetUnusedName(clone.Name);
+                        if (name != clone.Name)
+                        {
+                            clone.Name = name;
+                        }
+
+                        clone.Path = folder.Path + "." + clone.Name;
+                        project.AddGraph(clone);
+                    }
+                }
+            }
+        }
+
         public static void OnLangSwitch(Lang lang)
         {
             MenuItems.Clear();
@@ -316,9 +402,28 @@ namespace NewFlowChartTool.ViewModels
                     var menuDelegate = (Action<ProjectTreeItemViewModel>)
                         Delegate.CreateDelegate(typeof(Action<ProjectTreeItemViewModel>), methodInfo);
                     MenuItems.Add(new MenuItemViewModel<ProjectTreeItemViewModel>(
-                        Application.Current.FindResource(menuItemAttr.Name) as string ?? menuItemAttr.Name
+                        Application.Current.FindResource(menuItemAttr.Name) as string ?? menuItemAttr.Name.ToString() ?? string.Empty
                     , new DelegateCommand<ProjectTreeItemViewModel>(menuDelegate)));
                 }
+            }
+
+            var otherMenus = new List<Tuple<object, Action<ProjectTreeItemViewModel>, string?>>();
+            otherMenus.Add(new Tuple<object, Action<ProjectTreeItemViewModel>, string?>
+                (NFCT.Common.Localization.ResourceKeys.Common_Cut, MenuCutGraph, null));
+            otherMenus.Add(new Tuple<object, Action<ProjectTreeItemViewModel>, string?>
+                (NFCT.Common.Localization.ResourceKeys.Common_Copy, MenuCopyGraph, null));
+            otherMenus.Add(new Tuple<object, Action<ProjectTreeItemViewModel>, string?>
+                (NFCT.Common.Localization.ResourceKeys.Common_Paste, MenuPasteGraph, null));
+
+            foreach (var item in otherMenus)
+            {
+                var key = item.Item1;
+                var f = item.Item2;
+                var menuItem = new MenuItemViewModel<ProjectTreeItemViewModel>(
+                    Application.Current.FindResource(key) as string ?? key.ToString() ?? string.Empty
+                    , new DelegateCommand<ProjectTreeItemViewModel>(f));
+                menuItem.InputGestureText = item.Item3;
+                MenuItems.Add(menuItem);
             }
         }
 
@@ -340,6 +445,13 @@ namespace NewFlowChartTool.ViewModels
                 folder = folder.Folder;
             }
         }
+
+        #region Copy Paste
+
+        private static ProjectTreeItemViewModel? _clipBoard;
+        private static bool _isCut;
+
+        #endregion
     }
 
     public class ProjectTreeFolderViewModel : ProjectTreeItemViewModel
