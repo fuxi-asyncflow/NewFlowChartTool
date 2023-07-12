@@ -690,33 +690,7 @@ namespace NewFlowChartTool.ViewModels
             MethodDefineCodes.Clear();
             if (SelectedMember.Model is Method method)
             {
-                if (method.Description != null)
-                {
-                    MethodDefineCodes.Add($"// {method.Description}");
-                }
-                if(method.Parameters.Count == 0)
-                    MethodDefineCodes.Add($"{method.Type.Name} {method.Name}();");
-                else
-                {
-                    MethodDefineCodes.Add($"{method.Type.Name} {method.Name}(");
-                    var last = method.Parameters.Last();
-                    foreach (var para in method.Parameters)
-                    {
-                        var comma = para == last ? "" : ",";
-                        var line = $"  {para.Type.Name} {para.Name}";
-                        if (para.Default != null)
-                        {
-                            line += $" = {para.Default}";
-                        }
-
-                        line += comma;
-                        if (para.Description != null)
-                            line += $" // {para.Description}";
-                        MethodDefineCodes.Add(line);
-                    }
-                    MethodDefineCodes.Add(");");
-                }
-
+                MethodDefineCodes = method.GetDefineCode();
                 MethodCode.Text = string.Join('\n', MethodDefineCodes);
             }
         }

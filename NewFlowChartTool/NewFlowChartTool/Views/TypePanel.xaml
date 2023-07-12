@@ -54,12 +54,15 @@
                             Text="{Binding Name}" />
                         <TextBlock
                             VerticalAlignment="Center"
-                            Foreground="DarkGreen"
+                            Foreground="{DynamicResource light-green}"
                             Text="{Binding BaseType}" />
                     </StackPanel>
                 </HierarchicalDataTemplate>
                 <DataTemplate DataType="{x:Type vm:TypeMemberTreeItemViewModel}">
-                    <StackPanel Margin="2" Orientation="Horizontal">
+                    <StackPanel
+                        Margin="2"
+                        Orientation="Horizontal"
+                        ToolTip="{Binding ToolTipText}">
                         <ContentControl Content="{Binding Converter={StaticResource TypeMemberIconConverter}}" />
                         <TextBlock
                             Margin="5,0,5,0"
@@ -67,7 +70,7 @@
                             Text="{Binding Name}" />
                         <TextBlock
                             VerticalAlignment="Center"
-                            Foreground="DarkGreen"
+                            Foreground="{DynamicResource light-green}"
                             Text="{Binding Description}"
                             Visibility="{Binding Description, Converter={StaticResource NullToVisibilityConverter}}" />
                     </StackPanel>

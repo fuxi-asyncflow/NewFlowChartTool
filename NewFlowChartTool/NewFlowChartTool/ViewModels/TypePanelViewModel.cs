@@ -72,6 +72,36 @@ namespace NewFlowChartTool.ViewModels
             set { SetProperty(ref _isVisible, value); }
         }
         public TypeMemberTreeItemViewModel ParentNode { get; set; }
+
+        public string ToolTipText => _getToolTip();
+
+        private string _getToolTip()
+        {
+            if (_item is Property prop)
+            {
+                var sb = new StringBuilder();
+                if (!string.IsNullOrEmpty(Description))
+                    sb.AppendLine($"// {Description}");
+                sb.AppendLine($"{prop.Type?.Name} {prop.Name}");
+                return sb.ToString();
+            }
+            else if (_item is Method method)
+            {
+                return string.Join('\n', method.GetDefineCode());
+            }
+            else if (_item is EventType eventType)
+            {
+                if(eventType.Parameters.Count == 0)
+                    return string.Empty;
+                var lines = new List<string>();
+                eventType.Parameters.ForEach(p =>
+                {
+                    lines.Add($"{p.Name}  :  {p.Type}");
+                });
+                return string.Join('\n', lines);
+            }
+            return string.Empty;
+        }
     }
 
     internal class TypeMemberTreeFolderViewModel : TypeMemberTreeItemViewModel
