@@ -94,6 +94,8 @@ namespace NFCT.Common.Localization
         public static readonly ComponentResourceKey Menu_ConnectNodes = KEY(nameof(Menu_ConnectNodes));
         public static readonly ComponentResourceKey Menu_NewNode = KEY(nameof(Menu_NewNode));
         public static readonly ComponentResourceKey Menu_BreakPoint = KEY(nameof(Menu_BreakPoint));
+        public static readonly ComponentResourceKey Menu_MoveLeft = KEY(nameof(Menu_MoveLeft));
+        public static readonly ComponentResourceKey Menu_MoveRight = KEY(nameof(Menu_MoveRight));
         #endregion
 
         #region Type Manager

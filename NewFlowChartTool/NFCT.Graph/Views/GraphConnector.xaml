@@ -6,6 +6,7 @@
     xmlns:common="clr-namespace:NFCT.Common;assembly=NFCT.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:NFCT.Graph.Views"
+    xmlns:localization="clr-namespace:NFCT.Common.Localization;assembly=NFCT.Common"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:utility="clr-namespace:NFCT.Graph.Utility"
@@ -18,8 +19,36 @@
         <utility:ConnectorColorConverter x:Key="ConnectorColorConverter" />
         <utility:ConnectorStrokeWidthConverter x:Key="ConnectorStrokeWidthConverter" />
         <ContextMenu x:Key="ConnectorContextMenu">
-            <MenuItem Command="{Binding MoveLeftCommand}" Header="left" />
-            <MenuItem Command="{Binding MoveRightCommand}" Header="right" />
+            <MenuItem Command="{Binding ColorBlueCommand}" InputGestureText="Tab">
+                <MenuItem.Header>
+                    <Border
+                        Width="48"
+                        Height="5"
+                        BorderBrush="{DynamicResource LineBlueColor}"
+                        BorderThickness="5" />
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem Command="{Binding ColorGreenCommand}" InputGestureText="Tab">
+                <MenuItem.Header>
+                    <Border
+                        Width="48"
+                        Height="5"
+                        BorderBrush="{DynamicResource LineGreenColor}"
+                        BorderThickness="5" />
+                </MenuItem.Header>
+            </MenuItem>
+            <MenuItem Command="{Binding ColorRedCommand}" InputGestureText="Tab">
+                <MenuItem.Header>
+                    <Border
+                        Width="48"
+                        Height="5"
+                        BorderBrush="{DynamicResource LineRedColor}"
+                        BorderThickness="5" />
+                </MenuItem.Header>
+            </MenuItem>
+            <Separator />
+            <MenuItem Command="{Binding MoveLeftCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Menu_MoveLeft}}" />
+            <MenuItem Command="{Binding MoveRightCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Menu_MoveRight}}" />
         </ContextMenu>
     </UserControl.Resources>
     <Canvas ContextMenu="{StaticResource ConnectorContextMenu}">

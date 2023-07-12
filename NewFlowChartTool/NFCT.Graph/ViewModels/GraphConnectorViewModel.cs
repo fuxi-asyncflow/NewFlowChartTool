@@ -41,6 +41,9 @@ namespace NFCT.Graph.ViewModels
             OnMouseUpCommand = new DelegateCommand<MouseEventArgs>(OnMouseUp);
             MoveLeftCommand = new DelegateCommand(delegate { Owner.SwitchChildNodeOrder_Operation(this, -1); });
             MoveRightCommand = new DelegateCommand(delegate { Owner.SwitchChildNodeOrder_Operation(this, 1); });
+            ColorBlueCommand = new DelegateCommand(delegate { Owner.ChangeConnectorType_Operation(Connector, Connector.ConnectorType.ALWAYS); });
+            ColorRedCommand = new DelegateCommand(delegate { Owner.ChangeConnectorType_Operation(Connector, Connector.ConnectorType.FAILURE); });
+            ColorGreenCommand = new DelegateCommand(delegate { Owner.ChangeConnectorType_Operation(Connector, Connector.ConnectorType.SUCCESS); });
         }
 
         public GraphPaneViewModel Owner { get; set; }
@@ -48,6 +51,9 @@ namespace NFCT.Graph.ViewModels
         public Connector Connector => _conn;
         public DelegateCommand MoveLeftCommand { get; set; }
         public DelegateCommand MoveRightCommand { get; set; }
+        public DelegateCommand ColorBlueCommand { get; set; }
+        public DelegateCommand ColorGreenCommand { get; set; }
+        public DelegateCommand ColorRedCommand { get; set; }
 
         private bool _isSelect;
         public bool IsSelect

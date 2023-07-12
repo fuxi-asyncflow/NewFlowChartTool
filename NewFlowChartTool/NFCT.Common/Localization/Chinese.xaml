@@ -70,6 +70,8 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_ConnectNodes}">连接节点</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewNode}">新建节点</system:String>
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BreakPoint}">设置/取消断点</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_MoveLeft}">左移</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_MoveRight}">右移</system:String>
 
     <!--  Type Manager  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_NewType}">添加类型</system:String>

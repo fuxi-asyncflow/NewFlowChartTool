@@ -67,9 +67,11 @@
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_RemoveGraphKey}">Remove</system:String>
 
     <!--  Node Menu  -->
-    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_ConnectNodes}">connect</system:String>
-    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewNode}">new node</system:String>
-    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BreakPoint}">breakpoint</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_ConnectNodes}">Connect</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_NewNode}">New Node</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_BreakPoint}">Breakpoint</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_MoveLeft}">Move Left</system:String>
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Menu_MoveRight}">Move Right</system:String>
 
     <!--  Type Manager  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Dlg_NewType}">New Type</system:String>
