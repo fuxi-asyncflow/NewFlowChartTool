@@ -22,7 +22,22 @@ namespace FlowChart.Core
         List<string> GraphPatch(Graph graph);
         void LoadGraph(Project project, List<string> lines);
         string HotFix(List<Graph> graphs);
+        string SerializeGraph(Graph graph);
+        Graph? DeserializeGraph(string content);
         IProjectFactory Clone();
+    }
+
+    public class EmptyProjectFactory : IProjectFactory
+    {
+        public virtual void Create(Project project) { }
+        public virtual void Save(Project project) { }
+        public virtual List<string> NodesPatch(Graph graph, List<Node> nodes) { return new List<string>(); }
+        public virtual List<string> GraphPatch(Graph graph) { return new List<string>(); }
+        public virtual void LoadGraph(Project project, List<string> lines) { }
+        public virtual string HotFix(List<Graph> graphs) { return string.Empty;}
+        public virtual string SerializeGraph(Graph graph) { return string.Empty; }
+        public virtual Graph? DeserializeGraph(string content) { return null; }
+        public virtual IProjectFactory Clone() { return new EmptyProjectFactory(); }
     }
 
     public class Project

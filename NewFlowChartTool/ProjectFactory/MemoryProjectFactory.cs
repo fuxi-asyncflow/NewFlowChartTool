@@ -11,7 +11,7 @@ using Type = FlowChart.Type.Type;
 
 namespace ProjectFactory
 {
-    public class MemoryProjectFactory : IProjectFactory
+    public class MemoryProjectFactory : EmptyProjectFactory
     {
         FlowChart.Type.Type CreateMonsterType()
         {
@@ -80,7 +80,7 @@ namespace ProjectFactory
             return g;
         }
 
-        public void Create(Project project)
+        public override void Create(Project project)
         {
             if (project.Config == null)
             {
@@ -97,37 +97,6 @@ namespace ProjectFactory
             AddEvents(project);
             project.AddGraph(CreateTestGraph_1(monsterType));
             project.AddGraph(CreateTestGraph_2(monsterType));
-        }
-
-        public void Save(Project project)
-        {
-            //Console.WriteLine("nothing to do when save memory project");
-            //var saver = new Saver();
-            //saver.SaveProject(project);
-        }
-
-        public void Save(Graph graph, List<string> outputs, List<string> genLines)
-        {
-
-        }
-
-        public List<string> NodesPatch(Graph graph, List<Node> nodes)
-        {
-            return new List<string>();
-        }
-
-        public List<string> GraphPatch(Graph graph)
-        {
-            return new List<string>();
-        }
-
-        public void LoadGraph(Project project, List<string> lines)
-        {
-        }
-
-        public string HotFix(List<Graph> graphs)
-        {
-            return string.Empty;
         }
 
         public IProjectFactory Clone()

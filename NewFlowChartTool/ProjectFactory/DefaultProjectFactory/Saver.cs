@@ -54,6 +54,23 @@ namespace ProjectFactory.DefaultProjectFactory
             return codesData;
         }
 
+        public string SerializeGraph(Graph graph)
+        {
+            var outputs = new List<string>();
+            var lines = new List<string>();
+            saver.SaveGraph(graph, lines, outputs);
+            return string.Join('\n', lines);
+        }
+
+        public Graph? DeserializeGraph(string content)
+        {
+            var lines = content.Split('\n');
+            var graph = loader.CustomCreateGraph(lines.ToList());
+            if(graph != null)
+                graph.LazyLoad();
+            return graph;
+        }
+
         public IProjectFactory Clone()
         {
             return new DefaultProjectFactory();
