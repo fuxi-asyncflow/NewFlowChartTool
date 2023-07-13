@@ -427,6 +427,7 @@ namespace NewFlowChartTool.ViewModels
                 OpenedGraphs.RemoveAt(0);
             }
             EventHelper.Pub<ProjectCloseEvent, Project>(CurrentProject);
+            FileHelper.ReleaseAllWriteLock();
             CurrentProject = null;
             CloseProjectCommand.RaiseCanExecuteChanged();
         }

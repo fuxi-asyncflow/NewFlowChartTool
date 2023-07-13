@@ -402,10 +402,12 @@ namespace ProjectFactory.DefaultProjectFactory
 
             bool _loadFile(string path)
             {
-                if (File.Exists(path + ".yaml"))
+                var yamlPath = path + ".yaml";
+                if (File.Exists(yamlPath))
                 {
-                    var file = new FileInfo(path + ".yaml");
+                    var file = new FileInfo(yamlPath);
                     CustomLoadGraphFile(File.ReadAllLines(file.FullName).ToList());
+                    FileHelper.WriteLock(yamlPath);
                     return true;
                 }
                 return false;
@@ -419,6 +421,7 @@ namespace ProjectFactory.DefaultProjectFactory
                     foreach (var file in graphFolder.EnumerateFiles())
                     {
                         CustomLoadGraphFile(File.ReadAllLines(file.FullName).ToList());
+                        FileHelper.WriteLock(file.FullName);
                     }
 
                     return true;
