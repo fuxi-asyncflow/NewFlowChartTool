@@ -119,9 +119,16 @@ namespace FlowChart.Common
 
             }
 
-            
-            if(fs == null)
-                System.IO.File.WriteAllText(path, content, encode);
+
+            if (fs == null)
+            {
+                // don't use File.WriteAllText(path, content, encode); because it will save as utf-8 with bom
+                using var _fs = new FileStream(path, FileMode.Create, FileAccess.Write);
+                var bytes = encode.GetBytes(content);
+                _fs.Write(bytes);
+                _fs.SetLength(bytes.Length);
+                _fs.Close();
+            }
             else
             {
                 fs.Seek(0, SeekOrigin.Begin);
