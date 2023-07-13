@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Common;
+using FlowChart.Misc;
 using FlowChart.Type;
 
 namespace FlowChart.Core
@@ -46,7 +47,6 @@ namespace FlowChart.Core
                 _extra = new SortedDictionary<string, string>();
             _extra[name] = value;
         }
-
         #endregion
 
         public void AddChild(TreeItem item)
@@ -143,6 +143,7 @@ namespace FlowChart.Core
         {
             var parentPath = Parent.JoinPath();
             //Debug.Assert(Path == $"{parentPath}.{Name}");
+            var oldName = Name;
             var oldPath = Path;
             Name = newName;
             var newPath = IsRootFolder ? Name : $"{parentPath}.{Name}";
@@ -151,6 +152,24 @@ namespace FlowChart.Core
             RenameChildren(newPath);
 
             RaiseRenameEvent(newName);
+
+            RemoveFolderFile(oldName);
+        }
+
+        public void RemoveFolderFile(string oldName)
+        {
+            // remove file if needed
+            var rootFolder = GetRoot();
+            if (Project != null && rootFolder != null)
+            {
+                var rootConfig = Project.Config?.GetGraphRoot(rootFolder.Name);
+                if (rootConfig != null && rootConfig.SaveRule is FilePerRootChildSaveRule && Parent == rootFolder)
+                {
+                    var saveFilePath = System.IO.Path.Combine(Project.Path, rootConfig.Path, rootFolder.Name, oldName + ".yaml");
+                    OutputMessage.Inst?.Output($"remove file {saveFilePath}");
+                    FileHelper.RemoveFile(saveFilePath);
+                }
+            }
         }
 
         private void RenameChildren(string parentPath)

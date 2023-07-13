@@ -93,6 +93,19 @@ namespace FlowChart.Core
         {
             NameChangeEvent?.Invoke(this, newName);
         }
+
+        public Folder? GetRoot()
+        {
+            var parent = Parent;
+            while (true)
+            {
+                if (parent == null)
+                    return null;
+                if (parent.IsRootFolder)
+                    return parent;
+                parent = parent.Parent;
+            }
+        }
     }
     public class Graph : TreeItem
     {

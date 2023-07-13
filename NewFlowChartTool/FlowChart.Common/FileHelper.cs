@@ -142,6 +142,18 @@ namespace FlowChart.Common
             Save(path, string.Join("\r\n", lines), encode);
         }
 
+        public static void RemoveFile(string path)
+        {
+            var fullPath = Path.GetFullPath(path);
+            if (_readLocks.ContainsKey(fullPath))
+            {
+                var fs = _readLocks[fullPath];
+                fs.Close();
+            }
+            if(File.Exists(fullPath))
+                File.Delete(fullPath);
+        }
+
 
         #region WriteLock
 

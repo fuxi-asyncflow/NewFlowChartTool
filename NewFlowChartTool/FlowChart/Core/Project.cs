@@ -453,6 +453,20 @@ namespace FlowChart.Core
             }
             GraphDict.Remove(graph.Path);
             RemoveGraphEvent?.Invoke(graph);
+
+            //TODO need test
+            // remove file if needed
+            var rootFolder = graph.GetRoot();
+            if (rootFolder != null)
+            {
+                var rootConfig = Config?.GetGraphRoot(rootFolder.Name);
+                if (rootConfig != null && rootConfig.SaveRule is FilePerGraphSaveRule)
+                {
+                    var saveFilePath = System.IO.Path.Combine(Path, rootConfig.Path, rootConfig.SaveRule.GetGraphSaveFile(graph.Path), ".yaml");
+                    OutputMessage.Inst?.Output($"remove file {saveFilePath}");
+                    FileHelper.RemoveFile(saveFilePath);
+                }
+            }
         }
 
         void _removeFolder(Folder folder)
@@ -468,6 +482,9 @@ namespace FlowChart.Core
             });
             GraphDict.Remove(folder.Path);
             RemoveGraphEvent?.Invoke(folder);
+
+            // remove file if needed
+            folder.RemoveFolderFile(folder.Name);
         }
 
         public void RenameRoot(string oldName, string newName)
@@ -482,6 +499,10 @@ namespace FlowChart.Core
                 return;
 
             root.Rename(newName);
+
+            var saveFilePath = System.IO.Path.Combine(Path, rootCfg.Path, oldName + ".yaml");
+            OutputMessage.Inst?.Output($"remove file {saveFilePath}");
+            FileHelper.RemoveFile(saveFilePath);
         }
 
         #region PARSER and BUILDER
