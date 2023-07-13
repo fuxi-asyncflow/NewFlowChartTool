@@ -252,7 +252,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 filePath = System.IO.Path.Combine(Project.Path, filePath);
                 var lines = new List<string>();
                 var genLines = new List<string>();
-                foreach (var item in kv.Value)
+                foreach (var item in kv.Value.OrderBy(g => g.Path))
                 {
                     lines.Add("--- ");
                     if (item is Graph graph)
