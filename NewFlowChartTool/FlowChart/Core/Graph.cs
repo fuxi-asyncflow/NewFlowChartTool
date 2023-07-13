@@ -338,8 +338,12 @@ namespace FlowChart.Core
         }
         #endregion
 
-        
 
+        public void ResetUid()
+        {
+            Uid = Project.GenUUID();
+            Nodes.ForEach(node => node.Uid = Project.GenUUID());
+        }
 
 
         public void Build(ParserConfig? cfg = null)

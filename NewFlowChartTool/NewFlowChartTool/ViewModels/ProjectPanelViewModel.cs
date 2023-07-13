@@ -375,6 +375,7 @@ namespace NewFlowChartTool.ViewModels
                 if (source is Graph graph)
                 {
                     var clone = project.Factory.DeserializeGraph(project.Factory.SerializeGraph(graph));
+                    clone?.ResetUid();
                     if (clone != null && dstFolder.Item is Folder folder)
                     {
                         var name = folder.GetUnusedName(clone.Name);
