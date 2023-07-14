@@ -101,6 +101,7 @@ namespace FlowChart.Parser
                 catch (Exception e)
                 {
                     pr = new ParseResult();
+                    pr.ErrorMessage = e.Message;
                 }
                 
                 pr.Tokens = parser.Tokens;
