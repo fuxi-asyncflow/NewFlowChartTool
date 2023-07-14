@@ -444,7 +444,7 @@ namespace ProjectFactory.DefaultProjectFactory
                 }
                 else if (root.SaveRule is FilePerRootChildSaveRule)
                 {
-                    _loadFile(path);
+                    //_loadFile(path);
                     _loadFolder(path);
                 }
             }

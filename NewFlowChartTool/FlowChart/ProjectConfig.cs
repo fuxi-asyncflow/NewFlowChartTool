@@ -35,7 +35,6 @@ namespace FlowChart
                 Logger.ERR(msg);
                 throw new Exception(msg);
             }
-
             return graphPath.Substring(0, pos);
         }
     }
@@ -48,9 +47,8 @@ namespace FlowChart
 
             if (splits.Length <= 2)
             {
-                return splits[0];
+                return $"{splits[0]}/{splits[0]}_root";
             }
-
             return $"{splits[0]}/{splits[1]}";
         }
     }
