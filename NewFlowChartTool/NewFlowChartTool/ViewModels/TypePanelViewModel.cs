@@ -173,7 +173,7 @@ namespace NewFlowChartTool.ViewModels
             {
                 if (!tp.IsBuiltinType)
                 {
-                    AddType(tp);
+                    _addType(tp);
                 }
             }
             AddEvents(project);
@@ -196,7 +196,7 @@ namespace NewFlowChartTool.ViewModels
             OnOpenProject(project);
         }
 
-        public void AddType(FlowChart.Type.Type tp)
+        void _addType(FlowChart.Type.Type tp)
         {
             var typeRoot = new TypeMemberTreeFolderViewModel(tp);
             foreach (var kv in tp.MemberDict)
@@ -205,7 +205,7 @@ namespace NewFlowChartTool.ViewModels
                 typeRoot.AddChild(treeItem);
             }
             Roots.Add(typeRoot);
-            RaisePropertyChanged("Roots");
+            RaisePropertyChanged(nameof(Roots));
         }
 
         public void AddEvents(Project project)
@@ -217,10 +217,12 @@ namespace NewFlowChartTool.ViewModels
                 typeRoot.AddChild(treeItem);
             }
             Roots.Add(typeRoot);
-            RaisePropertyChanged("Roots");
+            RaisePropertyChanged(nameof(Roots));
         }
         void Search(string? text)
         {
+            if (string.IsNullOrEmpty(text))
+                return;
             text = text.ToLower();
             if (text.Length < 3)
             {
@@ -244,7 +246,7 @@ namespace NewFlowChartTool.ViewModels
                     ResetRootVisible();
                     SearchRootData(text);
                 }
-                RaisePropertyChanged("Roots");
+                RaisePropertyChanged(nameof(Roots));
                 m_lastSeacherText = text;
 
             }
