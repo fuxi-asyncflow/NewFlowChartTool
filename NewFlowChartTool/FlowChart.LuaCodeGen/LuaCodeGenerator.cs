@@ -37,6 +37,8 @@ namespace FlowChart.LuaCodeGen
                 return;
 
             content.Type = GenerateContent.ContentType.FUNC;
+            if(_prefixCodes.Count > 0)
+                content.Contents.AddRange(_prefixCodes);
             if (Pr.IsWait)
                 content.Type = GenerateContent.ContentType.EVENT;
             if (info.Type == BuiltinTypes.VoidType)
@@ -46,14 +48,23 @@ namespace FlowChart.LuaCodeGen
             }
             else
             {
-                content.Contents.Add($"local __ret__ = {info.Code}");
-                if (info.Type == BuiltinTypes.NumberType)
-                    content.Contents.Add("return __ret__ ~= 0");
-                else if (info.Type == BuiltinTypes.ArrayType)
-                    content.Contents.Add("return (__ret__ ~= nil) and (next(__ret__) ~= nil)");
+                var retName = "__ret__";
+                if (info.Code.StartsWith("_v"))
+                    retName = info.Code;
                 else
-                    content.Contents.Add("return __ret__");
+                    content.Contents.Add($"local {retName} = {info.Code}");
+                if (info.Type == BuiltinTypes.NumberType)
+                    content.Contents.Add($"return {retName} ~= 0");
+                else if (info.Type == BuiltinTypes.ArrayType)
+                    content.Contents.Add($"return ({retName} ~= nil) and (next({retName}) ~= nil)");
+                else
+                    content.Contents.Add($"return {retName}");
             }
+        }
+
+        protected override string GenLocalVarCode(int idx, string content)
+        {
+            return $"local _v{idx} = {content}";
         }
     }
 }

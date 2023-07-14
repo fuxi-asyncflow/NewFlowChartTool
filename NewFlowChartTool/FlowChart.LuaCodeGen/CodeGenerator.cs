@@ -28,8 +28,16 @@ namespace FlowChart.LuaCodeGen
 
         public Dictionary<string, string>? KeyWordMap;
 
+        protected List<string> _prefixCodes = new List<string>();
+        protected Dictionary<string, int> _localVarMap = new Dictionary<string, int>();
+        protected List<string> _localVarList = new List<string>();
+
         public ParseResult GenerateCode(ASTNode ast, ParserConfig cfg, Node? node)
         {
+            _prefixCodes.Clear();
+            _localVarMap.Clear();
+            _localVarList.Clear();
+
             _node = node;
             OnlyGetType = cfg.OnlyGetType;
             LiteralNode.TextMap = KeyWordMap;
@@ -77,6 +85,28 @@ namespace FlowChart.LuaCodeGen
             }
             throw new ParseException(msg);
         }
+
+        #region Local Var
+
+        protected int AddorGetLocalVar(string code)
+        {
+            int idx = -1;
+            if (_localVarMap.TryGetValue(code, out idx))
+                return idx;
+            idx = _localVarList.Count;
+            _localVarList.Add(code);
+            _localVarMap.Add(code, idx);
+            _prefixCodes.Add(GenLocalVarCode(idx, code));
+            return idx;
+        }
+
+        protected virtual string GenLocalVarCode(int idx, string content)
+        {
+            throw new NotSupportedException();
+        }
+
+
+        #endregion
 
         #region CodeGen
 
@@ -440,7 +470,44 @@ namespace FlowChart.LuaCodeGen
             }
             else if (node.Left is SubscriptNode subNode)
             {
-                throw new NotImplementedException();
+                var ownerInfo = subNode.Owner.OnVisit(this);
+                var keyInfo = subNode.Key.OnVisit(this);
+                var exprInfo = node.Right.OnVisit(this);
+                var ownerType = ownerInfo.Type;
+                if (ownerType == BuiltinTypes.AnyType)
+                {
+
+                }
+                else if (ownerType is InstanceType instType)
+                {
+                    if (instType.GenType == BuiltinTypes.ArrayType)
+                    {
+                        if (!BuiltinTypes.NumberType.CanAccept(keyInfo.Type))
+                        {
+                            Error("数组下标应为整数");
+                        }
+                    }
+                    else if (instType.GenType == BuiltinTypes.MapType)
+                    {
+                        if (!instType.templateTypes[0].CanAccept(keyInfo.Type))
+                        {
+                            Error($"字典索引类型不匹配: {instType.templateTypes[0].Name} {keyInfo.Type.Name}");
+                        }
+                    }
+                }
+                else if (ownerType == BuiltinTypes.ArrayType || ownerType == BuiltinTypes.MapType)
+                {
+
+                }
+                else
+                {
+                    Error($"{ownerType.Name} 不支持下标操作");
+                }
+
+                var localVarId = AddorGetLocalVar(exprInfo.Code);
+                _prefixCodes.Add($"{ownerInfo.Code}[{keyInfo.Code}] = _v{localVarId}");
+                exprInfo.Code = $"_v{localVarId}";
+                return exprInfo;
             }
             else if (node.Left is MemberNode memberNode)
             {
@@ -448,7 +515,9 @@ namespace FlowChart.LuaCodeGen
                 var exprNodeInfo = node.Right.OnVisit(this);
                 if (memberNodeInfo.Type.CanAccept(exprNodeInfo.Type))
                 {
-                    memberNodeInfo.Code = $"{memberNodeInfo.Code} = {exprNodeInfo.Code}";
+                    var localVarId = AddorGetLocalVar(exprNodeInfo.Code);
+                    _prefixCodes.Add($"{memberNodeInfo.Code} = _v{localVarId}");
+                    memberNodeInfo.Code = $"_v{localVarId}";
                     return memberNodeInfo;
                 }
                 else
@@ -458,6 +527,7 @@ namespace FlowChart.LuaCodeGen
                 }
             }
 
+            Error("未支持的语法");
             return null;
 
         }
