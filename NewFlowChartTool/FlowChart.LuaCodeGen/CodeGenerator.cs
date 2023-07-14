@@ -419,10 +419,12 @@ namespace FlowChart.LuaCodeGen
                 if (v.Initialized && !varNodeInfo.Type.CanAccept(exprNodeInfo.Type))
                 {
                     Error(string.Format("assignment type unmatch: left expect `{0}` but receive `{1}`"
-                    , varNodeInfo.Type.Name, exprNodeInfo.Type.Name));
+                        , varNodeInfo.Type.Name, exprNodeInfo.Type.Name));
                 }
                 else
                 {
+                    if(!v.Initialized)
+                        v.Type = exprNodeInfo.Type;
                     if (Pr.IsAsync) // subchart or asyncfunction, not set variable
                     {
                         Pr.Content.ReturnVarName = v.Name;
@@ -430,7 +432,6 @@ namespace FlowChart.LuaCodeGen
                     }
                     else
                     {
-                        v.Type = exprNodeInfo.Type;
                         varNodeInfo.Code = GenSetVarCode(varNode.Text, exprNodeInfo.Code);
                         return varNodeInfo;
                     }
