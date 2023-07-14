@@ -149,10 +149,9 @@ namespace FlowChart.Core
             var newPath = IsRootFolder ? Name : $"{parentPath}.{Name}";
             Path = newPath;
             Project?.RenameItem(this, oldPath, newPath);
-            RenameChildren(newPath);
-
             RaiseRenameEvent(newName);
 
+            RenameChildren(newPath);
             RemoveFolderFile(oldName);
         }
 

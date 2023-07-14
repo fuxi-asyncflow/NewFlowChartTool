@@ -75,6 +75,19 @@ namespace NewFlowChartTool.ViewModels
                 graph.SubGraphChangeEvent += delegate { RaisePropertyChanged(nameof(IconType)); };
 
         }
+
+        public static ProjectTreeItemViewModel? CreateTreeItemViewModel(TreeItem item)
+        {
+            if (item is Graph) return new ProjectTreeItemViewModel(item);
+            if (item is Folder folder)
+            {
+                ProjectTreeFolderViewModel vm = folder.Parent != item.Project.Root ? new ProjectTreeFolderViewModel(folder) : new ProjectTreeRootViewModel(folder);
+                folder.Children.ForEach(child => vm.AddChild(CreateTreeItemViewModel(child)));
+                return vm;
+            }
+            return null;
+        }
+
         protected readonly TreeItem _item;
         public TreeItem Item => _item;
         public string Name => _item.Name;
@@ -358,8 +371,8 @@ namespace NewFlowChartTool.ViewModels
                             dstFolder.AddChild(new ProjectTreeItemViewModel(g));
                         else if (source is Folder f)
                         {
+                            dstFolder.AddChild(CreateTreeItemViewModel(f));
                             f.Rename(source.Name);
-                            dstFolder.AddChild(new ProjectTreeFolderViewModel(f));
                         }
                     }
                 }
@@ -630,19 +643,8 @@ namespace NewFlowChartTool.ViewModels
             Project = project;
             Project.AddGraphEvent += OnAddGraph;
             Project.RemoveGraphEvent += OnRemoveGraph;
-            ProjectTreeItemViewModel? CreateTreeItemViewModel(TreeItem item)
-            {                
-                if (item is Graph) return new ProjectTreeItemViewModel(item);
-                if (item is Folder folder)
-                {
-                    ProjectTreeFolderViewModel vm = folder.Parent != project.Root ? new ProjectTreeFolderViewModel(folder) : new ProjectTreeRootViewModel(folder);
-                    folder.Children.ForEach(child => vm.AddChild(CreateTreeItemViewModel(child)));
-                    return vm;
-                }
 
-                return null;
-            }
-            ProjectTreeRoot = CreateTreeItemViewModel(project.Root);
+            ProjectTreeRoot = ProjectTreeItemViewModel.CreateTreeItemViewModel(project.Root);
             if(ProjectTreeRoot is ProjectTreeFolderViewModel model)
             {
                 Roots = model.Children;
