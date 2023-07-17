@@ -68,11 +68,19 @@ namespace NewFlowChartTool.ViewModels
 
             OutputMessage.Inst = this;
             _inst = this;
+            ScrollToEnd = true;
             Logger.OnWarnEvent += msg => Output(msg, OutputMessageType.Warning);
             Logger.OnErrEvent += msg => Output(msg, OutputMessageType.Error);
         }
 
         private static OutputPanelViewModel? _inst;
+
+        private bool _scrollToEnd;
+        public bool ScrollToEnd
+        {
+            get => _scrollToEnd;
+            set => SetProperty(ref _scrollToEnd, value);
+        }
 
         public ObservableCollection<OutputItemViewModel> Outputs { get; set; }
 
@@ -94,7 +102,12 @@ namespace NewFlowChartTool.ViewModels
                 Node = node,
                 Graph = graph
             };
-            InvokeIfNecessary(delegate { Outputs.Add(message); });
+            InvokeIfNecessary(delegate
+            {
+                Outputs.Add(message);
+                if(ScrollToEnd)
+                    EventHelper.Pub<ScrollOutputToEndEvent>();
+            });
         }
 
         public void Clear()

@@ -31,6 +31,11 @@ namespace NFCT.Common
             ea.GetEvent<TEvent>().Publish(eventArg);
         }
 
+        public static void Pub<TEvent>() where TEvent : PubSubEvent, new()
+        {
+            ea.GetEvent<TEvent>().Publish();
+        }
+
         public static void Sub<TEvent, TArg>(Action<TArg> cb) where TEvent : PubSubEvent<TArg>, new()
         {
             ea.GetEvent<TEvent>()?.Subscribe(cb);
@@ -39,6 +44,11 @@ namespace NFCT.Common
         public static void Sub<TEvent, TArg>(Action<TArg> cb, ThreadOption to) where TEvent : PubSubEvent<TArg>, new()
         {
             ea.GetEvent<TEvent>().Subscribe(cb, to);
+        }
+
+        public static void Sub<TEvent>(Action cb) where TEvent : PubSubEvent, new()
+        {
+            ea.GetEvent<TEvent>().Subscribe(cb);
         }
 
         private static IEventAggregator ea;
@@ -71,4 +81,5 @@ namespace NFCT.Common.Events
 #endregion
 
     public class UpdateTypePanelDataEvent : PubSubEvent<Project> { }
+    public class ScrollOutputToEndEvent : PubSubEvent { }
 }

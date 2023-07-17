@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NewFlowChartTool.ViewModels;
 using NFCT.Common;
+using NFCT.Common.Events;
 
 namespace NewFlowChartTool.Views
 {
@@ -25,6 +26,7 @@ namespace NewFlowChartTool.Views
         public OutputPanel()
         {
             InitializeComponent();
+            EventHelper.Sub<ScrollOutputToEndEvent>(ScrollOutputToEnd);
         }
 
         private void OutputItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -35,6 +37,17 @@ namespace NewFlowChartTool.Views
             if (vm.Node == null)
                 return;
             MainWindowViewModel.Inst?.OnOpenGraph(vm.Node.OwnerGraph, vm.Node);
+        }
+
+        void ScrollOutputToEnd()
+        {
+            //TODO Debounce
+            if (VisualTreeHelper.GetChildrenCount(OutputListBox) > 0)
+            {
+                Border border = (Border)VisualTreeHelper.GetChild(OutputListBox, 0);
+                ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
+                scrollViewer.ScrollToBottom();
+            }
         }
     }
 }
