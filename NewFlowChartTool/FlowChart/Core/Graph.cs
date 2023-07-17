@@ -901,7 +901,19 @@ namespace FlowChart.Core
             });
         }
 
+        //TODO optimize
         public List<Node> GetRoots(List<Node> nodes)
+        {
+            var trees = UnionFind(nodes);
+            var roots = new List<Node>();
+            foreach (var tree in trees)
+            {
+                roots.AddRange(_getRoots(tree));
+            }
+            return roots;
+        }
+
+        List<Node> _getRoots(List<Node> nodes)
         {
             var roots = new List<Node>();
             if (nodes.Count == 0)
@@ -928,6 +940,73 @@ namespace FlowChart.Core
                 roots.Add(outerParentNodes[0]);
 
             return roots;
+        }
+
+        private IEnumerable<List<Node>> UnionFind(List<Node> nodes)
+        {
+#if DEBUG
+            foreach (var node in nodes)
+            {
+                Debug.Assert(Nodes[node.Id] == node);
+            }
+#endif
+
+            var ids = new int[Nodes.Count];
+            foreach (var node in nodes)
+            {
+                ids[node.Id] = node.Id;
+            }
+
+            var _root = (int i) =>
+            {
+                while (i != ids[i])
+                {
+                    i = ids[i];
+                }
+
+                return i;
+            };
+
+            var nodeSet = new HashSet<Node>(nodes);
+
+
+            //TODO optimize
+            // quick-union
+            foreach (var node in nodes)
+            {
+                int p = _root(node.Id);
+                foreach (var line in node.Children)
+                {
+                    var child = line.End;
+                    if (child != node && nodeSet.Contains(child))
+                    {
+                        int q = _root(child.Id);
+                        if (p != q)
+                        {
+                            Logger.DBG($"unionfind: union {p} {q}");
+                            ids[q] = p; //TODO or ids[p] = q
+                        }
+                    }
+                }
+            }
+
+            var result = new Dictionary<int, List<Node>>();
+
+            //TODO optimize
+            nodes.ForEach(node =>
+            {
+                var p = _root(node.Id);
+                if(result.TryGetValue(p, out var list))
+                    list.Add(node);
+                else
+                {
+                    list = new List<Node>();
+                    list.Add(node);
+                    result[p] = list;
+                }
+            });
+
+            return result.Values;
         }
     }
 }
