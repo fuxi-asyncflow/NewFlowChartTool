@@ -38,9 +38,13 @@ namespace FlowChart.Debug
             var result = await client.Connect();
             if (!result)
                 return null;
-
-            _clients.Add(MakeAddr(host, port), client);
-            return client;
+            var addr = MakeAddr(host, port);
+            if (!_clients.ContainsKey(addr))
+            {
+                _clients.Add(addr, client);
+                return client;
+            }
+            return _clients[addr];
         }
 
         public void BroadCast(string host, int startPort, int endPort, IDebugMessage msg)
