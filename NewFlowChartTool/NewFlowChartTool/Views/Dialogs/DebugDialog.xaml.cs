@@ -27,6 +27,18 @@ namespace NewFlowChartTool.Views
         public DebugDialog()
         {
             InitializeComponent();
+            Loaded += delegate
+            {
+                var window = Window.GetWindow(this);
+                if (window == null)
+                    return;
+                var mainWindow = Application.Current.MainWindow;
+                var mousePos = Mouse.GetPosition(mainWindow);
+                window.Left = mousePos.X + mainWindow.Left;
+                window.Top = mousePos.Y + mainWindow.Top;
+                window.Height = 450;
+                window.Width = 800;
+            };
         }
 
         private void OnDebugChartGridRowDoubleClicked(object sender, MouseButtonEventArgs e)
