@@ -121,7 +121,8 @@ namespace NFCT.Graph.Views
         {
             Dispatcher.Invoke(delegate
             {
-                NodeBorder.SetBinding(Border.BackgroundProperty, new Binding("BgType") { Source = DataContext, Converter = _bgColorConverter });
+                if(DataContext is TextNodeViewModel nodeVm)
+                    NodeBorder.SetBinding(Border.BackgroundProperty, new Binding("BgType") { Source = nodeVm?.BaseNode, Converter = _bgColorConverter });
             });
         }
     }
