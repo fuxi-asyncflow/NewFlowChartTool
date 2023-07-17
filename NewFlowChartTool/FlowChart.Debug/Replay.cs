@@ -303,13 +303,16 @@ namespace FlowChart.Debug
 
         int WriteGraphDebugData(BinaryWriter bw, GraphDebugData data)
         {
+            if (!GraphDebugInfoDict.TryGetValue(data.ChartName, out var graphDebugInfo))
+                return 0;
+
             bw.Write((byte)Flag.GraphDebugData);
             var startPos = bw.BaseStream.Position;
             bw.Write(0);
 
             // write graph uid
             bw.Write(data.ChartUid.ToByteArray());
-            var graphDebugInfo = GraphDebugInfoDict[data.ChartName];
+            
 
             // write data
             bw.Write(data.DebugDataList.Count);
