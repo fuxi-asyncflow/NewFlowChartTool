@@ -58,6 +58,7 @@ namespace NFCT.Common
 namespace NFCT.Common.Events
 {
     public class ProjectOpenEvent : PubSubEvent<Project> { }
+    public class ProjectLazyLoadFinishEvent : PubSubEvent<Project> { }
 
     public class ProjectCloseEvent : PubSubEvent<Project> { }
 

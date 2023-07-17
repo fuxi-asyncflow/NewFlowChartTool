@@ -332,6 +332,7 @@ namespace NewFlowChartTool.ViewModels
                 //var loadAllGraphTask = Task.WhenAll(p.GraphDict.Values.ToList().ConvertAll(graph => Task.Run(graph.LazyLoadFunc)));
                 //await loadAllGraphTask;
                 _statusBarService.EndProgress();
+                EventHelper.Pub<ProjectLazyLoadFinishEvent, Project>(p);
             }
         }
 

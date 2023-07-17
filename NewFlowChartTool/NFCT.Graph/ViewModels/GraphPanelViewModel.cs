@@ -86,6 +86,7 @@ namespace NFCT.Graph.ViewModels
             OnPreviewKeyDownCommand = new DelegateCommand<KeyEventArgs>(OnPreviewKeyDown);
 
             EventHelper.Sub<ThemeSwitchEvent, Theme>(OnThemeSwitch);
+            EventHelper.Sub<ProjectLazyLoadFinishEvent, Project>((Project p) => { Build();});
 
             GraphPaneViewModel_Layout_Init();
             GraphPanelViewModel_Debug_Init();
