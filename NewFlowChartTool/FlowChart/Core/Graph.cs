@@ -131,7 +131,7 @@ namespace FlowChart.Core
             Groups = new List<Group>();
             AutoLayout = true;
             IsLoaded = true;
-
+            Roots = new List<Node>();
 #if DEBUG
             //GraphAddNodeEvent += node => Logger.DBG($"[event] add node event: {node}");
             //GraphRemoveNodeEvent += node => Logger.DBG($"[event] remove node event: {node}");
@@ -200,6 +200,7 @@ namespace FlowChart.Core
         public bool IsLocalSubGraph => SubGraphType == SubGraphTypeEnum.LOCAL;
         public SubGraphTypeEnum SubGraphType { get; set; }
         private Type.Type? _returnType;
+        private List<Node> Roots;
         public FlowChart.Type.Type? ReturnType
         {
             get => _returnType;
@@ -904,13 +905,44 @@ namespace FlowChart.Core
         //TODO optimize
         public List<Node> GetRoots(List<Node> nodes)
         {
-            var trees = UnionFind(nodes);
-            var roots = new List<Node>();
-            foreach (var tree in trees)
+            Roots.Clear();
+            if (nodes.Count == 0)
+                return Roots;
+
+            var nodesOrderById = nodes.OrderBy(node => node.Id).ToList();
+            Roots.AddRange(nodesOrderById);
+            foreach (var node in nodesOrderById)
             {
-                roots.AddRange(_getRoots(tree));
+                var eIndex = nodesOrderById.IndexOf(node);
+                foreach (var line in node.Parents)
+                {
+                    var parent = line.Start;
+                    var sIndex = nodesOrderById.IndexOf(parent);
+                    if (parent != node && sIndex != -1)
+                    {
+                        if (sIndex > eIndex)
+                            continue;
+                        Union(parent, eIndex, sIndex);
+                    }
+                }
             }
-            return roots;
+            return Roots.Distinct().ToList();
+        }
+
+        private void Union(Node startNode, int endIndex, int startIndex)
+        {
+            var rootNode = Find(startNode, startIndex);
+            Roots[endIndex] = rootNode;
+        }
+
+        private Node Find(Node node, int index)
+        {
+            var rootNode = node;
+            while (rootNode != Roots[index])
+            {
+                rootNode = Roots[index];
+            }
+            return rootNode;
         }
 
         List<Node> _getRoots(List<Node> nodes)
