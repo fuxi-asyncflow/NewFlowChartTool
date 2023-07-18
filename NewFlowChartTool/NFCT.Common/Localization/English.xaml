@@ -85,4 +85,7 @@
     <!--  Graph Pane  -->
     <system:String x:Key="{x:Static reskeys:ResourceKeys.Graph_IsParameter}">Is Parameter</system:String>
 
+    <!--  Group Menu  -->
+    <system:String x:Key="{x:Static reskeys:ResourceKeys.Group_Menu_SelectAllNodes}">SelectAll</system:String>
+
 </ResourceDictionary>

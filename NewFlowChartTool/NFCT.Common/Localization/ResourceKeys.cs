@@ -114,5 +114,8 @@ namespace NFCT.Common.Localization
         public static readonly ComponentResourceKey Graph_IsParameter = KEY(nameof(Graph_IsParameter));
         #endregion
 
+        #region Group Menu
+        public static readonly ComponentResourceKey Group_Menu_SelectAllNodes = KEY(nameof(Group_Menu_SelectAllNodes));
+        #endregion
     }
 }

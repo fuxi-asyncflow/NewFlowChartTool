@@ -34,10 +34,10 @@ namespace NFCT.Graph.Views
             bool isCtrlDown = Keyboard.Modifiers.HasFlag(ModifierKeys.Control);
             bool isShiftDown = Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
             if (groupVm == null) return;
+            groupVm.Owner.ClearSelectedItems();
+            groupVm.Owner.SetCurrentGroup(groupVm);
             if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                groupVm.Owner.ClearSelectedItems();
-                groupVm.Owner.SetCurrentGroup(groupVm);
+            {               
                 e.Handled = true;
             }
             else if (e.RightButton == MouseButtonState.Pressed)

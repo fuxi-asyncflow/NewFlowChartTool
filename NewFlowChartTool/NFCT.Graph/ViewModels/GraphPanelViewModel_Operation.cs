@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using FlowChart.Core;
 using FlowChart.Common;
+using System.Windows.Media;
 
 namespace NFCT.Graph.ViewModels
 {
@@ -440,7 +441,9 @@ namespace NFCT.Graph.ViewModels
         void _addGroupViewModel(Group group)
         {
             var groupVm = new GroupBoxViewModel(group, this);
-            groupVm.Nodes.AddRange(group.Nodes.ConvertAll(GetNodeVm));
+            var nodesVM = group.Nodes.ConvertAll(GetNodeVm);
+            nodesVM.ForEach(node => node.IdBackGroundColor = Brushes.Black);
+            groupVm.Nodes.AddRange(nodesVM);
             Groups.Add(groupVm);
         }
 
@@ -461,13 +464,20 @@ namespace NFCT.Graph.ViewModels
             if(oldGroupVm != null)
                 oldGroupVm.RemoveNode(nodeVm);
             nodeVm.OwnerGroup = groupVm;
-            if(groupVm != null)
+            ChangeGroupBackColor(node);
+            if (groupVm != null)
                 groupVm.AddNode(nodeVm);
             UndoRedoManager.AddAction(
                 () => { _graph.SetGroupForNode_atom(node, newGroup); },
                 () => { _graph.SetGroupForNode_atom(node, oldGroup); });
         }
 
+        void ChangeGroupBackColor(Node node)
+        {
+            Brush brush = node.OwnerGroup != null ? Brushes.Black : Brushes.DarkGoldenrod;
+            var nodeVm = NodeDict[node];
+            nodeVm.IdBackGroundColor = brush;
+        }
         #endregion
     }
 }

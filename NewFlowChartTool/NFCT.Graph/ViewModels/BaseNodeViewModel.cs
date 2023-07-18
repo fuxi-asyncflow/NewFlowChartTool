@@ -124,6 +124,8 @@ namespace NFCT.Graph.ViewModels
                 ContainerLocator.Current.Resolve<IDebugService>().SetBreakPoint(Node, IsBreakPoint);
             });
             ContinueBreakPointCommand = new DelegateCommand(delegate { Owner.ContinueBreakPoint(); });
+
+            _brush = Brushes.DarkGoldenrod;
         }
 
         public void RemoveEventCallback()
@@ -476,6 +478,9 @@ namespace NFCT.Graph.ViewModels
 
         private int _id;
         public int Id { get => _id; set => SetProperty(ref _id, value); }
+
+        private Brush _brush;
+        public Brush IdBackGroundColor { get => _brush; set => SetProperty(ref _brush, value); }
 
         public void ReplaceContent(NodeContent content)
         {

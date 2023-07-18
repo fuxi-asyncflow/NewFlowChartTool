@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FlowChart.Core;
 using FlowChart.Layout;
+using Prism.Commands;
 using Prism.Mvvm;
 
 namespace NFCT.Graph.ViewModels
@@ -16,6 +17,8 @@ namespace NFCT.Graph.ViewModels
             Nodes = new List<BaseNodeViewModel>();
             Group = group;
             Owner = graph;
+
+            SelectNodesCommand = new DelegateCommand(SelectNodes);
         }
 
         public Group Group { get; set; }
@@ -79,5 +82,15 @@ namespace NFCT.Graph.ViewModels
             Nodes.Add(nodeVm);
         }
 
+        public void SelectNodes()
+        {
+            Owner.SelectedNodes.Clear();
+            Nodes.ForEach((node) =>
+            {
+                Owner.SetCurrentNode(node, false);
+            });
+        }
+
+        public DelegateCommand SelectNodesCommand { get; set; }
     }
 }

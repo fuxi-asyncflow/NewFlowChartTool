@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:NFCT.Graph.Views"
+    xmlns:localization="clr-namespace:NFCT.Common.Localization;assembly=NFCT.Common"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:utility="clr-namespace:NFCT.Graph.Utility"
     xmlns:viewModels="clr-namespace:NFCT.Graph.ViewModels"
@@ -15,6 +16,12 @@
         <utility:NodeBorderConverter x:Key="BorderConverter" />
         <utility:NodeBorderColorConverter x:Key="BorderColorConverter" />
     </UserControl.Resources>
+
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem Command="{Binding SelectNodesCommand}" Header="{DynamicResource {x:Static localization:ResourceKeys.Group_Menu_SelectAllNodes}}" />
+        </ContextMenu>
+    </UserControl.ContextMenu>
 
     <Grid
         Width="{Binding Width}"
