@@ -17,6 +17,9 @@ namespace FlowChart.Layout.MyLayout
             OutEdges = new List<LayoutEdge>();
             Width = _node.Width;
             Height = _node.Height;
+            AllOutEdges = new List<LayoutEdge>();
+            IsSelect = _node.IsSelect;
+            IsGroup = false;
         }
 
         public LayoutNode()
@@ -24,13 +27,16 @@ namespace FlowChart.Layout.MyLayout
             _node = this;
             InEdges = new List<LayoutEdge>();
             OutEdges = new List<LayoutEdge>();
+            AllOutEdges = new List<LayoutEdge>();
+            IsGroup = false;
         }
 
         private INode _node;
         public INode Node => _node;
         public double Width { get; set; }
         public double Height { get; set; }
-
+        public bool IsSelect { get; set; }
+        public bool IsGroup { get; set; }
         private double _x;
         public double X
         {
@@ -63,6 +69,7 @@ namespace FlowChart.Layout.MyLayout
         public int Rank;
         public List<LayoutEdge> InEdges;
         public List<LayoutEdge> OutEdges;
+        public List<LayoutEdge> AllOutEdges;
         public bool IsLeaf => OutEdges.Count == 0;
         // Rect is the smallest rect contains node and all descendent nods
         public double RectWidth;
@@ -113,6 +120,7 @@ namespace FlowChart.Layout.MyLayout
 
         protected IEdge _edge;
         public IEdge Edge => _edge;
+        protected IDrawCurve _draw;
         public LayoutNode StartNode;
         public LayoutNode EndNode;
         public bool IsTreeEdge;
@@ -127,9 +135,17 @@ namespace FlowChart.Layout.MyLayout
         public void Connect(int index = -1)
         {
             if(index < 0)
+            {
                 StartNode.OutEdges.Add(this);
+                if (!StartNode.AllOutEdges.Contains(this))
+                    StartNode.AllOutEdges.Add(this);
+            }
             else
+            {
                 StartNode.OutEdges.Insert(index, this);
+                if (!StartNode.AllOutEdges.Contains(this))
+                    StartNode.AllOutEdges.Insert(index, this);
+            }
             EndNode.InEdges.Add(this);
         }
 
@@ -149,35 +165,10 @@ namespace FlowChart.Layout.MyLayout
             _edge.Curves = new List<Curve>() {curve};
         }
 
-        public void CubicBezier()
+        public void SetBezierCurve()
         {
-            const double L = 80.0;
-            var startX = StartNode.X + StartNode.Width * 0.5;
-            var endX = EndNode.X + EndNode.Width * 0.5;
-
-            var curve = new Curve() { Type = Curve.CurveType.SPLINE };
-
-            if (Math.Abs(startX - endX) < 20.0 && (EndNode.Rank - StartNode.Rank) != 1)
-            {
-                var delatHeight = EndNode.Y - StartNode.Y - StartNode.Height;
-                var d = delatHeight * 0.25;
-                if (d < L)
-                    d = L;
-                curve.Points = new List<Position>();
-                curve.Points.Add(new Position(startX, StartNode.Y + StartNode.Height));
-                curve.Points.Add(new Position(startX + d, StartNode.Y + StartNode.Height + L));
-                curve.Points.Add(new Position(endX + d, EndNode.Y - L));
-                curve.Points.Add(new Position(endX, EndNode.Y));
-                _edge.Curves = new List<Curve>() { curve };
-                return;
-            }
-            
-
-            curve.Points = new List<Position>();
-            curve.Points.Add(new Position(startX, StartNode.Y + StartNode.Height));
-            curve.Points.Add(new Position(startX, StartNode.Y + StartNode.Height + L));
-            curve.Points.Add(new Position(endX, EndNode.Y - L));
-            curve.Points.Add(new Position(endX, EndNode.Y));
+            _draw = new MyDrawCurve();
+            var curve = _draw.DrawCurve(StartNode, EndNode);
             _edge.Curves = new List<Curve>() { curve };
         }
     }
@@ -503,7 +494,17 @@ namespace FlowChart.Layout.MyLayout
             //TODO self-connected edge
             foreach (var edge in EdgeDict.Values)
             {
-                edge.CubicBezier();
+                edge.SetBezierCurve();
+            }
+        }
+
+        public void InitSelectAttribute()
+        {
+            var graph = _graph;
+            foreach (var edge in NodeDict.Values)
+            {
+                var node = graph.Nodes.ToList().Find(n => n == edge.Node);
+                edge.IsSelect = node.IsSelect;
             }
         }
     }
@@ -515,6 +516,10 @@ namespace FlowChart.Layout.MyLayout
             var g = new LayoutGraph(graph);
             g.Init();
             g.Layout();
+        }
+
+        public void RedrawConnectPin(IGraph graph)
+        {
         }
     }
 }

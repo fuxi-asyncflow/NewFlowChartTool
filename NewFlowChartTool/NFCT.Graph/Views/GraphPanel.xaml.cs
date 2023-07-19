@@ -78,6 +78,11 @@ namespace NFCT.Graph.Views
                         vm.NeedLayout = false;
                 }
             }
+            if (vm.NeeedReDrawConnectPin)
+            {
+                vm.ReDrawConnectPin();
+                vm.NeeedReDrawConnectPin = false;
+            }
         }
 
         #endregion

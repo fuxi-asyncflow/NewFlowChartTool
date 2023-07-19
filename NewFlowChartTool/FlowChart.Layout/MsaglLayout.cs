@@ -186,6 +186,8 @@ namespace FlowChart.Layout
             //Console.WriteLine($"canvas width height {graph.BoundingBox.Width}, {graph.BoundingBox.Height}");
         }
 
-       
+        public void RedrawConnectPin(IGraph graph)
+        {
+        }
     }
 }

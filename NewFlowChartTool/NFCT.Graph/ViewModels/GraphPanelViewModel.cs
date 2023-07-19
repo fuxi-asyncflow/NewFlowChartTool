@@ -347,6 +347,8 @@ namespace NFCT.Graph.ViewModels
                 if(node != exclude)
                     node.IsSelect = false;
             });
+            if (SelectedNodes.Count > 0)
+                NeeedReDrawConnectPin = true;
             SelectedNodes.RemoveAll(node => node != exclude);
 
             SelectedConnectors.ForEach(conn =>
@@ -418,6 +420,7 @@ namespace NFCT.Graph.ViewModels
             {
                 SelectNode(CurrentNode, clearOthers);
                 CurrentNode.IsFocused = true;
+                NeeedReDrawConnectPin = true;
 #if DEBUG
                 if (CurrentNode.Node.Content != null)
                 {

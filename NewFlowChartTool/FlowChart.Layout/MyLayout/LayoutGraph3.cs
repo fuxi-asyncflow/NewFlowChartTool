@@ -178,6 +178,7 @@ namespace FlowChart.Layout.MyLayout
             for (int i = 0; i < nodeCount; i++)
             {
                 var newNode = new LayoutNode() {Width = nodeWidth, Height = nodeHeight};
+                newNode.IsGroup = true;
                 VirtualNodes.Add(newNode);
                 Graph.NodeDict.Add(newNode, newNode);
             }
@@ -247,11 +248,18 @@ namespace FlowChart.Layout.MyLayout
 
     class MyLayoutGroup : ILayout
     {
+        LayoutGraph3 layoutGraph = null;
         public void Layout(IGraph graph)
         {
-            var layoutGraph = new LayoutGraph3(graph);
+            layoutGraph = new LayoutGraph3(graph);
             layoutGraph.Init();
             layoutGraph.LayoutWithGroup();
+        }
+
+        public void RedrawConnectPin(IGraph graph)
+        {
+            layoutGraph.InitSelectAttribute();
+            layoutGraph.CalcCubicBezierEdge();
         }
     }
 
