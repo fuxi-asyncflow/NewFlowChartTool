@@ -77,6 +77,8 @@ namespace NFCT.Diff.ViewModels
 
         public Brush BgColor => GetColor(State);
 
+        public bool IsSelect { get ; set; }
+
         public static Brush GetColor(DiffState state)
         {
             switch (state)

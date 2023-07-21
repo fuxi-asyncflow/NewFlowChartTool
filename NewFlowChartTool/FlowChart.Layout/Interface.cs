@@ -1,4 +1,6 @@
-﻿namespace FlowChart.Layout
+﻿using FlowChart.Layout.MyLayout;
+
+namespace FlowChart.Layout
 {
     public struct Position
     {
@@ -41,6 +43,7 @@
         public double Height { get; }
         public double X { set; }
         public double Y { set; }
+        public bool IsSelect { get; set; }
     }
 
     public interface IEdge
@@ -67,5 +70,13 @@
     public interface ILayout
     {
         public void Layout(IGraph graph);
+
+        public void RedrawConnectPin(IGraph graph);
+    }
+
+    public interface IDrawCurve
+    {
+        public Curve DrawCurve(LayoutNode StartNode, LayoutNode EndNode);
+
     }
 }

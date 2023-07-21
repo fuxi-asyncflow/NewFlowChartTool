@@ -21,6 +21,7 @@ namespace NFCT.Graph.ViewModels
         }
         public Node? InitCenterNode { get; set; }
         public bool NeedLayout { get; set; }
+        public bool NeeedReDrawConnectPin { get; set; }
         public bool IsFirstLayout { get; set; }
         private double _width;
         public double Width
@@ -136,6 +137,15 @@ namespace NFCT.Graph.ViewModels
             }
 
             return true;
+        }
+
+        public void ReDrawConnectPin()
+        {
+            if (NodeDict.Count <= 0.0 || NodeDict.First().Value.Width <= 0.0)
+                return;
+            var graph = new GraphLayoutAdapter(this);
+            _layout.RedrawConnectPin(graph);
+
         }
 
         public void ReorderId()

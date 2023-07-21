@@ -15,6 +15,10 @@ namespace FlowChart.Layout.MyLayout
             g.Init();
             g.Layout();
         }
+
+        public void RedrawConnectPin(IGraph graph)
+        {
+        }
     }
 
     public class MyLayout3 : ILayout
@@ -24,6 +28,10 @@ namespace FlowChart.Layout.MyLayout
             var g = new LayoutGraph2(graph);
             g.Init();
             g.Layout0();
+        }
+
+        public void RedrawConnectPin(IGraph graph)
+        {
         }
     }
 
