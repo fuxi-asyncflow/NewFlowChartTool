@@ -308,7 +308,8 @@ namespace NewFlowChartTool.ViewModels
             }
             catch (Exception e)
             {
-
+                MessageBox.Show($"open project failed!\n{e.Message}");
+                return;
             }
 #endif
             CurrentProject = p;

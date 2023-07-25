@@ -100,15 +100,24 @@ namespace ProjectFactory.DefaultProjectFactory
 
             Project.RaiseProjectConfigEvent();
 
-            GroupDict = new Dictionary<string, Group>();
-            var sw = Stopwatch.StartNew();
-            LoadTypes();
-            Project.RaiseLoadTypesEndEvent();
-            AddTypeCastMethod(Project);
-            Logger.LOG($"load types time: {sw.ElapsedMilliseconds}");
-            sw.Restart();
-            LoadGraphs();
-            Logger.LOG($"load graphs time: {sw.ElapsedMilliseconds}");
+            try
+            {
+                GroupDict = new Dictionary<string, Group>();
+                var sw = Stopwatch.StartNew();
+                LoadTypes();
+                Project.RaiseLoadTypesEndEvent();
+                AddTypeCastMethod(Project);
+                Logger.LOG($"load types time: {sw.ElapsedMilliseconds}");
+                sw.Restart();
+                LoadGraphs();
+                Logger.LOG($"load graphs time: {sw.ElapsedMilliseconds}");
+            }
+            catch (Exception e)
+            {
+                Logger.ERR($"open project failed: {e.Message}");
+                throw;
+            }
+            
         }
 
         public void LoadTypes()
