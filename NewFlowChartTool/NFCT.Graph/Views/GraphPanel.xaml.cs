@@ -101,6 +101,7 @@ namespace NFCT.Graph.Views
             {
                 vm.ClearSelectedItems();
                 vm.ClearCurrentItem();
+                Keyboard.Focus(CanvasScroll);
                 if (!_isBoxSelecting)
                 {
                     CanvasState = GraphCanvasState.BOX_SELECT;
@@ -108,7 +109,6 @@ namespace NFCT.Graph.Views
                     SelectBox.Visibility = Visibility;
                     SetSelectBoxRect(_mouseScreenPos, _mouseScreenPos);
                 }
-                e.Handled = true;
             }
 
             if (e.RightButton == MouseButtonState.Pressed)
@@ -268,5 +268,7 @@ namespace NFCT.Graph.Views
             vm.ScrollY = Y * newScale - mouseY;
             vm.Scale = newScale;
         }
+
+
     }
 }
