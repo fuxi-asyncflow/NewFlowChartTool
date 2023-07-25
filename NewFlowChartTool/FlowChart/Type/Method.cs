@@ -68,10 +68,7 @@ namespace FlowChart.Type
 
         public Type? ObjectType => RelativeGraph.Type;
         public Graph? RelativeGraph { get; set; }
-        public override Type Type
-        {
-            get => RelativeGraph.ReturnType;
-        }
+        public override Type Type => RelativeGraph?.ReturnType ?? BuiltinTypes.VoidType;
 
         public static Func<string, bool, string> SubGraphTemplate;
 

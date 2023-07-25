@@ -312,7 +312,6 @@ namespace FlowChart.Core
         {
             var method = new SubGraphMethod(Name)
             {
-                Type = ReturnType ?? BuiltinTypes.VoidType,
                 SaveToFile = false,
                 RelativeGraph = this
             };
@@ -328,10 +327,7 @@ namespace FlowChart.Core
                     };
                     method.Parameters.Add(para);
                 }
-                    
             }
-
-            method.Type = Type;
 
             //TODO when subgraph path changes, template should update
             method.IsAsync = true;
