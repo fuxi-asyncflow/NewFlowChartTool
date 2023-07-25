@@ -412,6 +412,7 @@ namespace NewFlowChartTool.ViewModels
                 return;
             Logger.LOG($"save project");
             CurrentProject.Save();
+            OutputPanelViewModel.OutputMsg("project is saved");
             ForEachOpenedGraphs(graphVm =>
             {
                 if (graphVm.IsDirty)
@@ -468,7 +469,7 @@ namespace NewFlowChartTool.ViewModels
             await Task.Factory.StartNew(delegate { CurrentProject.Build(); });
             CurrentProject.OnGraphBuildEvent -= updateProgressBar;
             _statusBarService.EndProgress();
-            CurrentProject.Save();
+            SaveProject();
         }
 
         public void ShowTypeDialog()

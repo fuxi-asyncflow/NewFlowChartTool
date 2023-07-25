@@ -12,6 +12,7 @@ using Prism.Mvvm;
 using FlowChart.Core;
 using FlowChart.Layout;
 using FlowChart.Common;
+using FlowChart.Misc;
 using NFCT.Common;
 using NFCT.Common.Events;
 using NFCT.Common.ViewModels;
@@ -67,6 +68,7 @@ namespace NFCT.Graph.ViewModels
 
         public GraphPaneViewModel(FlowChart.Core.Graph graph)
         {
+            _outputService = OutputMessage.Inst;
             _graph = graph;
             Nodes = new ObservableCollection<BaseNodeViewModel>();
             NodeDict = new Dictionary<Node, BaseNodeViewModel>();
@@ -76,7 +78,7 @@ namespace NFCT.Graph.ViewModels
             SelectedNodes = new List<BaseNodeViewModel>();
             SelectedConnectors = new List<GraphConnectorViewModel>();
             VariablesPanel = new GraphVariablesPanelViewModel(this);
-            UndoRedoManager = new UndoRedoManagerViewModel();
+            UndoRedoManager = new UndoRedoManagerViewModel(msg => _outputService?.Output(msg, OutputMessageType.Default, null, _graph));
 
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
             CreateGroupCommand = new DelegateCommand(CreateGroupFromSelectedNodes);
@@ -236,7 +238,7 @@ namespace NFCT.Graph.ViewModels
 
         public DelegateCommand EllipsisCommand { get; set; }
 
-        
+        private IOutputMessage? _outputService;
         public void Build()
         {
             Graph.Build(new ParserConfig(){GetTokens = true});

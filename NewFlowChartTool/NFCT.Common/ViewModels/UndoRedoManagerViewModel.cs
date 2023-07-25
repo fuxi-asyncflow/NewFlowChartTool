@@ -29,12 +29,13 @@ namespace NFCT.Common.ViewModels
 
     public class UndoRedoManagerViewModel : BindableBase
     {
-        public UndoRedoManagerViewModel()
+        public UndoRedoManagerViewModel(Action<string>? output)
         {
             UndoCommands = new ObservableCollection<UndoRedoCommand>();
             RedoCommands = new ObservableCollection<UndoRedoCommand>();
             actions = () => { };
             reverts = new List<Action>();
+            _output = output;
         }
         public ObservableCollection<UndoRedoCommand> UndoCommands { get; set; }
         public ObservableCollection<UndoRedoCommand> RedoCommands { get; set; }
@@ -77,7 +78,7 @@ namespace NFCT.Common.ViewModels
             var cmd = UndoCommands[count - 1];
             UndoCommands.RemoveAt(count - 1);
             RedoCommands.Add(cmd);
-            Logger.DBG($"[Undo] {cmd}");
+            _output?.Invoke($"[Undo] {cmd}");
             cmd.Undo();
         }
 
@@ -89,11 +90,11 @@ namespace NFCT.Common.ViewModels
             var cmd = RedoCommands[count - 1];
             RedoCommands.RemoveAt(count - 1);
             UndoCommands.Add(cmd);
-            Logger.DBG($"[Redo] {cmd}");
+            _output?.Invoke($"[Redo] {cmd}");
             cmd.Redo();
         }
 
-
+        private Action<string>? _output;
 
     }
 }
