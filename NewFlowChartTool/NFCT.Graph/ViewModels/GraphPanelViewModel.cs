@@ -78,6 +78,7 @@ namespace NFCT.Graph.ViewModels
             SelectedNodes = new List<BaseNodeViewModel>();
             SelectedConnectors = new List<GraphConnectorViewModel>();
             VariablesPanel = new GraphVariablesPanelViewModel(this);
+            NodePropPanelViewModel = new NodePropPanelViewModel(this);
             UndoRedoManager = new UndoRedoManagerViewModel(msg => _outputService?.Output(msg, OutputMessageType.Default, null, _graph));
 
             ChangeLayoutCommand = new DelegateCommand(ChangeAutoLayout);
@@ -198,6 +199,7 @@ namespace NFCT.Graph.ViewModels
         public Dictionary<Connector, GraphConnectorViewModel> ConnectorDict { get; set; }
         public ObservableCollection<GroupBoxViewModel> Groups { get; set; }
         public GraphVariablesPanelViewModel VariablesPanel { get; set; }
+        public NodePropPanelViewModel NodePropPanelViewModel { get; set; }
         public UndoRedoManagerViewModel UndoRedoManager { get; set; }
 
         public BaseNodeViewModel GetNodeVm(Node node)
@@ -397,6 +399,8 @@ namespace NFCT.Graph.ViewModels
                 CurrentGroup.IsSelected = false;
                 CurrentGroup = null;
             }
+
+            NodePropPanelViewModel.SetNode(CurrentNode);
         }
 
         public void SetCurrentNode(BaseNodeViewModel? nodeVm, bool clearOthers = true)
@@ -430,6 +434,8 @@ namespace NFCT.Graph.ViewModels
                 }
 #endif
             }
+
+            NodePropPanelViewModel.SetNode(CurrentNode);
 
             Console.WriteLine("set current node");
         }

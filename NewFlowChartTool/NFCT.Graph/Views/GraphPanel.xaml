@@ -153,6 +153,12 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 DataContext="{Binding VariablesPanel}" />
+            <local:NodePropPanel
+                Margin="20,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                DataContext="{Binding NodePropPanelViewModel}"
+                Visibility="{Binding IsShow, Converter={StaticResource BooleanToVisibilityConverter}}" />
             <local:GraphThumbnail
                 Width="180"
                 Height="150"
