@@ -102,7 +102,7 @@ namespace NewFlowChartTool.ViewModels
                 Node = node,
                 Graph = graph
             };
-            InvokeIfNecessary(delegate
+            WPFHelper.InvokeIfNecessary(delegate
             {
                 Outputs.Add(message);
                 if(ScrollToEnd)
@@ -112,17 +112,9 @@ namespace NewFlowChartTool.ViewModels
 
         public void Clear()
         {
-            InvokeIfNecessary(delegate { Outputs.Clear(); });
+            WPFHelper.InvokeIfNecessary(delegate { Outputs.Clear(); });
         }
 
-        public static void InvokeIfNecessary(Action action)
-        {
-            if (Thread.CurrentThread == Application.Current.Dispatcher.Thread)
-                action();
-            else
-            {
-                Application.Current.Dispatcher.Invoke(action);
-            }
-        }
+        
     }
 }

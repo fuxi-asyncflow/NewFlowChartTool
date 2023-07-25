@@ -127,6 +127,7 @@ namespace FlowChart.Type
 
         #endregion
 
+        public event Action<Member>? AddMemberEvent;
         public bool AddMember(Member member, bool replace = true)
         {
             var memberName = member.Name;
@@ -142,6 +143,7 @@ namespace FlowChart.Type
             {
                 MemberDict.Add(memberName, member);
             }
+            AddMemberEvent?.Invoke(member);
             return true;
         }
 
@@ -182,12 +184,14 @@ namespace FlowChart.Type
             return true;
         }
 
+        public event Action<Member>? RemoveMemberEvent;
         public bool RemoveMember(string name)
         {
             var member = FindMember(name, false);
             if (member == null)
                 return false;
             MemberDict.Remove(name);
+            RemoveMemberEvent?.Invoke(member);
             return true;
         }
 

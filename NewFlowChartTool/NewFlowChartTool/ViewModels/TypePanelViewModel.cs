@@ -109,10 +109,14 @@ namespace NewFlowChartTool.ViewModels
         public TypeMemberTreeFolderViewModel(Item item) : base(item)
         {
             Children = new ObservableCollection<TypeMemberTreeItemViewModel>();
-            if (item is Type type && type.HasBaseType)
+            _childrenDict = new Dictionary<string, TypeMemberTreeItemViewModel>();
+            if (item is Type type)
             {
-                
-                BaseType = $"({type.GetBaseTypesString()})";
+                type.AddMemberEvent += OnAddMember;
+                type.RemoveMemberEvent += OnRemoveMember;
+
+                if (type.HasBaseType)
+                    BaseType = $"({type.GetBaseTypesString()})";
             }
             
         }
@@ -125,7 +129,25 @@ namespace NewFlowChartTool.ViewModels
                 Children.Add(child);
                 ChildsVisibleCount++;
                 child.ParentNode = this;
-            }               
+                _childrenDict.Add(child.Name, child);
+            }
+        }
+
+        void OnAddMember(Member member)
+        {
+            WPFHelper.InvokeIfNecessary(delegate { AddChild(new TypeMemberTreeItemViewModel(member)); });
+        }
+
+        void OnRemoveMember(Member member)
+        {
+            WPFHelper.InvokeIfNecessary(delegate
+            {
+                if (_childrenDict.ContainsKey(member.Name))
+                {
+                    Children.Remove(_childrenDict[member.Name]);
+                    _childrenDict.Remove(member.Name);
+                }
+            });
         }
 
         public string? BaseType { get; set; }
@@ -135,6 +157,8 @@ namespace NewFlowChartTool.ViewModels
         {
             get; set;
         }
+
+        Dictionary<string, TypeMemberTreeItemViewModel> _childrenDict;
     }
 
     public class TypePanelViewModel : BindableBase

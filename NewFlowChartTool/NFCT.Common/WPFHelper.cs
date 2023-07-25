@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using Prism.Mvvm;
@@ -21,6 +22,16 @@ namespace NFCT.Common
                 depo = VisualTreeHelper.GetParent(depo);
             }
             return (depo as T);
+        }
+
+        public static void InvokeIfNecessary(Action action)
+        {
+            if (Thread.CurrentThread == Application.Current.Dispatcher.Thread)
+                action();
+            else
+            {
+                Application.Current.Dispatcher.Invoke(action);
+            }
         }
     }
 }
